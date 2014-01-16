@@ -6,7 +6,7 @@
 <datadir zip="false">http://o-repositorio-maluco.googlecode.com/svn/trunk/</datadir>
 </extension>
 <extension point="xbmc.addon.metadata">
-<summary>O Repositório Maluco</summary>
+<summary>O Repositorio Maluco</summary>
 <description>Repositorio para XBMC</description>
 <disclaimer></disclaimer>
 <platform>all</platform>
