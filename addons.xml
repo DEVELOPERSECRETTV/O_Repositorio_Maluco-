@@ -1,3 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
+<addon id="plugin.video.TugaFilmesTV" name="Tuga-Filmes.tv" version="0.0.1" provider-name="OMaluco">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.urlresolver" version="1.0.5"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="addon.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <language>en</language>
+    <platform>all</platform>
+    <summary lang="en">Tuga Filmes tv</summary>
+    <description lang="en">Filmes e Series.</description>
+    <platform>all</platform>
+  </extension>
+</addon>
 </addons>
