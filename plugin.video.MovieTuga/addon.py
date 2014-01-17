@@ -140,6 +140,7 @@ def encontrar_fontes_filmes(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def encontrar_videos_filmes(name,url):
+        colecao = 'nao'
         addDir1(name,'','',iconimage,False,'')
         addDir1('','','',iconimage,False,'')
         conta_id_video = 0
@@ -160,9 +161,20 @@ def encontrar_videos_filmes(name,url):
                                                 conta_id_video = 0
                                                 cd = cd.replace('Filme Aqui','')
                                                 addDir1('[COLOR blue]' + cd + '[/COLOR]','','',iconimage,False,'')
+                                        if 'Cole' in cd:
+                                                conta_id_video = 0
+                                                colecao = 'sim'
+                                                #addDir1('[COLOR blue]' + cd + '[/COLOR]','','',iconimage,False,'')
                                 else:
                                         url_video_url_id = url_video_url_id.replace('"','')
-                                url_video = 'http:' + url_video_url_id
+                                if colecao == 'sim' and (('Breve' or 'breve') not in cd):
+                                        if 'Cole' not in cd:
+                                                conta_id_video = 0
+                                                addDir1('[COLOR blue]' + cd + ':[/COLOR]','','',iconimage,False,'')
+                                if 'http:' not in url_video_url_id:
+                                        url_video = 'http:' + url_video_url_id
+                                else:
+                                        url_video = url_video_url_id
                                 #addDir(url_video,url,1,iconimage,'','')
                                 try:
                                         fonte = abrir_url(url_video)
