@@ -137,6 +137,8 @@ def encontrar_fontes_filmes(url):
 		addDir("[B]Página Seguinte >>[/B]",proxima[0].replace('#038;',''),3,"",'','')
 	except: pass
 
+
+
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def encontrar_videos_filmes(name,url):
