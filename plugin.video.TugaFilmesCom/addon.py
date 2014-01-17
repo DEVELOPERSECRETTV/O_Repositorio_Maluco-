@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-# Copyright 2014 OMaluco 
+# Copyright 2014 OMaluco
+#
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,8 +18,8 @@
 #
 #
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
+# Créditos: Este addon foi desenvolvido a partir do addon PT Video Mashup desenvolvido por enen92
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
-
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver
