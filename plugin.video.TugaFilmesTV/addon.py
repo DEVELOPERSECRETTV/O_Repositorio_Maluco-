@@ -71,7 +71,7 @@ def Menu_M18():
         addDir1('[B][COLOR blue]Menu M+18[/COLOR][/B]','','',artfolder + 'banner.png',False,'')
         addDir1('','','',artfolder + 'banner.png',False,'')
 	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://extraporn.net/',23,artfolder + 'banner.png','nao','')
-	addDir('[COLOR yellow]Categorias[/COLOR]','url',12,artfolder + 'banner.png','nao','')
+	addDir('[COLOR yellow]Categorias[/COLOR]','url',21,artfolder + 'banner.png','nao','')
         addDir('[COLOR yellow]30 mais Recentes[/COLOR]','url',22,artfolder + 'banner.png','nao','')
         addDir1('','','',artfolder + 'banner.png',False,'')
 	addDir('Pesquisar','http://extraporn.net/?s=',25,artfolder + 'banner.png','nao','')
@@ -94,7 +94,7 @@ def Menu_Filmes_Top_5():
                                 qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                                 ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                                 thumbnail = re.compile('src="(.+?)"').findall(item)
-                                #print urletitulo,thumbnail
+                                print urletitulo,thumbnail
                                 try:
                                         if "Temporada" in urletitulo[0]:
                                                 num_mode = 13

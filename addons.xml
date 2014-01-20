@@ -14,7 +14,7 @@
 	</extension>
 </addon>
 
-<addon id="plugin.video.MovieTuga" name="MovieTuga" version="0.0.5" provider-name="OMaluco">
+<addon id="plugin.video.MovieTuga" name="MovieTuga" version="0.0.6" provider-name="OMaluco">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.urlresolver" version="1.0.5"/>
@@ -26,12 +26,12 @@
     <language>en</language>
     <platform>all</platform>
     <summary lang="en">Movie Tuga</summary>
-    <description lang="en">Filmes</description>
+    <description lang="en">Filmes do site www.Movie-Tuga.blogspot.pt</description>
     <platform>all</platform>
   </extension>
 </addon>
 
-<addon id="plugin.video.TugaFilmesCom" name="Tuga-Filmes.com" version="0.0.4" provider-name="OMaluco">
+<addon id="plugin.video.TugaFilmesCom" name="Tuga-Filmes.com" version="0.0.5" provider-name="OMaluco">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.urlresolver" version="1.0.5"/>
@@ -43,12 +43,12 @@
     <language>en</language>
     <platform>all</platform>
     <summary lang="en">Tuga Filmes Com</summary>
-    <description lang="en">Filmes</description>
+    <description lang="en">Filmes do site www.Tuga-Filmes.com</description>
     <platform>all</platform>
   </extension>
 </addon>
 
-<addon id="plugin.video.TugaFilmesTV" name="Tuga-Filmes.tv" version="0.0.4" provider-name="OMaluco">
+<addon id="plugin.video.TugaFilmesTV" name="Tuga-Filmes.tv" version="0.0.5" provider-name="OMaluco">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.urlresolver" version="1.0.5"/>
@@ -60,7 +60,7 @@
     <language>en</language>
     <platform>all</platform>
     <summary lang="en">Tuga Filmes tv</summary>
-    <description lang="en">Filmes e Series.</description>
+    <description lang="en">Filmes e Series do site www.Tuga-Filmes.tv</description>
     <platform>all</platform>
   </extension>
 </addon>
