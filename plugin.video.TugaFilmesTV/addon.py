@@ -138,12 +138,13 @@ def Menu_Series_A_a_Z():
 def Menu_M18_Categorias():
         url_categorias = 'http://extraporn.net/'
         html_categorias_source = abrir_url(url_categorias)
-	html_items_categorias = re.findall("<div class=\'widget Label\' id=\'Label1\'>\n<h2>Categorias</h2>(.*?)<div class=\'clear\'>", html_categorias_source, re.DOTALL)
+	html_items_categorias = re.findall('<div id="categories-3" class="widget_categories">(.*?)</option>\n</select>', html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
-                filmes_por_categoria = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(item_categorias)
-                for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ',endereco_categoria,3,artfolder + 'banner.png','nao','')
+                filmes_por_categoria = re.compile('<option class="level-0" value=".+?">(.+?)</option>').findall(item_categorias)
+                for nome_categoria in filmes_por_categoria:
+                        endereco_categoria = 'http://extraporn.net/category/' + nome_categoria
+                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ',endereco_categoria,23,artfolder + 'banner.png','nao','')
 
 def Menu_M18_30_Recentes():
         url_recente = 'http://extraporn.net/'
