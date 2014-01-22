@@ -47,7 +47,11 @@ def MenuPrincipal():
         addDir('[COLOR yellow]Recentes[/COLOR]','http://www.tuga-filmes.tv',3,artfolder + 'banner.png','nao','')
         addDir1('','','',artfolder + 'banner.png',False,'')
 	addDir('Pesquisar','http://www.tuga-filmes.tv/search?q=',5,artfolder + 'banner.png','nao','')
+	addDir('[COLOR brown]» Ver ChangeLog «[/COLOR]','url',27,artfolder + 'banner.png','nao','')
 
+def ChangeLog():
+        addDir1('[B][COLOR blue]Versão 0.0.7[/COLOR][/B]- Adicionado suporte para Dropvideo','','',artfolder + 'banner.png',False,'')
+ 
 def Menu_Filmes():
         addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'banner.png',False,'')
         addDir1('','','',artfolder + 'banner.png',False,'')
@@ -211,15 +215,10 @@ def encontrar_fontes_pesquisa(url,pesquisou):
                                 addDir('[B][COLOR green]- ' + urletitulo[0][1] + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
 			except: pass
 	else:
-		items = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(html_source)
-		for endereco,nome in items:
-                        if "Temporada" in nome:
-                                num_mode = 13
-                        else:
-                                num_mode = 4
-			addDir(nome,endereco,num_mode,'','','')
+		addDir1('[B][COLOR red]- No Match Found -[/COLOR][/B]','','','',False,'')
 	addDir1('','','',artfolder + 'banner.png',False,'')
 	addDir('Nova Pesquisa','http://www.tuga-filmes.tv/search?q=',5,artfolder + 'banner.png','nao','')
+	#addDir('[COLOR yellow]Menu Anterior >>[/COLOR]','url',8,artfolder + 'banner.png','','')
 
 def encontrar_fontes_pesquisa_M18(url,pesquisou):
         pesquisado = pesquisou.replace('%20',' ')
@@ -320,7 +319,7 @@ def resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
 		try:
                         url = 'http://dropvideo.com/embed/' + id_video
 			print url
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,1,iconimage,'','')
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,1,iconimage,'','')
 		except:pass
 	if "streamin.to" in url:
                 try:
@@ -467,7 +466,7 @@ def resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href):
 		try:
                         url = 'http://dropvideo.com/embed/' + id_video
 			print url
-			addDir('[B][COLOR green]' + nome_cada_episodio + '[/COLOR] - Fonte : [COLOR yellow](DropVideo)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,1,iconimage,'','')
+			addDir('[B][COLOR green]' + nome_cada_episodio + '[/COLOR] - Fonte : [COLOR yellow](DropVideo)[/COLOR][/B]',url,1,iconimage,'','')
 		except:pass
 	if "streamin.to" in url:
                 try:
@@ -613,6 +612,21 @@ def play_movie(url,name,iconimage,checker,fanart):
 			if source: 
 				url = source.resolve()
     			else: url = ''
+		except: pass
+	if "dropvideo" in url:
+		try:
+			iframe_url = url
+			print iframe_url
+			link3 = abrir_url(iframe_url)
+			tit=re.compile('var vtitle = "(.+?)"').findall(link3)
+			match=re.compile('var vurl = "(.+?)"').findall(link3)
+			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+			if subtitle == []:
+				checker = ''
+				url = match[0]
+			else:
+				checker = subtitle[0]
+				url = match[0]
 		except: pass
 	if "putlocker" in url:
                 try:
@@ -864,6 +878,9 @@ elif mode==25:
 
 elif mode==26:
         encontrar_fontes_pesquisa_M18(url,pesquisou)
+
+elif mode==27:
+        ChangeLog()
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
