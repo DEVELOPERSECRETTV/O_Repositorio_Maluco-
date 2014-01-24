@@ -44,7 +44,7 @@ def MenuPrincipal():
         addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','','',artfolder + 'banner1.png',False,'')
         addDir1('','','',artfolder + 'banner1.png',False,'')
 	addDir('[COLOR yellow]Menu Filmes[/COLOR]','url',8,artfolder + 'banner1.png','nao','')
-	addDir('[COLOR yellow]Animação[/COLOR]','http://www.tuga-filmes.com/search/label/Anima%C3%A7%C3%A3o',3,artfolder + 'banner1.png','nao','')
+	addDir('[COLOR yellow]Animação[/COLOR]','http://www.tuga-filmes.com/search/label/Anima%C3%A7%C3%A3o?max-results=20',3,artfolder + 'banner1.png','nao','')
         addDir1('','','',artfolder + 'banner1.png',False,'')
 	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',5,artfolder + 'banner1.png','nao','')
 
@@ -151,15 +151,66 @@ def encontrar_fontes_filmes(url):
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
-	items = re.findall("<div id=\'titledata\'>(.*?)</span><br />", html_source, re.DOTALL)
+	items = re.findall("<div id=\'titledata\'>(.*?)<b>ASSISTIR", html_source, re.DOTALL)
 	if items != []:
 		print len(items)
 		for item in items:
 			urletitulo = re.compile("<a href=\'(.+?)\' title=.+?>Assistir Online - </div>(.+?)<div id=\'player\'>").findall(item)
+			qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
 			thumbnail = re.compile('src="(.+?)"').findall(item)
 			print urletitulo,thumbnail
+			ano = 'Ano'
+			qualidade = ''
+			e_qua = 'nao'
+			calid = ''
+                        for q_a in qualidade_ano:
+                                a_q = re.compile('\d+')
+                                qq_aa = a_q.findall(q_a)
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) == 4:
+                                                ano = q_a_q_a
+                        quali = re.compile('\w+')
+                        qualid = quali.findall(q_a)
+                        for qua_qua in qualid:
+                                if len(qua_qua) == 4 and qua_qua == ano:
+                                        e_qua = 'sim'
+                                        qua_qua = ''
+                                        espaco = ''
+                                if e_qua == 'sim':
+                                        qualidade = qualidade + espaco + qua_qua
+                                        espaco = ' '
+                        if len(ano) < 4:
+                                ano = 'Ano'
+                        if qualidade == ' PT PT': qualidade = ' PT-PT'
+                        if qualidade == '':
+                                quali_titi = urletitulo[0][1].replace('á','a')
+                                quali = re.compile('\w+')
+                                qualid = quali.findall(q_a)
+                                for qua_qua in qualid:
+                                        qua_qua = str.capitalize(qua_qua)
+                                        calid = calid + ' ' + qua_qua
+                                tita = re.compile('\w+')
+                                titalo = tita.findall(quali_titi)
+                                for tt in titalo:
+                                        tt = str.capitalize(tt)
+                                        if tt in calid:
+                                                qualidade = re.sub(tt,'',calid)
+                                                calid = re.sub(tt,'',calid)
+                                quatit = re.compile('\s+')
+                                qualititulo = quatit.findall(qualidade)
+                                for q_t in qualititulo:
+                                        if len(q_t)>1:
+                                                qualidade = qualidade.replace(q_t,' ')
+                                if qualidade == ' Pt Pt':
+                                        qualidade = ' PT-PT'
+                        if qualidade == '':
+                                qualidade = qualidade_ano[0].replace('.',' ')                 
+                        if qualidade_ano[0] == '':
+                                qualidade = ''
+                        #if 'Pt Pt' in qualidade:
+                                #qualidade = qualidade.replace('Pt Pt','PT-PT')
 			try:
-				addDir(urletitulo[0][1].replace('&#8217;',"'"),urletitulo[0][0],4,thumbnail[0].replace('s72-c','s320').replace('.gif','.jpg'),'','')
+				addDir('[B][COLOR green]' + urletitulo[0][1].replace('&#8217;',"'") + '[/COLOR][/B][COLOR yellow] ( ' + ano + ' )[/COLOR][COLOR red] (' + qualidade + ' )[/COLOR]',urletitulo[0][0],4,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
 			except: pass
 	else:
 		items = re.compile("<a href=\'(.+?)\' title=.+?>Assistir Online - </div>(.+?)<div id=\'player\'>").findall(html_source)
@@ -168,7 +219,7 @@ def encontrar_fontes_filmes(url):
 	proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
 	try:
                 addDir1('','','','',False,'')
-		addDir("[B][COLOR red]Página Seguinte >>[/B][/COLOR]",proxima[0].replace('#038;',''),3,"",'','')
+		addDir("[B]Página Seguinte >>[/B]",proxima[0].replace('#038;',''),3,"",'','')
 	except: pass
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
