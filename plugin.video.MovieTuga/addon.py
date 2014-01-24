@@ -41,7 +41,7 @@ def MenuPrincipal():
         addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','','',artfolder + 'banner.png',False,'')
         addDir1('','','',artfolder + 'banner.png',False,'')
 	addDir('[COLOR yellow]Menu Filmes[/COLOR]','url',6,artfolder + 'banner.png','nao','')
-	addDir('[COLOR yellow]Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',3,artfolder + 'banner.png','nao','')
+	addDir('[COLOR yellow]Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao?&max-results=15',3,artfolder + 'banner.png','nao','')
         addDir1('','','',artfolder + 'banner.png',False,'')
 	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',5,artfolder + 'banner.png','nao','')
 
@@ -63,7 +63,7 @@ def Menu_Filmes_Por_Categorias():
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<a href=\'(.+?)\' title=\'.+?\'>(.+?)</a>").findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria,3,artfolder + 'banner.png','nao','')
+                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria + '?&max-results=15',3,artfolder + 'banner.png','nao','')
 
        
 
@@ -94,14 +94,18 @@ def encontrar_fontes_pesquisa(url):
 			if 'http' not in url[0]:
                                 url[0] = 'http:' + url[0] 
                         titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
-                        qualidade = re.compile("<strong>Qualidade:</strong>(.+?) &#8211; (.+?)</div>").findall(item)
+                        if 'Qualidade:' in item:
+                                qualidade = re.compile("<strong>Qualidade:</strong>(.+?)</div>").findall(item)
+                                qualidade_filme = qualidade[0].replace('&#8211;',"-")
+                        else:
+                                qualidade_filme = ''
                         ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
 			thumbnail = re.compile('src="(.+?)"').findall(item)
 			print url,thumbnail
 			titulo[0] = titulo[0].replace('&#8217;',"'")
                         titulo[0] = titulo[0].replace('&#8211;',"-")
 			try:
-				addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0][0] + ' - ' + qualidade[0][1] + ')[/COLOR]',url[0],4,thumbnail[0].replace('s72-c','s320'),'','')
+				addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],4,thumbnail[0].replace('s72-c','s320'),'','')
 			except: pass
 
 
@@ -119,23 +123,28 @@ def encontrar_fontes_filmes(url):
 	if items != []:
 		print len(items)
 		for item in items:
-			url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
-			if 'http' not in url[0]:
+                        url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
+                        if 'http' not in url[0]:
                                 url[0] = 'http:' + url[0] 
                         titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
-                        qualidade = re.compile("<strong>Qualidade:</strong>(.+?) &#8211; (.+?)</div>").findall(item)
+                        if 'Qualidade:' in item:
+                                qualidade = re.compile("<strong>Qualidade:</strong>(.+?)</div>").findall(item)
+                                qualidade_filme = qualidade[0].replace('&#8211;',"-")
+                        else:
+                                qualidade_filme = ''
                         ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
-			thumbnail = re.compile('src="(.+?)"').findall(item)
-			print url,thumbnail
-			titulo[0] = titulo[0].replace('&#8217;',"'")
+                        thumbnail = re.compile('src="(.+?)"').findall(item)
+                        print url,thumbnail
+                        titulo[0] = titulo[0].replace('&#8217;',"'")
                         titulo[0] = titulo[0].replace('&#8211;',"-")
-			try:
-				addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0][0] + ' - ' + qualidade[0][1] + ')[/COLOR]',url[0],4,thumbnail[0].replace('s72-c','s320'),'','')
-			except: pass
+                        try:
+                                addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],4,thumbnail[0].replace('s72-c','s320'),'','')
+                        except: pass
 	proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
 	try:
+                proxima_p = proxima[0].replace('%3A',':')
                 addDir1('','','','',False,'')
-		addDir("[B]Página Seguinte >>[/B]",proxima[0].replace('#038;',''),3,"",'','')
+		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),3,"",'','')
 	except: pass
 
 
