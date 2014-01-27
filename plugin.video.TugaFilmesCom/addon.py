@@ -50,6 +50,7 @@ def MenuPrincipal():
 	addDir('[COLOR brown]» Ver ChangeLog «[/COLOR]','url',19,artfolder + 'banner.png','nao','')
 
 def ChangeLog():
+        addDir1('[B][COLOR blue]Versão 0.0.8[/COLOR][/B]- Menu Filmes M+18 removido, podendo ser ativado a pardir das definições do addon.','','',artfolder + 'banner.png',False,'')
         addDir1('[B][COLOR blue]Versão 0.0.7[/COLOR][/B]- Adicionado o Ano e a qualidade dos filmes.','','',artfolder + 'banner.png',False,'')
         addDir1('- Resolvido bug que não permitia vizualizar todas as páginas com os filmes.','','',artfolder + 'banner.png',False,'')
 
@@ -62,7 +63,8 @@ def Menu_Filmes():
         addDir('[COLOR yellow]Top 10[/COLOR]','url',10,artfolder + 'banner1.png','nao','')
         #addDir('[COLOR yellow]Brevemente[/COLOR]','url',12,artfolder + 'banner1.png','nao','')
 	addDir('[COLOR yellow]Categorias[/COLOR]','url',9,artfolder + 'banner1.png','nao','')
-	addDir('[B][COLOR red]M+18[/B][/COLOR]','url',17,artfolder + 'banner1.png','nao','')
+	if selfAddon.getSetting('hide-porno') == "false":
+                addDir('[B][COLOR red]M+18[/B][/COLOR]','url',17,artfolder + 'banner1.png','nao','')
         addDir1('','','',artfolder + 'banner1.png',False,'')
 	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',5,artfolder + 'banner1.png','nao','')
 

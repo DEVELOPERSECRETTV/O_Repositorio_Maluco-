@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+   <category label="Definicoes gerais">
+      <setting id="hide-porno" type="bool" label="Esconder menu porno" default="true"/>
+   </category>
+</settings>
