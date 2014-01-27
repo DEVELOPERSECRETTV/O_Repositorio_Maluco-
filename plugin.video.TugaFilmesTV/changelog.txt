@@ -1,7 +1,5 @@
-
-
 >Versão 0.0.8 - Menu Filmes M+18 removido, podendo ser ativado a pardir das definições do addon.
-              - Adicionada informação de Audio aos filmes.<
+              - Adicionada informação de Audio aos filmes.
 
 
->Versão 0.0.7 - Adicionado suporte para Dropvideo.<
+Versão 0.0.7 - Adicionado suporte para Dropvideo.<
