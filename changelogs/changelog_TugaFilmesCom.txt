@@ -1,4 +1,4 @@
 >bbbbb<
->[B][COLOR blue]v.0.0.8[/COLOR][/B] - Menu Filmes M+18 removido, podendo ser ativado a pardir das definições do addon.<
+>[B][COLOR blue]v.0.0.8[/COLOR][/B] - Menu Filmes M+18 removido, podendo ser ativado a partir das definições do addon.<
 >bbbbb<
 >[B][COLOR blue]V.0.0.7[/COLOR][/B] - Adicionado o Ano e a qualidade dos filmes.<
