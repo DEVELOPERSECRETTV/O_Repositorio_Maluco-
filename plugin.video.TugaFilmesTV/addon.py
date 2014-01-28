@@ -47,12 +47,7 @@ def MenuPrincipal():
         addDir('[COLOR yellow]Recentes[/COLOR]','http://www.tuga-filmes.tv',3,artfolder + 'banner.png','nao','')
         addDir1('','','',artfolder + 'banner.png',False,'')
 	addDir('Pesquisar','http://www.tuga-filmes.tv/search?q=',5,artfolder + 'banner.png','nao','')
-	addDir('[COLOR brown]» Ver ChangeLog «[/COLOR]','url',27,artfolder + 'banner.png','nao','')
-
-def ChangeLog():
-        addDir1('[B][COLOR blue]Versão 0.0.8[/COLOR][/B]- Menu Filmes M+18 removido, podendo ser ativado a pardir das definições do addon.','','',artfolder + 'banner.png',False,'')
-        addDir1('- Adicionada informação de Audio aos filmes','','',artfolder + 'banner.png',False,'')
-        addDir1('[B][COLOR blue]Versão 0.0.7[/COLOR][/B]- Adicionado suporte para Dropvideo','','',artfolder + 'banner.png',False,'')
+	addDir('[COLOR brown]Ver ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_TugaFilmesTV.txt',28,artfolder + 'banner.png','nao','')
  
 def Menu_Filmes():
         addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'banner.png',False,'')
@@ -63,7 +58,6 @@ def Menu_Filmes():
 	addDir('[COLOR yellow]Top 5 da Semana[/COLOR]','url',19,artfolder + 'banner.png','nao','')
 	if selfAddon.getSetting('hide-porno') == "false":
 			addDir('[B][COLOR red]M+18[/B][/COLOR]','url',20,artfolder + 'banner.png','nao','')
-	#addDir('[B][COLOR red]M+18[/B][/COLOR]','url',20,artfolder + 'banner.png','nao','')
         addDir1('','','',artfolder + 'banner.png',False,'')
 	addDir('Pesquisar','http://www.tuga-filmes.tv/search?q=',5,artfolder + 'banner.png','nao','')
 
@@ -278,28 +272,29 @@ def encontrar_fontes_filmes(url):
 	if items != []:
 		print len(items)
 		for item in items:
-                        audio_filme = ''
-			urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)[(]").findall(item)
-			qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
-			ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
-			audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
-			if audio != []:
-                                if 'Portug' in audio[0]:
-                                        audio_filme = ': PT-PT'
-                                else:
-                                        audio_filme = audio[0]
-			thumbnail = re.compile('src="(.+?)"').findall(item)
-			print urletitulo,thumbnail
-			nome = urletitulo[0][1]
-			nome = nome.replace('&#8217;',"'")
-                        nome = nome.replace('&#8211;',"-")
-			try:
-                                if "Temporada" in urletitulo[0][1]:
-                                        num_mode = 13
-                                else:
-                                        num_mode = 4
-				addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')
-			except: pass
+                        if 'Nomeados' and 'TFCinemaHD' not in item:
+                                audio_filme = ''
+                                urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+                                qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
+                                ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
+                                audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
+                                if audio != []:
+                                        if 'Portug' in audio[0]:
+                                                audio_filme = ': PT-PT'
+                                        else:
+                                                audio_filme = audio[0]
+                                thumbnail = re.compile('src="(.+?)"').findall(item)
+                                print urletitulo,thumbnail
+                                nome = urletitulo[0][1]
+                                nome = nome.replace('&#8217;',"'")
+                                nome = nome.replace('&#8211;',"-")
+                                try:
+                                        if "Temporada" in urletitulo[0][1]:
+                                                num_mode = 13
+                                        else:
+                                                num_mode = 4
+                                        addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                                except: pass
 	else:
 		items = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(html_source)
 		for endereco,nome in items:
@@ -423,8 +418,11 @@ def encontrar_fontes_series_recentes(url):
 			qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
 			thumbnail = re.compile('src="(.+?)"').findall(item)
 			print urletitulo,thumbnail
+			nome = urletitulo[0][1]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
 			try:
-				addDir('[B][COLOR green]' + urletitulo[0][1] + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],13,thumbnail[0].replace('s72-c','s320'),'','')
+				addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],13,thumbnail[0].replace('s72-c','s320'),'','')
 			except: pass
 	else:
 		items = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(html_source)
@@ -453,8 +451,11 @@ def encontrar_fontes_series_A_a_Z(url):
 			qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
 			thumbnail = re.compile('src="(.+?)"').findall(item)
 			print urletitulo,thumbnail
+			nome = urletitulo[0][1]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
 			try:
-				addDir('[B][COLOR green]' + urletitulo[0][1] + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],13,thumbnail[0].replace('s72-c','s320'),'','')
+				addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],13,thumbnail[0].replace('s72-c','s320'),'','')
 			except: pass
 	else:
 		items = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(html_source)
@@ -775,7 +776,45 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         return ok
 
 
-        
+
+def TextBoxes(url):
+        texto = ''
+        try:
+                texto_url = abrir_url(url)
+        except: texto_url = ''
+        texto_items = re.compile('>(.+?)<').findall(texto_url)
+        if texto_items != []:
+                for linhas in texto_items:
+                        texto = texto + linhas + '\n'
+        texto = texto.replace('bbbbb','\n')
+	texto = texto.replace('\xe7','ç')
+	texto = texto.replace('\xf5','õ')	
+	texto = texto.replace('\xe3','ã')		
+	class TextBox():
+		"""Thanks to BSTRDMKR for this code:)"""
+		# constants
+		WINDOW = 10147		
+		CONTROL_LABEL = 1
+		CONTROL_TEXTBOX = 5
+		
+		def __init__( self, *args, **kwargs):
+			# activate the text viewer window
+			xbmc.executebuiltin( "ActivateWindow(%d)" % ( self.WINDOW, ) )
+			# get window
+			self.win = xbmcgui.Window( self.WINDOW )
+			# give window time to initialize
+			xbmc.sleep( 500 )
+			self.setControls()
+
+		def setControls( self ):
+			# set heading
+			self.win.getControl( self.CONTROL_LABEL ).setLabel('[COLOR brown]ChangeLog: [/COLOR][B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv')
+			self.win.getControl( self.CONTROL_TEXTBOX ).setText(texto)
+			return
+	TextBox()
+
+
+	
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -905,6 +944,9 @@ elif mode==26:
 
 elif mode==27:
         ChangeLog()
+
+elif mode==28:
+        TextBoxes(url)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 

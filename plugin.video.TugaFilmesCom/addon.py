@@ -47,12 +47,7 @@ def MenuPrincipal():
 	addDir('[COLOR yellow]Animação[/COLOR]','http://www.tuga-filmes.com/search/label/Anima%C3%A7%C3%A3o?max-results=20',3,artfolder + 'banner1.png','nao','')
         addDir1('','','',artfolder + 'banner1.png',False,'')
 	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',5,artfolder + 'banner1.png','nao','')
-	addDir('[COLOR brown]» Ver ChangeLog «[/COLOR]','url',19,artfolder + 'banner.png','nao','')
-
-def ChangeLog():
-        addDir1('[B][COLOR blue]Versão 0.0.8[/COLOR][/B]- Menu Filmes M+18 removido, podendo ser ativado a pardir das definições do addon.','','',artfolder + 'banner.png',False,'')
-        addDir1('[B][COLOR blue]Versão 0.0.7[/COLOR][/B]- Adicionado o Ano e a qualidade dos filmes.','','',artfolder + 'banner.png',False,'')
-        addDir1('- Resolvido bug que não permitia vizualizar todas as páginas com os filmes.','','',artfolder + 'banner.png',False,'')
+	addDir('[COLOR brown]ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_TugaFilmesCom.txt',20,artfolder + 'banner1.png','nao','')
 
 def Menu_Filmes():
         addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'banner1.png',False,'')
@@ -630,7 +625,45 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         return ok
 
 
-        
+
+def TextBoxes(url):
+        texto = ''
+        try:
+                texto_url = abrir_url(url)
+        except: texto_url = ''
+        texto_items = re.compile('>(.+?)<').findall(texto_url)
+        if texto_items != []:
+                for linhas in texto_items:
+                        texto = texto + linhas + '\n'
+        texto = texto.replace('bbbbb','\n')
+	texto = texto.replace('\xe7','ç')
+	texto = texto.replace('\xf5','õ')	
+	texto = texto.replace('\xe3','ã')		
+	class TextBox():
+		"""Thanks to BSTRDMKR for this code:)"""
+		# constants
+		WINDOW = 10147		
+		CONTROL_LABEL = 1
+		CONTROL_TEXTBOX = 5
+		
+		def __init__( self, *args, **kwargs):
+			# activate the text viewer window
+			xbmc.executebuiltin( "ActivateWindow(%d)" % ( self.WINDOW, ) )
+			# get window
+			self.win = xbmcgui.Window( self.WINDOW )
+			# give window time to initialize
+			xbmc.sleep( 500 )
+			self.setControls()
+
+		def setControls( self ):
+			# set heading
+			self.win.getControl( self.CONTROL_LABEL ).setLabel('[COLOR brown]ChangeLog: [/COLOR][B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com')
+			self.win.getControl( self.CONTROL_TEXTBOX ).setText(texto)
+			return
+	TextBox()
+
+
+	
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -737,6 +770,9 @@ elif mode==18:
 
 elif mode==19:
         ChangeLog()
+
+elif mode==20:
+        TextBoxes(url)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 

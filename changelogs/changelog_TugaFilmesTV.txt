@@ -1,4 +1,6 @@
 >bbbbb<
+>[B][COLOR blue]V.0.1.0[/COLOR][/B] - Anterior versão era o ficheiro errado - corrigido.<
+>bbbbb<
 >[B][COLOR blue]V.0.0.9[/COLOR][/B] - Changelog pode ser visto dentro e fora do addon.<
 >        - Resolvido link "Recentes" no Menu Principal.<
 >bbbbb<
