@@ -1,6 +1,11 @@
 
-V.0.0.8 - Menu Filmes M+18 removido, podendo ser ativado a pardir das definições do addon.
+
+[B][COLOR blue]V.0.0.9[/COLOR][/B] - Changelog pode ser visto dentro e fora do addon.
+        - Resolvido link "Recentes" no Menu Principal.
+
+
+[B][COLOR blue]V.0.0.8[/COLOR][/B] - Menu Filmes M+18 removido, podendo ser ativado a pardir das definições do addon.
         - Adicionada informação de Audio aos filmes.
 
 
-V.0.0.7 - Adicionado suporte para Dropvideo.
+[B][COLOR blue]V.0.0.7[/COLOR][/B] - Adicionado suporte para Dropvideo.

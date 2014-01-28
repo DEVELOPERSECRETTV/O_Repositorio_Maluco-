@@ -1,4 +1,7 @@
 >bbbbb<
+>[B][COLOR blue]V.0.0.9[/COLOR][/B] - Changelog pode ser visto dentro e fora do addon.<
+>        - Resolvido link "Recentes" no Menu Principal.<
+>bbbbb<
 >[B][COLOR blue]v.0.0.8[/COLOR][/B] - Menu Filmes M+18 removido, podendo ser ativado a partir das definições do addon.<
 >             - Adicionada informação de Audio aos filmes.<
 >bbbbb<
