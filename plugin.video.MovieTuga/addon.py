@@ -37,33 +37,34 @@ mensagemok = xbmcgui.Dialog().ok
 
 
 
-def MenuPrincipal():
-        addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','','',artfolder + 'banner.png',False,'')
-        addDir1('','','',artfolder + 'banner.png',False,'')
-	addDir('[COLOR yellow]Menu Filmes[/COLOR]','url',6,artfolder + 'banner.png','nao','')
-	addDir('[COLOR yellow]Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao?&max-results=15',3,artfolder + 'banner.png','nao','')
-        addDir1('','','',artfolder + 'banner.png',False,'')
-	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',5,artfolder + 'banner.png','nao','')
+def MVT_MenuPrincipal(artfolder):
+        addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','','',artfolder + 'banner2.png',False,'')
+        addDir1('','','',artfolder + 'banner2.png',False,'')
+	addDir('[COLOR yellow]Menu Filmes[/COLOR]','url',105,artfolder + 'banner2.png','nao','')
+	addDir('[COLOR yellow]Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao?&max-results=15',102,artfolder + 'banner2.png','nao','')
+        addDir1('','','',artfolder + 'banner2.png',False,'')
+	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',104,artfolder + 'banner2.png','nao','')
+	addDir('[COLOR brown]ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_MovieTuga.txt',108,artfolder + 'banner2.png','nao','')
 
-def Menu_Filmes():
-        addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'banner.png',False,'')
-        addDir1('','','',artfolder + 'banner.png',False,'')
-	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://www.movie-tuga.blogspot.pt/',3,artfolder + 'banner.png','nao','')
-	addDir('[COLOR yellow]Categorias[/COLOR]','url',7,artfolder + 'banner.png','nao','')
-        addDir1('','','',artfolder + 'banner.png',False,'')
-	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',5,artfolder + 'banner.png','nao','')
+def MVT_Menu_Filmes(artfolder):
+        addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'banner2.png',False,'')
+        addDir1('','','',artfolder + 'banner2.png',False,'')
+	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://www.movie-tuga.blogspot.pt/',102,artfolder + 'banner2.png','nao','')
+	addDir('[COLOR yellow]Categorias[/COLOR]','url',106,artfolder + 'banner2.png','nao','')
+        addDir1('','','',artfolder + 'banner2.png',False,'')
+	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',104,artfolder + 'banner2.png','nao','')
 
-def Menu_Filmes_Por_Categorias():
+def MVT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.movie-tuga.blogspot.pt/'
-        html_categorias_source = abrir_url(url_categorias)
-        addDir1('[B][COLOR blue]Categorias[/COLOR][/B]','','',artfolder + 'banner1.png',False,'')
-        addDir1('','','',artfolder + 'banner1.png',False,'')
+        html_categorias_source = MVT_abrir_url(url_categorias)
+        addDir1('[B][COLOR blue]Categorias[/COLOR][/B]','','',artfolder + 'banner2.png',False,'')
+        addDir1('','','',artfolder + 'banner21.png',False,'')
 	html_items_categorias = re.findall("<div id=\'menu-categorias\'>(.*?)</div>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<a href=\'(.+?)\' title=\'.+?\'>(.+?)</a>").findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria + '?&max-results=15',3,artfolder + 'banner.png','nao','')
+                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria + '?&max-results=15',102,artfolder + 'banner2.png','nao','')
 
        
 
@@ -72,19 +73,19 @@ def Menu_Filmes_Por_Categorias():
 
 
 
-def pesquisar_filmes():
+def MVT_pesquisar_filmes():
 	keyb = xbmc.Keyboard('', 'Escreva o parâmetro de pesquisa')
 	keyb.doModal()
 	if (keyb.isConfirmed()):
 		search = keyb.getText()
 		encode=urllib.quote(search)
 		url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode)
-		encontrar_fontes_pesquisa(url_pesquisa)
+		MVT_encontrar_fontes_pesquisa(url_pesquisa)
 
 		
-def encontrar_fontes_pesquisa(url):
+def MVT_encontrar_fontes_pesquisa(url):
 	try:
-		html_source = abrir_url(url)
+		html_source = MVT_abrir_url(url)
 	except: html_source = ''
 	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
 	if items != []:
@@ -105,7 +106,7 @@ def encontrar_fontes_pesquisa(url):
 			titulo[0] = titulo[0].replace('&#8217;',"'")
                         titulo[0] = titulo[0].replace('&#8211;',"-")
 			try:
-				addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],4,thumbnail[0].replace('s72-c','s320'),'','')
+				addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumbnail[0].replace('s72-c','s320'),'','')
 			except: pass
 
 
@@ -115,9 +116,9 @@ def encontrar_fontes_pesquisa(url):
 
 		
 
-def encontrar_fontes_filmes(url):
+def MVT_encontrar_fontes_filmes(url):
 	try:
-		html_source = abrir_url(url)
+		html_source = MVT_abrir_url(url)
 	except: html_source = ''
 	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
 	if items != []:
@@ -138,26 +139,26 @@ def encontrar_fontes_filmes(url):
                         titulo[0] = titulo[0].replace('&#8217;',"'")
                         titulo[0] = titulo[0].replace('&#8211;',"-")
                         try:
-                                addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],4,thumbnail[0].replace('s72-c','s320'),'','')
+                                addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumbnail[0].replace('s72-c','s320'),'','')
                         except: pass
 	proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
 	try:
                 proxima_p = proxima[0].replace('%3A',':')
                 addDir1('','','','',False,'')
-		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),3,"",'','')
+		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),102,"",'','')
 	except: pass
 
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_videos_filmes(name,url):
+def MVT_encontrar_videos_filmes(name,url):
         colecao = 'nao'
         addDir1(name,'','',iconimage,False,'')
         addDir1('','','',iconimage,False,'')
         conta_id_video = 0
         try:
-                fonte_video = abrir_url(url)
+                fonte_video = MVT_abrir_url(url)
         except: fonte_video = ''
         fontes_video = re.findall("<body>(.+?)</body>", fonte_video, re.DOTALL)
         #addDir(fontes_video[0],url,1,iconimage,'','')
@@ -189,7 +190,7 @@ def encontrar_videos_filmes(name,url):
                                         url_video = url_video_url_id
                                 #addDir(url_video,url,1,iconimage,'','')
                                 try:
-                                        fonte = abrir_url(url_video)
+                                        fonte = MVT_abrir_url(url_video)
                                 except: fonte = ''
                                 fontes = re.findall("<body>(.+?)</body>", fonte, re.DOTALL)
                                 for fonte_id in fontes:
@@ -199,7 +200,7 @@ def encontrar_videos_filmes(name,url):
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,1,iconimage,'','')
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
                                         if 'vidto' in fonte_id:
                                                 try:
@@ -207,7 +208,7 @@ def encontrar_videos_filmes(name,url):
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://vidto.me/' + id_video + '.html'
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,1,iconimage,'','')
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
                 else:
  	                if fonte_video:
@@ -218,7 +219,7 @@ def encontrar_videos_filmes(name,url):
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,1,iconimage,'','')
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
                                         if 'vidto' in fonte_id:
                                                 try:
@@ -226,7 +227,7 @@ def encontrar_videos_filmes(name,url):
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://vidto.me/' + id_video + '.html'
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,1,iconimage,'','')
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
 
 
@@ -236,7 +237,7 @@ def encontrar_videos_filmes(name,url):
 
 
 
-def play_movie(url,name,iconimage,checker,fanart):
+def MVT_play_movie(url,name,iconimage,checker,fanart):
         if "vidto.me" in url:
 		try:
 			sources = []
@@ -254,7 +255,7 @@ def play_movie(url,name,iconimage,checker,fanart):
 				iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
 			else: iframe_url = url
 			print iframe_url
-			link3 = abrir_url(iframe_url)
+			link3 = MVT_abrir_url(iframe_url)
 			match=re.compile('document.write\(unescape\("(.+?)"\)').findall(link3)
 			print match
 			tit=re.compile('<div id="title">&nbsp;&nbsp;&nbsp;(.+?)</div>').findall(link3)
@@ -285,7 +286,7 @@ def play_movie(url,name,iconimage,checker,fanart):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
-def abrir_url(url):
+def MVT_abrir_url(url):
 	req = urllib2.Request(url)
 	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
 	response = urllib2.urlopen(req)
@@ -295,7 +296,7 @@ def abrir_url(url):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
               
-def get_params():
+def MVT_get_params():
         param=[]
         paramstring=sys.argv[2]
         if len(paramstring)>=2:
@@ -350,13 +351,51 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         return ok
 
 
+
+def MVT_TextBoxes(url):
+        texto = ''
+        try:
+                texto_url = MVT_abrir_url(url)
+        except: texto_url = ''
+        texto_items = re.compile('>(.+?)<').findall(texto_url)
+        if texto_items != []:
+                for linhas in texto_items:
+                        texto = texto + linhas + '\n'
+        texto = texto.replace('bbbbb','\n')
+	texto = texto.replace('\xe7','ç')
+	texto = texto.replace('\xf5','õ')	
+	texto = texto.replace('\xe3','ã')		
+	class TextBox():
+		"""Thanks to BSTRDMKR for this code:)"""
+		# constants
+		WINDOW = 10147		
+		CONTROL_LABEL = 1
+		CONTROL_TEXTBOX = 5
+		
+		def __init__( self, *args, **kwargs):
+			# activate the text viewer window
+			xbmc.executebuiltin( "ActivateWindow(%d)" % ( self.WINDOW, ) )
+			# get window
+			self.win = xbmcgui.Window( self.WINDOW )
+			# give window time to initialize
+			xbmc.sleep( 500 )
+			self.setControls()
+
+		def setControls( self ):
+			# set heading
+			self.win.getControl( self.CONTROL_LABEL ).setLabel('[COLOR brown]ChangeLog: [/COLOR][B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]')
+			self.win.getControl( self.CONTROL_TEXTBOX ).setText(texto)
+			return
+	TextBox()
         
+
+
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
           
-params=get_params()
+params=MVT_get_params()
 url=None
 name=None
 mode=None
@@ -364,30 +403,23 @@ checker=None
 iconimage=None
 fanart=None
 
-try:
-        url=urllib.unquote_plus(params["url"])
-except:
-        pass
-try:
-        name=urllib.unquote_plus(params["name"])
-except:
-        pass
-try:
-        mode=int(params["mode"])
-except:
-        pass
-try:        
-        checker=urllib.unquote_plus(params["checker"])
-except:
-        pass
-try:        
-        iconimage=urllib.unquote_plus(params["iconimage"])
-except:
-        pass
-try:        
-        fanart=urllib.unquote_plus(params["fanart"])
-except:
-        pass
+try: url=urllib.unquote_plus(params["url"])
+except: pass
+
+try: name=urllib.unquote_plus(params["name"])
+except: pass
+
+try: mode=int(params["mode"])
+except: pass
+
+try: checker=urllib.unquote_plus(params["checker"])
+except: pass
+
+try: iconimage=urllib.unquote_plus(params["iconimage"])
+except: pass
+
+try: fanart=urllib.unquote_plus(params["fanart"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -395,34 +427,16 @@ print "Name: "+str(name)
 print "Checker: "+str(checker)
 print "Iconimage: "+str(iconimage)
 
-if mode==None or url==None or len(url)<1:
-        print ""
-        MenuPrincipal()
-
-elif mode==1:
-	print ""
-	play_movie(url,name,iconimage,checker,fanart)
-
-elif mode==2:
-	MenuPrincipal()
-
-elif mode==3:
-	encontrar_fontes_filmes(url)
-
-elif mode==4:
-	encontrar_videos_filmes(name,url)
-
-elif mode==5:
-        pesquisar_filmes()
-
-elif mode==6:
-        Menu_Filmes()
-
-elif mode==7:
-        Menu_Filmes_Por_Categorias()
-
-elif mode==8:
-        Menu_Filmes_Brevemente()
+if mode==None or url==None or len(url)<1: print ""; MVT_MenuPrincipal(artfolder)
+elif mode == 100: print ""; MVT_play_movie(url,name,iconimage,checker,fanart)
+elif mode == 101: MVT_MenuPrincipal(artfolder)
+elif mode == 102: MVT_encontrar_fontes_filmes(url)
+elif mode == 103: MVT_encontrar_videos_filmes(name,url)
+elif mode == 104: MVT_pesquisar_filmes()
+elif mode == 105: MVT_Menu_Filmes(artfolder)
+elif mode == 106: MVT_Menu_Filmes_Por_Categorias(artfolder)
+elif mode == 107: MVT_Menu_Filmes_Brevemente(artfolder)
+elif mode == 108: MVT_TextBoxes(url)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
