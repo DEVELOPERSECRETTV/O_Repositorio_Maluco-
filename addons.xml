@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="o.repository.maluco" name="O Repositorio Maluco" version="1.0.7" provider-name="OMaluco">
+<addon id="o.repository.maluco" name="O Repositorio Maluco" version="1.0.8" provider-name="OMaluco">
 	<extension point="xbmc.addon.repository" name="Filmes Series Tuga Add-on Repository">
 		<info compressed="false">http://o-repositorio-maluco.googlecode.com/svn/trunk/addons.xml</info>
 		<checksum>http://o-repositorio-maluco.googlecode.com/svn/trunk/addons.xml.md5</checksum>
@@ -27,6 +27,23 @@
     <platform>all</platform>
     <summary lang="en">Movie Tuga</summary>
     <description lang="en">Filmes do site www.Movie-Tuga.blogspot.pt</description>
+    <platform>all</platform>
+  </extension>
+</addon>
+
+<addon id="plugin.video.Sites_dos_Portugas" name="[COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR]" version="0.0.1" provider-name="OMaluco">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.urlresolver" version="1.0.5"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="addon.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <language>en</language>
+    <platform>all</platform>
+    <summary lang="en">Filmes dos Portugas</summary>
+    <description lang="en">Mashup dos addons Tuga-Filmes.com, Tuga-Filmes.tv e Movituga</description>
     <platform>all</platform>
   </extension>
 </addon>
