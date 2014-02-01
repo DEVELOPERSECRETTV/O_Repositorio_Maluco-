@@ -1,3 +1,5 @@
+v0.0.3 - Icon e mais umas limpezas.
+
 v0.0.2 - Erro de ficheiro, resolvido.
 
 v0.0.1 - Nasceu o
