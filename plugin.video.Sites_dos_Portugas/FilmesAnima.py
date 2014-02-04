@@ -31,30 +31,32 @@ mensagemok = xbmcgui.Dialog().ok
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def pesquisar():
-	keyb = xbmc.Keyboard('', 'Escreva o parâmetro de pesquisa')
-	keyb.doModal()
-	if (keyb.isConfirmed()):
-		search = keyb.getText()
-		encode=urllib.quote(search)
-		url_pesquisa = 'http://www.tuga-filmes.tv/search?q=' + str(encode)
-		pesquisou = str(encode)
-		encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
-		url_pesquisa = 'http://www.tuga-filmes.com/search?q=' + str(encode)
-		encontrar_fontes_filmes_TFC(url_pesquisa)
-		url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode)
-		encontrar_fontes_pesquisa_MVT(url_pesquisa)
-		addDir1('','','',artfolder + 'banner.png',False,'')		
-                addDir('Nova Pesquisa','inicio',1,artfolder + 'banner.png','nao','')
-                addDir('Menu Principal','','',artfolder + 'banner.png','nao','')
+def FILMES_ANIMACAO_pesquisar(nome_pesquisa):
+        pesquisou = nome_pesquisa
+        a_q = re.compile('\w+')
+        qq_aa = a_q.findall(nome_pesquisa)
+        nome_pesquisa = ''
+        for q_a_q_a in qq_aa:
+                #if len(q_a_q_a) > 2 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3':
+                if len(q_a_q_a) > 2:
+                        nome_pesquisa = nome_pesquisa + ' ' + q_a_q_a
+        encode=urllib.quote(nome_pesquisa)
+	url_pesquisa = 'http://www.tuga-filmes.tv/search?q=' + str(encode)
+	FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
+	url_pesquisa = 'http://www.tuga-filmes.com/search?q=' + str(encode)
+	FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url_pesquisa)
+	url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode)
+	FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url_pesquisa)
+	url_pesquisa = 'http://toppt.net/?s=' + str(encode)
+	FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url_pesquisa)
+	addDir1('','','',artfolder + 'banner.png',False,'')		
+        addDir('Pesquisar','inicio',1,artfolder + 'banner.png','nao','')
+        addDir('Menu Principal','','',artfolder + 'banner.png','nao','')
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_pesquisa_TFV(url,pesquisou):
-        pesquisado = pesquisou.replace('%20',' ')
-        addDir1('[B][COLOR blue]Pesquisou : [/COLOR]( ' + pesquisado + ' )[/B]','','',artfolder + 'banner.png',False,'')
-        addDir1('','','',artfolder + 'banner.png',False,'')
+def FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url,pesquisou):
         addDir1('[B][COLOR blue]----- [/COLOR][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv[B][COLOR blue] -----[/COLOR][/B]','','','',False,'')
 	try:
 		html_source = abrir_url(url)
@@ -80,6 +82,9 @@ def encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                 else:
                                         audio_filme = audio[0]
 			thumbnail = re.compile('src="(.+?)"').findall(item)
+			generos = re.compile('<b>G.+?nero</b>:(.+?)<br />').findall(item)
+			if generos: genero = generos[0]
+			else: genero = ''
 			print urletitulo,thumbnail
 			nome = urletitulo[0][1]
 			nome = nome.replace('&#8217;',"'")
@@ -100,16 +105,17 @@ def encontrar_fontes_pesquisa_TFV(url,pesquisou):
                         else:
                                 qualidade = ''
 			try:
-                                addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
+                                if 'Anima' in genero or 'anima' in genero: addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
 			except: pass
+			
 	else:
-		addDir1('[B][COLOR red]- No Match Found -[/COLOR][/B]','','','',False,'')
+		addDir1('- No Match Found -','','','',False,'')
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_filmes_TFC(url):
+def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url):
         addDir1('[B][COLOR blue]----- [/COLOR][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com[B][COLOR blue] -----[/COLOR][/B]','','','',False,'')
         pt_en = 0
 	try:
@@ -202,13 +208,13 @@ def encontrar_fontes_filmes_TFC(url):
 				addDir('[B][COLOR green]- ' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
 			except: pass
 	else:
-		addDir1('[B][COLOR red]- No Match Found -[/COLOR][/B]','','','',False,'')
+		addDir1('- No Match Found -','','','',False,'')
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_pesquisa_MVT(url):
+def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url):
         addDir1('[B][COLOR blue]----- [/COLOR][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B][B][COLOR blue] -----[/COLOR][/B]','','','',False,'')
 	try:
 		html_source = abrir_url(url)
@@ -228,18 +234,85 @@ def encontrar_fontes_pesquisa_MVT(url):
                                 qualidade_filme = ''
                         ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
 			thumbnail = re.compile('src="(.+?)"').findall(item)
+			generos = re.compile('<strong>G.+?nero:</strong>(.+?)</div>').findall(item)
+			if generos: genero = generos[0]
+			else: genero = ''
 			print url,thumbnail
 			titulo[0] = titulo[0].replace('&#8217;',"'")
                         titulo[0] = titulo[0].replace('&#8211;',"-")
 			try:
-				addDir('[B][COLOR green]- ' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumbnail[0].replace('s72-c','s320'),'','')
+                                if 'Anima' in genero or 'anima' in genero: addDir('[B][COLOR green]- ' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumbnail[0].replace('s72-c','s320'),'','')
 			except: pass
 	else:
-		addDir1('[B][COLOR red]- No Match Found -[/COLOR][/B]','','','',False,'')
+		addDir1('- No Match Found -','','','',False,'')
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
+
+def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url):
+        addDir1('[B][COLOR blue]----- [/COLOR][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.com[/COLOR][COLOR blue] -----[/COLOR][/B]','','','',False,'')
+	try:
+		html_source = abrir_url(url)
+	except: html_source = ''
+	items = re.findall('<span class="cat-links">(.*?)</article>', html_source, re.DOTALL)
+	if items != []:
+		print len(items)
+		for item in items:
+                        if 'Nomeados' not in item:
+                                audio_filme = ''
+                                urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
+                                if '[' in urletitulo[0][1] and ('Season' or 'Temporada' or 'Epis') not in urletitulo[0][1]:
+                                        urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)[[].+?</a>').findall(item)
+                                info = re.compile("<p>ANO: (.+?) AUDIO: (.+?) QUALIDADE: (.+?) TAMANHO: .+? GENERO: (.+?) TRAILER:").findall(item)
+                                if not info:
+                                        qualidade = ''
+                                        ano = ''
+                                        audio = ''
+                                        genero = ''
+                                else:
+                                        qualidade = info[0][2]
+                                        ano = info[0][0]
+                                        audio = ': ' + info[0][1]
+                                        genero = info[0][3]
+                                if genero == '':
+                                        generos = re.compile('title="View all posts in online animaçao" rel="category">(.+?)</a>').findall(item)
+                                        if generos:
+                                                genero = generos[0]
+                                        else:
+                                                genero = ''
+                                print urletitulo
+                                nome = urletitulo[0][1]
+                                nome = nome.replace('&#8217;',"'")
+                                nome = nome.replace('&#8211;',"-")
+                                nome = nome.replace('(PT-PT)',"")
+                                nome = nome.replace('(PT/PT)',"")
+                                nome = nome.replace('[PT-PT]',"")
+                                nome = nome.replace('[PT/PT]',"")    
+                                a_q = re.compile('\d+')
+                                qq_aa = a_q.findall(nome)
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) == 4:
+                                                tirar_ano = '(' + str(q_a_q_a) + ')'
+                                                nome = nome.replace(tirar_ano,'')
+                                qualidade = qualidade.replace('[',' - ')
+                                qualidade = qualidade.replace(']','')
+                                try:
+                                        if "Temporada" or "Season" in nome:
+                                                num_mode = 242
+                                        else:
+                                                nome = nome.replace('['," ")
+                                                nome = nome.replace(']'," ")
+                                                num_mode = 233
+                                        #addDir('[B][COLOR green]' + nome + '[/COLOR][/B]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                                        if 'Anima' in genero or 'anima' in genero: addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow](' + ano + ')[/COLOR][COLOR red] (' + qualidade + audio + ')[/COLOR]',urletitulo[0][0],num_mode,'','','')
+                                except: pass
+        else:
+                addDir1('- No Match Found -','','','',False,'')
+        return
+
+#----------------------------------------------------------------------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------------------------------#                        
 
 def get_params():
         param=[]
