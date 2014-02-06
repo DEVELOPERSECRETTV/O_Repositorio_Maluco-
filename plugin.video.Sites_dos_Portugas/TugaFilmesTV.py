@@ -376,11 +376,11 @@ def TFV_encontrar_videos_series(name,url):
 		link_series=TFV_abrir_url(url)
 	except: link_series = ''
 	if link_series:
-                parameters = {"nome_texto" : name, "url": url}
-                nome_textbox = urllib.urlencode(parameters)
-                addDir('[COLOR blue]Sinopse[/COLOR]',nome_textbox,57,iconimage,'nao','')
-                trailer = re.compile('<b>Trailer</b>: <a href="(.+?)" target="_blank">').findall(link_series)
-                addDir('[COLOR blue]Trailer[/COLOR]',trailer[0],30,iconimage,'nao','')
+                #parameters = {"nome_texto" : name, "url": url}
+                #nome_textbox = urllib.urlencode(parameters)
+                #addDir('[COLOR blue]Sinopse[/COLOR]',nome_textbox,57,iconimage,'nao','')
+                #trailer = re.compile('<b>Trailer</b>: <a href="(.+?)" target="_blank">').findall(link_series)
+                #addDir('[COLOR blue]Trailer[/COLOR]',trailer[0],30,iconimage,'nao','')
                 try:
                         items_series = re.findall("<div class=\'id(.*?)</p>", link_series, re.DOTALL)
                         for item_vid_series in items_series:

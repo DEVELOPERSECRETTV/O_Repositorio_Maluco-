@@ -32,14 +32,20 @@ mensagemok = xbmcgui.Dialog().ok
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def SERIES_pesquisar(nome_pesquisa):
+        addDir1('[B][COLOR blue]Séries:[/COLOR][/B]','','','',False,'')
+        addDir1('','','','',False,'')
         pesquisou = nome_pesquisa
+        #nome_pesquisa = nome_pesquisa.replace("'",'')
         a_q = re.compile('\w+')
         qq_aa = a_q.findall(nome_pesquisa)
         nome_pesquisa = ''
         for q_a_q_a in qq_aa:
                 #if len(q_a_q_a) > 2 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3':
                 if len(q_a_q_a) > 2:
-                        nome_pesquisa = nome_pesquisa + ' ' + q_a_q_a
+                        nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+        #a_q = re.compile('\w+')
+        #qq_aa = a_q.findall(nome_pesquisa)
+        #nome_pesquisa = max(qq_aa)
         encode=urllib.quote(nome_pesquisa)
 	url_pesquisa = 'http://www.tuga-filmes.tv/search?q=' + str(encode)
 	SERIES_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
@@ -50,14 +56,14 @@ def SERIES_pesquisar(nome_pesquisa):
 	url_pesquisa = 'http://toppt.net/?s=' + str(encode)
 	SERIES_encontrar_fontes_TPT(url_pesquisa)
 	addDir1('','','',artfolder + 'banner.png',False,'')		
-        addDir('Pesquisar','inicio',1,artfolder + 'banner.png','nao','')
-        addDir('Menu Principal','','',artfolder + 'banner.png','nao','')
+        addDir('[COLOR yellow]Pesquisar[/COLOR]','inicio',1,artfolder + 'banner.png','nao','')
+        addDir('[COLOR yellow]Menu Principal[/COLOR]','','',artfolder + 'banner.png','nao','')
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def SERIES_encontrar_fontes_pesquisa_TFV(url,pesquisou):
-        addDir1('[B][COLOR blue]----- [/COLOR][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv[B][COLOR blue] -----[/COLOR][/B]','','','',False,'')
+        addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv[B][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -80,7 +86,7 @@ def SERIES_encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
 			try:
-				addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],42,thumbnail[0].replace('s72-c','s320'),'sim','')
+				addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],42,thumbnail[0].replace('s72-c','s320'),'sim','')
 			except: pass
 	else:
 		addDir1('- No Match Found -','','','',False,'')
@@ -90,65 +96,112 @@ def SERIES_encontrar_fontes_pesquisa_TFV(url,pesquisou):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def SERIES_encontrar_fontes_TPT(url):
-        addDir1('[B][COLOR blue]----- [/COLOR][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.com[/COLOR][COLOR blue] -----[/COLOR][/B]','','','',False,'')
+        addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.com[/COLOR][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
-	items = re.findall('<span class="cat-links">(.*?)</article>', html_source, re.DOTALL)
+	if 'article' in html_source: items = re.findall('<article(.*?)</article>', html_source, re.DOTALL)
+	else:
+                addDir1('- No Match Found -','','','',False,'')
+                return
 	if items != []:
+                num_f = 0
 		print len(items)
 		for item in items:
-                        if 'Nomeados' not in item:
+                        try:
                                 audio_filme = ''
                                 urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
-                                if '[' in urletitulo[0][1] and ('Season' or 'Temporada' or 'Epis') not in urletitulo[0][1]:
-                                        urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)[[].+?</a>').findall(item)
-                                info = re.compile("<p>ANO: (.+?) AUDIO: (.+?) QUALIDADE: (.+?) TAMANHO: .+? GENERO: .+? TRAILER:").findall(item)
-                                if not info: info = re.compile("<p>ANO: (.+?)AUDIO: (.+?)FORMATO: AVI XvidQUALIDADE: (.+?) TAMANHO:").findall(item)
-                                if not info:
-                                        qualidade = ''
-                                        ano = ''
-                                        audio = ''
-                                        #genero = ''
-                                else:
-                                        qualidade = info[0][2]
-                                        ano = info[0][0]
-                                        audio = ': ' + info[0][1]
-                                        #genero = info[0][3]
-                                #if genero == '':
-                                generos = re.compile('title="View all posts in online series" rel="category">(.+?)</a>').findall(item)
-                                if generos:
-                                        genero = generos[0]
-                                else:
-                                        genero = ''
-                                print urletitulo
-                                nome = urletitulo[0][1]
-                                nome = nome.replace('&#8217;',"'")
-                                nome = nome.replace('&#8211;',"-")
-                                nome = nome.replace('(PT-PT)',"")
-                                nome = nome.replace('(PT/PT)',"")
-                                nome = nome.replace('[PT-PT]',"")
-                                nome = nome.replace('[PT/PT]',"")    
-                                a_q = re.compile('\d+')
-                                qq_aa = a_q.findall(nome)
-                                for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) == 4:
-                                                tirar_ano = '(' + str(q_a_q_a) + ')'
-                                                nome = nome.replace(tirar_ano,'')
-                                qualidade = qualidade.replace('[',' - ')
-                                qualidade = qualidade.replace(']','')
+                                url = urletitulo[0][0]
                                 try:
-                                        if "Temporada" or "Season" in nome:
-                                                num_mode = 242
-                                        else:
-                                                nome = nome.replace('['," ")
-                                                nome = nome.replace(']'," ")
-                                                num_mode = 233
-                                        #addDir('[B][COLOR green]' + nome + '[/COLOR][/B]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')
-                                        if 'series' in genero or 'Series' in genero: addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow](' + ano + ')[/COLOR][COLOR red] (' + qualidade + audio + ')[/COLOR]',urletitulo[0][0],num_mode,'','','')
-                                except: pass
-        else:
-                addDir1('- No Match Found -','','','',False,'')
+                                        html_source = abrir_url(url)
+                                except: html_source = ''
+                                #addDir1(url,'','','',False,'')
+                                items = re.findall('<article(.*?)</article>', html_source, re.DOTALL)
+                                if items != []:
+                                        print len(items)
+                                        for item in items:
+                                                audio_filme = ''
+                                                titulo = re.compile('<h1 class="entry-title">(.+?)</h1>').findall(item)
+                                                urlpesq = re.compile('<span class="entry-date"><a href="(.+?)" rel="bookmark">').findall(item)
+                                                qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
+                                                ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
+                                                audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)
+                                                if qualidade == [] or ano == [] or audio == []:
+                                                        qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<b").findall(item)
+                                                        ano = re.compile("<b>ANO:.+?/b>(.+?)<b").findall(item)
+                                                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<b").findall(item)    
+                                                thumbnail = re.compile('src="(.+?)"').findall(item)
+                                                print urletitulo,thumbnail
+                                                nome = titulo[0]
+                                                nome = nome.replace('&#8217;',"'")
+                                                nome = nome.replace('&#8211;',"-")
+                                                nome = nome.replace('(PT-PT)',"")
+                                                nome = nome.replace('(PT/PT)',"")
+                                                nome = nome.replace('[PT-PT]',"")
+                                                nome = nome.replace('[PT/PT]',"")
+                                                generos = re.compile('id="post-.+?" class="post-.+? post type-post status-publish format-standard hentry (.+?)">').findall(item)
+                                                if generos:
+                                                        genero = generos[0]
+                                                else:
+                                                        genero = ''
+                                                if audio:
+                                                        if len(audio[0]) > 15:
+                                                                audio = re.compile('<b>AUDIO: </b>(.+?)<span style="color: red;"><b>(.+?)</b></span><br/>').findall(item)
+                                                                if audio:
+                                                                        audio_filme = ': ' + audio[0][0] + audio[0][1]
+                                                                else:
+                                                                        audio = re.compile('<b>AUDIO: </b> <b><span style="color: red;">(.+?)</span> <span style="color: #38761d;">(.+?)</span></b><br/>').findall(item)
+                                                                        if audio:
+                                                                                audio_filme = audio[0][0] + audio[0][1]
+                                                                                if 'Portug' or 'PORTUG' in audio_filme:
+                                                                                        audio_filme = ': PT-PT'
+                                                        else:
+                                                                audio_filme = ': ' + audio[0]
+                                                if not audio:
+                                                        audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br/>").findall(item)
+                                                        if audio:
+                                                                audio_filme = ': ' + audio[0]
+                                                        else:
+                                                                audio_filme = ''
+                                                if not ano:
+                                                        ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
+                                                        if ano:
+                                                                ano_filme = ': ' + ano[0]
+                                                        else:
+                                                                ano_filme = ''     
+                                                if ano:
+                                                        ano_filme = ano[0]
+                                                        a_q = re.compile('\d+')
+                                                        qq_aa = a_q.findall(nome)
+                                                        for q_a_q_a in qq_aa:
+                                                                if len(q_a_q_a) == 4:
+                                                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                                                        nome = nome.replace(tirar_ano,'')
+                                                if qualidade:
+                                                        qualidade = qualidade[0]
+                                                        qualidade = qualidade.replace('[',' - ')
+                                                        qualidade = qualidade.replace(']','')
+                                                else:
+                                                        qualidade = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                                        if qualidade:
+                                                                qualidade = qualidade[0]
+                                                                qualidade = qualidade.replace('[',' - ')
+                                                                qualidade = qualidade.replace(']','')
+                                                        else:
+                                                                qualidade = ''
+                                                try:
+                                                        #addDir(nome,urletitulo[0][0],233,'','','')
+                                                        if 'series' in genero:
+                                                                if 'online' in genero:
+                                                                        if 'OP\xc3\x87\xc3\x83O' in item:
+                                                                                addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urlpesq[0],233,thumbnail[0].replace('s72-c','s320'),'','')
+                                                                                num_f = num_f + 1
+                                                except: pass
+                                        
+                                else:
+                                        addDir1('- No Match Found -','','','',False,'')
+                                if num_f == 0: addDir1('- No Match Found -','','','',False,'')
+                        except: pass
         return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#

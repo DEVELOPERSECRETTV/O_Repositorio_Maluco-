@@ -108,6 +108,36 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                                 url = source.resolve()
                         else: url = ''
     		except:pass
+    	if "primeshare" in url:
+                try:
+                        sources = []
+                        hosted_media = urlresolver.HostedMediaFile(url)
+                        sources.append(hosted_media)
+                        source = urlresolver.choose_source(sources)
+                        if source: 
+                                url = source.resolve()
+                        else: url = ''
+    		except:pass
+    	if "videoslasher" in url:
+                try:
+                        sources = []
+                        hosted_media = urlresolver.HostedMediaFile(url)
+                        sources.append(hosted_media)
+                        source = urlresolver.choose_source(sources)
+                        if source: 
+                                url = source.resolve()
+                        else: url = ''
+    		except:pass
+    	if "sockshare" in url:
+                try:
+                        sources = []
+                        hosted_media = urlresolver.HostedMediaFile(url)
+                        sources.append(hosted_media)
+                        source = urlresolver.choose_source(sources)
+                        if source: 
+                                url = source.resolve()
+                        else: url = ''
+    		except:pass
     	if "videomega" in url:
 		try:
 			if "iframe" not in url:
@@ -130,7 +160,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 				url = match[0]
 		except: pass
 	dp = xbmcgui.DialogProgress()
-	dp.create("TugaFilmesTv",'A sincronizar vídeos e legendas')
+	dp.create("SitesDosPortugas",'A sincronizar vídeos e legendas')
 	dp.update(0)
 	playlist = xbmc.PlayList(1)
 	playlist.clear()             
