@@ -37,7 +37,8 @@ def FILMES_pesquisar(nome_pesquisa):
         pesquisou = nome_pesquisa
         if '-' in nome_pesquisa:
                 nome_p = re.compile('(.+?)[-].+?').findall(nome_pesquisa)
-                nome_pesquisa = nome_p[0]
+                if len(nome_p[0])>2:
+                        nome_pesquisa = nome_p[0]
         if ':' in nome_pesquisa:
                 nome_p = re.compile('(.+?)[:].+?').findall(nome_pesquisa)
                 nome_pesquisa = nome_p[0]
