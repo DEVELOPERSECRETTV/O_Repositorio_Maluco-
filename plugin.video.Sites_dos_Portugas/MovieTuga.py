@@ -81,7 +81,7 @@ def MVT_encontrar_fontes_filmes(url):
 		for item in items:
                         url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
                         if 'http' not in url[0]:
-                                url[0] = 'http:' + url[0] 
+                                url = 'http:' + url[0] 
                         titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
                         if 'Qualidade:' in item:
                                 qualidade = re.compile("<strong>Qualidade:</strong>(.+?)</div>").findall(item)
@@ -89,12 +89,15 @@ def MVT_encontrar_fontes_filmes(url):
                         else:
                                 qualidade_filme = ''
                         ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
-                        thumbnail = re.compile('src="(.+?)"').findall(item)
+                        thumb = re.compile('src="(.+?)"').findall(item)
+                        if 'http' not in thumb[0]:
+                                thumbnail = 'http:' + thumb[0]
                         print url,thumbnail
                         titulo[0] = titulo[0].replace('&#8217;',"'")
                         titulo[0] = titulo[0].replace('&#8211;',"-")
+                        if 'Dear John' in titulo[0] and ano[0] == '2013': titulo[0] = titulo[0].replace('Dear John','12 Anos Escravo')
                         try:
-                                addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumbnail[0].replace('s72-c','s320'),'','')
+                                addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url,103,thumbnail.replace('s72-c','s320'),'','')
                         except: pass
 	proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
 	try:

@@ -47,7 +47,7 @@ def TFV_MenuPrincipal(artfolder):
 def TFV_Menu_Filmes(artfolder):
         addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'ze-TFV1.png',False,'')
         addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
-	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://www.tuga-filmes.tv/search/label/Filmes',32,artfolder + 'ze-TFV1.png','nao','')
+	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://www.tuga-filmes.tv/search/label/Filmes?&max-results=18',32,artfolder + 'ze-TFV1.png','nao','')
         addDir('[COLOR yellow]Ver por Ano[/COLOR]','url',39,artfolder + 'ze-TFV1.png','nao','')
 	addDir('[COLOR yellow]Categorias[/COLOR]','url',38,artfolder + 'ze-TFV1.png','nao','')
 	addDir('[COLOR yellow]Top 5 da Semana[/COLOR]','url',48,artfolder + 'ze-TFV1.png','nao','')
@@ -189,7 +189,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
 	if proxima[0] != '':
                 try:
                         addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
-                        addDir("[B]Página Seguinte >>[/B]",proxima[0],32,artfolder + 'ze-TFV1.png','','')
+                        addDir("[B]Página Seguinte >>[/B]",proxima[0].replace('&amp;','&'),32,artfolder + 'ze-TFV1.png','','')
                 except:pass
         
 #----------------------------------------------------------------------------------------------------------------------------------------------#	

@@ -17,8 +17,8 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver
-import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TextBoxes,TopPt,FilmesAnima,Filmes,Series
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver,urlparse
+import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TextBoxes,TopPt,FilmesAnima,Filmes,Series,Mashup
 from array import array
 from string import capwords
 
@@ -29,8 +29,14 @@ addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
 arr_series1 = [['' for i in range(87)] for j in range(1)]
-arr_series = ['' for i in range(87)]
- 
+arr_series = ['' for i in range(100)]
+arr_filmes = ['' for i in range(100)]
+arrai_filmes = ['' for i in range(100)]
+thumb_filmes = ['' for i in range(100)]
+arr_filmes[4] = '6'
+i=arr_filmes[4] 
+
+
 mensagemok = xbmcgui.Dialog().ok
 
 
@@ -38,27 +44,47 @@ mensagemok = xbmcgui.Dialog().ok
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
 def MAIN_MENU():
+        url_TFV = 'http://www.tuga-filmes.tv/search/label/Filmes'
+        url_TFC = 'http://www.tuga-filmes.com'
+        url_MVT = 'http://www.movie-tuga.blogspot.pt'
+        url_TPT = 'http://toppt.net/?cat=68'
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+        url_filmes_filmes = urllib.urlencode(parameters)
         addDir1('[B][COLOR blue]Menu Principal[/COLOR][/B]','',31,artfolder + 'MPrin.png',False,'')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
-        addDir('[B][COLOR green]Fi[/COLOR][COLOR yellow]l[/COLOR][COLOR red]mes[/COLOR][/B]','http://www.tuga-filmes.com/',25,'','nao','')
+        addDir('[B][COLOR green]Fi[/COLOR][COLOR yellow]l[/COLOR][COLOR red]mes[/COLOR][/B]',url_filmes_filmes,507,'','nao','')
+        #addDir_mashup('[B][COLOR green]Fi[/COLOR][COLOR yellow]l[/COLOR][COLOR red]mes[/COLOR][/B]',url_TFV,url_TFC,url_MVT,url_TPT,507,'','nao','')
         addDir('[B][COLOR green]Sé[/COLOR][COLOR yellow]r[/COLOR][COLOR red]ies[/COLOR][/B]','http://www.tuga-filmes.tv',26,'','nao','')
-        addDir('[B][COLOR green]Ani[/COLOR][COLOR yellow]m[/COLOR][COLOR red]ação[/COLOR][/B]','http://www.tuga-filmes.com/search/label/Anima%C3%A7%C3%A3o?max-results=20',6,'','nao','')
-        #addDir('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.com[/COLOR][/B]','http://direct',231,artfolder + 'Ze-mv1.png','nao','')	
+        url_TFV = 'http://www.tuga-filmes.tv/search/label/Anima%C3%A7%C3%A3o'
+        url_TFC = 'http://www.tuga-filmes.com/search/label/Anima%C3%A7%C3%A3o?max-results=20'
+        url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
+        url_TPT = 'http://toppt.net/?cat=24'
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+        url_filmes_animacao = urllib.urlencode(parameters)
+        addDir('[B][COLOR green]Ani[/COLOR][COLOR yellow]m[/COLOR][COLOR red]ação[/COLOR][/B]',url_filmes_animacao,6,'','nao','')
+        #addDir('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.com[/COLOR][/B]','http://direct',231,artfolder + 'Ze-mv1.png','nao','')
+        #addDir('[B][COLOR cyan]IMDB[/COLOR][/B]','url',500,'','nao','')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','http://direct',31,artfolder + 'Ze-tv1.png','nao','')
         addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','http://direct',71,artfolder + 'Ze-tc1.png','nao','')
         addDir('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','http://direct',101,artfolder + 'Ze-mv1.png','nao','')
         addDir('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.com[/COLOR][/B]','http://direct',231,'','nao','')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
-	addDir('Pesquisar','url',1,artfolder + 'Ze-pesquisar1.png','nao','')
-	
+        addDir('Pesquisar','http://www.tuga-filmes.tv/search?q=',1,artfolder + 'Ze-pesquisar1.png','nao','')
+
+
+def Menu_IMDB():        
+        addDir('[B][COLOR green]Fi[/COLOR][COLOR yellow]l[/COLOR][COLOR red]mes[/COLOR][/B]','url',25,'','nao','')
+        addDir('[B][COLOR green]Sé[/COLOR][COLOR yellow]r[/COLOR][COLOR red]ies[/COLOR][/B]','url',26,'','nao','')
+        addDir('[B][COLOR green]Ani[/COLOR][COLOR yellow]m[/COLOR][COLOR red]ação[/COLOR][/B]','url',501,'','nao','')
+
 
 
 def Filmes_IMDB_antiga(url):
         sim='sim'
         #nome_filme_IMDB = 'croods'
 	#Filmes.FILMES_pesquisar(nome_filme_IMDB)
-        url = 'http://www.imdb.com/genre/animation/?ref_=gnr_mn_an_mp'
+        url = 'http://www.imdb.com/search/title?at=0&genres=animation&sort=moviemeter&title_type=feature'
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -66,254 +92,18 @@ def Filmes_IMDB_antiga(url):
 	if items != []:
 		print len(items)
 		for item in items:
-                        
 			nomethumb_IMDB = re.compile('<a href=".+?" title="(.+?)"><img src="(.+?)"').findall(item)
 			nome_filme_IMDB = nomethumb_IMDB[0][0]
-			#nome_filme_IMDB = 'croods'
+			nome_filme_IMDB = nome_filme_IMDB.replace('&#xF4;','ô')
+			nome_filme_IMDB = nome_filme_IMDB.replace('&#xE3;','ã')
+			nome_filme_IMDB = nome_filme_IMDB.replace('&#xE7;','ç')
+			nome_filme_IMDB = nome_filme_IMDB.replace('&#xF3;','ó')
+			nome_filme_IMDB = nome_filme_IMDB.replace('&#xC0;','À')
+			nome_filme_IMDB = nome_filme_IMDB.replace('&#xE1;','á')
+			nome_filme_IMDB = nome_filme_IMDB.replace('&#xF5;','õ')
+			nome_filme_IMDB = nome_filme_IMDB.replace('&#xF3;','ó')
 			#passar_nome_pesquisa(nome_filme_IMDB)
 			addDir(nome_filme_IMDB,'url',7,nomethumb_IMDB[0][1],'nao','')
-
-def Filmes_Filmes(url):
-        pt_en = 0
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
-	if items != []:
-		print len(items)
-		for item in items:
-                        versao = ''
-                        pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
-                        if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
-			urletitulo = re.compile("<a href=\'(.+?)\' title=\'(.+?)\'>").findall(item)
-			qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
-			thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
-			print urletitulo,thumbnail
-			ano = ''
-			qualidade = ''
-			e_qua = 'nao'
-			calid = ''
-			if qualidade_ano != []:
-                                for q_a in qualidade_ano:
-                                        #addDir1(q_a,'','','',False,'')
-                                        a_q = re.compile('\d+')
-                                        qq_aa = a_q.findall(q_a)
-                                        for q_a_q_a in qq_aa:
-                                                if len(q_a_q_a) == 4:
-                                                        ano = q_a_q_a
-                                quali = re.compile('\w+')
-                                qualid = quali.findall(q_a)
-                                for qua_qua in qualid:
-                                        if len(qua_qua) == 4 and qua_qua == ano:
-                                                e_qua = 'sim'
-                                                qua_qua = ''
-                                                espaco = ''
-                                                espa = 0
-                                        if e_qua == 'sim' and espa < 2:
-                                                espa = espa + 1
-                                        if e_qua == 'sim' and espa == 2:
-                                                qualidade = qualidade + espaco + qua_qua
-                                                espaco = ' '
-                                if len(ano) < 4:
-                                        ano = ''
-                                        #qualidade = q_a
-                                if qualidade == 'PT PT':
-                                        qualidade = 'PT-PT'
-                                if qualidade == '':
-                                        quali_titi = urletitulo[0][1].replace('á','a')
-                                        quali_titi = urletitulo[0][1].replace('é','e')
-                                        quali_titi = urletitulo[0][1].replace('í','i')
-                                        quali_titi = urletitulo[0][1].replace('ó','o')
-                                        quali_titi = urletitulo[0][1].replace('ú','u')
-                                        #addDir1(quali_titi,'','','',False,'')
-                                        quali = re.compile('\w+')
-                                        qualid = quali.findall(q_a)
-                                        for qua_qua in qualid:
-                                                qua_qua = str.capitalize(qua_qua)
-                                                calid = calid + ' ' + qua_qua
-                                        tita = re.compile('\w+')
-                                        titalo = tita.findall(quali_titi)
-                                        for tt in titalo:
-                                                tt = str.capitalize(tt)
-                                                if tt in calid:
-                                                        qualidade = re.sub(tt,'',calid)
-                                                        calid = re.sub(tt,'',calid)
-                                        qqqq = re.compile('\w+')
-                                        qqqqq = qqqq.findall(qualidade)
-                                        for qqq in qqqqq:
-                                                if qqq in quali_titi:
-                                                        qualidade = qualidade.replace(qqq,'')
-                                        nnnn = re.compile('\d+')
-                                        nnnnn = nnnn.findall(qualidade)
-                                        for nnn in nnnnn:
-                                                if nnn in ano:
-                                                        qualidade = qualidade.replace(nnn,'')
-                                        quatit = re.compile('\s+')
-                                        qualititulo = quatit.findall(qualidade)
-                                        for q_t in qualititulo:
-                                                if len(q_t)>1:
-                                                        qualidade = qualidade.replace(q_t,'')
-                                        if qualidade == 'Pt Pt':
-                                                qualidade = 'PT-PT'
-                        else:
-                                qualidade = ''
-                        if 'Pt Pt' in qualidade:
-                                qualidade = qualidade.replace('Pt Pt','PT-PT')
-                        if 'PT PT' in qualidade:
-                                qualidade = qualidade.replace('PT PT','PT-PT')
-			try:
-				addDir(urletitulo[0][1].replace('&#39;',"'") + ' (' + ano + ')',urletitulo[0][0],8,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
-			except: pass
-	else:
-		items = re.compile("<a href=\'(.+?)\' title=.+?>Assistir Online - </div>(.+?)<div id=\'player\'>").findall(html_source)
-		for endereco,nome in items:
-			addDir(nome.replace('&#8217;',"'"),endereco,8,'','','')
-	proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
-	try:
-                addDir1('','','','',False,'')
-		addDir("[COLOR yellow]Página Seguinte >>[/COLOR]",proxima[0].replace('&amp;','&'),25,"",'','')
-	except: pass
-
-
-
-def Series_Series(url):
-	html_series_source = abrir_url(url)
-	html_items_series = re.findall("<div class=\'widget Label\' id=\'Label3\'>\n<h2>S\xc3\xa9ries(.*?)<div class=\'clear\'>", html_series_source, re.DOTALL)
-        print len(html_items_series)
-        i=0
-        for item_series in html_items_series:
-                series = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(item_series)
-                for endereco_series,nome_series in series:
-                        nome_series = nome_series.replace('&amp;','&')
-                        nome_series = nome_series.replace('&#39;',"'")
-                        nome_series = nome_series.replace('&#8217;',"'")
-                        nome_series = nome_series.replace('&#8230;',"...")
-                        if nome_series != 'Agents of S.H.I.E.L.D':
-                                arr_series[i]=nome_series
-                                i=i+1
-                        #arr_series[6][1]=endereco_series
-                        #addDir(nome_series,endereco_series,47,artfolder + 'ze-TFV1.png','nao','')
-        url = 'http://toppt.net/'
-        html_series_source = abrir_url(url)
-	html_items_series = re.findall('<h1 class="widget-title">SERIES</h1>(.+?)</div></aside>', html_series_source, re.DOTALL)
-        print len(html_items_series)
-        for item_series in html_items_series:
-                series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
-                for endereco_series,nome_series in series:
-                        nome_series = nome_series.replace('&amp;','&')
-                        nome_series = nome_series.replace('&#39;',"'")
-                        nome_series = nome_series.replace('&#8217;',"'")
-                        nome_series = nome_series.replace('&#8230;',"...")
-                        if (nome_series not in arr_series) and (nome_series != 'Da Vincis Demons'):
-                                arr_series.append(nome_series)
-        arr_series.sort(key = lambda k : k.lower())
-        addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(len(arr_series)) + ')','','',artfolder + 'ze-TFV1.png',False,'')
-        addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
-        for x in range(len(arr_series)):
-                if arr_series[x] != '': addDir(arr_series[x],'url',9,artfolder + 'ze-TFV1.png','nao','')
- 
-
-
-def Filmes_Animacao(url):
-        pt_en = 0
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
-	if items != []:
-		print len(items)
-		for item in items:
-                        versao = ''
-                        pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
-                        if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
-			urletitulo = re.compile("<a href=\'(.+?)\' title=\'(.+?)\'>").findall(item)
-			qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
-			thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
-			print urletitulo,thumbnail
-			ano = ''
-			qualidade = ''
-			e_qua = 'nao'
-			calid = ''
-			if qualidade_ano != []:
-                                for q_a in qualidade_ano:
-                                        #addDir1(q_a,'','','',False,'')
-                                        a_q = re.compile('\d+')
-                                        qq_aa = a_q.findall(q_a)
-                                        for q_a_q_a in qq_aa:
-                                                if len(q_a_q_a) == 4:
-                                                        ano = q_a_q_a
-                                quali = re.compile('\w+')
-                                qualid = quali.findall(q_a)
-                                for qua_qua in qualid:
-                                        if len(qua_qua) == 4 and qua_qua == ano:
-                                                e_qua = 'sim'
-                                                qua_qua = ''
-                                                espaco = ''
-                                                espa = 0
-                                        if e_qua == 'sim' and espa < 2:
-                                                espa = espa + 1
-                                        if e_qua == 'sim' and espa == 2:
-                                                qualidade = qualidade + espaco + qua_qua
-                                                espaco = ' '
-                                if len(ano) < 4:
-                                        ano = ''
-                                        #qualidade = q_a
-                                if qualidade == 'PT PT':
-                                        qualidade = 'PT-PT'
-                                if qualidade == '':
-                                        quali_titi = urletitulo[0][1].replace('á','a')
-                                        quali_titi = urletitulo[0][1].replace('é','e')
-                                        quali_titi = urletitulo[0][1].replace('í','i')
-                                        quali_titi = urletitulo[0][1].replace('ó','o')
-                                        quali_titi = urletitulo[0][1].replace('ú','u')
-                                        #addDir1(quali_titi,'','','',False,'')
-                                        quali = re.compile('\w+')
-                                        qualid = quali.findall(q_a)
-                                        for qua_qua in qualid:
-                                                qua_qua = str.capitalize(qua_qua)
-                                                calid = calid + ' ' + qua_qua
-                                        tita = re.compile('\w+')
-                                        titalo = tita.findall(quali_titi)
-                                        for tt in titalo:
-                                                tt = str.capitalize(tt)
-                                                if tt in calid:
-                                                        qualidade = re.sub(tt,'',calid)
-                                                        calid = re.sub(tt,'',calid)
-                                        qqqq = re.compile('\w+')
-                                        qqqqq = qqqq.findall(qualidade)
-                                        for qqq in qqqqq:
-                                                if qqq in quali_titi:
-                                                        qualidade = qualidade.replace(qqq,'')
-                                        nnnn = re.compile('\d+')
-                                        nnnnn = nnnn.findall(qualidade)
-                                        for nnn in nnnnn:
-                                                if nnn in ano:
-                                                        qualidade = qualidade.replace(nnn,'')
-                                        quatit = re.compile('\s+')
-                                        qualititulo = quatit.findall(qualidade)
-                                        for q_t in qualititulo:
-                                                if len(q_t)>1:
-                                                        qualidade = qualidade.replace(q_t,'')
-                                        if qualidade == 'Pt Pt':
-                                                qualidade = 'PT-PT'
-                        else:
-                                qualidade = ''
-                        if 'Pt Pt' in qualidade:
-                                qualidade = qualidade.replace('Pt Pt','PT-PT')
-                        if 'PT PT' in qualidade:
-                                qualidade = qualidade.replace('PT PT','PT-PT')
-			try:
-				addDir(urletitulo[0][1].replace('&#39;',"'") + ' (' + ano + ')',urletitulo[0][0],7,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
-			except: pass
-	else:
-		items = re.compile("<a href=\'(.+?)\' title=.+?>Assistir Online - </div>(.+?)<div id=\'player\'>").findall(html_source)
-		for endereco,nome in items:
-			addDir(nome.replace('&#8217;',"'"),endereco,7,'','','')
-	proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
-	try:
-                addDir1('','','','',False,'')
-		addDir("[COLOR yellow]Página Seguinte >>[/COLOR]",proxima[0].replace('&amp;','&'),6,"",'','')
-	except: pass
 
 
 
@@ -431,7 +221,7 @@ elif mode ==  2: Pesquisar.encontrar_fontes_pesquisa_TFV(url,pesquisou)
 elif mode ==  3: Pesquisar.encontrar_fontes_filmes_TFC(url_pesquisa)
 elif mode ==  4: Pesquisar.encontrar_fontes_pesquisa_MVT(url)
 elif mode ==  5: Pesquisar.encontrar_fontes_filmes_TPT(url_pesquisa)
-elif mode ==  6: Filmes_Animacao(url)
+elif mode ==  6: Mashup.Filmes_Animacao(url)
 elif mode ==  7: passar_nome_pesquisa_animacao(name)
 elif mode ==  8: passar_nome_pesquisa_filmes(name)
 elif mode ==  9: passar_nome_pesquisa_series(name)
@@ -445,8 +235,8 @@ elif mode == 21: Filmes.FILMES_fontes_pesquisa_TFV(url,pesquisou)
 elif mode == 22: Filmes.FILMES_fontes_filmes_TFC(url_pesquisa)
 elif mode == 23: Filmes.FILMES_fontes_pesquisa_MVT(url)
 elif mode == 24: Filmes.FILMES_fontes_filmes_TPT(url_pesquisa)
-elif mode == 25: Filmes_Filmes(url)
-elif mode == 26: Series_Series(url)
+elif mode == 25: Filmes_Filmes()
+elif mode == 26: Mashup.Series_Series(url)
 elif mode == 27: Series.SERIES_pesquisar(nome_pesquisa)
 elif mode == 28: Series.SERIES_fontes_pesquisa_TFV(url,pesquisou)
 elif mode == 29: Series.SERIES_fontes_TPT(url_pesquisa)
@@ -547,6 +337,15 @@ elif mode == 248: TopPt.TPT_Menu_Posts_Recentes(artfolder)
 #elif mode == 255: M18.M18_TPT_encontrar_fontes_pesquisa_M18(url,pesquisou)
 elif mode == 256: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
 elif mode == 257: TextBoxes.TBOX_TextBoxes_Sinopse(url)
+#----------------------------------------------------------------   IMDB   --------------------------------------------------------------------#
+elif mode == 500: Menu_IMDB()
+elif mode == 501: Filmes_IMDB_antiga(url)
+elif mode == 502: Filmes_Filmes_TFV(i)
+elif mode == 503: Filmes_Filmes_TFC(i)
+elif mode == 504: Filmes_Filmes_MVT(i)
+elif mode == 505: Filmes_Filmes_TPT(i)
+elif mode == 506: declara_variaveis(url)
+elif mode == 507: Mashup.Filmes_Filmes_Filmes(url)
 
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

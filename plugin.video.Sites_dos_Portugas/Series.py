@@ -40,8 +40,8 @@ def SERIES_pesquisar(nome_pesquisa):
         qq_aa = a_q.findall(nome_pesquisa)
         nome_pesquisa = ''
         for q_a_q_a in qq_aa:
-                #if len(q_a_q_a) > 2 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3':
-                if len(q_a_q_a) > 2:
+                if len(q_a_q_a) > 2 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                #if len(q_a_q_a) > 2:
                         nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
         #a_q = re.compile('\w+')
         #qq_aa = a_q.findall(nome_pesquisa)
@@ -56,7 +56,7 @@ def SERIES_pesquisar(nome_pesquisa):
 	url_pesquisa = 'http://toppt.net/?s=' + str(encode)
 	SERIES_encontrar_fontes_TPT(url_pesquisa)
 	addDir1('','','',artfolder + 'banner.png',False,'')		
-        addDir('[COLOR yellow]Pesquisar[/COLOR]','inicio',1,artfolder + 'banner.png','nao','')
+        addDir('[COLOR yellow]Pesquisar[/COLOR]','url',1,artfolder + 'banner.png','nao','')
         addDir('[COLOR yellow]Menu Principal[/COLOR]','','',artfolder + 'banner.png','nao','')
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -197,11 +197,8 @@ def SERIES_encontrar_fontes_TPT(url):
                                                                                 addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urlpesq[0],233,thumbnail[0].replace('s72-c','s320'),'','')
                                                                                 num_f = num_f + 1
                                                 except: pass
-                                        
-                                else:
-                                        addDir1('- No Match Found -','','','',False,'')
-                                if num_f == 0: addDir1('- No Match Found -','','','',False,'')
                         except: pass
+        if num_f == 0: addDir1('- No Match Found -','','','',False,'')
         return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#

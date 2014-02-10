@@ -58,7 +58,7 @@ def TPT_Menu_Filmes(artfolder):
         url_toppt = 'http://toppt.net/'
         toppt_source = TPT_abrir_url(url_toppt)
         saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
-        saber_url_M18 = re.compile('<option class="level-0" value="92">m18</option>').findall(toppt_source)
+        saber_url_M18 = re.compile('<option class="level-0" value="(.+?)">m18</option>').findall(toppt_source)
         addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'ze-TFV1.png',False,'')
         addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
 	addDir('[COLOR yellow]Ver Todos[/COLOR]',saber_url_todos[0],232,artfolder + 'ze-TFV1.png','nao','')
