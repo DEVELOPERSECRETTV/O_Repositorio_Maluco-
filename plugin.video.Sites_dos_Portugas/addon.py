@@ -34,7 +34,14 @@ arr_filmes = ['' for i in range(100)]
 arrai_filmes = ['' for i in range(100)]
 thumb_filmes = ['' for i in range(100)]
 arr_filmes[4] = '6'
-i=arr_filmes[4] 
+i=arr_filmes[4]
+
+
+arr_filmes_animacao = ['' for i in range(100)]
+arrai_filmes_animacao  = ['' for i in range(100)]
+thumb_filmes_animacao  = ['' for i in range(100)]
+
+
 
 
 mensagemok = xbmcgui.Dialog().ok

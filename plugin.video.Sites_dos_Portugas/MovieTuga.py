@@ -39,7 +39,7 @@ def MVT_MenuPrincipal(artfolder):
         addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','','',artfolder + 'ze-MVT1.png',False,'')
         addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
 	addDir('[COLOR yellow]Menu Filmes[/COLOR]','url',105,artfolder + 'ze-MVT1.png','nao','')
-	addDir('[COLOR yellow]Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao?&max-results=15',102,artfolder + 'ze-MVT1.png','nao','')
+	addDir('[COLOR yellow]Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',102,artfolder + 'ze-MVT1.png','nao','')
         addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
 	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar1.png','nao','')
 	#addDir('[COLOR brown]ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_MovieTuga.txt',108,artfolder + 'ze-MVT1.png','nao','')
@@ -47,7 +47,7 @@ def MVT_MenuPrincipal(artfolder):
 def MVT_Menu_Filmes(artfolder):
         addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'ze-MVT1.png',False,'')
         addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
-	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://www.movie-tuga.blogspot.pt/',102,artfolder + 'ze-MVT1.png','nao','')
+	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'ze-MVT1.png','nao','')
 	addDir('[COLOR yellow]Categorias[/COLOR]','url',106,artfolder + 'ze-MVT1.png','nao','')
         addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
 	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar1.png','nao','')
@@ -72,7 +72,7 @@ def MVT_Menu_Filmes_Por_Categorias(artfolder):
 		
 
 def MVT_encontrar_fontes_filmes(url):
-	try:
+        try:
 		html_source = MVT_abrir_url(url)
 	except: html_source = ''
 	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
@@ -81,7 +81,7 @@ def MVT_encontrar_fontes_filmes(url):
 		for item in items:
                         url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
                         if 'http' not in url[0]:
-                                url = 'http:' + url[0] 
+                                url[0] = 'http:' + url[0] 
                         titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
                         if 'Qualidade:' in item:
                                 qualidade = re.compile("<strong>Qualidade:</strong>(.+?)</div>").findall(item)
@@ -89,15 +89,14 @@ def MVT_encontrar_fontes_filmes(url):
                         else:
                                 qualidade_filme = ''
                         ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
-                        thumb = re.compile('src="(.+?)"').findall(item)
-                        if 'http' not in thumb[0]:
-                                thumbnail = 'http:' + thumb[0]
+                        thumbnail = re.compile('src="(.+?)"').findall(item)
                         print url,thumbnail
+                        if 'http' not in thumbnail[0]: thumbnail[0] = 'http:' + thumbnail[0]
                         titulo[0] = titulo[0].replace('&#8217;',"'")
                         titulo[0] = titulo[0].replace('&#8211;',"-")
                         if 'Dear John' in titulo[0] and ano[0] == '2013': titulo[0] = titulo[0].replace('Dear John','12 Anos Escravo')
                         try:
-                                addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url,103,thumbnail.replace('s72-c','s320'),'','')
+                                addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumbnail[0].replace('s72-c','s320'),'','')
                         except: pass
 	proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
 	try:

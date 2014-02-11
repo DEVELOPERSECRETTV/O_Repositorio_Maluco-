@@ -80,6 +80,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8230;',"...")
                         nome = nome = nome.replace('  '," ")
+                        nome = nome_series('&#8211;',"-")
                         nome_filme = nome
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
@@ -118,6 +119,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8230;',"...")
                         nome = nome = nome.replace('  '," ")
+                        nome = nome.replace('&#8211;',"-")
                         nome_filme = nome
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
@@ -148,7 +150,7 @@ def Filmes_Filmes_Filmes(url):
                         if 'http' not in thumb[0]:
                                 thumbnail = 'http:' + thumb[0]
                         else: thumbnail = thumb[0]
-                        nome = titulo[0] + ' (' + ano[0] + ') '
+                        nome = titulo[0] + ' (' + ano[0] + ')'
                         if 'Dear John' in nome and ano[0] == '2013': nome = nome.replace('Dear John','12 Anos Escravo')
                         nome = nome.replace('&amp;','&')
                         nome = nome.replace('&#39;',"'")
@@ -167,7 +169,10 @@ def Filmes_Filmes_Filmes(url):
                         #else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'/MVT'
                         i = i + 4
         proxima_MVT = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
-        url_MVT = proxima_MVT[0].replace('%3A',':').replace('&amp;','&')
+	try:
+                url_MVT = proxima_MVT[0].replace('%3A',':')
+                url_MVT = proxima_MVT[0].replace('&amp;','&')
+	except: pass
         #----------------------------------------------------------------------------------------------------
         i = 1
         try:
@@ -178,7 +183,7 @@ def Filmes_Filmes_Filmes(url):
 		print len(items)
 		for item in items:
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
-                        if '[' in urletitulo[0][1]: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)[[].+?</a>').findall(item)
+                        #if '[' in urletitulo[0][1]: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)[[].+?</a>').findall(item)
                         ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
                         thumbnail = re.compile('src="(.+?)"').findall(item)
                         print urletitulo,thumbnail
@@ -257,6 +262,7 @@ def Series_Series(url):
                         nome_series = nome_series.replace('&#39;',"'")
                         nome_series = nome_series.replace('&#8217;',"'")
                         nome_series = nome_series.replace('&#8230;',"...")
+                        nome_series = nome_series.replace('&#8211;',"-")
                         if (nome_series not in arr_series) and (nome_series != 'Da Vincis Demons'):
                                 arr_series.append(nome_series)
         arr_series.sort(key = lambda k : k.lower())
@@ -302,6 +308,7 @@ def Filmes_Animacao(url):
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8230;',"...")
                         nome = nome = nome.replace('  '," ")
+                        nome = nome.replace('&#8211;',"-")
                         nome_filme = nome
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
@@ -340,6 +347,7 @@ def Filmes_Animacao(url):
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8230;',"...")
                         nome = nome = nome.replace('  '," ")
+                        nome = nome.replace('&#8211;',"-")
                         nome_filme = nome
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
@@ -386,9 +394,12 @@ def Filmes_Animacao(url):
                                 arrai_filmes.insert(i,nome_filme)
                                 thumb_filmes.insert(i,thumbnail.replace('s72-c','s320'))
                         #else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'/MVT'
-                        i = i + 4
+                        i = i + 4	
         proxima_MVT = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
-        url_MVT = proxima_MVT[0].replace('%3A',':').replace('&amp;','&')
+	try:
+                url_MVT = proxima_MVT[0].replace('%3A',':')
+                url_MVT = proxima_MVT[0].replace('&amp;','&')
+	except: pass
         #----------------------------------------------------------------------------------------------------
         i = 1
         try:
@@ -399,7 +410,7 @@ def Filmes_Animacao(url):
 		print len(items)
 		for item in items:
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
-                        if '[' in urletitulo[0][1]: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)[[].+?</a>').findall(item)
+                        #if '[' in urletitulo[0][1]: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)[[].+?</a>').findall(item)
                         ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
                         thumbnail = re.compile('src="(.+?)"').findall(item)
                         print urletitulo,thumbnail
@@ -407,7 +418,7 @@ def Filmes_Animacao(url):
                         if not ano:
                                 ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
                                 if ano:
-                                        ano_filme = ': ' + ano[0]
+                                        ano_filme = ano[0]
                                 else:
                                         ano_filme = ''     
                         if ano:
@@ -418,7 +429,7 @@ def Filmes_Animacao(url):
                                         if len(q_a_q_a) == 4:
                                                 tirar_ano = '(' + str(q_a_q_a) + ')'
                                                 nome = nome.replace(tirar_ano,'')
-                        nome = nome + ' (' + ano[0] + ') '
+                        nome = nome + ' (' + ano_filme + ') '
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('(PT-PT)',"")
@@ -436,17 +447,19 @@ def Filmes_Animacao(url):
                                 thumb_filmes.insert(i,thumbnail[0].replace('s72-c','s320'))
                         #else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'/TPT'
                         i = i + 2
-        proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)		
-        url_TPT = proxima_TPT[0].replace('#038;','')
+        proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
+        try:
+                url_TPT = proxima_TPT[0].replace('#038;','')
+        except: pass
         #----------------------------------------------------------------------------------------------------
         #x = int(arr_filmes[5])        
         for x in range(len(arrai_filmes)):
         #for x in range(12):
                 if arrai_filmes[x] != '':
-                        addDir(arrai_filmes[x],'url',8,thumb_filmes[x],'nao','')
+                        addDir(arrai_filmes[x],'url',7,thumb_filmes[x],'nao','')
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
-        url_filmes_filmes = urllib.urlencode(parameters)
-        addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_filmes,507,artfolder + 'ze-TFV1.png','','')
+        url_filmes_animacao = urllib.urlencode(parameters)
+        addDir(url_TPT+'[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_animacao,6,artfolder + 'ze-TFV1.png','','')
 
 
 
