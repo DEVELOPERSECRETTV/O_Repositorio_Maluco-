@@ -18,9 +18,10 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver,urlparse
-import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TextBoxes,TopPt,FilmesAnima,Filmes,Series,Mashup
+import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TextBoxes,TopPt,FilmesAnima,Filmes,Series,Mashup,Armagedom
 from array import array
 from string import capwords
+import xbmcvfs
 
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
@@ -51,6 +52,7 @@ mensagemok = xbmcgui.Dialog().ok
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
 def MAIN_MENU():
+        #xbmc.executebuiltin("Container.SetViewMode(503)")
         url_TFV = 'http://www.tuga-filmes.tv/search/label/Filmes'
         url_TFC = 'http://www.tuga-filmes.com'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
@@ -60,7 +62,6 @@ def MAIN_MENU():
         addDir1('[B][COLOR blue]Menu Principal[/COLOR][/B]','',31,artfolder + 'MPrin.png',False,'')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         addDir('[B][COLOR green]Fi[/COLOR][COLOR yellow]l[/COLOR][COLOR red]mes[/COLOR][/B]',url_filmes_filmes,507,'','nao','')
-        #addDir_mashup('[B][COLOR green]Fi[/COLOR][COLOR yellow]l[/COLOR][COLOR red]mes[/COLOR][/B]',url_TFV,url_TFC,url_MVT,url_TPT,507,'','nao','')
         addDir('[B][COLOR green]Sé[/COLOR][COLOR yellow]r[/COLOR][COLOR red]ies[/COLOR][/B]','http://www.tuga-filmes.tv',26,'','nao','')
         url_TFV = 'http://www.tuga-filmes.tv/search/label/Anima%C3%A7%C3%A3o'
         url_TFC = 'http://www.tuga-filmes.com/search/label/Anima%C3%A7%C3%A3o?max-results=20'
@@ -69,13 +70,14 @@ def MAIN_MENU():
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
         addDir('[B][COLOR green]Ani[/COLOR][COLOR yellow]m[/COLOR][COLOR red]ação[/COLOR][/B]',url_filmes_animacao,6,'','nao','')
-        #addDir('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.com[/COLOR][/B]','http://direct',231,artfolder + 'Ze-mv1.png','nao','')
         #addDir('[B][COLOR cyan]IMDB[/COLOR][/B]','url',500,'','nao','')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','http://direct',31,artfolder + 'Ze-tv1.png','nao','')
         addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','http://direct',71,artfolder + 'Ze-tc1.png','nao','')
         addDir('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','http://direct',101,artfolder + 'Ze-mv1.png','nao','')
         addDir('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.com[/COLOR][/B]','http://direct',231,'','nao','')
+        #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
+        addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B]','url',331,'','nao','')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         addDir('Pesquisar','http://www.tuga-filmes.tv/search?q=',1,artfolder + 'Ze-pesquisar1.png','nao','')
 
@@ -344,6 +346,30 @@ elif mode == 248: TopPt.TPT_Menu_Posts_Recentes(artfolder)
 #elif mode == 255: M18.M18_TPT_encontrar_fontes_pesquisa_M18(url,pesquisou)
 elif mode == 256: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
 elif mode == 257: TextBoxes.TBOX_TextBoxes_Sinopse(url)
+#----------------------------------------------------------------ARMAGEDOM--------------------------------------------------------------------#
+elif mode == 331: Armagedom.ARM_MenuPrincipal()
+elif mode == 332: Armagedom.ARM_encontrar_fontes_filmes()
+elif mode == 333: Armagedom.ARM_encontrar_videos_filmes(name,url)
+elif mode == 334: Armagedom.ARM_pesquisar()
+elif mode == 335: Armagedom.ARM_resolve_videomega_filmes(url,conta_id_video)
+elif mode == 336: Armagedom.ARM_resolve_not_videomega_filmes(url,id_video,num_fonte)
+elif mode == 337: Armagedom.ARM_Menu_Filmes()
+elif mode == 338: Armagedom.ARM_Menu_Filmes_Por_Categorias()
+elif mode == 339: Armagedom.ARM_Menu_Filmes_Por_Ano()
+elif mode == 340: Armagedom.ARM_Menu_Series()
+elif mode == 341: Armagedom.ARM_Menu_Series_A_a_Z()
+elif mode == 342: Armagedom.ARM_encontrar_videos_series(name,url)
+elif mode == 343: Armagedom.ARM_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
+elif mode == 344: Armagedom.ARM_encontrar_fontes_series_recentes(url)
+elif mode == 345: Armagedom.ARM_pesquisar_series()
+elif mode == 346: Armagedom.ARM_encontrar_fontes_pesquisa(url,pesquisou)
+elif mode == 347: Armagedom.ARM_encontrar_fontes_series_A_a_Z(url)
+elif mode == 348: Armagedom.ARM_Menu_Posts_Recentes(artfolder)
+elif mode == 349: Armagedom.ARM_encontrar_fontes_filmes_MEGA()
+elif mode == 350: Armagedom.ARM_encontrar_fontes_filmes_M18()
+elif mode == 351: Armagedom.ARM_encontrar_fontes_filmes_MEGA_net()
+elif mode == 352: Armagedom.ARM_Menu_Filmes_Por_Categorias_MEGA_net()
+elif mode == 353: Armagedom.ARM_encontrar_fontes_series_MEGA_net()
 #----------------------------------------------------------------   IMDB   --------------------------------------------------------------------#
 elif mode == 500: Menu_IMDB()
 elif mode == 501: Filmes_IMDB_antiga(url)

@@ -33,6 +33,16 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def PLAY_movie(url,name,iconimage,checker,fanart):
+        if "streamin" in url:
+		try:
+			sources = []
+			hosted_media = urlresolver.HostedMediaFile(url)
+			sources.append(hosted_media)
+			source = urlresolver.choose_source(sources)
+			if source: 
+				url = source.resolve()
+    			else: url = ''
+		except: pass
         if "streamcloud" in url:
 		try:
 			sources = []

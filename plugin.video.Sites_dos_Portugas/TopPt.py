@@ -269,11 +269,15 @@ def TPT_encontrar_videos_filmes(name,url):
 					for url in match:
                                                 conta_id_video = conta_id_video + 1
 						TPT_resolve_not_videomega_filmes(url,conta_id_video)
+					match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
+					for url in match:
+                                                conta_id_video = conta_id_video + 1
+						TPT_resolve_not_videomega_filmes(url,conta_id_video)
 			else:
-                                linksseccao = re.findall('<span style="color:.+?"><strong>(.+?)</strong></span><br/>(.+?)Ver Aqui</a></p>',newmatch[0],re.DOTALL)
+                                linksseccao = re.findall('<span style="color:.+?">(.+?)</span><br/>(.+?)Ver Aqui</a></p>',newmatch[0],re.DOTALL)
 				if linksseccao:			
 					for parte1,parte2 in linksseccao:
-                                                parte1=parte1.replace('[','(').replace(']',')')
+                                                parte1=parte1.replace('[','(').replace(']',')').replace('<strong>','').replace('</strong>','')
                                                 conta_id_video = 0
 						addDir1('[COLOR blue]'+parte1+'[/COLOR]','','',iconimage,False,'')					
 						match = re.compile('<iframe src="(.+?)"').findall(parte2)	
@@ -285,28 +289,47 @@ def TPT_encontrar_videos_filmes(name,url):
                                                         conta_id_video = conta_id_video + 1
 							TPT_resolve_not_videomega_filmes(url,conta_id_video)
 				else:
-                                        linksseccao = re.findall('<p>EPISODIO (.+?)<br/>\n(.+?)</p>',newmatch[0],re.DOTALL)
+					linksseccao = re.findall('<span style="color:.+?"><strong>(.+?)</strong></span><br/>(.+?)Ver Aqui</a></p>',newmatch[0],re.DOTALL)
                                         if linksseccao:			
                                                 for parte1,parte2 in linksseccao:
+                                                        parte1=parte1.replace('[','(').replace(']',')').replace('<strong>','').replace('</strong>','')
                                                         conta_id_video = 0
-                                                        addDir1('[COLOR blue] Episódio '+parte1+'[/COLOR]','','',iconimage,False,'')					
+                                                        addDir1('[COLOR blue]'+parte1+'[/COLOR]','','',iconimage,False,'')					
                                                         match = re.compile('<iframe src="(.+?)"').findall(parte2)	
                                                         for url in match:
                                                                 conta_id_video = conta_id_video + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                                                        match = re.compile('<a href="(.+?)" target="_blank">Ver Aqui</a>').findall(parte2)
+                                                        match = re.compile('<a href="(.+?)" target="_blank">').findall(parte2)
                                                         for url in match:
                                                                 conta_id_video = conta_id_video + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video)
                                         else:
-                                                match = re.compile('<iframe src="(.+?)"').findall(newmatch[0])	
-                                                for url in match:
-                                                        conta_id_video = conta_id_video + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                                                match = re.compile('</b><a href="(.+?)" target="_blank">Ver Aqui</a>').findall(newmatch[0])
-                                                for url in match:
-                                                        conta_id_video = conta_id_video + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                linksseccao = re.findall('<p>EPISODIO (.+?)<br/>\n(.+?)</p>',newmatch[0],re.DOTALL)
+                                                if linksseccao:			
+                                                        for parte1,parte2 in linksseccao:
+                                                                conta_id_video = 0
+                                                                addDir1('[COLOR blue] Episódio '+parte1+'[/COLOR]','','',iconimage,False,'')					
+                                                                match = re.compile('<iframe src="(.+?)"').findall(parte2)	
+                                                                for url in match:
+                                                                        conta_id_video = conta_id_video + 1
+                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                                match = re.compile('<a href="(.+?)" target="_blank">Ver Aqui</a>').findall(parte2)
+                                                                for url in match:
+                                                                        conta_id_video = conta_id_video + 1
+                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                else:
+                                                        match = re.compile('<iframe src="(.+?)"').findall(newmatch[0])	
+                                                        for url in match:
+                                                                conta_id_video = conta_id_video + 1
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                        match = re.compile('</b><a href="(.+?)" target="_blank">Ver Aqui</a>').findall(newmatch[0])
+                                                        for url in match:
+                                                                conta_id_video = conta_id_video + 1
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                        match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(newmatch[0])
+                                                        for url in match:
+                                                                conta_id_video = conta_id_video + 1
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
 		else:
 			newmatch = re.findall('EM PT/PT:.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
 			if newmatch:
@@ -320,6 +343,10 @@ def TPT_encontrar_videos_filmes(name,url):
                                                         conta_id_video = conta_id_video + 1
 							TPT_resolve_not_videomega_filmes(url,conta_id_video)
 						match = re.compile('<a href="(.+?)" target="_blank">Ver Aqui</a>').findall(parte2)
+						for url in match:
+                                                        conta_id_video = conta_id_video + 1
+							TPT_resolve_not_videomega_filmes(url,conta_id_video)
+						match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
 						for url in match:
                                                         conta_id_video = conta_id_video + 1
 							TPT_resolve_not_videomega_filmes(url,conta_id_video)

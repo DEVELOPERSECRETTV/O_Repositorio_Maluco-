@@ -6,8 +6,7 @@
    <category label="Tipos de vista">
       <setting label="[B][COLOR green]Definições de vista:[/B][/COLOR]" type="lsep" />
       <setting id="menu-view" type="enum" label="Vista - Menus" values="Lista|Lista Grande|Miniatura" default="0"/>
-      <setting id="moviesandseries-view" type="enum" label="Vista - Filmes e Séries" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="6"/>
-      <setting id="homepage-view" type="enum" label="Vista - Filmes e Séries da Homepage" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="3"/>
-      <setting id="pedidos-view" type="enum" label="Vista - Menu de pedidos" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="6"/>
+      <setting id="movies-view" type="enum" label="Vista - Filmes" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="6"/>
+      <setting id="series-view" type="enum" label="Vista - Séries" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="3"/>
    </category>
 </settings>

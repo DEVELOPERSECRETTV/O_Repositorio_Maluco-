@@ -35,12 +35,13 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa):
         addDir1('','','','',False,'')
         pesquisou = nome_pesquisa
         if '-' in nome_pesquisa:
-                nome_p = re.compile('(.+?)[-].+?').findall(nome_pesquisa)
+                nome_p = re.compile('.+?[-](.+?)').findall(nome_pesquisa)
                 if len(nome_p[0])>2:
                         nome_pesquisa = nome_p[0]
-        if ':' in nome_pesquisa:
-                nome_p = re.compile('(.+?)[:].+?').findall(nome_pesquisa)
-                nome_pesquisa = nome_p[0]
+        else:
+                if ':' in nome_pesquisa:
+                        nome_p = re.compile('(.+?)[:].+?').findall(nome_pesquisa)
+                        nome_pesquisa = nome_p[0]
         nome_pesquisa = nome_pesquisa.replace('é','e')
         nome_pesquisa = nome_pesquisa.replace('ê','e')
         nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -52,12 +53,13 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa):
         nome_pesquisa = nome_pesquisa.replace('õ','o')
         nome_pesquisa = nome_pesquisa.replace('ú','u')
         nome_pesquisa = nome_pesquisa.replace('Ú','U')
+        nome_pesquisa = nome_pesquisa.replace('ç','c')
         a_q = re.compile('\w+')
         qq_aa = a_q.findall(nome_pesquisa)
         nome_pesquisa = ''
         for q_a_q_a in qq_aa:
-                if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                #if len(q_a_q_a) > 2:
+                #if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                if len(q_a_q_a) > 1:
                         nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
         encode=urllib.quote(nome_pesquisa)
 	url_pesquisa = 'http://www.tuga-filmes.tv/search?q=' + str(encode)

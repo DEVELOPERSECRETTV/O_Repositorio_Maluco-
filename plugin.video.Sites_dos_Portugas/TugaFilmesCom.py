@@ -212,13 +212,13 @@ def TFC_encontrar_fontes_filmes(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
 def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
-        req = urllib2.Request(url)
-        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-        response = urllib2.urlopen(req)
-        link4=response.read()
-        response.close()
-        match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)" .+?></iframe>').findall(link4)
-        url=match[0]
+        #req = urllib2.Request(url)
+        #req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+        #response = urllib2.urlopen(req)
+        #link4=response.read()
+        #response.close()
+        #match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)" .+?></iframe>').findall(link4)
+        #url=match[0]
         if "videomega" in url:
 		try:
                         url = 'http://videomega.tv/iframe.php?ref=' + id_video
@@ -233,9 +233,8 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
 		except: pass
         if "dropvideo" in url:
 		try:
-                        url = 'http://dropvideo.com/embed/' + id_video
-			print url
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,70,iconimage,'','')
+                        if '/video/' in url: url = url.replace('/video/','/embed/')
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,70,iconimage,'','')
 		except:pass
 	if "streamin.to" in url:
                 try:
@@ -266,8 +265,8 @@ def TFC_encontrar_videos_filmes(name,url):
         try:
                 fonte = TFC_abrir_url(url)
         except: fonte = ''
-        assist = re.findall('>ASSISTIR(.+?)</iframe>', fonte, re.DOTALL)
-        fontes = re.findall("Clique aqui(.+?)", fonte, re.DOTALL)
+        assist = re.findall(">ASSISTIR(.+?)<div class=\'postmeta\'>", fonte, re.DOTALL)
+        fontes = re.findall("Ver Aqui.+?", fonte, re.DOTALL)
         numero_de_fontes = len(fontes)
 	if fonte:
                 #-------------------- Videomega
@@ -292,14 +291,15 @@ def TFC_encontrar_videos_filmes(name,url):
                 #----------------- Not Videomega
 		if numero_de_fontes > 0:
                         conta_video = 0
-                        match = re.compile('<a href="(.+?)" .+? target=".+?">Clique aqui para ver!</a>').findall(fonte)
+                        match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(fonte)
                         url = match[0]
                         if url != '':
                                 try:
                                         for url in match:
-                                                identifica_video = re.compile('=(.*)').findall(match[conta_video])
-                                                id_video = identifica_video[0]
-                                                conta_video = conta_video + 1
+                                                #identifica_video = re.compile('=(.*)').findall(match[conta_video])
+                                                #id_video = identifica_video[0]
+                                                id_video = ''
+                                                #conta_video = conta_video + 1
                                                 conta_id_video = conta_id_video + 1
                                                 TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
                                 except:pass
