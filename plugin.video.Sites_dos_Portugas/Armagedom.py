@@ -51,6 +51,7 @@ def ARM_MenuPrincipal():
 	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=3228',332,artfolder,'nao','')
 	addDir('[COLOR blue]Animes/Desenhos - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=36',332,artfolder,'nao','')
         addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/',338,artfolder,'nao','')
+        addDir('Pesquisar - [B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?s=',334,artfolder,'nao','')
         if selfAddon.getSetting('hide-porno') == "false":
 			addDir('[B][COLOR red]M+18 - [/COLOR][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.megavideoporno.org/porno/filmes',350,artfolder,'nao','')
         #----------------------------------------------------------------------
@@ -65,6 +66,8 @@ def ARM_MenuPrincipal():
 	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/series/',353,artfolder,'nao','')	
 	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/category/animacao/',351,artfolder,'nao','')
 	addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/category/lancamentos/',352,artfolder,'nao','')
+	addDir('Pesquisar Filmes - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/?s=',334,artfolder,'nao','')
+	addDir('Pesquisar Séries - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/series/?pesquisaRapida=',334,artfolder,'nao','')
         #----------------------------------------------------------------------
         addDir1('','','',artfolder,False,'')
 	#addDir('Pesquisar','url',1,artfolder,'nao','')
@@ -119,6 +122,17 @@ def ARM_Menu_Filmes_Por_Categorias_MEGA_net():
                                 addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,351,artfolder,'nao','')
 
 
+def ARM_pesquisar():
+	keyb = xbmc.Keyboard('', 'Escreva o parâmetro de pesquisa') #Chama o keyboard do XBMC com a frase indicada
+	keyb.doModal() #Espera ate que seja confirmada uma determinada string
+	if (keyb.isConfirmed()): #Se a entrada estiver confirmada (isto e, se carregar no OK)
+		search = keyb.getText() #Variavel search fica definida com o conteudo do formulario
+		parametro_pesquisa=urllib.quote(search) #parametro_pesquisa faz o quote da expressao search, isto é, escapa os parametros necessarios para ser incorporado num endereço url
+		url_pesquisa = url + str(parametro_pesquisa)#+ '&x=0&y=0' #nova definicao de url. str força o parametro de pesquisa a ser uma string
+		#addDir1(url_pesquisa,'','',artfolder,False,'')
+		if 'armagedom' in url_pesquisa: ARM_encontrar_fontes_filmes(url_pesquisa) #chama a função listar_videos com o url definido em cima
+                if 'megafilmeshd.net' in url_pesquisa and 'Filmes' in name: ARM_encontrar_fontes_filmes_MEGA_net(url_pesquisa) #chama a função listar_videos com o url definido em cima
+                if 'megafilmeshd.net' in url_pesquisa and 'Séries' in name: ARM_encontrar_fontes_series_MEGA_net(url_pesquisa) #chama a função listar_videos com o url definido em cima
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -126,7 +140,7 @@ def ARM_Menu_Filmes_Por_Categorias_MEGA_net():
 
 		
 
-def ARM_encontrar_fontes_filmes():        
+def ARM_encontrar_fontes_filmes(url):        
         if 'Seguinte' not in name:
                 addDir1(name + ':','','',iconimage,False,'')
                 addDir1('','','',iconimage,False,'')
@@ -222,7 +236,7 @@ def ARM_encontrar_fontes_filmes_MEGA():
         except:pass
 
 
-def ARM_encontrar_fontes_filmes_MEGA_net():        
+def ARM_encontrar_fontes_filmes_MEGA_net(url):        
         if 'Seguinte' not in name:
                 addDir1(name + ':','','',iconimage,False,'')
                 addDir1('','','',iconimage,False,'')
@@ -260,7 +274,7 @@ def ARM_encontrar_fontes_filmes_MEGA_net():
 		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),351,artfolder,'nao','')
         except:pass
 
-def ARM_encontrar_fontes_series_MEGA_net():        
+def ARM_encontrar_fontes_series_MEGA_net(url):        
         if 'Seguinte' not in name:
                 addDir1(name + ':','','',iconimage,False,'')
                 addDir1('','','',iconimage,False,'')
@@ -547,7 +561,30 @@ def ARM_encontrar_videos_filmes(name,url):
                                                 nome = nome.replace('&#8230;',"...")
                                                 nome = nome.replace('&#8211;',"-")
                                                 nome = nome.replace('#038;','&')
-                                                addDir('[B]'+nome+' - '+title+'[/B]',url_filme[0],333,thumb[0],'','')             
+                                                addDir('[B]'+nome+' - '+title+'[/B]',url_filme[0],333,thumb[0],'','')
+                matchvideo = re.findall('main"(.*?)id="x',link2,re.DOTALL)
+                if matchvideo:
+                        partes = re.findall('id="xmain"(.*)',link2,re.DOTALL)
+                        num_partes = len(partes)
+                        num_part = 0
+                        for parte in matchvideo:
+                                num_part = num_part + 1
+                                temporada = re.compile('onclick="JavaScript:doMenu.+?;">(.+?)</a>').findall(parte)
+                                addDir1(str(num_partes)+'[COLOR blue]'+temporada[0]+'[/COLOR]','','',iconimage,False,'')
+                                urletitulo = re.compile('<a class="video" href="(.+?)">(.+?)</a>').findall(parte)
+                                for url, titulo in urletitulo:
+                                        addDir('[B]'+titulo+'[/B]',url,342,iconimage,'','')
+                        addLink(str(num_part)+partes[0],'','')
+                        if num_partes > num_part:
+                                #for part in partes:
+                                matchvideo = re.findall('onclick="JavaScript(.*?)<p class="ntemp">',partes[num_part],re.DOTALL)
+                                if matchvideo: addLink(str(num_part),'','')
+                                        
+                
+                
+
+
+                                        
                 
 def ARM_encontrar_videos_series(name,url):
         num_fonte = 0

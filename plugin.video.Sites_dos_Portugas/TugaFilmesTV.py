@@ -224,7 +224,10 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
 	if items != []:
 		print len(items)
 		for item in items:
+                        thumb = ''
+                        versao = ''
                         audio_filme = ''
+                        if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
                         genero = re.compile("nero</b>:(.+?)<br />").findall(item)
                         if genero: genre = genero[0]
                         else: genre = ''
@@ -311,7 +314,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                                                         fanart = url_fanart[0].replace('w300','w1280')
                                                                 else:
                                                                         fanart = artfolder + 'flag.jpg'
-                                else: fanart = artfolder + 'flag.jpg'
+                                else: fanart = thumb
                         if qualidade:
                                 qualidade = qualidade[0]
                         else:
@@ -321,7 +324,9 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                         num_mode = 42
                                 else:
                                         num_mode = 33
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
+                                xbmc.executebuiltin("Container.SetViewMode(504)")
+                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                         except: pass
                         #---------------------------------------------------------------
                         conta_items = conta_items + 1   
@@ -355,11 +360,15 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                         num_mode = 42
                                 else:
                                         num_mode = 33
+                                xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
+                                xbmc.executebuiltin("Container.SetViewMode(504)")
                                 addDir(nome,endereco,num_mode,'','','')
                         except:pass
 	proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
 	if proxima[0] != '':
                 try:
+                        xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
+                        xbmc.executebuiltin("Container.SetViewMode(504)")
                         addDir1('','','','',False,'')
                         addDir("[B]Página Seguinte >>[/B]",proxima[0].replace('&amp;','&'),32,artfolder + 'ze-TFV1.png','','')
                 except:pass
@@ -371,46 +380,65 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
 def TFV_encontrar_videos_filmes(name,url):
         conta_id_video = 0
 	addDir1(name,'','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
-        try:
-                fonte = TFV_abrir_url(url)
-        except: fonte = ''
-        fontes = re.findall("Clique aqui(.+?)", fonte, re.DOTALL)
-        numero_de_fontes = len(fontes)
+        addDir1('','','',iconimage,False,'')      
 	try:
 		link2=TFV_abrir_url(url)
 	except: link2 = ''
+	fontes = re.findall("Clique aqui(.+?)", link2, re.DOTALL)
+        numero_de_fontes = len(fontes)
 	#if link2:
         if 'Parte' not in link2:
+                num_leg = 1
+                num_ptpt = 1
                 #parameters = {"nome_texto" : name, "url": url, "addonid": 'TFV'}
                 #nome_textbox = urllib.urlencode(parameters)
                 #addDir('[COLOR blue]Sinopse[/COLOR]',nome_textbox,57,iconimage,'nao','')
                 #trailer = re.compile('<b>Trailer</b>: <a href="(.+?)" target="_blank">').findall(link2)
                 #if trailer: addDir('[COLOR blue]Trailer[/COLOR]',trailer[0],30,iconimage,'nao','')
                 #-------------------- Videomega
-                match = re.compile('<iframe frameborder="0" height="400" scrolling="no" src="(.+?)"').findall(link2)
-                conta_video = len(match)
-		for url in match:
-                        conta_id_video = conta_id_video + 1
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],30,iconimage,'','')
+                matchvid = re.findall("Assistir(.+?)\n</p>", link2, re.DOTALL)
+                if matchvid:
+                        for matchsvids in matchvid:
+                                #if '</iframe>' in matchsvids: addDir1('[COLOR blue]iframe[/COLOR]','','',iconimage,False,'')
+                                if 'Legendado' in matchsvids and num_leg == 1:
+                                        num_leg = 0
+                                        if num_ptpt == 0: conta_id_video = 0
+                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                if 'Portug' in matchsvids and num_ptpt == 1:
+                                        num_ptpt = 0
+                                        if num_leg == 0: conta_id_video = 0
+                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                if '</iframe>' in matchsvids:
+                                        #addDir1('[COLOR blue]iframe[/COLOR]','','',iconimage,False,'')
+                                        videomeg = re.compile('<iframe frameborder="0" height="400" scrolling="no" src="(.+?)"').findall(matchsvids)
+                                        if videomeg:
+                                                conta_id_video = conta_id_video + 1
+                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'','')
                 #-------------------------------
                 #----------------- Not Videomega
-		if numero_de_fontes > 0:
-                        conta_video = 0
-                        match = re.compile('<a href="(.+?)" .+? target=".+?">Clique aqui para ver!</a>').findall(link2)
-                        url = match[0]
-                        if url != '':
-                                try:
-                                        for url in match:
-                                                identifica_video = re.compile('=(.*)').findall(match[conta_video])
-                                                id_video = identifica_video[0]
-                                                conta_video = conta_video + 1
-                                                conta_id_video = conta_id_video + 1
-                                                TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
-                                except:pass
+                                if numero_de_fontes > 0 and not '</iframe>' in matchsvids:
+                                        #addDir1(str(numero_de_fontes)+'[COLOR blue]iframe[/COLOR]','','',iconimage,False,'')
+                                        #conta_video = 0
+                                        match = re.compile('<a href="(.+?)"').findall(matchsvids)
+                                        url = match[0]
+                                        if url != '':
+                                                try:
+                                                        #for url in match:
+                                                        identifica_video = re.compile('=(.*)').findall(url)
+                                                        id_video = identifica_video[0]
+                                                        #conta_video = conta_video + 1
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                except:pass
                 #-------------------------------
+                else:
+                        videomeg = re.compile('<iframe frameborder="0" height="400" scrolling="no" src="(.+?)"').findall(link2)
+                        if videomeg:
+                                conta_id_video = conta_id_video + 1
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'','')
+
         if 'Parte' in link2:
-                matchvideo = re.findall("<div class='.+?'> Assistir(.+?)\n</p>", link2, re.DOTALL)
+                matchvideo = re.findall("Assistir(.+?)\n</p>", link2, re.DOTALL)
                 if matchvideo:
                         for parte in matchvideo:
                                 nome_video = re.compile('(.+?)</div></h3><p>').findall(parte)
@@ -437,6 +465,12 @@ def TFV_encontrar_videos_filmes(name,url):
                                         response.close()
                                         match = re.compile('<iframe src="(.+?)" scrolling="no" frameborder="0" width="870px" height="500px"></iframe></center>').findall(link4)
                                         url=match[0]
+                                        if "videomega" in url:
+                                                try:
+                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video
+                                                        print url
+                                                        addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
+                                                except: pass
                                         if "vidto.me" in url:
                                                 try:
                                                         url = 'http://vidto.me/' + id_video + '.html'

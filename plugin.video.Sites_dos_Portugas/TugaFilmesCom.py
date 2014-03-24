@@ -120,6 +120,8 @@ def TFC_encontrar_fontes_filmes(url):
                         versao = ''
                         pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
                         if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
+                        assist = re.findall(">ASSISTIR.+?", item, re.DOTALL)
+                        if len(assist) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
 			urletitulo = re.compile("<a href=\'(.+?)\' title=\'(.+?)\'>").findall(item)
 			qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
 			thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
@@ -265,45 +267,100 @@ def TFC_encontrar_videos_filmes(name,url):
         try:
                 fonte = TFC_abrir_url(url)
         except: fonte = ''
-        assist = re.findall(">ASSISTIR(.+?)<div class=\'postmeta\'>", fonte, re.DOTALL)
+        assist = re.findall(">ASSISTIR.+?", fonte, re.DOTALL)
         fontes = re.findall("Ver Aqui.+?", fonte, re.DOTALL)
         numero_de_fontes = len(fontes)
 	if fonte:
-                #-------------------- Videomega
-                if '----------------------------<br />' in fonte and len(assist) > 1:
-                        assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
-                        for ass_fon in assistir_fontes:
-                                match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)"').findall(ass_fon)
-                                assis = re.compile('(.+?)</span>').findall(ass_fon)
-                                conta_video = len(match)
-                                if 'LEGENDADO' in assis[0]:
-                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
-                                if 'PT/PT' in assis[0]:
-                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
-                                addDir('[B]- Fonte 1 : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
-                else:        
+                if len(assist) > 1:
+                        assistir_fontes = re.findall('>ASSISTIR(.*?)------------------------------', fonte, re.DOTALL)
+                        if assistir_fontes:
+                                for ass_fon in assistir_fontes:
+                                        match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)"').findall(ass_fon)
+                                        assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
+                                        conta_video = len(match)
+                                        if assis:
+                                                addDir1(assis[0],'','',iconimage,False,'')
+                                                if 'LEGENDADO' in assis[0]:
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                if 'PT/PT' in assis[0]:
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                elif 'PT-PT' in assis[0]: addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                        if match:
+                                                conta_id_video = conta_id_video + 1
+                                                addDir('[B]- Fonte '+str(conta_id_video)+' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
+                                        match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
+                                        if match:
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                assistir_fontes = re.findall("------------------------------<br />(.*?)<div class='postmeta'>", fonte, re.DOTALL)
+                                conta_id_video = 0
+                                #if assistir_fontes:
+                                for ass_fon in assistir_fontes:
+                                        match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)"').findall(ass_fon)
+                                        assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
+                                        conta_video = len(match)
+                                        if assis:
+                                                addDir1(assis[0],'','',iconimage,False,'')
+                                                if 'LEGENDADO' in assis[0]:
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                if 'PT/PT' in assis[0]:
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                elif 'PT-PT' in assis[0]: addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                        if match:
+                                                conta_id_video = conta_id_video + 1
+                                                addDir('[B]- Fonte '+str(conta_id_video)+' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
+                                        match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
+                                        if match:
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                        else:
+                                assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
+                                conta_id_video = 0
+                                for ass_fon in assistir_fontes:
+                                        match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)"').findall(ass_fon)
+                                        assis = re.compile('(.+?)</span>').findall(ass_fon)
+                                        conta_video = len(match)
+                                        if assis:
+                                                addDir1(assis[0],'','',iconimage,False,'')
+                                                if 'LEGENDADO' in assis[0]:
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                if 'PT/PT' in assis[0]:
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                elif 'PT-PT' in assis[0]: addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                        if match:
+                                                conta_id_video = conta_id_video + 1
+                                                addDir('[B]- Fonte '+str(conta_id_video)+' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
+                                        match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
+                                        if match:
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                else:
                         match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)" .+?></iframe>').findall(fonte)
                         conta_video = len(match)
                         for url in match:                                
                                 conta_id_video = conta_id_video + 1
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
-                #-------------------------------
-                #----------------- Not Videomega
-		if numero_de_fontes > 0:
-                        conta_video = 0
-                        match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(fonte)
-                        url = match[0]
-                        if url != '':
-                                try:
-                                        for url in match:
-                                                #identifica_video = re.compile('=(.*)').findall(match[conta_video])
-                                                #id_video = identifica_video[0]
-                                                id_video = ''
-                                                #conta_video = conta_video + 1
-                                                conta_id_video = conta_id_video + 1
-                                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
-                                except:pass
-                #-------------------------------
+                        if numero_de_fontes > 0:
+                                conta_video = 0
+                                match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(fonte)
+                                url = match[0]
+                                if url != '':
+                                        try:
+                                                for url in match:
+                                                        #identifica_video = re.compile('=(.*)').findall(match[conta_video])
+                                                        #id_video = identifica_video[0]
+                                                        id_video = ''
+                                                        #conta_video = conta_video + 1
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                        except:pass
+
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#

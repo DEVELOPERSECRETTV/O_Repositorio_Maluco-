@@ -17,7 +17,7 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver,urlparse
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver,urlparse,time,os
 import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TextBoxes,TopPt,FilmesAnima,Filmes,Series,Mashup,Armagedom
 from array import array
 from string import capwords
@@ -52,9 +52,11 @@ mensagemok = xbmcgui.Dialog().ok
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
 def MAIN_MENU():
+        #addLink('vvv','http://d3442.allmyvideos.net/d/ygmagbpgyq5dh6lnptgit5gqehpeyy6jc7ha3df3qvcxpa2w4jkdoi77fefbdai/video.mp4?v2','')
+        #addLink('vvv','http://st59.u1.videomega.tv/v/2cadf4fe7583d75d3c0fd927a7b19c7b.mp4','')
         #xbmc.executebuiltin("Container.SetViewMode(503)")
         url_TFV = 'http://www.tuga-filmes.tv/search/label/Filmes'
-        url_TFC = 'http://www.tuga-filmes.com'
+        url_TFC = 'http://www.tuga-filmes.com/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_TPT = 'http://toppt.net/?cat=68'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
@@ -348,7 +350,7 @@ elif mode == 256: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
 elif mode == 257: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 #----------------------------------------------------------------ARMAGEDOM--------------------------------------------------------------------#
 elif mode == 331: Armagedom.ARM_MenuPrincipal()
-elif mode == 332: Armagedom.ARM_encontrar_fontes_filmes()
+elif mode == 332: Armagedom.ARM_encontrar_fontes_filmes(url)
 elif mode == 333: Armagedom.ARM_encontrar_videos_filmes(name,url)
 elif mode == 334: Armagedom.ARM_pesquisar()
 elif mode == 335: Armagedom.ARM_resolve_videomega_filmes(url,conta_id_video)
@@ -367,9 +369,9 @@ elif mode == 347: Armagedom.ARM_encontrar_fontes_series_A_a_Z(url)
 elif mode == 348: Armagedom.ARM_Menu_Posts_Recentes(artfolder)
 elif mode == 349: Armagedom.ARM_encontrar_fontes_filmes_MEGA()
 elif mode == 350: Armagedom.ARM_encontrar_fontes_filmes_M18()
-elif mode == 351: Armagedom.ARM_encontrar_fontes_filmes_MEGA_net()
+elif mode == 351: Armagedom.ARM_encontrar_fontes_filmes_MEGA_net(url)
 elif mode == 352: Armagedom.ARM_Menu_Filmes_Por_Categorias_MEGA_net()
-elif mode == 353: Armagedom.ARM_encontrar_fontes_series_MEGA_net()
+elif mode == 353: Armagedom.ARM_encontrar_fontes_series_MEGA_net(url)
 #----------------------------------------------------------------   IMDB   --------------------------------------------------------------------#
 elif mode == 500: Menu_IMDB()
 elif mode == 501: Filmes_IMDB_antiga(url)

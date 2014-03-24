@@ -237,6 +237,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
 
 def TPT_encontrar_videos_filmes(name,url):
         conta_id_video = 0
+        contaultimo = 0
 	addDir1(name,'','',iconimage,False,'')
         addDir1('','','',iconimage,False,'')
         #try:
@@ -273,6 +274,11 @@ def TPT_encontrar_videos_filmes(name,url):
 					for url in match:
                                                 conta_id_video = conta_id_video + 1
 						TPT_resolve_not_videomega_filmes(url,conta_id_video)
+					match = re.compile('<input onclick="window.open(.+?)" type="button" name=""').findall(parte2)
+                                        for url in match:
+                                                conta_id_video = conta_id_video + 1
+                                                url = url.replace("'","").replace("(","").replace(")","")
+                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
 			else:
                                 linksseccao = re.findall('<span style="color:.+?">(.+?)</span><br/>(.+?)Ver Aqui</a></p>',newmatch[0],re.DOTALL)
 				if linksseccao:			
@@ -288,6 +294,11 @@ def TPT_encontrar_videos_filmes(name,url):
 						for url in match:
                                                         conta_id_video = conta_id_video + 1
 							TPT_resolve_not_videomega_filmes(url,conta_id_video)
+						match = re.compile('<input onclick="window.open(.+?)" type="button" name=""').findall(parte2)
+                                                for url in match:
+                                                        conta_id_video = conta_id_video + 1
+                                                        url = url.replace("'","").replace("(","").replace(")","")
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
 				else:
 					linksseccao = re.findall('<span style="color:.+?"><strong>(.+?)</strong></span><br/>(.+?)Ver Aqui</a></p>',newmatch[0],re.DOTALL)
                                         if linksseccao:			
@@ -303,20 +314,90 @@ def TPT_encontrar_videos_filmes(name,url):
                                                         for url in match:
                                                                 conta_id_video = conta_id_video + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                        match = re.compile('<input onclick="window.open(.+?)" type="button" name=""').findall(parte2)
+                                                        for url in match:
+                                                                conta_id_video = conta_id_video + 1
+                                                                url = url.replace("'","").replace("(","").replace(")","")
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
                                         else:
-                                                linksseccao = re.findall('<p>EPISODIO (.+?)<br/>\n(.+?)</p>',newmatch[0],re.DOTALL)
+                                                linksseccao = re.findall('ODIO (.+?)<br/>\n(.+?)EPIS',newmatch[0],re.DOTALL)
+                                                linksseccaoultimo = re.findall('ODIO (.+?)<br/>\n(.+?)</p>',newmatch[0],re.DOTALL)
                                                 if linksseccao:			
                                                         for parte1,parte2 in linksseccao:
                                                                 conta_id_video = 0
-                                                                addDir1('[COLOR blue] Episódio '+parte1+'[/COLOR]','','',iconimage,False,'')					
+                                                                #parte1='teste'
+                                                                addDir1('[COLOR blue] Episódio '+parte1+'[/COLOR]','','',iconimage,False,'')
+                                                                ultepi = int(parte1)
                                                                 match = re.compile('<iframe src="(.+?)"').findall(parte2)	
                                                                 for url in match:
                                                                         conta_id_video = conta_id_video + 1
                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video)
                                                                 match = re.compile('<a href="(.+?)" target="_blank">Ver Aqui</a>').findall(parte2)
+                                                                if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                                 for url in match:
                                                                         conta_id_video = conta_id_video + 1
                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                                match = re.compile('<input onclick="window.open(.+?)" type="button" name=""').findall(parte2)
+                                                                for url in match:
+                                                                        conta_id_video = conta_id_video + 1
+                                                                        url = url.replace("'","").replace("(","").replace(")","")
+                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                                match = re.compile('<input name="" type="button" onClick="window.open(.+?)" value=').findall(parte2)
+                                                                for url in match:
+                                                                        conta_id_video = conta_id_video + 1
+                                                                        url = url.replace("'","").replace("(","").replace(")","")
+                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                        for parte1,parte2 in linksseccaoultimo:
+                                                                conta_id_video = 0
+                                                                #parte1='teste'
+                                                                contaultimo = contaultimo + 1
+                                                                if contaultimo == len(linksseccaoultimo) and '<p><b>' not in parte1:
+                                                                        addDir1('[COLOR blue] Episódio '+parte1+'[/COLOR]','','',iconimage,False,'')					
+                                                                        match = re.compile('<iframe src="(.+?)"').findall(parte2)	
+                                                                        for url in match:
+                                                                                conta_id_video = conta_id_video + 1
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                                        match = re.compile('<a href="(.+?)" target="_blank">Ver Aqui</a>').findall(parte2)
+                                                                        if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
+                                                                        for url in match:
+                                                                                conta_id_video = conta_id_video + 1
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                                        match = re.compile('<input onclick="window.open(.+?)" type="button" name=""').findall(parte2)
+                                                                        for url in match:
+                                                                                conta_id_video = conta_id_video + 1
+                                                                                url = url.replace("'","").replace("(","").replace(")","")
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                                        match = re.compile('<input name="" type="button" onClick="window.open(.+?)" value=').findall(parte2)
+                                                                        for url in match:
+                                                                                conta_id_video = conta_id_video + 1
+                                                                                url = url.replace("'","").replace("(","").replace(")","")
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                        linksse = re.findall('ODIO (.+?)</p>\n<p><b>(.+?)</p>',newmatch[0],re.DOTALL)
+                                                        if linksse:
+                                                                for parte1,parte2 in linksse:
+                                                                        conta_id_video = 0
+                                                                        #parte1='teste'
+                                                                        if len(parte1) > 2 and ' e ' not in parte1: parte1 = str(ultepi - 1)
+                                                                        addDir1('[COLOR blue] Episódio '+parte1+'[/COLOR]','','',iconimage,False,'')					
+                                                                        match = re.compile('<iframe src="(.+?)"').findall(parte2)	
+                                                                        for url in match:
+                                                                                conta_id_video = conta_id_video + 1
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                                        match = re.compile('<a href="(.+?)" target="_blank">Ver Aqui</a>').findall(parte2)
+                                                                        if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
+                                                                        for url in match:
+                                                                                conta_id_video = conta_id_video + 1
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                                        match = re.compile('<input onclick="window.open(.+?)" type="button" name=""').findall(parte2)
+                                                                        for url in match:
+                                                                                conta_id_video = conta_id_video + 1
+                                                                                url = url.replace("'","").replace("(","").replace(")","")
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                                        match = re.compile('<input name="" type="button" onClick="window.open(.+?)" value=').findall(parte2)
+                                                                        for url in match:
+                                                                                conta_id_video = conta_id_video + 1
+                                                                                url = url.replace("'","").replace("(","").replace(")","")
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
                                                 else:
                                                         match = re.compile('<iframe src="(.+?)"').findall(newmatch[0])	
                                                         for url in match:
@@ -329,6 +410,11 @@ def TPT_encontrar_videos_filmes(name,url):
                                                         match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(newmatch[0])
                                                         for url in match:
                                                                 conta_id_video = conta_id_video + 1
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
+                                                        match = re.compile('<input onclick="window.open(.+?)" type="button" name=""').findall(newmatch[0])
+                                                        for url in match:
+                                                                conta_id_video = conta_id_video + 1
+                                                                url = url.replace("'","").replace("(","").replace(")","")
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video)
 		else:
 			newmatch = re.findall('EM PT/PT:.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
@@ -350,8 +436,13 @@ def TPT_encontrar_videos_filmes(name,url):
 						for url in match:
                                                         conta_id_video = conta_id_video + 1
 							TPT_resolve_not_videomega_filmes(url,conta_id_video)
+						match = re.compile('<input onclick="window.open(.+?)" type="button" name=""').findall(parte2)
+                                                for url in match:
+                                                        conta_id_video = conta_id_video + 1
+                                                        url = url.replace("'","").replace("(","").replace(")","")
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
                                 else:
-					linksseccao = re.findall('<p>EPISODIO (.+?)<br/>\n(.+?)</p>',newmatch[0],re.DOTALL)
+					linksseccao = re.findall('EPISODIO (.+?)<br/>\n(.+?)</p>',newmatch[0],re.DOTALL)
 					if linksseccao:			
 						for parte1,parte2 in linksseccao:
                                                         conta_id_video = 0
@@ -365,7 +456,12 @@ def TPT_encontrar_videos_filmes(name,url):
 							match = re.compile('<a href="(.+?)" target="_blank">Ver Aqui</a>').findall(parte2)
 							for url in match:
                                                                 conta_id_video = conta_id_video + 1
-								TPT_resolve_not_videomega_filmes(url,conta_id_video)				
+								TPT_resolve_not_videomega_filmes(url,conta_id_video)
+							match = re.compile('<input onclick="window.open(.+?)" type="button" name=""').findall(parte2)
+                                                        for url in match:
+                                                                conta_id_video = conta_id_video + 1
+                                                                url = url.replace("'","").replace("(","").replace(")","")
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
 					else:
 						match = re.compile('<iframe src="(.+?)"').findall(newmatch[0])	
 						for url in match:
@@ -375,6 +471,11 @@ def TPT_encontrar_videos_filmes(name,url):
 						for url in match:
                                                         conta_id_video = conta_id_video + 1
 							TPT_resolve_not_videomega_filmes(url,conta_id_video)
+						match = re.compile('<input onclick="window.open(.+?)" type="button" name=""').findall(newmatch[0])
+                                                for url in match:
+                                                        conta_id_video = conta_id_video + 1
+                                                        url = url.replace("'","").replace("(","").replace(")","")
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
 				
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -418,6 +519,14 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video):
     	if "sockshare" in url:
                 try:
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Sockshare)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "firedrive" in url:
+                try:
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "movshare" in url:
+                try:
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Movshare)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	return
 

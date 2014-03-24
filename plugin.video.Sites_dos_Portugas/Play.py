@@ -21,7 +21,7 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver,time,os
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -33,6 +33,9 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def PLAY_movie(url,name,iconimage,checker,fanart):
+        dp = xbmcgui.DialogProgress()
+	dp.create(name,'A sincronizar vídeos e legendas')
+	dp.update(0)
         if "streamin" in url:
 		try:
 			sources = []
@@ -89,7 +92,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
 			tit=re.compile('var vtitle = "(.+?)"').findall(link3)
-			match=re.compile('var vurl = "(.+?)"').findall(link3)
+			match=re.compile('var vurl2 = "(.+?)"').findall(link3)
 			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
 			if subtitle == []:
 				checker = ''
@@ -97,9 +100,12 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			else:
 				checker = subtitle[0]
 				url = match[0]
+			#addLink(name+match[0],match[0],'')
 		except: pass
 	if "putlocker" in url:
                 try:
+                        url = url.replace("putlocker","firedrive")
+                        addLink(url,url,'')
                         sources = []
                         hosted_media = urlresolver.HostedMediaFile(url)
                         sources.append(hosted_media)
@@ -148,6 +154,26 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                                 url = source.resolve()
                         else: url = ''
     		except:pass
+    	if "firedrive" in url:
+                try:
+                        sources = []
+                        hosted_media = urlresolver.HostedMediaFile(url)
+                        sources.append(hosted_media)
+                        source = urlresolver.choose_source(sources)
+                        if source: 
+                                url = source.resolve()
+                        else: url = ''
+    		except:pass
+    	if "movshare" in url:
+                try:
+                        sources = []
+                        hosted_media = urlresolver.HostedMediaFile(url)
+                        sources.append(hosted_media)
+                        source = urlresolver.choose_source(sources)
+                        if source: 
+                                url = source.resolve()
+                        else: url = ''
+    		except:pass
     	if "videomega" in url:
 		try:
 			if "iframe" not in url:
@@ -168,21 +194,23 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			else:
 				checker = subtitle[0]
 				url = match[0]
+			#addLink(name+match[0],match[0],'')
 		except: pass
-	dp = xbmcgui.DialogProgress()
-	dp.create("SitesDosPortugas",'A sincronizar vídeos e legendas')
-	dp.update(0)
-	playlist = xbmc.PlayList(1)
-	playlist.clear()             
-	playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
-	addLink('Voltar',url,'')
-	dp.update(1, 'A reproduzir o filme.')
-	if dp.iscanceled(): return
-        dp.close()
-        xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
-        xbmcPlayer.play(playlist)
-	if checker == '' or checker == None: pass
-	else: xbmcPlayer.setSubtitles(checker)
+	try:
+                playlist = xbmc.PlayList(1)
+                playlist.clear()             
+                playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
+                addLink(name,url,iconimage)
+                dp.update(33)
+                if dp.iscanceled(): return
+                xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
+                dp.update(66)
+                xbmcPlayer.play(playlist)
+                dp.update(100)
+                dp.close()
+                if checker == '' or checker == None: pass
+                else: xbmcPlayer.setSubtitles(checker)
+        except: pass
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	

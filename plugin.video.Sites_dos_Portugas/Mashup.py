@@ -125,6 +125,8 @@ def Filmes_Filmes_Filmes(url):
 			urletitulo = re.compile("<a href=\'(.+?)\' title=\'(.+?)\'>").findall(item)
 			ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
 			thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
+			if thumbnail: thumb = thumbnail[0]
+			else: thumb = ''
 			print urletitulo,thumbnail
 			if ano != []:
                                 for q_a in ano:
@@ -148,7 +150,7 @@ def Filmes_Filmes_Filmes(url):
                         if nome not in arr_filmes:
                                 arr_filmes.insert(i,nome)
                                 arrai_filmes.insert(i,nome_filme)
-                                thumb_filmes.insert(i,thumbnail[0])
+                                thumb_filmes.insert(i,thumb)
                         #else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'/TFC
                         i = i + 1
                         conta_items = conta_items + 1
@@ -159,7 +161,7 @@ def Filmes_Filmes_Filmes(url):
         proxima_TFC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
         url_TFC = proxima_TFC[0].replace('&amp;','&')
         #----------------------------------------------------------------------------------------------------
-        i = 1
+        i = 3
 	try:
 		html_source = MASH_abrir_url(url_MVT)
 	except: html_source = ''
@@ -207,7 +209,7 @@ def Filmes_Filmes_Filmes(url):
                 url_MVT = proxima_MVT[0].replace('&amp;','&')
 	except: pass
         #----------------------------------------------------------------------------------------------------
-        i = 1
+        i = 0
         try:
 		html_source = MASH_abrir_url(url_TPT)
 	except: html_source = ''
@@ -218,11 +220,15 @@ def Filmes_Filmes_Filmes(url):
 		#addDir(str(num_perc)+'  '+str(len(items)),'',507,artfolder + 'ze-TFV1.png','','')
 		for item in items:
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
+                        if '[' in urletitulo[0][1] and not ('PT' in urletitulo[0][1] or 'Tri' in urletitulo[0][1] or 'Qua' in urletitulo[0][1]):
+                                urletitulo = re.compile('[[](.+?)[]]').findall(urletitulo[0][1])
+                                nome = urletitulo[0]
+                        else: nome = urletitulo[0][1]
                         #if '[' in urletitulo[0][1]: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)[[].+?</a>').findall(item)
                         ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
                         thumbnail = re.compile('src="(.+?)"').findall(item)
                         print urletitulo,thumbnail
-                        nome = urletitulo[0][1]
+                        #nome = urletitulo[0][1]
                         if not ano:
                                 ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
                                 if ano:
@@ -578,7 +584,7 @@ def MASH_get_params():
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'Wall.jpg')
+	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -586,7 +592,7 @@ def addLink(name,url,iconimage):
 def addLink1(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'Wall.jpg')
+	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -595,7 +601,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'Wall.jpg')
+	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
@@ -604,7 +610,7 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'Wall.jpg')
+	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok
