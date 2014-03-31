@@ -88,6 +88,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 		except: pass
 	if "dropvideo" in url:
 		try:
+                        if '/video/' in url: url = url.replace('/video/','/embed/')
 			iframe_url = url
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
@@ -164,7 +165,33 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                                 url = source.resolve()
                         else: url = ''
     		except:pass
+    	if "videowood" in url:
+                try:
+                        iframe_url = url
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			tit=re.compile('title: "(.+?)"').findall(link3)
+			match=re.compile('file: "(.+?)"').findall(link3)
+			subtitle=re.compile("addSubtitles('(.+?)'").findall(link3)
+			if subtitle == []:
+				checker = ''
+				url = match[0]
+			else:
+				checker = subtitle[0]
+				url = match[0]
+			#addLink(name+match[0],match[0],'')
+    		except:pass
     	if "movshare" in url:
+                try:
+                        sources = []
+                        hosted_media = urlresolver.HostedMediaFile(url)
+                        sources.append(hosted_media)
+                        source = urlresolver.choose_source(sources)
+                        if source: 
+                                url = source.resolve()
+                        else: url = ''
+    		except:pass
+    	if "video.tt" in url:
                 try:
                         sources = []
                         hosted_media = urlresolver.HostedMediaFile(url)
@@ -197,6 +224,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			#addLink(name+match[0],match[0],'')
 		except: pass
 	try:
+                #addLink(name+match[0],match[0],'')
                 playlist = xbmc.PlayList(1)
                 playlist.clear()             
                 playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))

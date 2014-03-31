@@ -386,10 +386,14 @@ def TFV_encontrar_videos_filmes(name,url):
 	except: link2 = ''
 	fontes = re.findall("Clique aqui(.+?)", link2, re.DOTALL)
         numero_de_fontes = len(fontes)
+        Partes = re.findall("PARTE(.+?)", link2, re.DOTALL)
+        #addDir1(str(len(Partes)),'','',iconimage,False,'')
+        #return
 	#if link2:
-        if 'Parte' not in link2:
+        if 'Parte 1' and 'Parte 2' not in link2:
                 num_leg = 1
                 num_ptpt = 1
+                ########################addDir1(str(len(Partes)),'','',iconimage,False,'')
                 #parameters = {"nome_texto" : name, "url": url, "addonid": 'TFV'}
                 #nome_textbox = urllib.urlencode(parameters)
                 #addDir('[COLOR blue]Sinopse[/COLOR]',nome_textbox,57,iconimage,'nao','')
@@ -414,13 +418,14 @@ def TFV_encontrar_videos_filmes(name,url):
                                         if videomeg:
                                                 conta_id_video = conta_id_video + 1
                                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'','')
+                                else:
                 #-------------------------------
                 #----------------- Not Videomega
-                                if numero_de_fontes > 0 and not '</iframe>' in matchsvids:
+                                #if numero_de_fontes > 0 and not '</iframe>' in matchsvids:
                                         #addDir1(str(numero_de_fontes)+'[COLOR blue]iframe[/COLOR]','','',iconimage,False,'')
                                         #conta_video = 0
                                         match = re.compile('<a href="(.+?)"').findall(matchsvids)
-                                        url = match[0]
+                                        url = match[0] 
                                         if url != '':
                                                 try:
                                                         #for url in match:
@@ -428,6 +433,7 @@ def TFV_encontrar_videos_filmes(name,url):
                                                         id_video = identifica_video[0]
                                                         #conta_video = conta_video + 1
                                                         conta_id_video = conta_id_video + 1
+                                                        #addDir1(id_video,'','',iconimage,False,'')
                                                         TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
                                                 except:pass
                 #-------------------------------
@@ -437,7 +443,7 @@ def TFV_encontrar_videos_filmes(name,url):
                                 conta_id_video = conta_id_video + 1
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'','')
 
-        if 'Parte' in link2:
+        if 'Parte 1' and 'Parte 2' in link2:
                 matchvideo = re.findall("Assistir(.+?)\n</p>", link2, re.DOTALL)
                 if matchvideo:
                         for parte in matchvideo:
@@ -463,7 +469,7 @@ def TFV_encontrar_videos_filmes(name,url):
                                         response = urllib2.urlopen(req)
                                         link4=response.read()
                                         response.close()
-                                        match = re.compile('<iframe src="(.+?)" scrolling="no" frameborder="0" width="870px" height="500px"></iframe></center>').findall(link4)
+                                        match = re.compile('<iframe src="(.+?)".+?></iframe></center>').findall(link4)
                                         url=match[0]
                                         if "videomega" in url:
                                                 try:
@@ -500,7 +506,14 @@ def TFV_encontrar_videos_filmes(name,url):
                                                         url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video
                                                         print url
                                                         addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
-                                                except:pass                
+                                                except:pass
+                                        if "videowood" in url:
+                                                try:
+                                                        #if '/video/' in url: url = url.replace('/video/','/embed/')
+                                                        url = 'http://videowood.tv/embed/' + id_video
+                                                        print url
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
+                                                except:pass
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -510,7 +523,7 @@ def TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
         response = urllib2.urlopen(req)
         link4=response.read()
         response.close()
-        match = re.compile('<iframe src="(.+?)" scrolling="no" frameborder="0" width="870px" height="500px"></iframe></center>').findall(link4)
+        match = re.compile('<iframe src="(.+?)".+?></iframe></center>').findall(link4)
         url=match[0]
         if "videomega" in url:
 		try:
@@ -547,6 +560,13 @@ def TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
                         url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video
                         print url
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "videowood" in url:
+                try:
+                        #if '/video/' in url: url = url.replace('/video/','/embed/')
+                        url = 'http://videowood.tv/embed/' + id_video
+                        print url
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
     		except:pass
     	return
 
@@ -691,7 +711,7 @@ def TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_hr
         link4=response.read()
         response.close()
         if src_href == 'href':
-                match = re.compile('<iframe src="(.+?)" scrolling="no" frameborder="0" width="870px" height="500px"></iframe>').findall(link4)
+                match = re.compile('<iframe src="(.+?)".+?></iframe>').findall(link4)
         if src_href == 'src':
                 match = re.compile('<iframe .+? src="(.+?)" .+?></iframe>').findall(link4)
         url=match[0]        
@@ -730,6 +750,13 @@ def TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_hr
                         url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video
                         print url
                         addDir('[B][COLOR green]' + nome_cada_episodio + '[/COLOR] - Fonte : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "videowood" in url:
+                try:
+                        #if '/video/' in url: url = url.replace('/video/','/embed/')
+                        url = 'http://videowood.tv/embed/' + id_video
+                        print url
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
     		except:pass
     	return
                 

@@ -256,6 +256,12 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
                         print url
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,70,iconimage,'','')
     		except:pass
+    	if "videowood" in url:
+                try:
+                        if '/video/' in url: url = url.replace('/video/','/embed/')
+                        print url
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
+    		except:pass
     	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -279,7 +285,7 @@ def TFC_encontrar_videos_filmes(name,url):
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
-                                                addDir1(assis[0],'','',iconimage,False,'')
+                                                #addDir1(assis[0],'','',iconimage,False,'')
                                                 if 'LEGENDADO' in assis[0]:
                                                         addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
                                                 if 'PT/PT' in assis[0]:
@@ -302,7 +308,7 @@ def TFC_encontrar_videos_filmes(name,url):
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
-                                                addDir1(assis[0],'','',iconimage,False,'')
+                                                #addDir1(assis[0],'','',iconimage,False,'')
                                                 if 'LEGENDADO' in assis[0]:
                                                         addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
                                                 if 'PT/PT' in assis[0]:
@@ -325,7 +331,7 @@ def TFC_encontrar_videos_filmes(name,url):
                                         assis = re.compile('(.+?)</span>').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
-                                                addDir1(assis[0],'','',iconimage,False,'')
+                                                #addDir1(assis[0],'','',iconimage,False,'')
                                                 if 'LEGENDADO' in assis[0]:
                                                         addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
                                                 if 'PT/PT' in assis[0]:
