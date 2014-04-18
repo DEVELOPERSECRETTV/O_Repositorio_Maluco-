@@ -159,7 +159,7 @@ def MVT_encontrar_videos_filmes(name,url):
                                                         match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
-                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video
+                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
                                         if 'vidto' in fonte_id:
@@ -167,7 +167,7 @@ def MVT_encontrar_videos_filmes(name,url):
                                                         match = re.compile('<iframe .+? src="//vidto.me/embed-(.+?)-755x390.html" .+?</iframe>').findall(fonte_id)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
-                                                        url = 'http://vidto.me/' + id_video + '.html'
+                                                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
                 else:
@@ -178,7 +178,7 @@ def MVT_encontrar_videos_filmes(name,url):
                                                         match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
-                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video
+                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
                                         if 'vidto' in fonte_id:
@@ -186,7 +186,7 @@ def MVT_encontrar_videos_filmes(name,url):
                                                         match = re.compile('<iframe .+? src="//vidto.me/embed-(.+?)-755x390.html" .+?</iframe>').findall(fonte_id)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
-                                                        url = 'http://vidto.me/' + id_video + '.html'
+                                                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
 

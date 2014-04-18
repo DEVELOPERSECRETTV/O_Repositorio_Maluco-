@@ -36,6 +36,14 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
         dp = xbmcgui.DialogProgress()
 	dp.create(name,'A sincronizar vídeos e legendas')
 	dp.update(0)
+	nome = re.compile('///(.+?)[)].+?[(].+?[)]').findall(url)
+	if not nome:
+                nome = re.compile('///(.*)').findall(url)
+                nomefilme = nome[0]
+	else: nomefilme = nome[0] + ')'
+	urlvid = re.compile('(.+?)///').findall(url)
+	url = urlvid[0]
+	name = nomefilme + ' ' + name
         if "streamin" in url:
 		try:
 			sources = []
@@ -45,8 +53,19 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			if source: 
 				url = source.resolve()
     			else: url = ''
+    			#return url
 		except: pass
         if "streamcloud" in url:
+		try:
+			sources = []
+			hosted_media = urlresolver.HostedMediaFile(url)
+			sources.append(hosted_media)
+			source = urlresolver.choose_source(sources)
+			if source: 
+				url = source.resolve()
+    			else: url = ''
+		except: pass
+	if "video.mail.ru" in url:
 		try:
 			sources = []
 			hosted_media = urlresolver.HostedMediaFile(url)
@@ -75,6 +94,33 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			if source: 
 				url = source.resolve()
     			else: url = ''
+		except: pass
+	if "youwatch" in url:
+		try:
+			sources = []
+			hosted_media = urlresolver.HostedMediaFile(url)
+			sources.append(hosted_media)
+			source = urlresolver.choose_source(sources)
+			if source: 
+				url = source.resolve()
+    			else: url = ''
+		except: pass
+	if "hostingbulk" in url:
+		try:
+			iframe_url = url
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			#tit=re.compile('title: "(.+?)"').findall(link3)
+			match=re.compile('http[|]player[|]type[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]com[|]hostingbulk[|]provider[|](.+?)[|]video[|](.+?)[|][|]file[|]').findall(link3)
+			#subtitle=re.compile("addSubtitles('(.+?)', '', false)").findall(link3)
+			#subtitle = []
+			url = 'http://'+match[0][3]+'.'+match[0][2]+'.'+match[0][1]+'.'+match[0][0]+'/d/'+match[0][5]+'/video.'+match[0][4]+'?start=0'
+			#if subtitle == []:
+				#checker = ''
+				#url = match[0]
+			#else:
+				#checker = subtitle[0]
+				#url = match[0]
 		except: pass
         if "vidto.me" in url:
 		try:
@@ -105,8 +151,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 		except: pass
 	if "putlocker" in url:
                 try:
-                        url = url.replace("putlocker","firedrive")
-                        addLink(url,url,'')
+                        #url = url.replace("putlocker","firedrive")
                         sources = []
                         hosted_media = urlresolver.HostedMediaFile(url)
                         sources.append(hosted_media)
@@ -114,6 +159,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                         if source: 
                                 url = source.resolve()
                         else: url = ''
+                        #addLink(url,url,'')
     		except:pass
     	if "nowvideo" in url:
                 try:
@@ -126,6 +172,26 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                         else: url = ''
     		except:pass
     	if "primeshare" in url:
+                try:
+                        sources = []
+                        hosted_media = urlresolver.HostedMediaFile(url)
+                        sources.append(hosted_media)
+                        source = urlresolver.choose_source(sources)
+                        if source: 
+                                url = source.resolve()
+                        else: url = ''
+    		except:pass
+    	if "allmyvideos" in url:
+                try:
+                        sources = []
+                        hosted_media = urlresolver.HostedMediaFile(url)
+                        sources.append(hosted_media)
+                        source = urlresolver.choose_source(sources)
+                        if source: 
+                                url = source.resolve()
+                        else: url = ''
+    		except:pass
+    	if "vkontakte" in url:
                 try:
                         sources = []
                         hosted_media = urlresolver.HostedMediaFile(url)
@@ -164,6 +230,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                         if source: 
                                 url = source.resolve()
                         else: url = ''
+                        #addLink(url,url,'')
     		except:pass
     	if "videowood" in url:
                 try:
@@ -172,7 +239,8 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			link3 = PLAY_abrir_url(iframe_url)
 			tit=re.compile('title: "(.+?)"').findall(link3)
 			match=re.compile('file: "(.+?)"').findall(link3)
-			subtitle=re.compile("addSubtitles('(.+?)'").findall(link3)
+			subtitle=re.compile("addSubtitles('(.+?)', '', false)").findall(link3)
+			#subtitle = []
 			if subtitle == []:
 				checker = ''
 				url = match[0]
@@ -191,7 +259,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                                 url = source.resolve()
                         else: url = ''
     		except:pass
-    	if "video.tt" in url:
+    	if "video.tt" in url or "videott" in url:
                 try:
                         sources = []
                         hosted_media = urlresolver.HostedMediaFile(url)
@@ -200,6 +268,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                         if source: 
                                 url = source.resolve()
                         else: url = ''
+                        #addLink(name+url,url,'')
     		except:pass
     	if "videomega" in url:
 		try:
@@ -239,7 +308,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                 if checker == '' or checker == None: pass
                 else: xbmcPlayer.setSubtitles(checker)
         except: pass
-
+        #return
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
 def PLAY_abrir_url(url):

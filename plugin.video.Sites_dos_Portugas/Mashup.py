@@ -108,8 +108,11 @@ def Filmes_Filmes_Filmes(url):
                                 mensagemprogresso.update(10)
                         if conta_items == 20:
                                 mensagemprogresso.update(20)
-        proxima_TFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
-        url_TFV = proxima_TFV[0].replace('&amp;','&')        
+        else: pass
+        if items != []:
+                proxima_TFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
+                url_TFV = proxima_TFV[0].replace('&amp;','&')
+        else: pass
         #----------------------------------------------------------------------------------------------------
         i = 1
         #mensagemprogresso.create('Tuga-Filmes.com', 'A Pesquisar','Por favor aguarde...')

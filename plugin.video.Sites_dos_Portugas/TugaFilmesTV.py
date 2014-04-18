@@ -461,6 +461,7 @@ def TFV_encontrar_videos_filmes(name,url):
                                 #addDir(url+'[B]- Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
                                 if "videomega" in url:
                                         try:
+                                                url = url + '///' + name
                                                 addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
                                         except: pass
                                 else:
@@ -473,46 +474,46 @@ def TFV_encontrar_videos_filmes(name,url):
                                         url=match[0]
                                         if "videomega" in url:
                                                 try:
-                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video
+                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                                                         print url
                                                         addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
                                                 except: pass
                                         if "vidto.me" in url:
                                                 try:
-                                                        url = 'http://vidto.me/' + id_video + '.html'
+                                                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                                                         print url
                                                         addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'','')
                                                 except: pass
                                         if "dropvideo" in url:
                                                 try:
-                                                        url = 'http://dropvideo.com/embed/' + id_video
+                                                        url = 'http://dropvideo.com/embed/' + id_video + '///' + name
                                                         print url
                                                         addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'','')
                                                 except:pass
                                         if "streamin.to" in url:
                                                 try:
-                                                        url = 'http://streamin.to/embed-' + id_video + '.html'
+                                                        url = 'http://streamin.to/embed-' + id_video + '.html' + '///' + name
                                                         print url
                                                         addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'','')
                                                 except:pass                        
                                         if "putlocker" in url:
                                                 try:
-                                                        url = 'http://www.putlocker.com/embed/' + id_video
+                                                        url = 'http://www.putlocker.com/embed/' + id_video + '///' + name
                                                         print url
                                                         addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Putlocker)[/COLOR][/B]',url,30,iconimage,'','')
                                                 except:pass
                                         if "nowvideo" in url:
                                                 try:
-                                                        url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video
+                                                        url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video + '///' + name
                                                         print url
                                                         addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
                                                 except:pass
                                         if "videowood" in url:
                                                 try:
-                                                        #if '/video/' in url: url = url.replace('/video/','/embed/')
-                                                        url = 'http://videowood.tv/embed/' + id_video
+                                                        if '/video/' in url: url = url.replace('/video/','/embed/')
+                                                        url = 'http://www.videowood.tv/embed/' + id_video + '///' + name
                                                         print url
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
+                                                        addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
                                                 except:pass
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -527,44 +528,44 @@ def TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
         url=match[0]
         if "videomega" in url:
 		try:
-                        url = 'http://videomega.tv/iframe.php?ref=' + id_video
+                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                         print url
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
         if "vidto.me" in url:
 		try:
-                        url = 'http://vidto.me/' + id_video + '.html'
+                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                         print url
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
         if "dropvideo" in url:
 		try:
-                        url = 'http://dropvideo.com/embed/' + id_video
+                        url = 'http://dropvideo.com/embed/' + id_video + '///' + name
 			print url
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'','')
 		except:pass
 	if "streamin.to" in url:
                 try:
-                        url = 'http://streamin.to/embed-' + id_video + '.html'
+                        url = 'http://streamin.to/embed-' + id_video + '.html' + '///' + name
 			print url
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'','')
                 except:pass                        
         if "putlocker" in url:
                 try:
-                        url = 'http://www.putlocker.com/embed/' + id_video
+                        url = 'http://www.putlocker.com/embed/' + id_video + '///' + name
                         print url
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "nowvideo" in url:
                 try:
-                        url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video
+                        url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video + '///' + name
                         print url
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "videowood" in url:
                 try:
-                        #if '/video/' in url: url = url.replace('/video/','/embed/')
-                        url = 'http://videowood.tv/embed/' + id_video
+                        if '/video/' in url: url = url.replace('/video/','/embed/')
+                        url = 'http://www.videowood.tv/embed/' + id_video + '///' + name
                         print url
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
     		except:pass
@@ -717,46 +718,46 @@ def TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_hr
         url=match[0]        
         if "videomega" in url:
 		try:
-                        url = 'http://videomega.tv/iframe.php?ref=' + id_video
+                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                         print url
 			addDir('[B][COLOR green]' + nome_cada_episodio + '[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
         if "vidto.me" in url:
 		try:
-                        url = 'http://vidto.me/' + id_video + '.html'
+                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                         print url
 			addDir('[B][COLOR green]' + nome_cada_episodio + '[/COLOR] - Fonte : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
         if "dropvideo" in url:
 		try:
-                        url = 'http://dropvideo.com/embed/' + id_video
+                        url = 'http://dropvideo.com/embed/' + id_video + '///' + name
 			print url
 			addDir('[B][COLOR green]' + nome_cada_episodio + '[/COLOR] - Fonte : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'','')
 		except:pass
 	if "streamin.to" in url:
                 try:
-                        url = 'http://streamin.to/embed-' + id_video + '.html'
+                        url = 'http://streamin.to/embed-' + id_video + '.html' + '///' + name
 			print url
 			addDir('[B][COLOR green]' + nome_cada_episodio + '[/COLOR] - Fonte : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'','')
                 except:pass                        
         if "putlocker" in url:
                 try:
-                        url = 'http://www.putlocker.com/embed/' + id_video
+                        url = 'http://www.putlocker.com/embed/' + id_video + '///' + name
                         print url
                         addDir('[B][COLOR green]' + nome_cada_episodio + '[/COLOR] - Fonte : [COLOR yellow](Putlocker)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "nowvideo" in url:
                 try:
-                        url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video
+                        url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video + '///' + name
                         print url
                         addDir('[B][COLOR green]' + nome_cada_episodio + '[/COLOR] - Fonte : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "videowood" in url:
                 try:
-                        #if '/video/' in url: url = url.replace('/video/','/embed/')
-                        url = 'http://videowood.tv/embed/' + id_video
+                        if '/video/' in url: url = url.replace('/video/','/embed/')
+                        url = 'http://www.videowood.tv/embed/' + id_video + '///' + name
                         print url
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
+                        addDir('[B][COLOR green]' + nome_cada_episodio + '[/COLOR] - Fonte : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
     		except:pass
     	return
                 

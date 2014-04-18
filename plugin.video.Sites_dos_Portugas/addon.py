@@ -52,8 +52,11 @@ mensagemok = xbmcgui.Dialog().ok
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
 def MAIN_MENU():
+        #addLink('vvv','http://gs.video.tt/s?v=RpEFrQiNk&r=1&t=1397232446&u=&c=f95e735cb0f62605300d845e02de1efc960414db899a79627ad03f98460c15b47289543b15644ffddc66efa92bdd0f35&start=0','')
         #addLink('vvv','http://d3442.allmyvideos.net/d/ygmagbpgyq5dh6lnptgit5gqehpeyy6jc7ha3df3qvcxpa2w4jkdoi77fefbdai/video.mp4?v2','')
         #addLink('vvv','http://st59.u1.videomega.tv/v/2cadf4fe7583d75d3c0fd927a7b19c7b.mp4','')
+        #addLink('vvv','http://www.video.tt/player/player.swf?v=RpEFrQiNk&em=TRUE&sd=www.video.tt&rv=1\.0\.1','')
+        #addLink('vvv','http://cs540206v4.vk.me/u248685033/videos/b7ce337189.240.mp4','')
         #xbmc.executebuiltin("Container.SetViewMode(503)")
         url_TFV = 'http://www.tuga-filmes.tv/search/label/Filmes'
         url_TFC = 'http://www.tuga-filmes.com/'
@@ -74,6 +77,7 @@ def MAIN_MENU():
         addDir('[B][COLOR green]Ani[/COLOR][COLOR yellow]m[/COLOR][COLOR red]ação[/COLOR][/B]',url_filmes_animacao,6,'','nao','')
         #addDir('[B][COLOR cyan]IMDB[/COLOR][/B]','url',500,'','nao','')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
+        #addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','',None,artfolder + 'Ze-tv1.png','nao','')
         addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','http://direct',31,artfolder + 'Ze-tv1.png','nao','')
         addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','http://direct',71,artfolder + 'Ze-tc1.png','nao','')
         addDir('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','http://direct',101,artfolder + 'Ze-mv1.png','nao','')

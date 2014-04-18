@@ -221,15 +221,14 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
         #response.close()
         #match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)" .+?></iframe>').findall(link4)
         #url=match[0]
+        url = url + '///' + name
         if "videomega" in url:
 		try:
-                        url = 'http://videomega.tv/iframe.php?ref=' + id_video
-                        print url
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,70,iconimage,'','')
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
         if "vidto.me" in url:
 		try:
-                        url = 'http://vidto.me/' + id_video + '.html'
+                        #url = 'http://vidto.me/' + id_video + '.html'
                         print url
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,70,iconimage,'','')
 		except: pass
@@ -240,19 +239,19 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
 		except:pass
 	if "streamin.to" in url:
                 try:
-                        url = 'http://streamin.to/embed-' + id_video + '.html'
+                        #url = 'http://streamin.to/embed-' + id_video + '.html'
 			print url
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,70,iconimage,'','')
                 except:pass                        
         if "putlocker" in url:
                 try:
-                        url = 'http://www.putlocker.com/embed/' + id_video
+                        #url = 'http://www.putlocker.com/embed/' + id_video
                         print url
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,70,iconimage,'','')
     		except:pass
     	if "nowvideo" in url:
                 try:
-                        url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video
+                        #url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video
                         print url
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,70,iconimage,'','')
     		except:pass
@@ -281,7 +280,7 @@ def TFC_encontrar_videos_filmes(name,url):
                         assistir_fontes = re.findall('>ASSISTIR(.*?)------------------------------', fonte, re.DOTALL)
                         if assistir_fontes:
                                 for ass_fon in assistir_fontes:
-                                        match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)"').findall(ass_fon)
+                                        match = re.compile('<iframe frameborder=".+?" height=".+?" scrolling=".+?" src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
@@ -292,8 +291,11 @@ def TFC_encontrar_videos_filmes(name,url):
                                                         addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                                 elif 'PT-PT' in assis[0]: addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                         if match:
-                                                conta_id_video = conta_id_video + 1
-                                                addDir('[B]- Fonte '+str(conta_id_video)+' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                        #addDir('[B]- Fonte '+str(conta_id_video)+' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
@@ -304,7 +306,7 @@ def TFC_encontrar_videos_filmes(name,url):
                                 conta_id_video = 0
                                 #if assistir_fontes:
                                 for ass_fon in assistir_fontes:
-                                        match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)"').findall(ass_fon)
+                                        match = re.compile('<iframe frameborder=".+?" height=".+?" scrolling=".+?" src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
@@ -315,8 +317,11 @@ def TFC_encontrar_videos_filmes(name,url):
                                                         addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                                 elif 'PT-PT' in assis[0]: addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                         if match:
-                                                conta_id_video = conta_id_video + 1
-                                                addDir('[B]- Fonte '+str(conta_id_video)+' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                        #addDir('[B]- Fonte '+str(conta_id_video)+' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
@@ -327,8 +332,8 @@ def TFC_encontrar_videos_filmes(name,url):
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
                                 conta_id_video = 0
                                 for ass_fon in assistir_fontes:
-                                        match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)"').findall(ass_fon)
-                                        assis = re.compile('(.+?)</span>').findall(ass_fon)
+                                        match = re.compile('<iframe frameborder=".+?" height=".+?" scrolling=".+?" src="(.+?)"').findall(ass_fon)
+                                        assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
                                                 #addDir1(assis[0],'','',iconimage,False,'')
@@ -338,8 +343,11 @@ def TFC_encontrar_videos_filmes(name,url):
                                                         addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                                 elif 'PT-PT' in assis[0]: addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                         if match:
-                                                conta_id_video = conta_id_video + 1
-                                                addDir('[B]- Fonte '+str(conta_id_video)+' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                        #addDir('[B]- Fonte '+str(conta_id_video)+' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
@@ -347,11 +355,13 @@ def TFC_encontrar_videos_filmes(name,url):
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
                 else:
-                        match = re.compile('<iframe frameborder="0" height="450" scrolling="no" src="(.+?)" .+?></iframe>').findall(fonte)
+                        match = re.compile('<iframe frameborder=".+?" height=".+?" scrolling=".+?" src="(.+?)"').findall(fonte)
                         conta_video = len(match)
                         for url in match:                                
+                                id_video = ''
                                 conta_id_video = conta_id_video + 1
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
+                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',match[0],70,iconimage,'','')
                         if numero_de_fontes > 0:
                                 conta_video = 0
                                 match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(fonte)
@@ -412,6 +422,15 @@ def addLink(name,url,iconimage):
 	return ok
 
 def addLink1(name,url,iconimage):
+        ok=True
+        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
+	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+        liz.setInfo( type="Video", infoLabels={ "Title": name } )
+        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
+	return ok
+
+def addLink2(name,url,iconimage,checker):
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',artfolder + 'flag.jpg')

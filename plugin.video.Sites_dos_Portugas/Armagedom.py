@@ -323,176 +323,135 @@ def ARM_encontrar_videos_filmes(name,url):
 	except: link2 = '' 
 	if link2:
                 if 'ASSISTIR: LEGENDADO' in link2: addDir1('[COLOR orange]Dublado:[/COLOR]','','',iconimage,False,'')
-                urls_video = re.compile('<div id="ver-filme-user">\n<iframe frameborder="0" height="480" scrolling="no" src="(.+?)" width="600"></iframe>\n</div>').findall(link2)
-                for url_video in urls_video:
-                        id_video = re.compile('id=(.*)').findall(url_video)
-                        if id_video: id_video = id_video[0]
-                        else: id_video = ''
-                        num_fonte = num_fonte + 1
-                        ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)          
-                matchvideo = re.findall('\n \n \n<div id=".+?">\n(.*?)\n</div>\n \n \n', link2, re.DOTALL)
-                for match in matchvideo:
-                        urls_video = re.compile('src="(.+?)"').findall(match)
-                        if urls_video:
-                                for url_video in urls_video:
+                urls_video = re.findall('<div id="ver-filme-user">(.*?)<div id="box-embed"', link2, re.DOTALL)
+                if urls_video:
+                        urlss_video = re.compile('src="(.+?)"').findall(urls_video[0])
+                        if urlss_video:
+                                for url_video in urlss_video:
+                                        #addDir1(url_video,'','',iconimage,False,'')
                                         id_video = re.compile('id=(.*)').findall(url_video)
                                         if id_video: id_video = id_video[0]
                                         else: id_video = ''
                                         num_fonte = num_fonte + 1
                                         ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
-                        urls_video = re.compile('SRC="(.+?)"').findall(match)
-                        if urls_video:
-                                for url_video in urls_video:
+                        urlss_video = re.compile('SRC="(.+?)"').findall(urls_video[0])
+                        if urlss_video:
+                                for url_video in urlss_video:
                                         id_video = re.compile('id=(.*)').findall(url_video)
                                         if id_video: id_video = id_video[0]
                                         else: id_video = ''
                                         num_fonte = num_fonte + 1
                                         ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
+                        if 'telecinemajestic' in link2:
+                                linktelecine = re.compile('href="http://telecinemajestic(.+?)"').findall(link2)
+                                telelink = 'http://telecinemajestic' + linktelecine[0]
+                                try:
+                                        telecine = ARM_abrir_url(telelink)
+                                except: telecine = ''
+                                if telecine:
+                                        telemajestic = re.findall('id="conteudo-filmes">(.*?)</iframe></div><div><object', telecine, re.DOTALL)
+                                        urlss_video = re.compile('SRC="(.+?)"').findall(telemajestic[0])
+                                        if urlss_video:
+                                                for url_video in urlss_video:
+                                                        id_video = ''
+                                                        num_fonte = num_fonte + 1
+                                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
+                                        urlss_video = re.compile('src="(.+?)"').findall(telemajestic[0])
+                                        if urlss_video:
+                                                for url_video in urlss_video:
+                                                        id_video = ''
+                                                        num_fonte = num_fonte + 1
+                                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
                 if 'ASSISTIR: LEGENDADO' in link2:
                         num_fonte = 0
                         addDir1('[COLOR orange]Legendado:[/COLOR]','','',iconimage,False,'')
                         matchvideo = re.findall('<p style="text-align: center;">(.*?)<center><a href="https://twitter.com/share"', link2, re.DOTALL)
-                        for match in matchvideo:
-                                urls_video = re.compile('href="(.+?)"').findall(match)
-                                if urls_video:
-                                        for url_video in urls_video:
-                                                id_video = re.compile('id=(.*)').findall(url_video)
-                                                if id_video: id_video = id_video[0]
-                                                else: id_video = ''
-                                                num_fonte = num_fonte + 1
-                                                ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
-                if 'Temporada' in link2:
+                        if matchvideo:
+                                for match in matchvideo:
+                                        urls_video = re.compile('href="(.+?)"').findall(match)
+                                        if urls_video:
+                                                for url_video in urls_video:                                                        
+                                                        if 'telecinemajestic' in url_video:
+                                                                try:
+                                                                        telecine = ARM_abrir_url(url_video)
+                                                                except: telecine = ''
+                                                                if telecine:
+                                                                        telemajestic = re.findall('</iframe></div><div><object(.*?)class="titulo-bloco">', telecine, re.DOTALL)
+                                                                        urlss_video = re.compile('SRC="(.+?)"').findall(telemajestic[0])
+                                                                        if urlss_video:
+                                                                                for url_video in urlss_video:
+                                                                                        id_video = ''
+                                                                                        num_fonte = num_fonte + 1
+                                                                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
+                                                                        urlss_video = re.compile('src="(.+?)"').findall(telemajestic[0])
+                                                                        if urlss_video:
+                                                                                for url_video in urlss_video:
+                                                                                        id_video = ''
+                                                                                        num_fonte = num_fonte + 1
+                                                                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
+                                                        else:
+                                                                id_video = re.compile('id=(.*)').findall(url_video)
+                                                                if id_video: id_video = id_video[0]
+                                                                else: id_video = ''
+                                                                num_fonte = num_fonte + 1
+                                                                ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
+                if 'Temporada' in link2 or 'TEMPORADA' in link2 or 'Epis' in link2:
                         i = 0
-                        num_fonte = 0
                         num_temporada = 1
                         ep = 1
-                        matchvideo = re.findall('style="text-align: center.+?Assistir (.+?) Temporada(.+?)<center><a href="https://twitter.com/share"',link2,re.DOTALL)
-			if matchvideo:
-				for parte1,parte2 in matchvideo:				
-					matchvideo = re.compile('<iframe src="(.+?)"').findall(parte2)	
-					for url_video in matchvideo:
-                                                id_video = re.compile('id=(.*)').findall(url_video)
-                                                if id_video: id_video = id_video[0]
-                                                else: id_video = ''
-                                                num_fonte = num_fonte + 1
-                                                addDir('[B]'+epi+'[/B]','',342,iconimage,'','')
-					matchvideo = re.compile('<a href="(.+?)" target="_bla.+?Assistir (.+?)<.+?<span style="color: .+?">(.+?)</span>').findall(parte2)
-					if matchvideo:
-                                                for url_video,epi,ver in matchvideo:
-                                                        i=i+1
-                                                        if 'DUB' not in ver and 'dublado' not in url_video:
-                                                                dub_leg = ' (LEGENDADO)'
-                                                        if 'dublado' in url_video or 'DUB' in ver:
-                                                                dub_leg = ' (DUBLADO)'
-                                                                if 'DUB' in ver:
-                                                                        ver = ''
-                                                        if 'LEG' in ver:
-                                                                dub_leg = ' (LEGENDADO)'
-                                                                ver = ''
-                                                        if 'Dub' in ver and 'Leg' in ver: dub_leg = ''
-                                                        epi = epi.replace('&#8211;',"-")
-                                                        arrai_series[i] = epi
-                                                        if '00' in epi and ('00' not in arrai_series[i-1] and '01' not in arrai_series[i-1]):
-                                                                addDir1('[COLOR blue]'+str(num_temporada)+'ª Temporada[/COLOR]','','',iconimage,False,'')
-                                                                num_temporada = num_temporada + 1
-                                                                ep = 0
-                                                        if '01' in epi and ('00' not in arrai_series[i-1] and '01' not in arrai_series[i-1]):
-                                                                addDir1('[COLOR blue]'+str(num_temporada)+'ª Temporada[/COLOR]','','',iconimage,False,'')
-                                                                num_temporada = num_temporada + 1
-                                                                ep = 0
+                        legdub = ""
+                        ultimoadicionado = ''
+                        num_epi = ''
+                        matchvideo = re.findall('<div id="HOTWordsTxt" name="HOTWordsTxt">(.+?)<a href="https://twitter.com/share"',link2,re.DOTALL)
+                        if matchvideo:
+                                for parte1 in matchvideo:
+                                        matchvideolink = re.compile('<iframe src="(.+?)"').findall(parte1)
+					if matchvideolink:
+                                                for url_video in matchvideolink:
                                                         id_video = re.compile('id=(.*)').findall(url_video)
                                                         if id_video: id_video = id_video[0]
                                                         else: id_video = ''
                                                         num_fonte = num_fonte + 1
-                                                        addDir('[B]'+epi+'[/B]'+dub_leg+ver,url_video,342,iconimage,'','')
-                                        else:
-                                                matchvideo = re.compile('<a href="(.+?)" target="_bla.+?Assistir (.+?)<').findall(parte2)
-                                                for url_video,epi in matchvideo:
-                                                        i=i+1
-                                                        if 'dublado' in url_video: dub_leg = ' (DUBLADO)'
-                                                        else: dub_leg = ' (LEGENDADO)'
-                                                        epi = epi.replace('&#8211;',"-")
-                                                        arrai_series[i] = epi
-                                                        if '00' in epi and ('00' not in arrai_series[i-1] and '01' not in arrai_series[i-1]):
-                                                                addDir1('[COLOR blue]'+str(num_temporada)+'ª Temporada[/COLOR]','','',iconimage,False,'')
-                                                                num_temporada = num_temporada + 1
-                                                                ep = 0
-                                                        if '01' in epi and ('00' not in arrai_series[i-1] and '01' not in arrai_series[i-1]):
-                                                                addDir1('[COLOR blue]'+str(num_temporada)+'ª Temporada[/COLOR]','','',iconimage,False,'')
-                                                                num_temporada = num_temporada + 1
-                                                                ep = 0
-                                                        id_video = re.compile('id=(.*)').findall(url_video)
-                                                        if id_video: id_video = id_video[0]
-                                                        else: id_video = ''
-                                                        num_fonte = num_fonte + 1
-                                                        addDir('[B]'+epi+'[/B]'+dub_leg,url_video,342,iconimage,'','')
-                if 'TEMPORADA' in link2:
-                        i = 0
-                        num_fonte = 0
-                        num_temporada = 1
-                        ep = 1
-                        matchvideo = re.findall('style="text-align: center.+?ASSISTIR (.+?) TEMPORADA(.+?)<center><a href="https://twitter.com/share"',link2,re.DOTALL)
-			if matchvideo:			
-				for parte1,parte2 in matchvideo:				
-					matchvideo = re.compile('<iframe src="(.+?)"').findall(parte2)	
-					for url_video in matchvideo:
-                                                id_video = re.compile('id=(.*)').findall(url_video)
-                                                if id_video: id_video = id_video[0]
-                                                else: id_video = ''
-                                                num_fonte = num_fonte + 1
-                                                addDir('[B]'+epi+'[/B]','',342,iconimage,'','')
-					matchvideo = re.compile('<a href="(.+?)" target="_bla.+?Assistir (.+?)<.+?<span style="color: .+?">(.+?)</span>').findall(parte2)
-                                        if matchvideo:
-                                                for url_video,epi,ver in matchvideo:
-                                                        i=i+1
-                                                        if 'DUB' not in ver and 'dublado' not in url_video:
-                                                                dub_leg = ' (LEGENDADO)'
-                                                        if 'dublado' in url_video or 'DUB' in ver:
-                                                                dub_leg = ' (DUBLADO)'
-                                                                if 'DUB' in ver:
-                                                                        ver = ''
-                                                        if 'LEG' in ver:
-                                                                dub_leg = ' (LEGENDADO)'
-                                                                ver = ''
-                                                        if 'Dub' in ver and 'Leg' in ver: dub_leg = ''
-                                                        epi = epi.replace('&#8211;',"-")
-                                                        arrai_series[i] = epi
-                                                        if '00' in epi and ('00' not in arrai_series[i-1] and '01' not in arrai_series[i-1]):
-                                                                addDir1('[COLOR blue]'+str(num_temporada)+'ª Temporada[/COLOR]','','',iconimage,False,'')
-                                                                num_temporada = num_temporada + 1
-                                                                ep = 0
-                                                        if '01' in epi and ('00' not in arrai_series[i-1] and '01' not in arrai_series[i-1]):
-                                                                addDir1('[COLOR blue]'+str(num_temporada)+'ª Temporada[/COLOR]','','',iconimage,False,'')
-                                                                num_temporada = num_temporada + 1
-                                                                ep = 0
-                                                        id_video = re.compile('id=(.*)').findall(url_video)
-                                                        if id_video: id_video = id_video[0]
-                                                        else: id_video = ''
-                                                        num_fonte = num_fonte + 1
-                                                        addDir('[B]'+epi+'[/B]'+dub_leg+ver,url_video,342,iconimage,'','')
-                                        else:
-                                                #addDir('nao','',342,iconimage,'','')
-                                                matchvideo = re.compile('<a href="(.+?)" target="_bla.+?Assistir (.+?)<').findall(parte2)
-                                                for url_video,epi in matchvideo:
-                                                        i=i+1
-                                                        if 'dublado' in url_video: dub_leg = ' (DUBLADO)'
-                                                        else: dub_leg = ' (LEGENDADO)'
-                                                        epi = epi.replace('&#8211;',"-")
-                                                        arrai_series[i] = epi
-                                                        if '00' in epi and ('00' not in arrai_series[i-1] and '01' not in arrai_series[i-1]):
-                                                                addDir1('[COLOR blue]'+str(num_temporada)+'ª Temporada[/COLOR]','','',iconimage,False,'')
-                                                                num_temporada = num_temporada + 1
-                                                                ep = 0
-                                                        if '01' in epi and ('00' not in arrai_series[i-1] and '01' not in arrai_series[i-1]):
-                                                                addDir1('[COLOR blue]'+str(num_temporada)+'ª Temporada[/COLOR]','','',iconimage,False,'')
-                                                                num_temporada = num_temporada + 1
-                                                                ep = 0
-                                                        id_video = re.compile('id=(.*)').findall(url_video)
-                                                        if id_video: id_video = id_video[0]
-                                                        else: id_video = ''
-                                                        num_fonte = num_fonte + 1
-                                                        addDir('[B]'+epi+'[/B]'+dub_leg,url_video,342,iconimage,'','')
-                if 'Coleção' in link2:
+                                                        epi = epi.replace('&#8211;',"-").replace('>ASSISTIR','')
+                                                        epi = epi.replace('>Assistir','')
+                                                        addDir('[B]'+epi+'[/B]','',342,iconimage,'','')
+                                        matchvideolink = re.compile('<a href="(.+?)".+?target="_blank">(.+?)</a>').findall(parte1)
+                                        if matchvideolink:
+                                                for videolink,numepi in matchvideolink:
+                                                        if '<span' in numepi:
+                                                                renumepi = re.compile('<span style="color:.+?">(.*)').findall(numepi)
+                                                                numepi = renumepi[0]
+                                                        epi = re.compile('dio(.*)').findall(numepi)
+                                                        if not epi: epi = re.compile('DIO(.*)').findall(numepi)
+                                                        if epi: epinum = epi[0]
+                                                        else: epinum = ''
+                                                        if '/span' in epinum or '/strong' in epinum:
+                                                                a_q = re.compile('\d+')
+                                                                epin = a_q.findall(epinum)
+                                                                epinum = ''
+                                                                for num in epin:
+                                                                        epinum = epinum + str(num)
+                                                        if 'Temporada' in link2 or 'TEMPORADA' in link2:
+                                                                if len(epinum)<7:
+                                                                        ultimoadicionado = ''
+                                                                        if '00' in epinum or '01' in epinum:
+                                                                                if '00' in epinum and '00' not in num_epi:
+                                                                                        addDir1('[COLOR blue]'+str(num_temporada)+'ª Temporada[/COLOR]','','',iconimage,False,'')
+                                                                                        num_temporada = num_temporada + 1
+                                                                                        ep = 0
+                                                                                if '01' in epinum and '00' not in num_epi and '01' not in num_epi:
+                                                                                        addDir1('[COLOR blue]'+str(num_temporada)+'ª Temporada[/COLOR]','','',iconimage,False,'')
+                                                                                        num_temporada = num_temporada + 1
+                                                                                        ep = 0
+                                                                        num_epi = epinum
+                                                                else: ultimoadicionado = '[COLOR blue](NOVO)[/COLOR]'
+                                                        if 'dublado' in videolink or 'dubldo' in videolink: legdub = '(DUBLADO)'
+                                                        else: legdub = '(LEGENDADO)'
+                                                        #if 'dubldo' in videolink: legdub = '(DUBLADO)'
+                                                        #else: legdub = '(LEGENDADO)'
+                                                        #if 'legendado' in videolink: legdub = '(LEGENDADO)'
+                                                        if 'download' not in videolink: addDir(ultimoadicionado+'[COLOR yellow]- Épisódio '+str(epinum)+'[/COLOR] '+legdub,videolink,342,iconimage,'','')
+                if 'Coleção' in link2 and not 'TEMPORADA' in link2 and not 'Temporada' in link2:
                         matchvideo = re.findall('style="text-align: center;">(.*?)>ASSISTIR FILME ONLINE',link2,re.DOTALL)
                         if not matchvideo: matchvideo = re.findall('style="text-align: center;">(.*?)border="0"/></a>',link2,re.DOTALL)
 			if matchvideo:			
@@ -562,7 +521,7 @@ def ARM_encontrar_videos_filmes(name,url):
                                                 nome = nome.replace('&#8211;',"-")
                                                 nome = nome.replace('#038;','&')
                                                 addDir('[B]'+nome+' - '+title+'[/B]',url_filme[0],333,thumb[0],'','')
-                matchvideo = re.findall('main"(.*?)id="x',link2,re.DOTALL)
+                matchvideo = re.findall('main"(.*?)id="x',link2,re.DOTALL)#-----------------------------------------------------------------
                 if matchvideo:
                         partes = re.findall('id="xmain"(.*)',link2,re.DOTALL)
                         num_partes = len(partes)
@@ -579,7 +538,55 @@ def ARM_encontrar_videos_filmes(name,url):
                                 #for part in partes:
                                 matchvideo = re.findall('onclick="JavaScript(.*?)<p class="ntemp">',partes[num_part],re.DOTALL)
                                 if matchvideo: addLink(str(num_part),'','')
-                                        
+                matchvideo = re.findall('<div class="capa">(.*?)</div>', link2, re.DOTALL)#--------------------------------------------------
+                for match in matchvideo:
+                        urls_video = re.compile('href="(.+?)"').findall(match)
+                        if urls_video:
+                                try:
+                                        link2=ARM_abrir_url(urls_video[0])
+                                except: link2 = ''
+                                if link2:
+                                        if 'esquerdo' in link2 or 'direito' in link2:
+                                                urls_videos = re.findall('<div class="dub">(.*?)<div class="direito">',link2,re.DOTALL)
+                                                if urls_videos: urls_video = re.compile('<a href="(.+?)"').findall(urls_videos[0])
+                                                addDir1('[COLOR orange]Dublado:[/COLOR]','','',iconimage,False,'')
+                                                for url_videos in urls_video:
+                                                        id_video = ''
+                                                        try:
+                                                                link2=ARM_abrir_url(url_videos)
+                                                        except: link2 = ''                                                
+                                                        videolink = re.compile('src="(.+?)"').findall(link2)
+                                                        if videolink: url_video = videolink[0]
+                                                        else: url_video = ''
+                                                        if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
+                                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
+                                                urls_videos = re.findall('<div class="leg"> </div>(.*?)</div>',link2,re.DOTALL)
+                                                if urls_videos: urls_video = re.compile('<a href="(.+?)"').findall(urls_videos[0])
+                                                addDir1('[COLOR orange]Legendado:[/COLOR]','','',iconimage,False,'')
+                                                num_fonte = 0
+                                                for url_videos in urls_video:
+                                                        id_video = ''
+                                                        try:
+                                                                link2=ARM_abrir_url(url_videos)
+                                                        except: link2 = ''                                                
+                                                        videolink = re.compile('src="(.+?)"').findall(link2)
+                                                        if videolink: url_video = videolink[0]
+                                                        else: url_video = ''
+                                                        if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
+                                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
+                                        else:
+                                                urls_video = re.compile('<a href="(.+?)"').findall(link2)
+                                                for url_videos in urls_video:
+                                                        id_video = ''
+                                                        try:
+                                                                link2=ARM_abrir_url(url_videos)
+                                                        except: link2 = ''
+                                                        videolink = re.compile('src="(.+?)"').findall(link2)
+                                                        if videolink: url_video = videolink[0]
+                                                        else: url_video = ''
+                                                        if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
+                                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
+                                                        
                 
                 
 
@@ -630,13 +637,50 @@ def ARM_encontrar_videos_series(name,url):
                                         else: id_video = ''
                                         if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
                                         ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
+                #matchvideo = re.findall('<div class="capa">(.*?)</div>', link2, re.DOTALL)#--------------------------------------------------
+                if 'megafilmeshd.net' in url:
+                        urls_video = re.compile('href="(.+?)"').findall(link2)
+                        if urls_video:
+                                try:
+                                        link2=ARM_abrir_url(urls_video[0])
+                                except: link2 = ''
+                                if link2:
+                                        urls_video = re.compile('<a href="(.+?)"').findall(link2)
+                                        for url_videos in urls_video:
+                                                id_video = re.compile('v=(.*)').findall(url_videos)
+                                                if id_video: id_video = id_video[0]
+                                                else:
+                                                        id_video = re.compile('id=(.*)').findall(url_videos)
+                                                        if id_video: id_video = id_video[0]
+                                                        else: id_video = ''
+                                                try:
+                                                        link2=ARM_abrir_url(url_videos)
+                                                except: link2 = ''
+                                                videolink = re.compile('src="(.+?)"').findall(link2)
+                                                if videolink: url_video = videolink[0]
+                                                else: url_video = ''
+                                                if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
+                                                ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
+                
                         
 				
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
+        #addDir1(url,'','',iconimage,False,'')
+        if "allmyvideos" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Allmyvideos)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+        if "vkontakte.ru" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Vkontakte.ru)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
         if "videomega" in url:
 		try:
+                        url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
         if "vidto.me" in url:
@@ -645,65 +689,206 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
 			if match:
 				id_video = match[0]
 				url = 'http://vidto.me/' + id_video + '.html'
+				url = url + '///' + name
+			else: url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Vidto.me)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
         if "dropvideo" in url or 'drop' in url:
 		try:
                         url = 'http://dropvideo.com/embed/' + id_video
 			print url
+			url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](DropVideo)[/COLOR][/B]',url,30,iconimage,'','')
 		except:pass
 	if "streamin.to" in url:
                 try:
+                        url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'','')
-                except:pass                        
+                except:pass
+        if "firedrive" in url:
+                try:
+                        url = 'http://www.firedrive.com/embed/' + id_video
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Firedrive)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'','')
+                except:pass    
         if "putlocker" in url or 'armage.php' in url:
                 try:
-                        url = 'http://www.putlocker.com/embed/' + id_video
+                        url = 'http://www.firedrive.com/embed/' + id_video
                         print url
-                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Putlocker)[/COLOR][/B]',url,30,iconimage,'','')
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "nowvideo" in url:
                 try:
                         url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video
                         print url
+                        url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "primeshare" in url:
                 try:
+                        url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Primeshare.tv)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "videoslasher" in url:
                 try:
+                        url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](VideoSlasher)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "sockshare" in url:
                 try:
+                        url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Sockshare)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "video.mail.ru" in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.mail.ru)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "flashx.tv" in url:
                 try:
+                        url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
-    	if "/flashxtv/" in url:
+    	else:
+                if "/flashxtv/" in url:
+                        try:
+                                try:
+                                        flashxtv=ARM_abrir_url(url)
+                                except: flashxtv = ''
+                                flash = re.compile('<iframe width="600" height="480" src="(.+?)"').findall(flashxtv)
+                                try:
+                                        flashxtv=ARM_abrir_url(flash[0].replace('WWWflash','flash'))
+                                except: flashxtv = ''
+                                flashurl = re.compile('addthis:url="(.+?)" addthis:').findall(flashxtv)
+                                url = flashurl[0]
+                                url = url + '///' + name
+                                addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]',url,30,iconimage,'','')
+                        except:pass
+    	if 'videott' in url:
+                try:
+                        url = 'http://www.video.tt/e/' + id_video
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	else:
+                if "video.tt" in url:
+                        try:
+                                url = url + '///' + name
+                                addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
+                        except:pass
+    	return
+
+
+
+def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
+        #addDir1(url,'','',iconimage,False,'')
+        if "allmyvideos" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Allmyvideos)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+	if "youwatch" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Youwatch)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+	if "hostingbulk" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Hostingbulk)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+        if "vkontakte.ru" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Vkontakte.ru)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+        if "videomega" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+        if "vidto.me" in url:
+		try:
+                        match = re.compile('http://vidto.me/embed-(.+?).html').findall(url)
+			if match:
+				id_video = match[0]
+				url = 'http://vidto.me/' + id_video + '.html'
+				url = url + '///' + name
+			else: url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Vidto.me)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+        if "dropvideo" in url or 'drop' in url:
+		try:
+			url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](DropVideo)[/COLOR][/B]',url,30,iconimage,'','')
+		except:pass
+	if "streamin.to" in url:
+                try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'','')
+                except:pass
+        if "firedrive" in url:
+                try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Firedrive)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'','')
+                except:pass    
+        if "putlocker" in url or 'armage.php' in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "nowvideo" in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "primeshare" in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Primeshare.tv)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "videoslasher" in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](VideoSlasher)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "sockshare" in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Sockshare)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "video.mail.ru" in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.mail.ru)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "flashx.tv" in url:
                 try:
                         try:
                                 flashxtv=ARM_abrir_url(url)
                         except: flashxtv = ''
-                        flash = re.compile('</head><body><iframe width="600" height="480" src="(.+?)"').findall(flashxtv)
-                        try:
-                                flashxtv=ARM_abrir_url(flash[0])
-                        except: flashxtv = ''
                         flashurl = re.compile('addthis:url="(.+?)" addthis:').findall(flashxtv)
                         url = flashurl[0]
+                        url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "/flashxtv/" in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if 'videott' in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "video.tt" in url:
                 try:
+                        url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	return
-
    
 
 
