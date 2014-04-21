@@ -376,6 +376,8 @@ elif mode == 350: Armagedom.ARM_encontrar_fontes_filmes_M18()
 elif mode == 351: Armagedom.ARM_encontrar_fontes_filmes_MEGA_net(url)
 elif mode == 352: Armagedom.ARM_Menu_Filmes_Por_Categorias_MEGA_net()
 elif mode == 353: Armagedom.ARM_encontrar_fontes_series_MEGA_net(url)
+elif mode == 354: Armagedom.ARM_encontrar_videos_filmes_MEGA_NET(name,url)
+elif mode == 355: ARM_encontrar_fontes_filmes_pesquisa_MEGA_net(url,nome_pesquisa)
 #----------------------------------------------------------------   IMDB   --------------------------------------------------------------------#
 elif mode == 500: Menu_IMDB()
 elif mode == 501: Filmes_IMDB_antiga(url)
