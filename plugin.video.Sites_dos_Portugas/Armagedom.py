@@ -46,6 +46,10 @@ def ARM_MenuPrincipal():
         addDir1(name+'[COLOR blue] - Menu Principal[/COLOR]','','',artfolder,False,'')
         #----------------------------------------------------------------------
         addDir1('','','',artfolder,False,'')
+        #addDir('[B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','url',337,artfolder,'nao','')
+        #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv',356,artfolder,'nao','')
+        #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','url',337,artfolder,'nao','')
+        #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','url',358,artfolder,'nao','')
 	addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','url',337,artfolder,'nao','')
 	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=21',332,artfolder,'nao','')	
 	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=3228',332,artfolder,'nao','')
@@ -56,11 +60,15 @@ def ARM_MenuPrincipal():
 			addDir('[B][COLOR red]M+18 - [/COLOR][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.megavideoporno.org/porno/filmes',350,artfolder,'nao','')
         #----------------------------------------------------------------------
         addDir1('','','',artfolder,False,'')
-        addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','url',349,artfolder,'nao','')
-	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','url',349,artfolder,'nao','')	
-	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/category/animacao/',349,artfolder,'nao','')
-	addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/',349,artfolder,'nao','')
+        addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/category/acao/',356,artfolder,'nao','')	
+	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/category/animacao',349,artfolder,'nao','')
+	#addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/',349,artfolder,'nao','')
+	addDir('Pesquisar - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/?s-btn=Enviar&s=',334,artfolder,'nao','')
+	addDir1('','','',artfolder,False,'')
         #----------------------------------------------------------------------
+	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','url',358,artfolder,'nao','')
+	addDir('Pesquisar - [B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','http://megaseriesonlinehd.com/?s=',334,artfolder,'nao','')
+	#----------------------------------------------------------------------
         addDir1('','','',artfolder,False,'')
         addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','url',337,artfolder,'nao','')
 	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/series/',353,artfolder,'nao','')	
@@ -92,6 +100,17 @@ def ARM_Menu_Series():
         addDir1('','','',artfolder,False,'')
 	#addDir('Pesquisar','http://www.tuga-filmes.tv/search?q=',1,artfolder,'nao','')
 
+def ARM_Menu_Series_MEGASERIESONLINEHD():
+        addDir1('[B][COLOR yellow]Menu Séries[/COLOR][/B]','','',artfolder,False,'')
+        addDir1('','','',artfolder,False,'')
+	addDir('[COLOR blue]Lançamentos[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-lancamentos/',357,artfolder,'nao','')
+        addDir('[COLOR blue]Animes/Desenhos[/COLOR]','http://megaseriesonlinehd.com/index.php/category/desenhos/',357,artfolder,'nao','')
+        addDir('[COLOR blue]Atualizados[/COLOR]','http://megaseriesonlinehd.com',357,artfolder,'nao','')
+        addDir('[COLOR blue]Completos[/COLOR]','http://megaseriesonlinehd.com/index.php/page/2/',357,artfolder,'nao','')
+        addDir('[COLOR blue]Dublados[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-dublados/',357,artfolder,'nao','')
+        addDir('[COLOR blue]Legendados[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-legendados/',357,artfolder,'nao','')
+        addDir1('','','',artfolder,False,'')
+
 
 
 def ARM_Menu_Filmes_Por_Categorias():
@@ -108,6 +127,18 @@ def ARM_Menu_Filmes_Por_Categorias():
                 filmes_por_categoria = re.compile('<a href="(.+?)" title=".+?">(.+?)</a>').findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
                         addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,332,artfolder,'nao','')
+
+def ARM_Menu_Filmes_Por_Categorias_MEGA_tv():
+        addDir1(name,'','',artfolder,False,'')
+        addDir1('','','',artfolder,False,'')
+        html_categorias_source = ARM_abrir_url(url)
+	html_items_categorias = re.findall('<div id="header_centro_menu">(.*?)<div id="header_centro_busca">', html_categorias_source, re.DOTALL)
+        print len(html_items_categorias)
+        for item_categorias in html_items_categorias:
+                filmes_por_categoria = re.compile('<li><a href="(.+?)".+?>(.+?)</a></li>').findall(item_categorias)
+                for endereco_categoria,nome_categoria in filmes_por_categoria:
+                        if 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria:
+                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder,'nao','')
 
 def ARM_Menu_Filmes_Por_Categorias_MEGA_net():
         addDir1(name,'','',artfolder,False,'')
@@ -132,6 +163,8 @@ def ARM_pesquisar():
 		url_pesquisa = url + str(parametro_pesquisa)#+ '&x=0&y=0' #nova definicao de url. str força o parametro de pesquisa a ser uma string
                 nome_pesquisa = str(parametro_pesquisa)
 		#addDir1(url_pesquisa,'','',artfolder,False,'')
+                if 'megaseriesonlinehd' in url_pesquisa: ARM_encontrar_fontes_filmes_MEGASERIESONLINEHD(url_pesquisa)
+                if 'megafilmeshd.tv' in url_pesquisa: ARM_encontrar_fontes_filmes_MEGA_tv(url_pesquisa)
 		if 'armagedom' in url_pesquisa: ARM_encontrar_fontes_filmes(url_pesquisa) #chama a função listar_videos com o url definido em cima
                 if 'Filmes' in url or 'Series' in url: 
                         film_serie = re.compile('http://megafilmeshd.net/(.+?)/').findall(url)
@@ -192,54 +225,120 @@ def ARM_encontrar_fontes_filmes(url):
 		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),332,artfolder,'nao','')
         except:pass
 
-
-def ARM_encontrar_fontes_filmes_MEGA():        
+def ARM_encontrar_fontes_filmes_MEGASERIESONLINEHD(url):        
         if 'Seguinte' not in name:
                 addDir1(name + ':','','',iconimage,False,'')
                 addDir1('','','',iconimage,False,'')
 	try:
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
-	items = re.findall('<li>(.*?)<div class="autor-thumb">', html_source, re.DOTALL)
+	if url == 'http://megaseriesonlinehd.com':
+                atualizados = re.findall("Seriados Atualizados</h4>(.*?)<span class='pages'>", html_source, re.DOTALL)
+                items = re.findall('<div class="title-serie">(.*?)class="link-series">', atualizados[0], re.DOTALL)
+        else: items = re.findall('<div class="title-serie">(.*?)class="link-series">', html_source, re.DOTALL)
+	ano = ''
+	dubleg = ''
 	#addDir1(str(len(items)),'','',iconimage,False,'')
 	if items != []:
 		print len(items)
 		for item in items:
-                        urletitulo = re.compile('<a href="(.+?)" title="(.+?)" class="link-tumb"></a>').findall(item)
-                        if urletitulo:
-                                urlfilme = urletitulo[0][0]
-                                nome = urletitulo[0][1].replace('Assistir ','')
+                        titulo = re.compile('title="(.+?)Todas(.+?)"').findall(item)
+                        #if not titulo: titulo = re.compile('title="(.+?)Todas').findall(item)
+                        if titulo:
+                                nome = titulo[0][0]
+                                if 'Legendado' in titulo[0][1] and 'Dublado' in titulo[0][1]: dubleg = '(Legendado/Dublado)'
+                                if 'Legendado' in titulo[0][1] and 'Dublado' not in titulo[0][1]: dubleg = '(Legendado)'
+                                if 'Legendado' not in titulo[0][1] and 'Dublado' in titulo[0][1]: dubleg = '(Dublado)'
+                                if 'Legendado' not in titulo[0][1] and 'Dublado' not in titulo[0][1]: dubleg = ''
+                        else:
+                                titulo = re.compile('title="(.+?)"').findall(item)
+                                nome = titulo[0]
+                        urldofilme = re.compile('href="(.+?)"').findall(item)
+                        if urldofilme:
+                                urlfilme = urldofilme[0]
                         else:
                                 urlfilme = ''
-                                nome = ''
-                        thumbnail = re.compile('src="(.+?)&amp;h=259&amp;w=177"').findall(item)
-                        if thumbnail: thumb = thumbnail[0].replace('http://static.filmesonlinegratis.net/thumb.php?src=','')
+                        thumbnail = re.compile('src="(.+?)"').findall(item)
+                        if thumbnail: thumb = thumbnail[0]
                         else: thumb = ''
-                        a_q = re.compile('\d+')
-                        qq_aa = a_q.findall(nome)
-                        if qq_aa:
-                                for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) == 4:
-                                                ano = str(q_a_q_a)
-                                                nome = nome.replace(' '+ano,'')
-                        else: ano = ''
-                        if ' Dublado ou Legendado' in nome: nome = nome.replace(' Dublado ou Legendado','')
-                        if ' Dublado e Legendado &#8211;' in nome: nome = nome.replace(' Dublado e Legendado &#8211;','')
-                        if ' Dublado e Legendado' in nome: nome = nome.replace(' Dublado e Legendado','')
-                        if ' Online' in nome: nome = nome.replace(' Online','')
-                        if ' Dublado' in nome: nome = nome.replace(' Dublado','')
-                        if ' Legendado' in nome: nome = nome.replace(' Legendado','')
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8230;',"...")
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('#038;','')
                         try:
-                                addDir('[B][COLOR yellow]' + nome + '[/COLOR][COLOR green] (' + ano + ')[/COLOR][/B]',urlfilme,333,thumb,'nao','')
+                                addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B][COLOR green] ' + dubleg + '[/COLOR]',urlfilme,359,thumb,'nao','')
                         except: pass
-	proxima = re.compile('<a class="nextpostslink" href="(.+?)">&raquo;').findall(html_source)		
+	proxima = re.compile('<a class="nextpostslink" href="(.+?)">&raquo;</a>').findall(html_source)		
 	try:
                 addDir1('','','',iconimage,False,'')
-		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),349,artfolder,'nao','')
+		addDir("Página Seguinte >>",proxima[0].replace('amp;',''),357,artfolder,'nao','')
+        except:pass
+
+
+def ARM_encontrar_fontes_filmes_MEGA_tv(url):        
+        if 'Seguinte' not in name:
+                addDir1(name + ':','','',iconimage,False,'')
+                addDir1('','','',iconimage,False,'')
+	try:
+		html_source = ARM_abrir_url(url)
+	except: html_source = ''
+	items = re.findall('class="link-tumb">(.*?)</div><!--capa-thumb -->', html_source, re.DOTALL)
+	#addDir1(str(len(items)),'','',iconimage,False,'')
+	dubleg = ''
+	if items != []:
+		print len(items)
+		for item in items:
+                        titulo = re.compile('title="(.+?)"').findall(item)
+                        if titulo:
+                                nome = titulo[0].replace('720p','').replace('1080p','')
+                        else:
+                                nome = ''
+                        urldofilme = re.compile('href="(.+?)"').findall(item)
+                        if urldofilme:
+                                urlfilme = urldofilme[0]
+                        else:
+                                urlfilme = ''
+                        thumbnail = re.compile('src="(.+?)&amp;h=259&amp;w=177"').findall(item)
+                        if not thumbnail: thumbnail = re.compile('src="(.+?)"').findall(item)
+                        if thumbnail: thumb = thumbnail[0].replace('http://static.filmesonlinegratis.net/thumb.php?src=','')
+                        else: thumb = ''
+                        if 'Legendado' not in nome and 'Dublado' not in nome: dubleg = ''
+                        if ' Dublado ou Legendado' in nome:
+                                nome = nome.replace(' Dublado ou Legendado','')
+                                dubleg = '(Legendado/Dublado)'
+                        if ' Dublado e Legendado &#8211;' in nome:
+                                nome = nome.replace(' Dublado e Legendado &#8211;','')
+                                dubleg = '(Legendado/Dublado)'
+                        if ' Dublado e Legendado' in nome:
+                                nome = nome.replace(' Dublado e Legendado','')
+                                dubleg = '(Legendado/Dublado)'
+                        if ' Online' in nome: nome = nome.replace(' Online','')
+                        if ' Dublado' in nome:
+                                nome = nome.replace(' Dublado','')
+                                dubleg = '(Dublado)'
+                        if ' Legendado' in nome:
+                                nome = nome.replace(' Legendado','')
+                                dubleg = '(Legendado)'
+                        
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8230;',"...")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('#038;','')
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        if qq_aa:
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) == 4:
+                                                nome = nome.replace(' '+str(q_a_q_a),'')
+                                                ano = ' ('+str(q_a_q_a)+')'                                                
+                        else: ano = ''
+                        try:
+                                addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B][COLOR blue]' + ano + '[/COLOR][COLOR green] - ' + dubleg + '[/COLOR]',urlfilme,333,thumb,'nao','')
+                        except: pass
+	proxima = re.compile('<a class="nextpostslink" href="(.+?)">»</a>').findall(html_source)		
+	try:
+                addDir1('','','',iconimage,False,'')
+		addDir("Página Seguinte >>",proxima[0].replace('amp;',''),349,artfolder,'nao','')
         except:pass
 
 
@@ -633,9 +732,62 @@ def ARM_encontrar_videos_filmes(name,url):
                                                 nome = nome.replace('&#8211;',"-")
                                                 nome = nome.replace('#038;','&')
                                                 addDir('[B]'+nome+' - '+title+'[/B]',url_filme[0],333,thumb[0],'','')
+                if 'megafilmeshd.tv' in url:
+                        id_video = ''
+                        matchvideo = re.findall('<li id=".+?" class="box-temp">(.*?)</li>', link2, re.DOTALL)
+                        if matchvideo:
+                                for vidlink in matchvideo:
+                                        if '/ads/' not in vidlink:
+                                                linkvmatch = re.compile('src="(.+?)"').findall(vidlink)
+                                                if linkvmatch:
+                                                        try:
+                                                                link2=ARM_abrir_url(linkvmatch[0])
+                                                        except: link2 = ''
+                                                        vlink = re.findall('<iframe(.*?)</iframe>', link2, re.DOTALL)
+                                                        for vidurl in vlink:
+                                                                linkinho=vidurl
+                                                        linkv = re.compile('src="(.+?)"').findall(linkinho)
+                                                        #addDir1(linkv[0],'','',iconimage,False,'')
+                                                        url_video = linkv[0]
+                                                        num_fonte = num_fonte + 1
+                                                        if 'flashx.tv' not in url_video: ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)                                            
+                                                        else:
+                                                                url = url + '///' + name
+                                                                addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]',url,30,iconimage,'','')
 
                                                 
-
+def ARM_encontrar_videos_filmes_MEGASERIESONLINEHD(name,url):
+        num_fonte = 0
+	addDir1(name,'','',iconimage,False,'')
+        addDir1('','','',iconimage,False,'')
+	try:
+		link2=ARM_abrir_url(url)
+	except: link2 = '' 
+	if link2:
+                partes = re.findall('<ul id="series-player">(.*?)POSTAGENS',link2,re.DOTALL)
+                matchvideo = re.findall('an>(.*?)<sp',partes[0],re.DOTALL)
+                if matchvideo:
+                        for parte in matchvideo:
+                                #ultima = re.compile('=(.*)').findall(url)
+                                #if ultima: last = ultima[0]
+                                temporada = re.compile('(.+?)</span>').findall(parte)
+                                for temp in temporada:
+                                        if 'final' not in temporada[0].lower():
+                                                addDir1('[B][COLOR blue]'+temporada[0].replace('<p>','')+' :[/COLOR][/B]','','',iconimage,False,'')
+                                urletitulo = re.compile('href="(.+?)">(.+?)</a>').findall(parte)
+                                for url, titulo in urletitulo:
+                                        addDir('[COLOR orange]'+titulo+'[/COLOR]',url,342,iconimage,'','')
+                #ultimaserie = last + '">' + titulo
+                #matchvideo = re.findall(ultimaserie+'(.*?)</ul><!--series player -->',partes[0],re.DOTALL)
+                #if matchvideo:
+                        #for parte in matchvideo:
+                                #temporada = re.compile('(.+?)</span>').findall(parte)
+                                #for temp in temporada:
+                                        #if 'final' not in temp.lower():
+                                                #addDir1('[B][COLOR blue]'+temp.replace('<span>','')+' :[/COLOR][/B]','','',iconimage,False,'')
+                                #urletitulo = re.compile('href="(.+?)">(.+?)</a>').findall(parte)
+                                #for url, titulo in urletitulo:
+                                        #addDir('[COLOR orange]'+titulo+'[/COLOR]',url,342,iconimage,'','')
 
                                                 
 def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
@@ -881,6 +1033,7 @@ def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
                                                                 if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
                                                                 ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)                               
                 
+
                 
 
 
@@ -951,6 +1104,16 @@ def ARM_encontrar_videos_series(name,url):
                                                 id_video = ''
                                                 num_fonte = num_fonte + 1
                                                 ARM_resolve_not_videomega_filmes_telecine(url_videos,id_video,num_fonte)
+                if 'megaseriesonlinehd.com' in url:
+                        urls_video = re.findall('<ul id="filmes">(.*?)background:url', link2, re.DOTALL)
+                        if urls_video:
+                                id_video = ''
+                                videolink = re.compile('src="(.+?)"').findall(urls_video[0])
+                                for vid in videolink:
+                                        url_video = vid
+                                        num_fonte = num_fonte + 1
+                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
+
                 
                         
 				
@@ -962,6 +1125,11 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
 		try:
                         url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Allmyvideos)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+	if "drive.google" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](DG)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
         if "vkontakte.ru" in url:
 		try:
@@ -1004,7 +1172,7 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                 try:
                         url = 'http://www.firedrive.com/embed/' + id_video
                         url = url + '///' + name
-			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Firedrive)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'','')
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
                 except:pass    
         if "putlocker" in url or 'armage.php' in url:
                 try:
@@ -1078,10 +1246,25 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
 
 def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
         #addDir1(url,'','',iconimage,False,'')
+        if "drive.google" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](DG)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
         if "allmyvideos" in url:
 		try:
                         url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Allmyvideos)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+	if "vodlocker" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Vodlocker)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+	if "vk.com" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](VK)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
 	if "youwatch" in url:
 		try:
@@ -1131,7 +1314,7 @@ def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
         if "firedrive" in url:
                 try:
                         url = url + '///' + name
-			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Firedrive)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'','')
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
                 except:pass    
         if "putlocker" in url or 'armage.php' in url:
                 try:

@@ -33,9 +33,10 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def PLAY_movie(url,name,iconimage,checker,fanart):
-        dp = xbmcgui.DialogProgress()
-	dp.create(name,'A sincronizar vídeos e legendas')
-	dp.update(0)
+        if 'vk.com' not in url:
+                dp = xbmcgui.DialogProgress()
+                dp.create(name,'A sincronizar vídeos e legendas')
+                dp.update(0)
 	nome = re.compile('///(.+?)[)].+?[(].+?[)]').findall(url)
 	if not nome:
                 nome = re.compile('///(.*)').findall(url)
@@ -44,6 +45,21 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 	urlvid = re.compile('(.+?)///').findall(url)
 	url = urlvid[0]
 	name = nomefilme + ' ' + name
+	if "drive.google" in url:
+		try:
+			iframe_url = url
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			#tit=re.compile('var vtitle = "(.+?)"').findall(link3)
+			match=re.compile('"fmt_stream_map":".+?[|](.+?)[,]').findall(link3)
+			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+			if subtitle == []:
+				checker = ''
+				url = match[0].replace('\u0026','&').replace('\u003d','=')
+			else:
+				checker = subtitle[0]
+				url = match[0].replace('\u0026','&').replace('\u003d','=')
+		except: pass
         if "streamin" in url:
 		try:
 			sources = []
@@ -54,6 +70,41 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 				url = source.resolve()
     			else: url = ''
     			#return url
+		except: pass
+	if "vodlocker" in url:
+		try:
+                        #if '/video/' in url: url = url.replace('/video/','/embed/')
+			iframe_url = url
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			#tit=re.compile('var vtitle = "(.+?)"').findall(link3)
+			match=re.compile('file: "(.+?)"').findall(link3)
+			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+			if subtitle == []:
+				checker = ''
+				url = match[0]
+			else:
+				checker = subtitle[0]
+				url = match[0]
+			#addLink(name+match[0],match[0],'')
+		except: pass
+	if "vk.com" in url:
+		try:
+                        #if '/video/' in url: url = url.replace('/video/','/embed/')
+			iframe_url = url
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			#tit=re.compile('var vtitle = "(.+?)"').findall(link3)
+                        match=re.compile('var vars = {.+?"url240":"(.+?)"').findall(link3)
+			if match: addLink('240p',match[0].replace('\/','/'),'')
+			match=re.compile('var vars = {.+?"url360":"(.+?)"').findall(link3)
+			if match: addLink('360p',match[0].replace('\/','/'),'')
+			match=re.compile('var vars = {.+?"url480":"(.+?)"').findall(link3)
+			if match: addLink('480p',match[0].replace('\/','/'),'')
+			match=re.compile('var vars = {.+?"url720":"(.+?)"').findall(link3)
+			if match: addLink('720p',match[0].replace('\/','/'),'')
+			match=re.compile('var vars = {.+?"url1080":"(.+?)"').findall(link3)
+			if match: addLink('1080p',match[0].replace('\/','/'),'')
 		except: pass
         if "streamcloud" in url:
 		try:
@@ -292,23 +343,24 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 				url = match[0]
 			#addLink(name+match[0],match[0],'')
 		except: pass
-	try:
-                #addLink(name+match[0],match[0],'')
-                playlist = xbmc.PlayList(1)
-                playlist.clear()             
-                playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
-                addLink(name,url,iconimage)
-                dp.update(33)
-                if dp.iscanceled(): return
-                xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
-                dp.update(66)
-                xbmcPlayer.play(playlist)
-                dp.update(100)
-                dp.close()
-                if checker == '' or checker == None: pass
-                else: xbmcPlayer.setSubtitles(checker)
-        except: pass
-        #return
+        if 'vk.com' not in url:
+                try:
+                        #addLink(name+url,match[0],'')
+                        playlist = xbmc.PlayList(1)
+                        playlist.clear()             
+                        playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
+                        addLink(name,url,iconimage)
+                        dp.update(33)
+                        if dp.iscanceled(): return
+                        xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
+                        dp.update(66)
+                        xbmcPlayer.play(playlist)
+                        dp.update(100)
+                        dp.close()
+                        if checker == '' or checker == None: pass
+                        else: xbmcPlayer.setSubtitles(checker)
+                except: pass
+                #return
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
 def PLAY_abrir_url(url):
