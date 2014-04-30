@@ -81,7 +81,7 @@ def MAIN_MENU():
         addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','http://direct',31,artfolder + 'Ze-tv1.png','nao','')
         addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','http://direct',71,artfolder + 'Ze-tc1.png','nao','')
         addDir('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','http://direct',101,artfolder + 'Ze-mv1.png','nao','')
-        addDir('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.com[/COLOR][/B]','http://direct',231,'','nao','')
+        addDir('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]','http://direct',231,'','nao','')
         #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B]','url',331,'','nao','')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
