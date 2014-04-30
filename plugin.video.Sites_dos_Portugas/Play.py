@@ -202,14 +202,14 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 		except: pass
 	if "putlocker" in url:
                 try:
-                        #url = url.replace("putlocker","firedrive")
-                        sources = []
-                        hosted_media = urlresolver.HostedMediaFile(url)
-                        sources.append(hosted_media)
-                        source = urlresolver.choose_source(sources)
-                        if source: 
-                                url = source.resolve()
-                        else: url = ''
+                        url = url.replace('putlocker.com/embed/','firedrive.com/file/')
+                        #sources = []
+                        #hosted_media = urlresolver.HostedMediaFile(url)
+                        #sources.append(hosted_media)
+                        #source = urlresolver.choose_source(sources)
+                        #if source: 
+                                #url = source.resolve()
+                        #else: url = ''
                         #addLink(url,url,'')
     		except:pass
     	if "nowvideo" in url:

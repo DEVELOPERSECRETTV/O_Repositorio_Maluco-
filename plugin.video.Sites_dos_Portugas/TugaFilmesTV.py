@@ -291,7 +291,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                 qq_aa = a_q.findall(nome_pesquisa)
                                 nome_pesquisa = ''
                                 for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                         #if len(q_a_q_a) > 1:
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
                                 url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
@@ -306,14 +306,14 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                                 try:
                                                         html_pesquisa = TFV_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.findall('<div id="backdrop_window">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
                                                 if url_fan:
                                                         for urls_fanart in url_fan:
                                                                 url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
                                                                 if url_fanart:
                                                                         fanart = url_fanart[0].replace('w300','w1280')
                                                                 else:
-                                                                        fanart = artfolder + 'flag.jpg'
+                                                                        fanart = thumb
                                 else: fanart = thumb
                         if qualidade:
                                 qualidade = qualidade[0]
@@ -515,6 +515,11 @@ def TFV_encontrar_videos_filmes(name,url):
                                                         print url
                                                         addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
                                                 except:pass
+                                        if "firedrive" in url:
+                                                try:
+                                                        url = 'http://www.firedrive.com/file/' + id_video + '///' + name
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
+                                                except:pass
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -569,6 +574,11 @@ def TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
                         print url
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
     		except:pass
+    	if "firedrive" in url:
+                try:
+                        url = 'http://www.firedrive.com/file/' + id_video + '///' + name
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
+                except:pass
     	return
 
 

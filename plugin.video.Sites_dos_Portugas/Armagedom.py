@@ -202,6 +202,7 @@ def ARM_encontrar_fontes_filmes(url):
 	except: html_source = ''
 	items = re.findall('<div class="titulo-post-us">(.*?)<div class="div-us">', html_source, re.DOTALL)
 	#addDir1(str(len(items)),'','',iconimage,False,'')
+	duble = ''
 	if items != []:
 		print len(items)
 		for item in items:
@@ -216,9 +217,13 @@ def ARM_encontrar_fontes_filmes(url):
                         if qq_aa:
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) == 4:
-                                                ano = str(q_a_q_a)
-                                                nome = nome.replace(' '+ano,'')
+                                                nome = nome.replace(' '+str(q_a_q_a),'')
+                                                ano = ' ('+str(q_a_q_a)+')'
                         else: ano = ''
+                        if 'Legendado' in nome and 'Dublado' in nome: dubleg = ' - (Legendado/Dublado)'
+                        if 'Legendado' in nome and 'Dublado' not in nome: dubleg = ' - (Legendado)'
+                        if 'Legendado' not in nome and 'Dublado' in nome: dubleg = ' - (Dublado)'
+                        if 'Legendado' not in nome and 'Dublado' not in nome: dubleg = ''
                         if ' Dublado ou Legendado' in nome: nome = nome.replace(' Dublado ou Legendado','')
                         if ' Dublado e Legendado &#8211;' in nome: nome = nome.replace(' Dublado e Legendado &#8211;','')
                         if ' Dublado e Legendado' in nome: nome = nome.replace(' Dublado e Legendado','')
@@ -230,7 +235,7 @@ def ARM_encontrar_fontes_filmes(url):
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('#038;','')
                         try:
-                                addDir('[B][COLOR yellow]' + nome + '[/COLOR][COLOR green] (' + ano + ')[/COLOR][/B]',urlfilme,333,thumb,'nao','')
+                                addDir('[B][COLOR yellow]' + nome + '[/COLOR][COLOR blue][/B]' + ano + '[/COLOR][COLOR green]' + dubleg + '[/COLOR]',urlfilme,333,thumb,'nao','')
                         except: pass
 	proxima = re.compile('<link rel="next" href="(.+?)"/>').findall(html_source)		
 	try:
@@ -675,7 +680,7 @@ def ARM_encontrar_videos_filmes(name,url):
                                                         #if 'dubldo' in videolink: legdub = '(DUBLADO)'
                                                         #else: legdub = '(LEGENDADO)'
                                                         #if 'legendado' in videolink: legdub = '(LEGENDADO)'
-                                                        if 'download' not in videolink: addDir(ultimoadicionado+'[COLOR yellow]- Épisódio '+str(epinum)+'[/COLOR] '+legdub,videolink,342,iconimage,'','')
+                                                        if 'download' not in videolink: addDir(ultimoadicionado+'[COLOR orange]- Épisódio '+str(epinum)+'[/COLOR] '+legdub,videolink,342,iconimage,'','')
                 if 'Coleção' in link2 and not 'TEMPORADA' in link2 and not 'Temporada' in link2:
                         matchvideo = re.findall('style="text-align: center;">(.*?)>ASSISTIR FILME ONLINE',link2,re.DOTALL)
                         if not matchvideo: matchvideo = re.findall('style="text-align: center;">(.*?)border="0"/></a>',link2,re.DOTALL)

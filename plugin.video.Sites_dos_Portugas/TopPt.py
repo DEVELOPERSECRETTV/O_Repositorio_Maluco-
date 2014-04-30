@@ -620,10 +620,6 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video):
                 try:
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'','')
                 except:pass                        
-        if "putlocker" in url:
-                try:
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,30,iconimage,'','')
-    		except:pass
     	if "nowvideo" in url:
                 try:
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
@@ -640,10 +636,16 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video):
                 try:
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Sockshare)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
-    	if "firedrive" in url:
+    	if "putlocker" in url:
                 try:
+                        url = url.replace('putlocker.com/embed/','firedrive.com/file/')
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
+    	else:
+                if "firedrive" in url:
+                        try:
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
+                        except:pass
     	if "movshare" in url:
                 try:
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Movshare)[/COLOR][/B]',url,30,iconimage,'','')
