@@ -137,18 +137,20 @@ def ARM_Menu_Filmes_Por_Categorias_MEGA_tv():
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile('href="(.+?)" target="_blank" title="(.+?)"').findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        if 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria:
+                        if 'Home' in nome_categoria and len(endereco_categoria)>2: nome_categoria = 'Recentes'
+                        if 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria and 'blank' not in endereco_categoria:
                                 addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder,'nao','')
                 filmes_por_categoria = re.compile('href="(.+?)" title="(.+?)"').findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        if 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria:
+                        if 'Home' in nome_categoria and len(endereco_categoria)>2: nome_categoria = 'Recentes'
+                        if 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria and 'blank' not in endereco_categoria:
                                 addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder,'nao','')
         if not html_items_categorias:
                 html_items_categorias = re.findall('<div class="styled-select">(.*?)</select>', html_categorias_source, re.DOTALL)
                 for item_categorias in html_items_categorias:
                         filmes_por_categoria = re.compile('<option value="(.+?)" style=".+?">(.+?)</option>').findall(item_categorias)
                         for endereco_categoria,nome_categoria in filmes_por_categoria:
-                                if 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria:
+                                if 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria and 'blank' not in endereco_categoria:
                                         addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder,'nao','')
         
                 
@@ -300,7 +302,11 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
 	try:
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
-	items = re.findall('class="link-tumb">(.*?)</div><!--capa-thumb -->', html_source, re.DOTALL)
+	if url == 'http://megafilmeshd.tv/':
+                atualizados = re.findall('title="Novo Filmes Adicionados"(.*?)<div id="footer">', html_source, re.DOTALL)
+                items = re.findall('class="link-tumb">(.*?)</div><!--capa-thumb -->', atualizados[0], re.DOTALL)
+        else:
+                items = re.findall('class="link-tumb">(.*?)</div><!--capa-thumb -->', html_source, re.DOTALL)
 	if not items: items = re.findall('<li class="create-tooltip"(.*?)</a></li>', html_source, re.DOTALL)
 	#addDir1(str(len(items)),'','',iconimage,False,'')
 	dubleg = ''
