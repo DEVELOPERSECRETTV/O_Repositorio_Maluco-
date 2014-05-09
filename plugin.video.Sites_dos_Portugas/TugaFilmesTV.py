@@ -30,6 +30,8 @@ artfolder = addonfolder + '/resources/img/'
 
 fanart = artfolder + 'flag.jpg'
 
+progress = xbmcgui.DialogProgress()
+
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENUS    -----------------------------------------------------------------#
 
@@ -661,17 +663,25 @@ def TFV_encontrar_fontes_series_A_a_Z(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def TFV_encontrar_videos_series(name,url):
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
         conta_id_video = 0
-        try:
-                fonte = TFV_abrir_url(url)
-        except: fonte = ''
-        fontes = re.findall("Epis(.+?)", fonte, re.DOTALL)
-        numero_de_fontes = len(fontes)
-        addDir1(name + ' ' + str(numero_de_fontes) + ' links','','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
 	try:
 		link_series=TFV_abrir_url(url)
 	except: link_series = ''
+	fontes = re.findall("Epis(.+?)", link_series, re.DOTALL)
+        numero_de_fontes = len(fontes)
+        if 'http://js.tuga-filmes.tv/counter/counter.html' in link_series: numero_de_fontes = numero_de_fontes - 1
+        addDir1(name + ' ' + str(numero_de_fontes) + ' links','','',iconimage,False,'')
+        addDir1('','','',iconimage,False,'')
+	if numero_de_fontes <= 5: divide = 5.0
+	if numero_de_fontes > 5 and numero_de_fontes <= 10: divide = 10.0
+	if numero_de_fontes > 10 and numero_de_fontes <= 15: divide = 15.0
+	if numero_de_fontes > 15 and numero_de_fontes <= 20: divide = 20.0
+	if numero_de_fontes > 20: divide = 25.0
 	if link_series:
                 #parameters = {"nome_texto" : name, "url": url}
                 #nome_textbox = urllib.urlencode(parameters)
@@ -682,6 +692,13 @@ def TFV_encontrar_videos_series(name,url):
                         items_series = re.findall("<div class=\'id(.*?)</p>", link_series, re.DOTALL)
                         for item_vid_series in items_series:
                                 try:
+                                        percent = int( ( i / divide ) * 100)
+                                        message = str(i) + " de " + str(numero_de_fontes) + ' Links'
+                                        progress.update( percent, "", message, "" )
+                                        print str(i) + " de " + str(numero_de_fontes) + ' Links'
+                                        xbmc.sleep( 500 )
+                                        if progress.iscanceled():
+                                                break
                                         if 'videomega' in item_vid_series:
                                                 try:                                      
                                                         videomega_video_nome = re.compile('>(.+?)</div></h3><p>').findall(item_vid_series)
@@ -709,7 +726,8 @@ def TFV_encontrar_videos_series(name,url):
                                                         id_video = identifica_video[0]
                                                         src_href = 'href'
                                                         TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
-                                                except:pass                                                                                                             
+                                                except:pass
+                                        i = i + 1
                                 except:pass
                 except:pass
         

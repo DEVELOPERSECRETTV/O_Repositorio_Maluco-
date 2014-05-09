@@ -569,7 +569,8 @@ def ARM_encontrar_videos_filmes(name,url):
                                         if id_video: id_video = id_video[0]
                                         else: id_video = ''
                                         num_fonte = num_fonte + 1
-                                        ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
+                                        if 'video.tt' not in url_video: ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
+                                        if 'video.tt' in url_video: ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
                         urlss_video = re.compile('SRC="(.+?)"').findall(urls_video[0])
                         if urlss_video:
                                 for url_video in urlss_video:
@@ -577,7 +578,8 @@ def ARM_encontrar_videos_filmes(name,url):
                                         if id_video: id_video = id_video[0]
                                         else: id_video = ''
                                         num_fonte = num_fonte + 1
-                                        ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
+                                        if 'video.tt' not in url_video: ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
+                                        if 'video.tt' in url_video: ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
                         if 'telecinemajestic' in link2:
                                 linktelecine = re.compile('href="http://telecinemajestic(.+?)"').findall(link2)
                                 telelink = 'http://telecinemajestic' + linktelecine[0]
@@ -1276,6 +1278,7 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
     	else:
                 if "/flashxtv/" in url:
                         try:
+                                funciona = ''
                                 try:
                                         flashxtv=ARM_abrir_url(url)
                                 except: flashxtv = ''
@@ -1284,9 +1287,13 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                                         flashxtv=ARM_abrir_url(flash[0].replace('WWWflash','flash'))
                                 except: flashxtv = ''
                                 flashurl = re.compile('addthis:url="(.+?)" addthis:').findall(flashxtv)
-                                url = flashurl[0]
-                                url = url + '///' + name
-                                addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]',url,30,iconimage,'','')
+                                if flashurl:
+                                        url = flashurl[0]
+                                        url = url + '///' + name
+                                else:
+                                        url = url + '///' + name
+                                        funciona = '[COLOR red] - Sem link[/COLOR]'
+                                addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]'+funciona,url,30,iconimage,'','')
                         except:pass
     	if 'videott' in url:
                 try:

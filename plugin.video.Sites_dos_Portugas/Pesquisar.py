@@ -17,7 +17,7 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver,time,os
 
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
@@ -46,17 +46,24 @@ def pesquisar():
                         #if len(q_a_q_a) > 2:
                                 search = search + '+' + q_a_q_a
 		encode=urllib.quote(search)
+		mensagemprogresso = xbmcgui.DialogProgress()
+                mensagemprogresso.create('Progresso', 'A Pesquisar','Por favor aguarde...')
+                mensagemprogresso.update(0)
 		url_pesquisa = 'http://www.tuga-filmes.tv/search?q=' + str(encode)
 		encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
+		mensagemprogresso.update(25)
 		url_pesquisa = 'http://www.tuga-filmes.com/search?q=' + str(encode)
 		encontrar_fontes_filmes_TFC(url_pesquisa)
+		mensagemprogresso.update(50)
 		url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode)
 		encontrar_fontes_pesquisa_MVT(url_pesquisa)
+		mensagemprogresso.update(75)
 		url_pesquisa = 'http://toppt.net/?s=' + str(encode)
 		encontrar_fontes_filmes_TPT(url_pesquisa)
 		addDir1('','','',artfolder + 'banner.png',False,'')		
                 addDir('[COLOR yellow]Nova Pesquisa[/COLOR]','url',1,artfolder + 'banner.png','nao','')
                 addDir('[COLOR yellow]Menu Principal[/COLOR]','','',artfolder + 'banner.png','nao','')
+                mensagemprogresso.update(100)
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#

@@ -416,12 +416,17 @@ def TPT_encontrar_videos_filmes(name,url):
                                                 lin = re.findall('.+?EPIS',newmatch[0],re.DOTALL)
                                                 linksseccao = re.findall('ODIO (.+?)<br/>\n(.+?)EPIS',newmatch[0],re.DOTALL)
                                                 linksseccaoultimo = re.findall('ODIO (.+?)<br/>\n(.+?)</p>',newmatch[0],re.DOTALL)
+                                                if len(lin) <= 5: divide = 5.0
+                                                if len(lin) > 5 and len(lin) <= 10: divide = 10.0
+                                                if len(lin) > 10 and len(lin) <= 15: divide = 15.0
+                                                if len(lin) > 15 and len(lin) <= 20: divide = 20.0
+                                                if len(lin) > 20: divide = 25.0
                                                 if linksseccao:
                                                         #mensagemprogresso.update(60)
                                                         ultima_parte = ''
                                                         #while i<len(lin)-1:
                                                         for parte1,parte2 in linksseccao:
-                                                                percent = int( ( i / 25.0 ) * 100)
+                                                                percent = int( ( i / divide ) * 100)
                                                                 message = str(i) + " de " + str(len(lin))
                                                                 progress.update( percent, "", message, "" )
                                                                 print str(i) + " de " + str(len(lin))

@@ -294,13 +294,16 @@ def Series_Series(url):
         i=0
         for item_series in html_items_series:
                 series = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(item_series)
+                #if series: addDir1('Existe'+str(len(series)),'','',artfolder + 'ze-TFV1.png',False,'')
                 for endereco_series,nome_series in series:
                         nome_series = nome_series.replace('&amp;','&')
                         nome_series = nome_series.replace('&#39;',"'")
                         nome_series = nome_series.replace('&#8217;',"'")
                         nome_series = nome_series.replace('&#8230;',"...")
+                        nome_series = nome_series.replace('&#8211;',"-")
                         if nome_series != 'Agents of S.H.I.E.L.D':
-                                arr_series[i]=nome_series
+                                #arr_series[i]=nome_series
+                                arr_series.append(nome_series)
                                 i=i+1
                         #arr_series[6][1]=endereco_series
                         #addDir(nome_series,endereco_series,47,artfolder + 'ze-TFV1.png','nao','')
