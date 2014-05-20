@@ -34,6 +34,7 @@ mensagemok = xbmcgui.Dialog().ok
 def FILMES_pesquisar(nome_pesquisa):
         addDir1('[B][COLOR blue]Procura: [/COLOR][/B]'+name,'','','',False,'')
         addDir1('','','','',False,'')
+        nome_pesquisa = nome_pesquisa.replace('[COLOR orange] | TFV[/COLOR]','').replace('[COLOR orange] | TFC[/COLOR]','').replace('[COLOR orange] | MVT[/COLOR]','').replace('[COLOR orange] | TPT[/COLOR]','')
         pesquisou = nome_pesquisa
         if '-' in nome_pesquisa:
                 nome_p = re.compile('(.+?)[-].+?').findall(nome_pesquisa)

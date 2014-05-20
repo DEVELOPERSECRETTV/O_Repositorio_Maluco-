@@ -45,7 +45,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 	urlvid = re.compile('(.+?)///').findall(url)
 	url = urlvid[0]
 	name = nomefilme + ' ' + name
-	if "drive.google" in url:
+	if "drive.google" in url or "docs.google" in url :
 		try:
 			iframe_url = url
 			print iframe_url
@@ -290,7 +290,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			link3 = PLAY_abrir_url(iframe_url)
 			tit=re.compile('title: "(.+?)"').findall(link3)
 			match=re.compile('file: "(.+?)"').findall(link3)
-			subtitle=re.compile("addSubtitles('(.+?)', '', false)").findall(link3)
+			subtitle=re.compile("addSubtitles[(]'(.+?)'").findall(link3)
 			#subtitle = []
 			if subtitle == []:
 				checker = ''
@@ -335,13 +335,16 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			video_url_escape = urllib.unquote(match[0])
 			match=re.compile('file: "(.+?)"').findall(video_url_escape)
 			subtitle=re.compile('"file": "(.+?)"').findall(video_url_escape)
+			if subtitle==[]:
+                                subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)
+                                
 			if subtitle == []:
-				checker = ''
+				checker = '1'
 				url = match[0]
 			else:
-				checker = subtitle[0]
+				checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
 				url = match[0]
-			#addLink(name+match[0],match[0],'')
+			#addLink(checker,match[0],'')
 		except: pass
         if 'vk.com' not in url:
                 try:

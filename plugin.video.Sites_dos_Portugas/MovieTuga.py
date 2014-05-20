@@ -38,19 +38,21 @@ artfolder = addonfolder + '/resources/img/'
 def MVT_MenuPrincipal(artfolder):
         addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','','',artfolder + 'ze-MVT1.png',False,'')
         addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
-	addDir('[COLOR yellow]Menu Filmes[/COLOR]','url',105,artfolder + 'ze-MVT1.png','nao','')
-	addDir('[COLOR yellow]Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',102,artfolder + 'ze-MVT1.png','nao','')
+        addDir('- Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','','',artfolder + 'ze-MVT1.png',False,'')
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'ze-MVT1.png','nao','')
+	addDir('[COLOR yellow]- Categorias[/COLOR]','url',106,artfolder + 'ze-MVT1.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',102,artfolder + 'ze-MVT1.png','nao','')
         addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
-	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar1.png','nao','')
 	#addDir('[COLOR brown]ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_MovieTuga.txt',108,artfolder + 'ze-MVT1.png','nao','')
 
-def MVT_Menu_Filmes(artfolder):
+def MVT_Menu_Filmes(artfolder):#105
         addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'ze-MVT1.png',False,'')
         addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
 	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'ze-MVT1.png','nao','')
 	addDir('[COLOR yellow]Categorias[/COLOR]','url',106,artfolder + 'ze-MVT1.png','nao','')
         addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
-	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar1.png','nao','')
+	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 
 def MVT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.movie-tuga.blogspot.pt/'

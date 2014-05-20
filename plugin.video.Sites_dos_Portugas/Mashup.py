@@ -94,7 +94,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('&#8230;',"...")
                         nome = nome.replace('  '," ")
                         nome = nome.replace('&#8211;',"-")
-                        nome_filme = nome
+                        nome_filme = nome+'[COLOR orange] | TFV[/COLOR]'
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
                         nome = nome.replace('   ',"")
@@ -146,7 +146,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('&#8230;',"...")
                         nome = nome.replace('  '," ")
                         nome = nome.replace('&#8211;',"-")
-                        nome_filme = nome
+                        nome_filme = nome+'[COLOR orange] | TFC[/COLOR]'
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
                         nome = nome.replace('   ',"")
@@ -154,7 +154,7 @@ def Filmes_Filmes_Filmes(url):
                                 arr_filmes.insert(i,nome)
                                 arrai_filmes.insert(i,nome_filme)
                                 thumb_filmes.insert(i,thumb)
-                        #else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'/TFC
+                        else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'[COLOR orange] | TFC[/COLOR]'
                         i = i + 1
                         conta_items = conta_items + 1
                         if conta_items == 30:
@@ -191,7 +191,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('&#8230;',"...")
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('  '," ")
-                        nome_filme = nome
+                        nome_filme = nome+'[COLOR orange] | MVT[/COLOR]'
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
                         nome = nome.replace('   ',"")
@@ -199,7 +199,7 @@ def Filmes_Filmes_Filmes(url):
                                 arr_filmes.insert(i,nome)
                                 arrai_filmes.insert(i,nome_filme)
                                 thumb_filmes.insert(i,thumbnail.replace('s72-c','s320'))
-                        #else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'/MVT'
+                        else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'[COLOR orange] | MVT[/COLOR]'
                         i = i + 1
                         conta_items = conta_items + 1
                         if conta_items == 40:
@@ -211,6 +211,7 @@ def Filmes_Filmes_Filmes(url):
                 url_MVT = proxima_MVT[0].replace('%3A',':')
                 url_MVT = proxima_MVT[0].replace('&amp;','&')
 	except: pass
+	#if proxima_MVT:
         #----------------------------------------------------------------------------------------------------
         i = 0
         try:
@@ -254,7 +255,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('[PT-PT]',"")
                         nome = nome.replace('[PT/PT]',"")
                         nome = nome.replace('  '," ")
-                        nome_filme = nome
+                        nome_filme = nome+'[COLOR orange] | TPT[/COLOR]'
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
                         nome = nome.replace('   ',"")
@@ -262,7 +263,7 @@ def Filmes_Filmes_Filmes(url):
                                 arr_filmes.insert(i,nome)
                                 arrai_filmes.insert(i,nome_filme)
                                 thumb_filmes.insert(i,thumbnail[0].replace('s72-c','s320'))
-                        #else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'/TPT'
+                        else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'[COLOR orange] | TPT[/COLOR]'
                         i = i + 1
                         conta_items = conta_items + 1
                         if conta_items == 58:

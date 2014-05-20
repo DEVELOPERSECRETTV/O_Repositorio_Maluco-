@@ -37,13 +37,21 @@ artfolder = addonfolder + '/resources/img/'
 def TFC_MenuPrincipal(artfolder):
         addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','','',artfolder + 'ze-TFC1.png',False,'')
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
-	addDir('[COLOR yellow]Menu Filmes[/COLOR]','url',77,artfolder + 'ze-TFC1.png','nao','')
-	addDir('[COLOR yellow]Animação[/COLOR]','http://www.tuga-filmes.com/search/label/Anima%C3%A7%C3%A3o?max-results=20',72,artfolder + 'ze-TFC1.png','nao','')
+        addDir('- Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','','',artfolder + 'ze-TFC1.png',False,'')
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.com/',72,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]- Destaques[/COLOR]','http://www.tuga-filmes.com/search/label/destaque',72,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]- 2013[/COLOR]','http://www.tuga-filmes.com/search/label/-%20Filmes%202013',72,artfolder + 'ze-TFC1.png','nao','')
+        addDir('[COLOR yellow]- Top 10[/COLOR]','url',79,artfolder + 'ze-TFC1.png','nao','')
+        #addDir('[COLOR yellow]Brevemente[/COLOR]','url',81,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]- Categorias[/COLOR]','url',78,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.com/search/label/Anima%C3%A7%C3%A3o?max-results=20',72,artfolder + 'ze-TFC1.png','nao','')
+	if selfAddon.getSetting('hide-porno') == "false":
+                addDir('[B][COLOR red]M+18[/B][/COLOR]','url',86,artfolder + 'ze-TFC1.png','nao','')	
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
-	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar1.png','nao','')
 	#addDir('[COLOR brown]ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_TugaFilmesCom.txt',88,artfolder + 'ze-TFC1.png','nao','')
 
-def TFC_Menu_Filmes(artfolder):
+def TFC_Menu_Filmes(artfolder):#77
         addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'ze-TFC1.png',False,'')
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
 	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://www.tuga-filmes.com/',72,artfolder + 'ze-TFC1.png','nao','')
@@ -55,7 +63,7 @@ def TFC_Menu_Filmes(artfolder):
 	if selfAddon.getSetting('hide-porno') == "false":
                 addDir('[B][COLOR red]M+18[/B][/COLOR]','url',86,artfolder + 'ze-TFC1.png','nao','')
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
-	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar1.png','nao','')
+	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 
 def TFC_Menu_Series(artfolder):
         addDir1('[B][COLOR blue]Menu Séries[/COLOR][/B]','','',artfolder + 'ze-TFC1.png',False,'')
@@ -63,7 +71,7 @@ def TFC_Menu_Series(artfolder):
 	addDir('[COLOR yellow]Ver Todas[/COLOR]','url',81,artfolder + 'ze-TFC1.png','nao','')
         addDir('[COLOR yellow]Episódios Recentes[/COLOR]','http://www.tuga-filmes.tv/search/label/S%C3%A9ries',84,artfolder + 'ze-TFC1.png','nao','')
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
-	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar1.png','nao','')
+	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 
 def TFC_Menu_Filmes_Top_10(artfolder):
         url_top_10 = 'http://www.tuga-filmes.com/'
@@ -280,7 +288,7 @@ def TFC_encontrar_videos_filmes(name,url):
                         assistir_fontes = re.findall('>ASSISTIR(.*?)------------------------------', fonte, re.DOTALL)
                         if assistir_fontes:
                                 for ass_fon in assistir_fontes:
-                                        match = re.compile('<iframe frameborder=".+?" height=".+?" scrolling=".+?" src="(.+?)"').findall(ass_fon)
+                                        match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
@@ -302,11 +310,12 @@ def TFC_encontrar_videos_filmes(name,url):
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
-                                assistir_fontes = re.findall("------------------------------<br />(.*?)<div class='postmeta'>", fonte, re.DOTALL)
+                                assistir_fontes = re.findall("------------------------------<br />(.*?)='postmeta'>", fonte, re.DOTALL)
+                                assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
                                 conta_id_video = 0
                                 #if assistir_fontes:
                                 for ass_fon in assistir_fontes:
-                                        match = re.compile('<iframe frameborder=".+?" height=".+?" scrolling=".+?" src="(.+?)"').findall(ass_fon)
+                                        match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
@@ -332,7 +341,7 @@ def TFC_encontrar_videos_filmes(name,url):
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
                                 conta_id_video = 0
                                 for ass_fon in assistir_fontes:
-                                        match = re.compile('<iframe frameborder=".+?" height=".+?" scrolling=".+?" src="(.+?)"').findall(ass_fon)
+                                        match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
@@ -355,7 +364,7 @@ def TFC_encontrar_videos_filmes(name,url):
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
                 else:
-                        match = re.compile('<iframe frameborder=".+?" height=".+?" scrolling=".+?" src="(.+?)"').findall(fonte)
+                        match = re.compile('<iframe .+? src="(.+?)"').findall(fonte)
                         conta_video = len(match)
                         for url in match:                                
                                 id_video = ''
