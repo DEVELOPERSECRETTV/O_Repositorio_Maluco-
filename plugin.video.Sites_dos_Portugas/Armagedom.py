@@ -582,7 +582,27 @@ def ARM_encontrar_videos_filmes(name,url):
                                         if 'video.tt' in url_video: ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
                         if 'telecinemajestic' in link2:
                                 linktelecine = re.compile('href="http://telecinemajestic(.+?)"').findall(link2)
-                                telelink = 'http://telecinemajestic' + linktelecine[0]
+                                if linktelecine: telelink = 'http://telecinemajestic' + linktelecine[0]
+                                try:
+                                        telecine = ARM_abrir_url(telelink)
+                                except: telecine = ''
+                                if telecine:
+                                        telemajestic = re.findall('id="conteudo-filmes">(.*?)</iframe></div><div><object', telecine, re.DOTALL)
+                                        urlss_video = re.compile('SRC="(.+?)"').findall(telemajestic[0])
+                                        if urlss_video:
+                                                for url_video in urlss_video:
+                                                        id_video = ''
+                                                        num_fonte = num_fonte + 1
+                                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
+                                        urlss_video = re.compile('src="(.+?)"').findall(telemajestic[0])
+                                        if urlss_video:
+                                                for url_video in urlss_video:
+                                                        id_video = ''
+                                                        num_fonte = num_fonte + 1
+                                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
+                        if 'efilmesnarede' in link2:
+                                linktelecine = re.compile('href="http://efilmesnarede(.+?)"').findall(link2)
+                                if linktelecine: telelink = 'http://efilmesnarede' + linktelecine[0]
                                 try:
                                         telecine = ARM_abrir_url(telelink)
                                 except: telecine = ''
@@ -610,6 +630,30 @@ def ARM_encontrar_videos_filmes(name,url):
                                         if urls_video:
                                                 for url_video in urls_video:                                                        
                                                         if 'telecinemajestic' in url_video:
+                                                                try:
+                                                                        telecine = ARM_abrir_url(url_video)
+                                                                except: telecine = ''
+                                                                if telecine:
+                                                                        telemajestic = re.findall('</iframe></div><div><object(.*?)class="titulo-bloco">', telecine, re.DOTALL)
+                                                                        urlss_video = re.compile('SRC="(.+?)"').findall(telemajestic[0])
+                                                                        if urlss_video:
+                                                                                for url_video in urlss_video:
+                                                                                        id_video = ''
+                                                                                        num_fonte = num_fonte + 1
+                                                                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
+                                                                        urlss_video = re.compile('src="(.+?)"').findall(telemajestic[0])
+                                                                        if urlss_video:
+                                                                                for url_video in urlss_video:
+                                                                                        id_video = ''
+                                                                                        num_fonte = num_fonte + 1
+                                                                                        ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
+                                                        else:
+                                                                id_video = re.compile('id=(.*)').findall(url_video)
+                                                                if id_video: id_video = id_video[0]
+                                                                else: id_video = ''
+                                                                num_fonte = num_fonte + 1
+                                                                ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
+                                                        if 'efilmesnarede' in url_video:
                                                                 try:
                                                                         telecine = ARM_abrir_url(url_video)
                                                                 except: telecine = ''
@@ -1054,42 +1098,43 @@ def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
                                                 link2=ARM_abrir_url(urls_video[0])
                                         except: link2 = ''
                                         if link2:
-                                                if 'esquerdo' in link2 or 'direito' in link2:
+                                                if 'esquerdo' in link2:
                                                         urls_videos = re.findall('<div class="dub">(.*?)<div class="direito">',link2,re.DOTALL)
                                                         if urls_videos: urls_video = re.compile('<a href="(.+?)"').findall(urls_videos[0])
                                                         addDir1('[COLOR orange]Dublado:[/COLOR]','','',iconimage,False,'')
                                                         for url_videos in urls_video:
                                                                 id_video = ''
                                                                 try:
-                                                                        link2=ARM_abrir_url(url_videos)
-                                                                except: link2 = ''                                                
-                                                                videolink = re.compile('src="(.+?)"').findall(link2)
+                                                                        link3=ARM_abrir_url(url_videos)
+                                                                except: link3 = ''                                                
+                                                                videolink = re.compile('src="(.+?)"').findall(link3)
                                                                 if videolink: url_video = videolink[0]
                                                                 else: url_video = ''
                                                                 if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
-                                                                ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
-                                                        urls_videos = re.findall('<div class="leg"> </div>(.*?)</div>',link2,re.DOTALL)
+                                                                ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)                                                                
+                                                if 'direito' in link2:
+                                                        urls_videos = re.findall('<div class="direito">(.*?)</body>',link2,re.DOTALL)
                                                         if urls_videos: urls_video = re.compile('<a href="(.+?)"').findall(urls_videos[0])
                                                         addDir1('[COLOR orange]Legendado:[/COLOR]','','',iconimage,False,'')
                                                         num_fonte = 0
                                                         for url_videos in urls_video:
                                                                 id_video = ''
                                                                 try:
-                                                                        link2=ARM_abrir_url(url_videos)
-                                                                except: link2 = ''                                                
-                                                                videolink = re.compile('src="(.+?)"').findall(link2)
+                                                                        link3=ARM_abrir_url(url_videos)
+                                                                except: link3 = ''                                                
+                                                                videolink = re.compile('src="(.+?)"').findall(link3)
                                                                 if videolink: url_video = videolink[0]
                                                                 else: url_video = ''
                                                                 if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
                                                                 ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
-                                                else:
+                                                if 'direito' not in link2 and 'esquerdo' not in link2:
                                                         urls_video = re.compile('<a href="(.+?)"').findall(link2)
                                                         for url_videos in urls_video:
                                                                 id_video = ''
                                                                 try:
-                                                                        link2=ARM_abrir_url(url_videos)
-                                                                except: link2 = ''
-                                                                videolink = re.compile('src="(.+?)"').findall(link2)
+                                                                        link3=ARM_abrir_url(url_videos)
+                                                                except: link3 = ''
+                                                                videolink = re.compile('src="(.+?)"').findall(link3)
                                                                 if videolink: url_video = videolink[0]
                                                                 else: url_video = ''
                                                                 if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
@@ -1193,8 +1238,16 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                         url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](DG)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
+	if "cloudzilla" in url:
+                try:
+                        url = 'http://www.cloudzilla.to/embed/' + id_video
+                        print url
+			url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
         if "vkontakte.ru" in url:
 		try:
+                        url = url.replace('vkontakte.ru','vk.com')
                         url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Vkontakte.ru)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
@@ -1267,6 +1320,7 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
     		except:pass
     	if "video.mail.ru" in url:
                 try:
+                        url = url.replace('/embed/','/').replace('.html','.json')
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.mail.ru)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
@@ -1313,6 +1367,11 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
 
 def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
         #addDir1(url,'','',iconimage,False,'')
+        if "cloudzilla" in url:
+                try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
         if "drive.google" in url:
 		try:
                         url = url + '///' + name
@@ -1345,6 +1404,7 @@ def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
 		except: pass
         if "vkontakte.ru" in url:
 		try:
+                        url = url.replace('vkontakte.ru','vk.com')
                         url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Vkontakte.ru)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
@@ -1410,7 +1470,8 @@ def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
     		except:pass
     	if "video.mail.ru" in url:
                 try:
-                        url = url + '///' + name
+                        url = url.replace('/embed/','/').replace('.html','.json')
+                        url = url + '///' + name  #http://api.video.mail.ru/videos/mail/megafilmes/_myvideo/172.json
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.mail.ru)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "flashx.tv" in url:

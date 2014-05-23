@@ -71,6 +71,21 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
     			else: url = ''
     			#return url
 		except: pass
+	if "cloudzilla" in url:
+		try:
+			iframe_url = url
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			tit=re.compile('var vtitle = "(.+?)"').findall(link3)
+			match=re.compile('var vurl = "(.+?)"').findall(link3)
+			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+			if subtitle == []:
+				checker = ''
+				url = match[0]
+			else:
+				checker = subtitle[0]
+				url = match[0]
+		except: pass
 	if "vodlocker" in url:
 		try:
                         #if '/video/' in url: url = url.replace('/video/','/embed/')
@@ -118,13 +133,30 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 		except: pass
 	if "video.mail.ru" in url:
 		try:
-			sources = []
-			hosted_media = urlresolver.HostedMediaFile(url)
-			sources.append(hosted_media)
-			source = urlresolver.choose_source(sources)
-			if source: 
-				url = source.resolve()
-    			else: url = ''
+			iframe_url = url
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			tit=re.compile('"videoTitle":"(.+?)"').findall(link3)
+			if 'sd' in link3 and 'hd' in link3:
+                                match=re.compile('"videos":{"sd":"(.+?)","hd":"(.+?)"}').findall(link3)
+                                if match:
+                                        addLink('SD',match[0][0],'')
+                                        addLink('HD',match[0][1],'')
+			if 'sd' in link3 and 'hd' not in link3:
+                                match=re.compile('"videos":{"sd":"(.+?)"}').findall(link3)
+                                if match:
+                                        addLink('SD',match[0],'')
+                        if 'hd' in link3 and 'sd' not in link3:
+                                match=re.compile('"videos":{"hd":"(.+?)"}').findall(link3)
+                                if match:
+                                        addLink('HD',match[0],'')
+			#subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+			#if subtitle == []:
+				#checker = ''
+				#url=match[0]
+			#else:
+				#checker = subtitle[0]
+				#url = match[0]
 		except: pass
 	if "flashx" in url:
 		try:
@@ -346,13 +378,13 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 				url = match[0]
 			#addLink(checker,match[0],'')
 		except: pass
-        if 'vk.com' not in url:
+        if 'vk.com' not in url and 'video.mail.ru' not in url:
                 try:
                         #addLink(name+url,match[0],'')
                         playlist = xbmc.PlayList(1)
                         playlist.clear()             
                         playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
-                        addLink(name,url,iconimage)
+                        addLink(url+name,url,iconimage)
                         dp.update(33)
                         if dp.iscanceled(): return
                         xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
