@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="o.repository.maluco" name="O Repositorio Maluco" version="1.0.8" provider-name="OMaluco">
+<addon id="o.repository.maluco" name="O Repositorio Maluco" version="1.0.9" provider-name="OMaluco">
 	<extension point="xbmc.addon.repository" name="Filmes Series Tuga Add-on Repository">
 		<info compressed="false">http://o-repositorio-maluco.googlecode.com/svn/trunk/addons.xml</info>
 		<checksum>http://o-repositorio-maluco.googlecode.com/svn/trunk/addons.xml.md5</checksum>
@@ -12,23 +12,6 @@
 		<disclaimer></disclaimer>
 		<platform>all</platform>
 	</extension>
-</addon>
-
-<addon id="plugin.video.MovieTuga" name="MovieTuga" version="0.0.8" provider-name="OMaluco">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.urlresolver" version="1.0.5"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="addon.py">
-    <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <language>en</language>
-    <platform>all</platform>
-    <summary lang="en">Movie Tuga</summary>
-    <description lang="en">Filmes do site www.Movie-Tuga.blogspot.pt</description>
-    <platform>all</platform>
-  </extension>
 </addon>
 
 <addon id="plugin.video.Sites_dos_Portugas" name="[COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR]" version="0.2.3" provider-name="OMaluco">
@@ -44,40 +27,6 @@
     <platform>all</platform>
     <summary lang="en">Filmes dos Portugas</summary>
     <description lang="en">Mashup dos addons Tuga-Filmes.com, Tuga-Filmes.tv, Movietuga e Toppt.net. E ainda os SITESdosBRAZUCAS.</description>
-    <platform>all</platform>
-  </extension>
-</addon>
-
-<addon id="plugin.video.TugaFilmesCom" name="Tuga-Filmes.com" version="0.1.3" provider-name="OMaluco">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.urlresolver" version="1.0.5"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="addon.py">
-    <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <language>en</language>
-    <platform>all</platform>
-    <summary lang="en">Tuga Filmes Com</summary>
-    <description lang="en">Filmes do site www.Tuga-Filmes.com</description>
-    <platform>all</platform>
-  </extension>
-</addon>
-
-<addon id="plugin.video.TugaFilmesTV" name="Tuga-Filmes.tv" version="0.1.1" provider-name="OMaluco">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.urlresolver" version="1.0.5"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="addon.py">
-    <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <language>en</language>
-    <platform>all</platform>
-    <summary lang="en">Tuga Filmes tv</summary>
-    <description lang="en">Filmes e Series do site www.Tuga-Filmes.tv</description>
     <platform>all</platform>
   </extension>
 </addon>
