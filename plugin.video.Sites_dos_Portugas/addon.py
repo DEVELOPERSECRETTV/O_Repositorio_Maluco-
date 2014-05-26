@@ -57,6 +57,7 @@ def MAIN_MENU():
         #addLink('vvv','http://st59.u1.videomega.tv/v/2cadf4fe7583d75d3c0fd927a7b19c7b.mp4','')
         #addLink('vvv','http://www.video.tt/player/player.swf?v=RpEFrQiNk&em=TRUE&sd=www.video.tt&rv=1\.0\.1','')
         #addLink('vvv','http://cs540206v4.vk.me/u248685033/videos/b7ce337189.240.mp4','')
+        #addLink('vvv','http://cdn27.video.mail.ru/v/47215363.mp4?sign=c38c691567ff4f3dc18f47a306d793c8100be935&slave[]=s%3Ahttp%3A%2F%2F127.0.0.1%3A5010%2F47215363-v.mp4&p=0&video_key=216b3d86ce9118c28ac5cab907a95cc8fb2dfb96&expire_at=1401048000&touch=1399860981','')
         #xbmc.executebuiltin("Container.SetViewMode(503)")
         url_TFV = 'http://www.tuga-filmes.tv/search/label/Filmes'
         url_TFC = 'http://www.tuga-filmes.com/'

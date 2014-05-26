@@ -33,7 +33,7 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def PLAY_movie(url,name,iconimage,checker,fanart):
-        if 'vk.com' not in url:
+        if 'vk.com' not in url and 'video.mail.ru' not in url:
                 dp = xbmcgui.DialogProgress()
                 dp.create(name,'A sincronizar vídeos e legendas')
                 dp.update(0)
@@ -136,18 +136,26 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			iframe_url = url
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
-			tit=re.compile('"videoTitle":"(.+?)"').findall(link3)
-			if 'sd' in link3 and 'hd' in link3:
-                                match=re.compile('"videos":{"sd":"(.+?)","hd":"(.+?)"}').findall(link3)
+			#tit=re.compile('"videoTitle":"(.+?)"').findall(link3)
+			tit=re.compile('<title>(.+?)</title>').findall(link3)
+			#v_key = re.compile('video_key=(.+?)&expire_at=(.+?)"').findall(link3)
+			if 'sd' in link3 and 'md' in link3:
+                                match=re.compile('videoPresets = {"sd":"(.+?)","md":"(.+?)"}').findall(link3)
+                                #match=re.compile('"videos":{"sd":"(.+?)&expire_at=.+?","hd":"(.+?)&expire_at=.+?"}').findall(link3)
+                                #matchHD=re.compile('"videos":{"sd":"(.+?)&expire_at=.+?","hd":"(.+?)&expire_at=.+?"}').findall(link3)
+                                #vl=match[0][0]+'&video_key='+v_key[0][0]+'&expire_at='+v_key[0][1]
                                 if match:
                                         addLink('SD',match[0][0],'')
                                         addLink('HD',match[0][1],'')
-			if 'sd' in link3 and 'hd' not in link3:
-                                match=re.compile('"videos":{"sd":"(.+?)"}').findall(link3)
+			if 'sd' in link3 and 'md' not in link3:
+                                match=re.compile('videoPresets = {"sd":"(.+?)"').findall(link3)
+                                #match=re.compile('"videos":{"sd":"(.+?)"}').findall(link3)
                                 if match:
+                                        #url=match[0]
                                         addLink('SD',match[0],'')
-                        if 'hd' in link3 and 'sd' not in link3:
-                                match=re.compile('"videos":{"hd":"(.+?)"}').findall(link3)
+                        if 'hd' in link3 and 'md' not in link3:
+                                match=re.compile('"md":"(.+?)"}').findall(link3)
+                                #match=re.compile('"videos":{"hd":"(.+?)"}').findall(link3)
                                 if match:
                                         addLink('HD',match[0],'')
 			#subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
@@ -384,7 +392,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                         playlist = xbmc.PlayList(1)
                         playlist.clear()             
                         playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
-                        addLink(url+name,url,iconimage)
+                        addLink(name,url,iconimage)
                         dp.update(33)
                         if dp.iscanceled(): return
                         xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
