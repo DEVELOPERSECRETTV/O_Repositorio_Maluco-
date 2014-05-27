@@ -352,14 +352,27 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
     		except:pass
     	if "video.tt" in url or "videott" in url:
                 try:
-                        sources = []
-                        hosted_media = urlresolver.HostedMediaFile(url)
-                        sources.append(hosted_media)
-                        source = urlresolver.choose_source(sources)
-                        if source: 
-                                url = source.resolve()
-                        else: url = ''
-                        #addLink(name+url,url,'')
+                        iframe_url = url
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			id_video = re.compile('http://video.tt/player_control/settings.php?v=(.+?)&fv=v1.2.74').findall(url)
+			if not id_video: id_video = re.compile('"vcode":"(.+?)"').findall(link3)
+			v_key=re.compile('"time":"(.+?)"}').findall(link3)
+			tit=re.compile('Title=(.+?)&SourceURL=').findall(link3)
+			tt=re.compile('"st":(.+?),"tst"').findall(link3)
+			vlink='http://gs.video.tt/s?v='+id_video[0]+'&r=1&t='+tt[0]+'&u=&c='+v_key[0]+'&start=0'
+			subtitle=re.compile("addSubtitles[(]'(.+?)'").findall(link3)
+			#subtitle = []
+			if subtitle == []:
+				checker = ''
+				url = vlink
+			else:
+				checker = subtitle[0]
+				url = vlink
+                        #addLink(id_video[0],vlink,'')
+                        #addLink(tt[0],vlink,'')
+                        #addLink(v_key[0],vlink,'')
+                        #addLink(vlink,vlink,'')
     		except:pass
     	if "videomega" in url:
 		try:

@@ -1351,13 +1351,19 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                         except:pass
     	if 'videott' in url:
                 try:
-                        url = 'http://www.video.tt/e/' + id_video
+                        url = url.replace('videott','video.tt')
+                        url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
+                        url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74///' + name
+                        #url = 'http://video.tt/player_control/settings.php?v='+id_video+'&fv=v1.2.74'
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	else:
                 if "video.tt" in url:
                         try:
+                                url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
+                                url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74//' + name
+                                #url = 'http://video.tt/player_control/settings.php?v='+id_video+'&fv=v1.2.74'
                                 url = url + '///' + name
                                 addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
                         except:pass
@@ -1491,14 +1497,18 @@ def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
     		except:pass
     	if 'videott' in url:
                 try:
-                        url = url + '///' + name
+                        url = url.replace('videott','video.tt')
+                        url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
+                        url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
-    	if "video.tt" in url:
-                try:
-                        url = url + '///' + name
-                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
-    		except:pass
+    	else:
+                if "video.tt" in url:
+                        try:
+                                url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
+                                url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74///' + name
+                                addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
+                        except:pass
     	return
    
 
