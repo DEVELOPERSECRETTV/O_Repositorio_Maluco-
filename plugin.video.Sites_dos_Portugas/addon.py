@@ -59,8 +59,8 @@ def MAIN_MENU():
         #addLink('vvv','http://cs540206v4.vk.me/u248685033/videos/b7ce337189.240.mp4','')
         #addLink('vvv','http://cdn27.video.mail.ru/v/47215363.mp4?sign=c38c691567ff4f3dc18f47a306d793c8100be935&slave[]=s%3Ahttp%3A%2F%2F127.0.0.1%3A5010%2F47215363-v.mp4&p=0&video_key=216b3d86ce9118c28ac5cab907a95cc8fb2dfb96&expire_at=1401048000&touch=1399860981','')
         #xbmc.executebuiltin("Container.SetViewMode(503)")
-        url_TFV = 'http://www.tuga-filmes.tv/search/label/Filmes'
-        url_TFC = 'http://www.tuga-filmes.com/'
+        url_TFV = 'http://series.tuga-filmes.tv/search/label/Filmes'
+        url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_TPT = 'http://toppt.net/?cat=68'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
@@ -68,15 +68,15 @@ def MAIN_MENU():
         addDir1('[B][COLOR blue]Menu Principal[/COLOR][/B]','',31,artfolder + 'MPrin.png',False,'')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         addDir('[B][COLOR green]Fi[/COLOR][COLOR yellow]l[/COLOR][COLOR red]mes[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'filmes.png','nao','')
-        addDir('[B][COLOR green]Sé[/COLOR][COLOR yellow]r[/COLOR][COLOR red]ies[/COLOR][/B]','http://www.tuga-filmes.tv',26,artfolder + 'series.png','nao','')
-        url_TFV = 'http://www.tuga-filmes.tv/search/label/Anima%C3%A7%C3%A3o'
-        url_TFC = 'http://www.tuga-filmes.com/search/label/Anima%C3%A7%C3%A3o?max-results=20'
+        addDir('[B][COLOR green]Sé[/COLOR][COLOR yellow]r[/COLOR][COLOR red]ies[/COLOR][/B]','http://series.tuga-filmes.tv',26,artfolder + 'series.png','nao','')
+        url_TFV = 'http://series.tuga-filmes.tv/search/label/Anima%C3%A7%C3%A3o'
+        url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
         url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
         url_TPT = 'http://toppt.net/?cat=24'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
         addDir('[B][COLOR green]Ani[/COLOR][COLOR yellow]m[/COLOR][COLOR red]ação[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'animacao.png','nao','')
-        addDir('Pesquisar','http://www.tuga-filmes.tv/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        addDir('Pesquisar','http://series.tuga-filmes.tv/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
         #addDir('[B][COLOR cyan]IMDB[/COLOR][/B]','url',500,'','nao','')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         #addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','',None,artfolder + 'Ze-tv1.png','nao','')

@@ -37,15 +37,15 @@ artfolder = addonfolder + '/resources/img/'
 def TFC_MenuPrincipal(artfolder):
         addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','','',artfolder + 'ze-TFC1.png',False,'')
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
-        addDir('- Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        addDir('- Pesquisar','http://www.tuga-filmes.info/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','','',artfolder + 'ze-TFC1.png',False,'')
-	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.com/',72,artfolder + 'ze-TFC1.png','nao','')
-	addDir('[COLOR yellow]- Destaques[/COLOR]','http://www.tuga-filmes.com/search/label/destaque',72,artfolder + 'ze-TFC1.png','nao','')
-	addDir('[COLOR yellow]- 2013[/COLOR]','http://www.tuga-filmes.com/search/label/-%20Filmes%202013',72,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.info/',72,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]- Destaques[/COLOR]','http://www.tuga-filmes.info/search/label/destaque',72,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]- 2013[/COLOR]','http://www.tuga-filmes.info/search/label/-%20Filmes%202013',72,artfolder + 'ze-TFC1.png','nao','')
         addDir('[COLOR yellow]- Top 10[/COLOR]','url',79,artfolder + 'ze-TFC1.png','nao','')
         #addDir('[COLOR yellow]Brevemente[/COLOR]','url',81,artfolder + 'ze-TFC1.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',78,artfolder + 'ze-TFC1.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.com/search/label/Anima%C3%A7%C3%A3o?max-results=20',72,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20',72,artfolder + 'ze-TFC1.png','nao','')
 	if selfAddon.getSetting('hide-porno') == "false":
                 addDir('[B][COLOR red]M+18[/B][/COLOR]','url',86,artfolder + 'ze-TFC1.png','nao','')	
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
@@ -54,16 +54,16 @@ def TFC_MenuPrincipal(artfolder):
 def TFC_Menu_Filmes(artfolder):#77
         addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'ze-TFC1.png',False,'')
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
-	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://www.tuga-filmes.com/',72,artfolder + 'ze-TFC1.png','nao','')
-	addDir('[COLOR yellow]Destaques[/COLOR]','http://www.tuga-filmes.com/search/label/destaque',72,artfolder + 'ze-TFC1.png','nao','')
-	addDir('[COLOR yellow]2013[/COLOR]','http://www.tuga-filmes.com/search/label/-%20Filmes%202013',72,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://www.tuga-filmes.info/',72,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]Destaques[/COLOR]','http://www.tuga-filmes.info/search/label/destaque',72,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]2013[/COLOR]','http://www.tuga-filmes.info/search/label/-%20Filmes%202013',72,artfolder + 'ze-TFC1.png','nao','')
         addDir('[COLOR yellow]Top 10[/COLOR]','url',79,artfolder + 'ze-TFC1.png','nao','')
         #addDir('[COLOR yellow]Brevemente[/COLOR]','url',81,artfolder + 'ze-TFC1.png','nao','')
 	addDir('[COLOR yellow]Categorias[/COLOR]','url',78,artfolder + 'ze-TFC1.png','nao','')
 	if selfAddon.getSetting('hide-porno') == "false":
                 addDir('[B][COLOR red]M+18[/B][/COLOR]','url',86,artfolder + 'ze-TFC1.png','nao','')
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
-	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+	addDir('Pesquisar','http://www.tuga-filmes.info/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 
 def TFC_Menu_Series(artfolder):
         addDir1('[B][COLOR blue]Menu Séries[/COLOR][/B]','','',artfolder + 'ze-TFC1.png',False,'')
@@ -71,10 +71,10 @@ def TFC_Menu_Series(artfolder):
 	addDir('[COLOR yellow]Ver Todas[/COLOR]','url',81,artfolder + 'ze-TFC1.png','nao','')
         addDir('[COLOR yellow]Episódios Recentes[/COLOR]','http://www.tuga-filmes.tv/search/label/S%C3%A9ries',84,artfolder + 'ze-TFC1.png','nao','')
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
-	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+	addDir('Pesquisar','http://www.tuga-filmes.info/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 
 def TFC_Menu_Filmes_Top_10(artfolder):
-        url_top_10 = 'http://www.tuga-filmes.com/'
+        url_top_10 = 'http://www.tuga-filmes.info/'
         top_10_source = TFC_abrir_url(url_top_10)
         addDir1('[B][COLOR blue]TOP 10[/COLOR][/B]','','',artfolder + 'ze-TFC1.png',False,'')
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
@@ -83,7 +83,7 @@ def TFC_Menu_Filmes_Top_10(artfolder):
 		addDir(nome_top_10,endereco_top_10,73,iconimage_filmes_top_10.replace('s72-c','s320').replace('.gif','.jpg'),'nao','')
 
 def TFC_Menu_Filmes_Por_Categorias(artfolder):
-        url_categorias = 'http://www.tuga-filmes.com/'
+        url_categorias = 'http://www.tuga-filmes.info/'
         html_categorias_source = TFC_abrir_url(url_categorias)
         addDir1('[B][COLOR blue]Categorias[/COLOR][/B]','','',artfolder + 'ze-TFC1.png',False,'')
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
@@ -96,7 +96,7 @@ def TFC_Menu_Filmes_Por_Categorias(artfolder):
                         addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',categoria_endereco,72,artfolder + 'ze-TFC1.png','nao','')
 
 def TFC_Menu_Filmes_Brevemente(artfolder):
-        url_brevemente = 'http://www.tuga-filmes.com/'
+        url_brevemente = 'http://www.tuga-filmes.info/'
 	html_brevemente_source = TFC_abrir_url(url_brevemente)
 	addDir1('[B][COLOR blue]Brevemente[/COLOR][/B]','','',artfolder + 'ze-TFC1.png',False,'')
         addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
@@ -105,7 +105,7 @@ def TFC_Menu_Filmes_Brevemente(artfolder):
         for items_brevemente in todos_brevemente:
                 item_brevemente = re.compile("<a href=\'(.+?)\' target=\'_blank\'><img height=\'140px\' src=\'(.+?)\' width=\'100px\'/></a>").findall(items_brevemente)
                 for brevemente_url,iconimage_brevemente in item_brevemente:
-                        nome_brevemente = re.compile('http://www.tuga-filmes.com/.+?/.+?/(.+?).html').findall(brevemente_url)
+                        nome_brevemente = re.compile('http://www.tuga-filmes.info/.+?/.+?/(.+?).html').findall(brevemente_url)
                         nome_brevemente = nome_brevemente[0].replace('-',' ')
                         addDir('[COLOR yellow]' + nome_brevemente + '[/COLOR]',brevemente_url,73,iconimage_brevemente,'nao','')
         

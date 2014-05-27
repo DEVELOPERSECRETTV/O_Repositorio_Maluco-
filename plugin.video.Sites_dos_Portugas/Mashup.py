@@ -108,11 +108,10 @@ def Filmes_Filmes_Filmes(url):
                                 mensagemprogresso.update(10)
                         if conta_items == 20:
                                 mensagemprogresso.update(20)
-        else: pass
         if items != []:
                 proxima_TFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
                 url_TFV = proxima_TFV[0].replace('&amp;','&')
-        else: pass
+        else: mensagemprogresso.update(25)
         #----------------------------------------------------------------------------------------------------
         i = 1
         #mensagemprogresso.create('Tuga-Filmes.com', 'A Pesquisar','Por favor aguarde...')
@@ -120,6 +119,8 @@ def Filmes_Filmes_Filmes(url):
 		html_source = MASH_abrir_url(url_TFC)
 	except: html_source = ''
 	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
+	#addDir(str(len(items)),'url',8,'','nao','')
+	#if str(len(items)) > 0:
 	if items != []:
 		print len(items)
 		num_perc = len(items)*.01
@@ -161,8 +162,10 @@ def Filmes_Filmes_Filmes(url):
                                 mensagemprogresso.update(30)
                         if conta_items == 38:
                                 mensagemprogresso.update(40)
-        proxima_TFC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
-        url_TFC = proxima_TFC[0].replace('&amp;','&')
+        if items != []:
+                proxima_TFC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
+                url_TFC = proxima_TFC[0].replace('&amp;','&')
+        else: mensagemprogresso.update(50)
         #----------------------------------------------------------------------------------------------------
         i = 3
 	try:
@@ -206,11 +209,13 @@ def Filmes_Filmes_Filmes(url):
                                 mensagemprogresso.update(50)
                         if conta_items == 48:
                                 mensagemprogresso.update(60)
-        proxima_MVT = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
-	try:
-                url_MVT = proxima_MVT[0].replace('%3A',':')
-                url_MVT = proxima_MVT[0].replace('&amp;','&')
-	except: pass
+        if items != []:
+                proxima_MVT = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
+                try:
+                        url_MVT = proxima_MVT[0].replace('%3A',':')
+                        url_MVT = proxima_MVT[0].replace('&amp;','&')
+                except: pass
+        else: mensagemprogresso.update(75)
 	#if proxima_MVT:
         #----------------------------------------------------------------------------------------------------
         i = 0
@@ -270,10 +275,12 @@ def Filmes_Filmes_Filmes(url):
                                 mensagemprogresso.update(70)
                         if conta_items == 68:
                                 mensagemprogresso.update(80)
-        proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
-        try:
-                url_TPT = proxima_TPT[0].replace('#038;','')
-        except: pass
+        if items != []:
+                proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
+                try:
+                        url_TPT = proxima_TPT[0].replace('#038;','')
+                except: pass
+        else: pass
         #----------------------------------------------------------------------------------------------------
         mensagemprogresso.update(100)
         mensagemprogresso.close()
@@ -289,9 +296,11 @@ def Filmes_Filmes_Filmes(url):
 
 
 def Series_Series(url):
-        html_series_source = MASH_abrir_url(url)
+        try:
+                html_series_source = MASH_abrir_url(url)
+        except: html_series_source = ''
 	html_items_series = re.findall("<div class=\'widget Label\' id=\'Label3\'>\n<h2>S\xc3\xa9ries(.*?)<div class=\'clear\'>", html_series_source, re.DOTALL)
-        print len(html_items_series)
+        #print len(html_items_series)
         i=0
         for item_series in html_items_series:
                 series = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(item_series)
@@ -309,7 +318,9 @@ def Series_Series(url):
                         #arr_series[6][1]=endereco_series
                         #addDir(nome_series,endereco_series,47,artfolder + 'ze-TFV1.png','nao','')
         url = 'http://toppt.net/'
-        html_series_source = MASH_abrir_url(url)
+        try:
+                html_series_source = MASH_abrir_url(url)
+        except: html_series_source = ''
 	html_items_series = re.findall('<h1 class="widget-title">SERIES</h1>(.+?)</div></aside>', html_series_source, re.DOTALL)
         print len(html_items_series)
         for item_series in html_items_series:
@@ -387,8 +398,13 @@ def Filmes_Animacao(url):
                                 mensagemprogresso.update(10)
                         if conta_items == 20:
                                 mensagemprogresso.update(20)
-        proxima_TFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
-        url_TFV = proxima_TFV[0].replace('&amp;','&')        
+        else:
+                mensagemprogresso.update(25)
+                pass
+        if items != []:
+                proxima_TFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
+                url_TFV = proxima_TFV[0].replace('&amp;','&')
+        else: pass
         #----------------------------------------------------------------------------------------------------
         i = 1
         try:
@@ -432,8 +448,13 @@ def Filmes_Animacao(url):
                                 mensagemprogresso.update(30)
                         if conta_items == 38:
                                 mensagemprogresso.update(40)
-        proxima_TFC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
-        url_TFC = proxima_TFC[0].replace('&amp;','&')
+        else:
+                mensagemprogresso.update(50)
+                pass
+        if items != []:
+                proxima_TFC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
+                url_TFC = proxima_TFC[0].replace('&amp;','&')
+        else: pass
         #----------------------------------------------------------------------------------------------------
         i = 3
 	try:
@@ -475,11 +496,16 @@ def Filmes_Animacao(url):
                                 mensagemprogresso.update(50)
                         if conta_items == 48:
                                 mensagemprogresso.update(60)
-        proxima_MVT = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
-	try:
-                url_MVT = proxima_MVT[0].replace('%3A',':')
-                url_MVT = proxima_MVT[0].replace('&amp;','&')
-	except: pass
+        else:
+                mensagemprogresso.update(75)
+                pass
+        if items != []:
+                proxima_MVT = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
+                try:
+                        url_MVT = proxima_MVT[0].replace('%3A',':')
+                        url_MVT = proxima_MVT[0].replace('&amp;','&')
+                except: pass
+        else: pass
         #----------------------------------------------------------------------------------------------------
         i = 0
         try:
@@ -534,11 +560,16 @@ def Filmes_Animacao(url):
                                 mensagemprogresso.update(70)
                         if conta_items == 68:
                                 mensagemprogresso.update(80)
-        proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
-        try:
-                url_TPT = proxima_TPT[0].replace('#038;','')
-        except: pass
+        else: pass
+        if items != []:
+                proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
+                try:
+                        url_TPT = proxima_TPT[0].replace('#038;','')
+                except: pass
+        else: pass
         #----------------------------------------------------------------------------------------------------
+        mensagemprogresso.update(100)
+        mensagemprogresso.close()
         #x = int(arr_filmes[5])
         sinopse = 'teste ahahahahaha'
         for x in range(len(arrai_filmes)):
