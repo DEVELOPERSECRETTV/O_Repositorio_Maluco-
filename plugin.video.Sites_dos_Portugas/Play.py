@@ -369,6 +369,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			else:
 				checker = subtitle[0]
 				url = vlink
+			addLink('Ver Filme',url,'')
                         #addLink(id_video[0],vlink,'')
                         #addLink(tt[0],vlink,'')
                         #addLink(v_key[0],vlink,'')
@@ -399,7 +400,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 				url = match[0]
 			#addLink(checker,match[0],'')
 		except: pass
-        if 'vk.com' not in url and 'video.mail.ru' not in url:
+        if 'vk.com' not in url and 'video.mail.ru' not in url and 'video.tt' not in url:
                 try:
                         #addLink(name+url,match[0],'')
                         playlist = xbmc.PlayList(1)
