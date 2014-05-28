@@ -1154,6 +1154,10 @@ def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
                                                                 videolink = re.compile('src="(.+?)"').findall(link3)
                                                                 if videolink: url_video = videolink[0]
                                                                 else: url_video = ''
+                                                                if '/vms.php' in url_videos:
+                                                                        videolink = re.compile('proxy.link=(.+?)&proxy.image').findall(link3)
+                                                                        if videolink: url_video = videolink[0]
+                                                                        else: url_video = ''
                                                                 if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
                                                                 ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)                                                                
                                                 if 'direito' in link2:
@@ -1169,6 +1173,10 @@ def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
                                                                 videolink = re.compile('src="(.+?)"').findall(link3)
                                                                 if videolink: url_video = videolink[0]
                                                                 else: url_video = ''
+                                                                if '/vms.php' in url_videos:
+                                                                        videolink = re.compile('proxy.link=(.+?)&proxy.image').findall(link3)
+                                                                        if videolink: url_video = videolink[0]
+                                                                        else: url_video = ''
                                                                 if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
                                                                 ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
                                                 if 'direito' not in link2 and 'esquerdo' not in link2:
@@ -1181,6 +1189,10 @@ def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
                                                                 videolink = re.compile('src="(.+?)"').findall(link3)
                                                                 if videolink: url_video = videolink[0]
                                                                 else: url_video = ''
+                                                                if '/vms.php' in url_videos:
+                                                                        videolink = re.compile('proxy.link=(.+?)&proxy.image').findall(link3)
+                                                                        if videolink: url_video = videolink[0]
+                                                                        else: url_video = ''
                                                                 if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
                                                                 ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)                               
                 
@@ -1366,6 +1378,8 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
     	if "video.mail.ru" in url:
                 try:
                         #url = url.replace('/embed/','/').replace('.html','.json')
+                        if '/videos/' not in url:
+                                url = url.replace('http://video.mail.ru/mail/megafilmes/_myvideo/','http://api.video.mail.ru/videos/embed/mail/megafilmes/_myvideo/')
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.mail.ru)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
@@ -1399,7 +1413,7 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                         url = url.replace('/video/','/e/')
                         url = url.replace('videott','video.tt')
                         url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
-                        url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74///' + name
+                        url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
                         #url = 'http://video.tt/player_control/settings.php?v='+id_video+'&fv=v1.2.74'
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
@@ -1409,7 +1423,7 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                         try:
                                 url = url.replace('/video/','/e/')
                                 url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
-                                url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74//' + name
+                                url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
                                 #url = 'http://video.tt/player_control/settings.php?v='+id_video+'&fv=v1.2.74'
                                 url = url + '///' + name
                                 addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
@@ -1526,6 +1540,8 @@ def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
     	if "video.mail.ru" in url:
                 try:
                         #url = url.replace('/embed/','/').replace('.html','.json')
+                        if '/videos/' not in url:
+                                url = url.replace('http://video.mail.ru/mail/megafilmes/_myvideo/','http://api.video.mail.ru/videos/embed/mail/megafilmes/_myvideo/')
                         url = url + '///' + name  #http://api.video.mail.ru/videos/mail/megafilmes/_myvideo/172.json
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.mail.ru)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass

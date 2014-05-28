@@ -772,6 +772,14 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video):
     		except:pass
         if "video.tt" in url:
                 try:
+                        url = url.replace('///'+name,'')
+                        url = url.replace('/video/','/e/')
+                        url = url.replace('/video/','/e/')
+                        url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
+                        url = url.replace('http://www.video.tt/embed/','http://video.tt/e/')
+                        url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
+                        #url = 'http://video.tt/player_control/settings.php?v='+id_video+'&fv=v1.2.74'
+                        url = url + '///' + name
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "videowood" in url:

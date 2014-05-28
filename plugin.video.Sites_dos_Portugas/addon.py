@@ -52,12 +52,7 @@ mensagemok = xbmcgui.Dialog().ok
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
 def MAIN_MENU():
-        #addLink('vvv','http://gs.video.tt/s?v=RpEFrQiNk&r=1&t=1397232446&u=&c=f95e735cb0f62605300d845e02de1efc960414db899a79627ad03f98460c15b47289543b15644ffddc66efa92bdd0f35&start=0','')
-        #addLink('vvv','http://d3442.allmyvideos.net/d/ygmagbpgyq5dh6lnptgit5gqehpeyy6jc7ha3df3qvcxpa2w4jkdoi77fefbdai/video.mp4?v2','')
-        #addLink('vvv','http://st59.u1.videomega.tv/v/2cadf4fe7583d75d3c0fd927a7b19c7b.mp4','')
-        #addLink('vvv','http://www.video.tt/player/player.swf?v=RpEFrQiNk&em=TRUE&sd=www.video.tt&rv=1\.0\.1','')
-        #addLink('vvv','http://cs540206v4.vk.me/u248685033/videos/b7ce337189.240.mp4','')
-        #addLink('vvv','http://cdn27.video.mail.ru/v/47215363.mp4?sign=c38c691567ff4f3dc18f47a306d793c8100be935&slave[]=s%3Ahttp%3A%2F%2F127.0.0.1%3A5010%2F47215363-v.mp4&p=0&video_key=216b3d86ce9118c28ac5cab907a95cc8fb2dfb96&expire_at=1401048000&touch=1399860981','')
+        #addLink('vvv','http://video.tt/player/player.swf?v=RDT6vUFUa&em=TRUE&sd=video.tt&rv=2\.0\.1','')
         #xbmc.executebuiltin("Container.SetViewMode(503)")
         url_TFV = 'http://series.tuga-filmes.tv/search/label/Filmes'
         url_TFC = 'http://www.tuga-filmes.info/'
