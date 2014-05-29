@@ -52,9 +52,9 @@ mensagemok = xbmcgui.Dialog().ok
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
 def MAIN_MENU():
-        #addLink('vvv','http://video.tt/player/player.swf?v=RDT6vUFUa&em=TRUE&sd=video.tt&rv=2\.0\.1','')
+        #addLink('vvv','','')
         #xbmc.executebuiltin("Container.SetViewMode(503)")
-        url_TFV = 'http://series.tuga-filmes.tv/search/label/Filmes'
+        url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_TPT = 'http://toppt.net/?cat=68'
@@ -63,15 +63,15 @@ def MAIN_MENU():
         addDir1('[B][COLOR blue]Menu Principal[/COLOR][/B]','',31,artfolder + 'MPrin.png',False,'')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         addDir('[B][COLOR green]Fi[/COLOR][COLOR yellow]l[/COLOR][COLOR red]mes[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'filmes.png','nao','')
-        addDir('[B][COLOR green]Sé[/COLOR][COLOR yellow]r[/COLOR][COLOR red]ies[/COLOR][/B]','http://series.tuga-filmes.tv',26,artfolder + 'series.png','nao','')
-        url_TFV = 'http://series.tuga-filmes.tv/search/label/Anima%C3%A7%C3%A3o'
+        addDir('[B][COLOR green]Sé[/COLOR][COLOR yellow]r[/COLOR][COLOR red]ies[/COLOR][/B]','http://www.tuga-filmes.us',26,artfolder + 'series.png','nao','')
+        url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
         url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
         url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
         url_TPT = 'http://toppt.net/?cat=24'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
         addDir('[B][COLOR green]Ani[/COLOR][COLOR yellow]m[/COLOR][COLOR red]ação[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'animacao.png','nao','')
-        addDir('Pesquisar','http://series.tuga-filmes.tv/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        addDir('Pesquisar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
         #addDir('[B][COLOR cyan]IMDB[/COLOR][/B]','url',500,'','nao','')
         addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         #addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','',None,artfolder + 'Ze-tv1.png','nao','')

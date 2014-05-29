@@ -47,7 +47,7 @@ def SERIES_pesquisar(nome_pesquisa):
         #qq_aa = a_q.findall(nome_pesquisa)
         #nome_pesquisa = max(qq_aa)
         encode=urllib.quote(nome_pesquisa)
-	url_pesquisa = 'http://series.tuga-filmes.tv/search?q=' + str(encode)
+	url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
 	SERIES_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
 	#url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode)
 	#SERIES_encontrar_fontes_filmes_TFC(url_pesquisa)

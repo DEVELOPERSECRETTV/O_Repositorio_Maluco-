@@ -291,7 +291,7 @@ def Filmes_Filmes_Filmes(url):
                         addDir(arrai_filmes[x],'url',8,thumb_filmes[x],'nao','')
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
-        addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_filmes,507,artfolder + 'ze-TFV1.png','','')
+        addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_filmes,507,artfolder + 'filmes.png','','')
 
 
 
@@ -335,10 +335,10 @@ def Series_Series(url):
                                 arr_series.append(nome_series)
                                 i=i+1
         arr_series.sort(key = lambda k : k.lower())
-        addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(i) + ')','','',artfolder + 'ze-TFV1.png',False,'')
+        addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(i) + ')','','',artfolder + 'series.png',False,'')
         addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
         for x in range(len(arr_series)):
-                if arr_series[x] != '': addDir(arr_series[x],'url',9,artfolder + 'ze-TFV1.png','nao','')
+                if arr_series[x] != '': addDir(arr_series[x],'url',9,artfolder + 'series.png','nao','')
         xbmcplugin.setContent(int(sys.argv[1]), 'TvShows')
         xbmc.executebuiltin("Container.SetViewMode(551)")
 
@@ -578,7 +578,7 @@ def Filmes_Animacao(url):
                         addDir(arrai_filmes[x],'url',7,thumb_filmes[x],sinopse,'')
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
-        addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_animacao,6,artfolder + 'ze-TFV1.png','','')
+        addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_animacao,6,artfolder + 'animacao.png','','')
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
         xbmc.executebuiltin("Container.SetViewMode(50)")
 

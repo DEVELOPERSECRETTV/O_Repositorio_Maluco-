@@ -49,7 +49,7 @@ def pesquisar():
 		mensagemprogresso = xbmcgui.DialogProgress()
                 mensagemprogresso.create('Progresso', 'A Pesquisar','Por favor aguarde...')
                 mensagemprogresso.update(0)
-		url_pesquisa = 'http://series.tuga-filmes.tv/search?q=' + str(encode)
+		url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
 		encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
 		mensagemprogresso.update(25)
 		url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode)

@@ -62,7 +62,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa):
                 if len(q_a_q_a) > 1:
                         nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
         encode=urllib.quote(nome_pesquisa)
-	url_pesquisa = 'http://series.tuga-filmes.tv/search?q=' + str(encode)
+	url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
 	FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
 	url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode)
 	FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url_pesquisa)

@@ -786,7 +786,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video):
                 try:
                         if '/video/' in url: url = url.replace('/video/','/embed/')
                         print url
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	return
    

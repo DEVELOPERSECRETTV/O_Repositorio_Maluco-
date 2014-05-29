@@ -329,15 +329,19 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
 			tit=re.compile('title: "(.+?)"').findall(link3)
-			match=re.compile('file: "(.+?)"').findall(link3)
+			#match=re.compile('file: "(.+?)"').findall(link3)
 			subtitle=re.compile("addSubtitles[(]'(.+?)'").findall(link3)
+			iframe_url = url.replace('/embed/','/video-link/')
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			match=re.compile('"url":"(.+?)"}').findall(link3)
 			#subtitle = []
 			if subtitle == []:
 				checker = ''
-				url = match[0]
+				url = match[0].replace('\/','/')
 			else:
 				checker = subtitle[0]
-				url = match[0]
+				url = match[0].replace('\/','/')
 			#addLink(name+match[0],match[0],'')
     		except:pass
     	if "movshare" in url:
@@ -393,7 +397,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                                 subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)
                                 
 			if subtitle == []:
-				checker = '1'
+				checker = ''
 				url = match[0]
 			else:
 				checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
@@ -418,7 +422,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                         if checker == '' or checker == None: pass
                         else: xbmcPlayer.setSubtitles(checker)
                 except: pass
-                #return
+        #return
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
 def PLAY_abrir_url(url):
