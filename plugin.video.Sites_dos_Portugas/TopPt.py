@@ -51,6 +51,7 @@ def TPT_MenuPrincipal(artfolder):
         saber_url_M18 = re.compile('<option class="level-0" value="(.+?)">m18</option>').findall(toppt_source)
         saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
         saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
+        if not saber_url_series: saber_url_series = re.compile('<a href="(.+?)">SERIES</a></li>').findall(toppt_source)
         addDir1('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]','','',artfolder + 'ze-TPT1.png',False,'')
         addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
         addDir('- Pesquisar','url',1,artfolder + 'Ze-pesquisar2.png','nao','')
@@ -90,6 +91,7 @@ def TPT_Menu_Series(artfolder):#240
         url_toppt = 'http://toppt.net/'
         toppt_source = TPT_abrir_url(url_toppt)
         saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
+        if not saber_url_series: saber_url_series = re.compile('<a href="(.+?)">SERIES</a></li>').findall(toppt_source)
         addDir1('[B][COLOR blue]Menu Séries[/COLOR][/B]','','',artfolder + 'ze-TPT1.png',False,'')
         addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
 	addDir('[COLOR yellow]A a Z[/COLOR]','url',241,artfolder + 'ze-TPT1.png','nao','')
@@ -129,7 +131,7 @@ def TPT_Menu_Filmes_Por_Ano(artfolder):
 def TPT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://toppt.net/'
         html_categorias_source = TPT_abrir_url(url_categorias)
-	html_items_categorias = re.findall('<h1 class="widget-title">FILMES</h1>(.*?)<h1 class="widget-title">MUSICAS</h1>', html_categorias_source, re.DOTALL)
+	html_items_categorias = re.findall('<h3 class="widgettitle">FILMES</h3>(.*?)<h3 class="widgettitle">MUSICAS</h3>', html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_categorias)
@@ -142,7 +144,7 @@ def TPT_Menu_Series_A_a_Z(artfolder):
         conta = 0
         url_series = 'http://toppt.net/'
 	html_series_source = TPT_abrir_url(url_series)
-	html_items_series = re.findall('<h1 class="widget-title">SERIES</h1>(.*?)</ul></div></aside>', html_series_source, re.DOTALL)	
+	html_items_series = re.findall('<h3 class="widgettitle">SERIES</h3>(.*?)<div id="footer-widgets" class="clearfix">', html_series_source, re.DOTALL)	
         print len(html_items_series)
         for item_series in html_items_series:
                 series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
@@ -188,7 +190,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
 	try:
 		html_source = TPT_abrir_url(url)
 	except: html_source = ''
-	items = re.findall('<h1 class="entry-title">(.*?)</article>', html_source, re.DOTALL)
+	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
 	if items != []:
 		print len(items)
 		for item in items:       
@@ -202,13 +204,16 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                         audio_filme = ''
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
+                        if not qualidade: qualidade = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
                         ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
                         audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)
                         thumbnail = re.compile('src="(.+?)"').findall(item)
+                        #addDir1(qualidade[0],'','',iconimage,False,'')
                         print urletitulo,thumbnail
                         nome = urletitulo[0][1]
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#038;',"&")
                         nome = nome.replace('(PT-PT)',"")
                         nome = nome.replace('(PT/PT)',"")
                         nome = nome.replace('[PT-PT]',"")

@@ -1410,6 +1410,7 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                         except:pass
     	if 'videott' in url:
                 try:
+                        if 'armagedomfilmes' in url: url = url.replace('http://www.armagedomfilmes.biz/player/videott.php?id=','http://www.video.tt/e/')
                         url = url.replace('/video/','/e/')
                         url = url.replace('videott','video.tt')
                         url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
@@ -1562,6 +1563,7 @@ def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
     		except:pass
     	if 'videott' in url:
                 try:
+                        if 'armagedomfilmes' in url: url = url.replace('http://www.armagedomfilmes.biz/player/videott.php?id=','http://www.video.tt/e/')
                         url = url.replace('/video/','/e/')
                         url = url.replace('videott','video.tt')
                         url = url.replace('http://www.video.tt/e/','http://video.tt/e/')

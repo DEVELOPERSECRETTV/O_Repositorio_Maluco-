@@ -222,7 +222,7 @@ def Filmes_Filmes_Filmes(url):
         try:
 		html_source = MASH_abrir_url(url_TPT)
 	except: html_source = ''
-	items = re.findall('<h1 class="entry-title">(.*?)</article>', html_source, re.DOTALL)
+	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
 	if items != []:
 		print len(items)
 		num_perc = len(items)*.01
@@ -255,6 +255,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome + ' (' + ano_filme + ') '
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#038;',"&")
                         nome = nome.replace('(PT-PT)',"")
                         nome = nome.replace('(PT/PT)',"")
                         nome = nome.replace('[PT-PT]',"")
@@ -321,7 +322,7 @@ def Series_Series(url):
         try:
                 html_series_source = MASH_abrir_url(url)
         except: html_series_source = ''
-	html_items_series = re.findall('<h1 class="widget-title">SERIES</h1>(.+?)</div></aside>', html_series_source, re.DOTALL)
+	html_items_series = re.findall('<h3 class="widgettitle">SERIES</h3>(.*?)<div id="footer-widgets" class="clearfix">', html_series_source, re.DOTALL)
         print len(html_items_series)
         for item_series in html_items_series:
                 series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
@@ -511,7 +512,7 @@ def Filmes_Animacao(url):
         try:
 		html_source = MASH_abrir_url(url_TPT)
 	except: html_source = ''
-	items = re.findall('<h1 class="entry-title">(.*?)</article>', html_source, re.DOTALL)
+	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
 	if items != []:
 		print len(items)
 		for item in items:
@@ -540,6 +541,7 @@ def Filmes_Animacao(url):
                         nome = nome + ' (' + ano_filme + ')'
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#038;',"&")
                         nome = nome.replace('(PT-PT)',"")
                         nome = nome.replace('(PT/PT)',"")
                         nome = nome.replace('[PT-PT]',"")

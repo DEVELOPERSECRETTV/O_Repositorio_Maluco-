@@ -281,13 +281,13 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url):
-        addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.com[/COLOR][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
+        addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
-	if 'article' in html_source: items = re.findall('<article(.*?)</article>', html_source, re.DOTALL)
+	if '<div class="postmeta-primary">' in html_source: items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
 	else:
-                addDir1('- No Match Found -','','','',False,'')
+                addDir1('fff- No Match Found -','','','',False,'')
                 return
 	if items != []:
                 num_f = 0
@@ -301,14 +301,15 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url):
                                         html_source = abrir_url(url)
                                 except: html_source = ''
                                 #addDir1(url,'','','',False,'')
-                                items = re.findall('<article(.*?)</article>', html_source, re.DOTALL)
+                                items = re.findall('<div class="post-(.*?)<span id="more-', html_source, re.DOTALL)
                                 if items != []:
                                         print len(items)
                                         for item in items:
                                                 audio_filme = ''
-                                                titulo = re.compile('<h1 class="entry-title">(.+?)</h1>').findall(item)
-                                                urlpesq = re.compile('<span class="entry-date"><a href="(.+?)" rel="bookmark">').findall(item)
+                                                titulo = re.compile('<h2 class="title">(.+?)</h2>').findall(item)
+                                                #urlpesq = re.compile('<a href="(.+?)" rel="bookmark">').findall(item)
                                                 qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
+                                                if not qualidade: qualidade = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
                                                 ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
                                                 audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)    
                                                 thumbnail = re.compile('src="(.+?)"').findall(item)
@@ -316,11 +317,13 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url):
                                                 nome = titulo[0]
                                                 nome = nome.replace('&#8217;',"'")
                                                 nome = nome.replace('&#8211;',"-")
+                                                nome = nome.replace('&#038;',"&")
                                                 nome = nome.replace('(PT-PT)',"")
                                                 nome = nome.replace('(PT/PT)',"")
                                                 nome = nome.replace('[PT-PT]',"")
                                                 nome = nome.replace('[PT/PT]',"")
                                                 generos = re.compile('id="post-.+?" class="post-.+? post type-post status-publish format-standard hentry (.+?)">').findall(item)
+                                                if not generos: generos = re.compile('post type-post status-publish format-standard hentry (.+?)id="post-.+?">').findall(item)
                                                 if generos:
                                                         genero = generos[0]
                                                 else:
@@ -374,7 +377,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url):
                                                         #addDir(nome,urletitulo[0][0],233,'','','')
                                                         if 'online' in genero and not 'series' in genero:
                                                                 #if 'OP\xc3\x87\xc3\x83O' in item:
-                                                                addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urlpesq[0],233,thumbnail[0].replace('s72-c','s320'),'','')
+                                                                addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url,233,thumbnail[0].replace('s72-c','s320'),'','')
                                                                 num_f = num_f + 1
                                                 except: pass
                         except: pass

@@ -334,6 +334,8 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			iframe_url = url.replace('/embed/','/video-link/')
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
+			#print iframe_url
+			#link3 = PLAY_abrir_url(iframe_url)
 			match=re.compile('"url":"(.+?)"}').findall(link3)
 			#subtitle = []
 			if subtitle == []:
