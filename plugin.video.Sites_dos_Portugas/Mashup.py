@@ -229,6 +229,7 @@ def Filmes_Filmes_Filmes(url):
 		#addDir(str(num_perc)+'  '+str(len(items)),'',507,artfolder + 'ze-TFV1.png','','')
 		for item in items:
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
+                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         if '[' in urletitulo[0][1] and not ('PT' in urletitulo[0][1] or 'Tri' in urletitulo[0][1] or 'Qua' in urletitulo[0][1]):
                                 urletitulo = re.compile('[[](.+?)[]]').findall(urletitulo[0][1])
                                 nome = urletitulo[0]
@@ -277,9 +278,10 @@ def Filmes_Filmes_Filmes(url):
                         if conta_items == 68:
                                 mensagemprogresso.update(80)
         if items != []:
-                proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
+                #proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
+                proxima_TPT = re.compile('</span><a class="nextpostslink" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
                 try:
-                        url_TPT = proxima_TPT[0].replace('#038;','')
+                        url_TPT = proxima_TPT[0].replace('#038;','').replace('&amp;','&')
                 except: pass
         else: pass
         #----------------------------------------------------------------------------------------------------
@@ -517,6 +519,7 @@ def Filmes_Animacao(url):
 		print len(items)
 		for item in items:
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
+                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         if '[' in urletitulo[0][1] and not ('PT' in urletitulo[0][1] or 'Tri' in urletitulo[0][1] or 'Qua' in urletitulo[0][1]):
                                 urletitulo = re.compile('[[](.+?)[]]').findall(urletitulo[0][1])
                                 nome = urletitulo[0]
@@ -564,9 +567,10 @@ def Filmes_Animacao(url):
                                 mensagemprogresso.update(80)
         else: pass
         if items != []:
-                proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
+                #proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
+                proxima_TPT = re.compile('</span><a class="nextpostslink" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
                 try:
-                        url_TPT = proxima_TPT[0].replace('#038;','')
+                        url_TPT = proxima_TPT[0].replace('#038;','').replace('&amp;','&')
                 except: pass
         else: pass
         #----------------------------------------------------------------------------------------------------

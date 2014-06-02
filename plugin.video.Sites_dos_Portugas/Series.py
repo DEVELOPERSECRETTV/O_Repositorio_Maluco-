@@ -111,6 +111,7 @@ def SERIES_encontrar_fontes_TPT(url):
                         try:
                                 audio_filme = ''
                                 urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
+                                if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                                 url = urletitulo[0][0]
                                 try:
                                         html_source = abrir_url(url)

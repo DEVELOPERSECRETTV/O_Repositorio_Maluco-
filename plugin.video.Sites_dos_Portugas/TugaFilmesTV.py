@@ -130,7 +130,7 @@ def TFV_Menu_Filmes_Por_Categorias(artfolder):
 
 def TFV_Menu_Series_A_a_Z(artfolder):
         xbmcplugin.setContent(int(sys.argv[1]), 'TvShows')
-        xbmc.executebuiltin("Container.SetViewMode(501)")
+        xbmc.executebuiltin("Container.SetViewMode(503)")
         conta_items = 1
         if conta_items == 1:      
                 mensagemprogresso = xbmcgui.DialogProgress()
