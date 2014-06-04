@@ -60,53 +60,20 @@ def TPT_MenuPrincipal(artfolder):
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',239,artfolder + 'ze-TPT1.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',238,artfolder + 'ze-TPT1.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'ze-TPT1.png','nao','')
-	#addDir('[COLOR yellow]Top 5 da Semana[/COLOR]','url',248,artfolder + 'ze-TPT1.png','nao','')
 	if selfAddon.getSetting('hide-porno') == "false":
-			addDir('[B][COLOR red]M+18[/B][/COLOR]','http://toppt.net/?cat=' + saber_url_M18[0],232,artfolder + 'ze-TPT1.png','nao','')
-			
+			addDir('[B][COLOR red]M+18[/B][/COLOR]','http://toppt.net/?cat=' + saber_url_M18[0],232,artfolder + 'ze-TPT1.png','nao','')		
 	addDir1('[COLOR blue]Séries:[/COLOR]','','',artfolder + 'ze-TPT1.png',False,'')
 	addDir('[COLOR yellow]- A a Z[/COLOR]','url',241,artfolder + 'ze-TPT1.png','nao','')
         addDir('[COLOR yellow]- Recentes[/COLOR]',saber_url_series[0],232,artfolder + 'ze-TPT1.png','nao','')
-        #addDir('[COLOR yellow]Recentes[/COLOR]','url',248,artfolder + 'ze-TPT1.png','nao','')
-        #addDir1('','','',artfolder + 'ze-TPT1.png',False,'')	
-	#addDir('[COLOR brown]ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_TugaFilmesTV.txt',56,artfolder + 'ze-TPT1.png','nao','')
- 
-def TPT_Menu_Filmes(artfolder):#237
-        url_toppt = 'http://toppt.net/'
-        toppt_source = TPT_abrir_url(url_toppt)
-        saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
-        saber_url_M18 = re.compile('<option class="level-0" value="(.+?)">m18</option>').findall(toppt_source)
-        addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'ze-TPT1.png',False,'')
-        addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
-	addDir('[COLOR yellow]Todos[/COLOR]',saber_url_todos[0],232,artfolder + 'ze-TPT1.png','nao','')
-        addDir('[COLOR yellow]Por Ano[/COLOR]','url',239,artfolder + 'ze-TPT1.png','nao','')
-	addDir('[COLOR yellow]Categorias[/COLOR]','url',238,artfolder + 'ze-TPT1.png','nao','')
-	#addDir('[COLOR yellow]Top 5 da Semana[/COLOR]','url',248,artfolder + 'ze-TPT1.png','nao','')
-	if selfAddon.getSetting('hide-porno') == "false":
-			addDir('[B][COLOR red]M+18[/B][/COLOR]','http://toppt.net/?cat=' + saber_url_M18[0],232,artfolder + 'ze-TPT1.png','nao','')
-        addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
-	addDir('Pesquisar','url',1,artfolder + 'Ze-pesquisar2.png','nao','')
-
-def TPT_Menu_Series(artfolder):#240
-        url_toppt = 'http://toppt.net/'
-        toppt_source = TPT_abrir_url(url_toppt)
-        saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
-        if not saber_url_series: saber_url_series = re.compile('<a href="(.+?)">SERIES</a></li>').findall(toppt_source)
-        addDir1('[B][COLOR blue]Menu Séries[/COLOR][/B]','','',artfolder + 'ze-TPT1.png',False,'')
-        addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
-	addDir('[COLOR yellow]A a Z[/COLOR]','url',241,artfolder + 'ze-TPT1.png','nao','')
-        addDir('[COLOR yellow]Recentes[/COLOR]',saber_url_series[0],232,artfolder + 'ze-TPT1.png','nao','')
-        addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
-	addDir('Pesquisar','http://www.tuga-filmes.tv/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 
 def TPT_Menu_Posts_Recentes(artfolder):
         url_recentes = 'http://toppt.net/'
         recentes_source = TPT_abrir_url(url_recentes)
-        addDir1('[B][COLOR blue]Recentes[/COLOR][/B]','','',artfolder + 'ze-TPT1.png',False,'')
-        addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
+        if selfAddon.getSetting('movies-view') == "0":
+                addDir1('[B][COLOR blue]Recentes[/COLOR][/B]','','',artfolder + 'ze-TPT1.png',False,'')
+                addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
         posts_recentes = re.compile('<a href="(.+?)">.+?</a>\n</li>\n<li>\n').findall(recentes_source)
         for endereco_recentes in posts_recentes:                
-                #TPT_encontrar_fontes_filmes(endereco_recentes,artfolder)
                 try:
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
@@ -115,9 +82,7 @@ def TPT_Menu_Posts_Recentes(artfolder):
                         nome = nome.replace('[PT-PT]',"")
                         nome = nome.replace('[PT/PT]',"")
                         addDir('[B][COLOR green]' + nome + '[/COLOR][/B]',endereco_recentes,233,'','','')
-                        #addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')
                 except: pass
-
 
 def TPT_Menu_Filmes_Por_Ano(artfolder):
         url_ano = 'http://toppt.net/'
@@ -154,25 +119,18 @@ def TPT_Menu_Series_A_a_Z(artfolder):
         for item_series in html_items_series:
                 series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
                 for endereco_series,nome_series in series:
-                        #if conta == 0:
-                                #addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(len(series)) + ')','','',artfolder + 'ze-TPT1.png',False,'')
-                                #addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
-                                #conta = 1
                         nome_series = nome_series.replace('&amp;','&')
                         nome_series = nome_series.replace('&#39;',"'")
                         nome_series = nome_series.replace('&#8217;',"'")
                         nome_series = nome_series.replace('&#8230;',"...")
                         nome_series = nome_series.lower()
                         nome_series = nome_series.title()
-                        #arrai_series[i][0]=nome_series
-                        #arrai_series[i][1]=endereco_series
                         arr_series.append((nome_series,endereco_series))
                         i = i + 1
-                        #addDir('[COLOR yellow]' + nome_series + '[/COLOR]',endereco_series,232,artfolder + 'ze-TPT1.png','nao','')
-        #arr_series.sort(key = lambda k : k.lower())
-        arr_series.sort()   
-        addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(len(series)) + ')','','',artfolder + 'ze-TPT1.png',False,'')
-        addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
+        arr_series.sort()
+        if selfAddon.getSetting('movies-view') == "0":
+                addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(len(series)) + ')','','',artfolder + 'ze-TPT1.png',False,'')
+                addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
         for x in range(len(arr_series)):
                 if arr_series[x][0] != '':
                         try:
@@ -195,20 +153,13 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                                 nome_pesquisa = ''
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                        #if len(q_a_q_a) > 1:
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                #url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
-                                #url_pesquisa = 'http://thetvdb.com/?string='+nome_pesquisa+'&searchseriesid=&tab=listseries&function=Search'
                                 try:
                                         html_pesquisa = TPT_abrir_url(arr_series[x][1])
                                 except: html_pesquisa = ''
                                 items_pesquisa = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_pesquisa, re.DOTALL)
-                                #items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                #items_pesquisa = re.findall('>English</td><td class=".+?">(.+?)</td></tr>', html_pesquisa, re.DOTALL)
                                 if items_pesquisa != []:
                                         thumbnail = re.compile('src="(.+?)"').findall(items_pesquisa[0])
-                                        #thumb = 'http://thetvdb.com/banners/posters/'+items_pesquisa[0]+'-1.jpg'
-                                        #thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                         if thumbnail:
                                                 thumb = thumbnail[0].replace('w92','w600')
                                         else:
@@ -218,7 +169,6 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                         #thumb = ''
                         except: pass
                         addDir('[COLOR yellow]' + arr_series[x][0] + '[/COLOR]',arr_series[x][1],232,thumb,'nao','')
-                        #addDir('[COLOR yellow]' + arr_series[x][0] + '[/COLOR]',arr_series[x][1],232,artfolder + 'ze-TPT1.png','nao','')
                         #---------------------------------------------------------------
                         conta_items = conta_items + 1   
                         if conta_items == 8:      
@@ -260,8 +210,9 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
         progress.update( percent, "", message, "" )
         i = 1
         if 'Seguinte' not in name:
-                addDir1(name + ':','','',iconimage,False,'')
-                addDir1('','','',iconimage,False,'')
+                if selfAddon.getSetting('movies-view') == "0":
+                        addDir1(name + ':','','',iconimage,False,'')
+                        addDir1('','','',iconimage,False,'')
 	try:
 		html_source = TPT_abrir_url(url)
 	except: html_source = ''
@@ -284,7 +235,6 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                         ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
                         audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)
                         thumbnail = re.compile('src="(.+?)"').findall(item)
-                        #addDir1(qualidade[0],'','',iconimage,False,'')
                         print urletitulo,thumbnail
                         nome = urletitulo[0][1]
                         nome = nome.replace('&#8217;',"'")
@@ -340,7 +290,6 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 else:
                                         qualidade = ''
                         try:
-                                #addDir('[B][COLOR green]' + nome + '[/COLOR][/B]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')
                                 addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],233,thumbnail[0].replace('s72-c','s320'),'','')
                         except: pass
                         i = i + 1
@@ -350,7 +299,6 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                         try:
                                 addDir(nome,endereco,233,'','','')
                         except:pass
-	#proxima = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
 	proxima = re.compile('</span><a class="nextpostslink" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
 	try:
 		addDir("Página Seguinte >>",proxima[0].replace('#038;','').replace('&amp;','&'),232,artfolder + 'ze-TPT1.png','','')
@@ -359,78 +307,6 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
-
-def quais(conta_id_video):
-        
-        #mensagemprogresso.create(name, 'A Pesquisar','Por favor aguarde...')
-        mensagemprogresso.update(conta_id_video*10)
-        return
-
-def TPT_encontrar_videos_series(name,url):
-        addDir1(url,'','',iconimage,False,'')
-        i = 1
-        percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
-        conta_id_video = 0
-        contaultimo = 0
-	addDir1(name,'','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
-	try:
-		link2=TPT_abrir_url(url)
-	except: link2 = ''
-	#addDir1(url,'','',iconimage,False,'')
-	if link2:
-                newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
-                if 'NOVO EPISODIO' in newmatch: addDir1(' existe mesmo porra1','','',iconimage,False,'')
-                if not newmatch: newmatch = re.findall('<span id=.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
-                linksseccao = re.findall('ODIO (.+?)<br.+?\n(.+?)EPIS',newmatch[0],re.DOTALL)
-                if linksseccao:
-                        #addDir1(url+'porra1','','',iconimage,False,'')
-                        for parte1,parte2 in linksseccao:
-                                addDir1('[COLOR blue] Episódio '+parte1+'[/COLOR]','','',iconimage,False,'')
-                                match = re.compile('<iframe.+?src="(.+?)"').findall(parte2)
-                                if not match: match = re.compile("<iframe.+?src='(.+?)'").findall(parte2)	
-                                for url in match:
-                                        conta_id_video = conta_id_video + 1
-                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                                match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
-                                if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
-                                for url in match:
-                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                conta_id_video = conta_id_video + 1
-                                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                                match = re.compile('"window.open(.+?)"').findall(parte2)
-                                for url in match:
-                                        conta_id_video = conta_id_video + 1
-                                        url = url.replace("'","").replace("(","").replace(")","")
-                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                addDir1(url,'','',iconimage,False,'')
-                conta_id_video = 0
-                ultima=re.compile('http://(.*)').findall(url)
-                ultima=ultima[0].replace('.html','')
-                addDir1(ultima,'','',iconimage,False,'')
-                linksseccao = re.findall(url+'(.*?)<p><img style',newmatch[0],re.DOTALL)
-                if linksseccao:
-                        match = re.compile('ODIO (.+?)<br').findall(linksseccao[0])
-                        addDir1('[COLOR blue] Episódio '+match[0]+'[/COLOR]','','',iconimage,False,'')
-                        match = re.compile('<iframe.+?src="(.+?)"').findall(linksseccao[0])
-                        if not match: match = re.compile("<iframe.+?src='(.+?)'").findall(linksseccao[0])	
-                        for url in match:
-                                conta_id_video = conta_id_video + 1
-                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                        match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(linksseccao[0])
-                        if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(linksseccao[0])
-                        for url in match:
-                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                        conta_id_video = conta_id_video + 1
-                                        TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                        match = re.compile('"window.open(.+?)"').findall(linksseccao[0])
-                        for url in match:
-                                conta_id_video = conta_id_video + 1
-                                url = url.replace("'","").replace("(","").replace(")","")
-                                TPT_resolve_not_videomega_filmes(url,conta_id_video)
                 
 
 def TPT_encontrar_videos_filmes(name,url):
@@ -439,39 +315,22 @@ def TPT_encontrar_videos_filmes(name,url):
         message = ''
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
-        #conta_items = 0
-        #mensagemprogresso = xbmcgui.DialogProgress()
-        #mensagemprogresso.create(name, 'A Pesquisar','Por favor aguarde...')
-        #mensagemprogresso.update(0)
         conta_id_video = 0
         contaultimo = 0
-	addDir1(name,'','',iconimage,False,'')
+        addDir1(name,'','',iconimage,False,'')
         addDir1('','','',iconimage,False,'')
-        #try:
-                #fonte = TPT_abrir_url(url)
-        #except: fonte = ''
-        #fontes = re.findall("Ver Aqui(.+?)", fonte, re.DOTALL)
-        #numero_de_fontes = len(fontes)
 	try:
 		link2=TPT_abrir_url(url)
 	except: link2 = ''
 	if link2:
                 newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
                 if not newmatch: newmatch = re.findall('<span id=.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
-                #parameters = {"nome_texto" : name, "url": url, "addonid": 'TFV'}
-                #nome_textbox = urllib.urlencode(parameters)
-                #addDir('[COLOR blue]Sinopse[/COLOR]',nome_textbox,57,iconimage,'nao','')
-                #trailer = re.compile('<b>Trailer</b>: <a href="(.+?)" target="_blank">').findall(link2)
-                #if trailer: addDir('[COLOR blue]Trailer[/COLOR]',trailer[0],30,iconimage,'nao','')
-                #-------------------- Videomega
                 if newmatch:
 			linksseccao = re.findall('<p>PARTE (\d+)<br.+?\n(.+?)</p>',newmatch[0],re.DOTALL)
-			#linksseccao = re.findall('<p>PARTE (\d+)</p>\n(.+?)</p>',newmatch[0],re.DOTALL)
 			if linksseccao:
                                 if len(linksseccao) > 1:
                                         linksseccao = re.findall('<p>PARTE (\d+)<br.+?\n(.+?)<p>&nbsp;</p>',newmatch[0],re.DOTALL)
                                         for parte1,parte2 in linksseccao:
-                                                #addDir1(name,'','',iconimage,False,'')
                                                 conta_id_video = 0
                                                 addDir1('[COLOR blue] Parte '+parte1+'[/COLOR]','','',iconimage,False,'')					
                                                 match = re.compile('<iframe.+?src="(.+?)"').findall(parte2)
@@ -485,10 +344,6 @@ def TPT_encontrar_videos_filmes(name,url):
                                                         if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                                                #match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
-                                                #for url in match:
-                                                        #conta_id_video = conta_id_video + 1
-                                                        #TPT_resolve_not_videomega_filmes(url,conta_id_video)
                                                 match = re.compile('"window.open(.+?)"').findall(parte2)
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
@@ -510,10 +365,6 @@ def TPT_encontrar_videos_filmes(name,url):
                                                         if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                                                #match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
-                                                #for url in match:
-                                                        #conta_id_video = conta_id_video + 1
-                                                        #TPT_resolve_not_videomega_filmes(url,conta_id_video)
                                                 match = re.compile('"window.open(.+?)"').findall(parte2)
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
@@ -534,10 +385,6 @@ def TPT_encontrar_videos_filmes(name,url):
                                                         if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                                                #match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
-                                                #for url in match:
-                                                        #conta_id_video = conta_id_video + 1
-                                                        #TPT_resolve_not_videomega_filmes(url,conta_id_video)
                                                 match = re.compile('"window.open(.+?)"').findall(parte2)
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
@@ -599,9 +446,7 @@ def TPT_encontrar_videos_filmes(name,url):
                                                 if len(lin) > 15 and len(lin) <= 20: divide = 20.0
                                                 if len(lin) > 20: divide = 25.0
                                                 if linksseccao:
-                                                        #mensagemprogresso.update(60)
                                                         ultima_parte = ''
-                                                        #while i<len(lin)-1:
                                                         for parte1,parte2 in linksseccao:
                                                                 percent = int( ( i / divide ) * 100)
                                                                 message = str(i) + " de " + str(len(lin))
@@ -611,39 +456,29 @@ def TPT_encontrar_videos_filmes(name,url):
                                                                 if progress.iscanceled():
                                                                         break
                                                                 conta_id_video = 0
-                                                                #parte1='teste'
                                                                 if parte1 != ultima_parte: addDir1('[COLOR blue] Episódio '+parte1+'[/COLOR]','','',iconimage,False,'')
                                                                 ultepi = int(parte1)
-                                                                #ultima_parte = parte1
                                                                 match = re.compile('<iframe.+?src="(.+?)"').findall(parte2)
                                                                 if not match: match = re.compile("<iframe.+?src='(.+?)'").findall(parte2)	
                                                                 for url in match:
                                                                         conta_id_video = conta_id_video + 1
-                                                                        #quais(conta_id_video)
                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                                                                #mensagemprogresso.update(utepi*10)
                                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                                 for url in match:
                                                                         if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                 conta_id_video = conta_id_video + 1
-                                                                                #quais(conta_id_video)
                                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                                                                #mensagemprogresso.update(60)
                                                                 match = re.compile('"window.open(.+?)"').findall(parte2)
                                                                 for url in match:
                                                                         conta_id_video = conta_id_video + 1
-                                                                        #quais(conta_id_video)
                                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video)
                                                                 i = i + 1
-                                                        #addDir1(url,'','',iconimage,False,'')
                                                         conta_id_video = 0
                                                         nmatch = re.findall(url+'.+?DOWNLOAD',link2,re.DOTALL)
                                                         if not nmatch: nmatch = re.findall(url+'.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
                                                         linksseccao = re.findall('ODIO (.+?)</p>\n<p><b>(.+?)EPIS',nmatch[0],re.DOTALL)
-                                                        #addDir1(str(len(contamatch)),'','',iconimage,False,'')
-                                                        #linksseccao = re.findall(url+'(.+?)<p><img style',newmatch[0],re.DOTALL)
                                                         if linksseccao:
                                                                 for parte1,parte2 in linksseccao:
                                                                         addDir1('[COLOR blue] Episódio '+parte1+'[/COLOR]','','',iconimage,False,'')
@@ -667,9 +502,7 @@ def TPT_encontrar_videos_filmes(name,url):
                                                         v_id = re.compile('=(.*)').findall(url)
                                                         if not v_id: v_id = re.compile('//(.*)').findall(url)
                                                         contamatch = re.findall('ODIO (.+?)</p>\n<p><b>',newmatch[0],re.DOTALL)
-                                                        #addDir1(str(len(contamatch)),'','',iconimage,False,'')
                                                         linksseccao = re.findall(v_id[0]+'(.+?)<img',newmatch[0],re.DOTALL)
-                                                        #addDir1(str(len(linksseccao)),'','',iconimage,False,'')
                                                         if linksseccao:
                                                                 match = re.compile('ODIO (.+?)<br').findall(linksseccao[0])
                                                                 if not match: match = re.compile('ODIO (.+?)</p>').findall(linksseccao[0])
@@ -692,7 +525,6 @@ def TPT_encontrar_videos_filmes(name,url):
                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video)
                                                         ####################################################################
                                                 else:
-                                                        #addDir1(name,'','',iconimage,False,'')
                                                         match = re.compile('<iframe.+?src="(.+?)"').findall(newmatch[0])
                                                         if not match: match = re.compile("<iframe.+?src='(.+?)'").findall(newmatch[0])
                                                         for url in match:
@@ -704,10 +536,6 @@ def TPT_encontrar_videos_filmes(name,url):
                                                                 if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                         conta_id_video = conta_id_video + 1
                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                                                        #match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(newmatch[0])
-                                                        #for url in match:
-                                                                #conta_id_video = conta_id_video + 1
-                                                                #TPT_resolve_not_videomega_filmes(url,conta_id_video)
                                                         match = re.compile('"window.open(.+?)"').findall(newmatch[0])
                                                         for url in match:
                                                                 conta_id_video = conta_id_video + 1
@@ -731,10 +559,6 @@ def TPT_encontrar_videos_filmes(name,url):
                                                         if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video)
-						#match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
-						#for url in match:
-                                                        #conta_id_video = conta_id_video + 1
-							#TPT_resolve_not_videomega_filmes(url,conta_id_video)
 						match = re.compile('"window.open(.+?)"').findall(parte2)
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
@@ -745,7 +569,6 @@ def TPT_encontrar_videos_filmes(name,url):
 					if linksseccao:
                                                 ultima_parte = ''
 						for parte1,parte2 in linksseccao:
-                                                        #addDir1(name,'','',iconimage,False,'')
                                                         conta_id_video = 0
 							if parte1 != ultima_parte: addDir('[COLOR yellow] Episódio '+parte1+'[/COLOR]',urlfinal,'',iconimage,False,'')
 							ultima_parte = parte1
@@ -781,16 +604,13 @@ def TPT_encontrar_videos_filmes(name,url):
                                                         conta_id_video = conta_id_video + 1
                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video)
-                #quais(conta_id_video)
 		
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def TPT_resolve_not_videomega_filmes(url,conta_id_video):
-        #addDir1(url,'','',iconimage,False,'')
         url = url + '///' + name
         if "videomega" in url:
 		try:
-                        #mensagemprogresso.update(conta_id_video*10)
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
         if "vidto.me" in url:
@@ -848,7 +668,6 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video):
                         url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
                         url = url.replace('http://www.video.tt/embed/','http://video.tt/e/')
                         url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
-                        #url = 'http://video.tt/player_control/settings.php?v='+id_video+'&fv=v1.2.74'
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass

@@ -152,9 +152,10 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('  ',"")
                         nome = nome.replace('   ',"")
                         if nome not in arr_filmes:
-                                arr_filmes.insert(i,nome)
-                                arrai_filmes.insert(i,nome_filme)
-                                thumb_filmes.insert(i,thumb)
+                                if 'ASSISTIR O FILME' in item:
+                                        arr_filmes.insert(i,nome)
+                                        arrai_filmes.insert(i,nome_filme)
+                                        thumb_filmes.insert(i,thumb)
                         else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'[COLOR orange] | TFC[/COLOR]'
                         i = i + 1
                         conta_items = conta_items + 1
@@ -441,9 +442,10 @@ def Filmes_Animacao(url):
                         nome = nome.replace('  ',"")
                         nome = nome.replace('   ',"")
                         if nome not in arr_filmes:
-                                arr_filmes.insert(i,nome)
-                                arrai_filmes.insert(i,nome_filme)
-                                thumb_filmes.insert(i,thumbnail[0])
+                                if 'ASSISTIR O FILME' in item:
+                                        arr_filmes.insert(i,nome)
+                                        arrai_filmes.insert(i,nome_filme)
+                                        thumb_filmes.insert(i,thumbnail[0])
                         #else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'/TFC
                         i = i + 1
                         conta_items = conta_items + 1

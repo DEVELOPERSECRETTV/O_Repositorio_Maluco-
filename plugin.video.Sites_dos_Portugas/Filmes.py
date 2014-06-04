@@ -32,8 +32,9 @@ mensagemok = xbmcgui.Dialog().ok
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FILMES_pesquisar(nome_pesquisa):
-        addDir1('[B][COLOR blue]Procura: [/COLOR][/B]'+name,'','','',False,'')
-        addDir1('','','','',False,'')
+        if selfAddon.getSetting('movies-view') == "0":
+                addDir1('[B][COLOR blue]Procura: [/COLOR][/B]'+name,'','','',False,'')
+                addDir1('','','','',False,'')
         nome_pesquisa = nome_pesquisa.replace('[COLOR orange] | TFV[/COLOR]','').replace('[COLOR orange] | TFC[/COLOR]','').replace('[COLOR orange] | MVT[/COLOR]','').replace('[COLOR orange] | TPT[/COLOR]','')
         pesquisou = nome_pesquisa
         if '-' in nome_pesquisa:
@@ -60,10 +61,8 @@ def FILMES_pesquisar(nome_pesquisa):
         nome_pesquisa = ''
         for q_a_q_a in qq_aa:
                 if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                #if len(q_a_q_a) > 2:
                         nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
         encode=urllib.quote(nome_pesquisa)
-        #encode=nome_pesquisa
 	url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
 	FILMES_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
 	url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode)
@@ -72,15 +71,17 @@ def FILMES_pesquisar(nome_pesquisa):
 	FILMES_encontrar_fontes_pesquisa_MVT(url_pesquisa)
 	url_pesquisa = 'http://toppt.net/?s=' + str(encode)
 	FILMES_encontrar_fontes_filmes_TPT(url_pesquisa)
-	addDir1('','','',artfolder + 'banner.png',False,'')		
-        addDir('[COLOR yellow]Pesquisar[/COLOR]','url',1,artfolder + 'banner.png','nao','')
-        addDir('[COLOR yellow]Menu Principal[/COLOR]','','',artfolder + 'banner.png','nao','')
+	if selfAddon.getSetting('movies-view') == "0":
+                addDir1('','','',artfolder + 'banner.png',False,'')		
+                addDir('[COLOR yellow]Pesquisar[/COLOR]','url',1,artfolder + 'banner.png','nao','')
+                addDir('[COLOR yellow]Menu Principal[/COLOR]','','',artfolder + 'banner.png','nao','')
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FILMES_encontrar_fontes_pesquisa_TFV(url,pesquisou):
-        addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv[B][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
+        if selfAddon.getSetting('movies-view') == "0":
+                addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv[B][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -132,14 +133,16 @@ def FILMES_encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                 except: pass
                         except: pass
         else: num_f = 0
-        if num_f == 0: addDir1('- No Match Found -','','','',False,'')
+        if num_f == 0:
+                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','','','',False,'')
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FILMES_encontrar_fontes_filmes_TFC(url):
-        addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com[B][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
+        if selfAddon.getSetting('movies-view') == "0":
+                addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com[B][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
         pt_en = 0
 	try:
 		html_source = abrir_url(url)
@@ -235,14 +238,16 @@ def FILMES_encontrar_fontes_filmes_TFC(url):
                                 except: pass
                         except: pass
         else: num_f = 0
-	if num_f == 0: addDir1('- No Match Found -','','','',False,'')
+	if num_f == 0:
+                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','','','',False,'')
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FILMES_encontrar_fontes_pesquisa_MVT(url):
-        addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B][B][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
+        if selfAddon.getSetting('movies-view') == "0":
+                addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B][B][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -277,20 +282,22 @@ def FILMES_encontrar_fontes_pesquisa_MVT(url):
                                 except: pass
                         except: pass
         else: num_f = 0
-	if num_f == 0: addDir1('- No Match Found -','','','',False,'')
+	if num_f == 0:
+                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','','','',False,'')
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FILMES_encontrar_fontes_filmes_TPT(url):
-        addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
+        if selfAddon.getSetting('movies-view') == "0":
+                addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
 	if '<div class="postmeta-primary">' in html_source: items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
 	else:
-                addDir1('- No Match Found -','','','',False,'')
+                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','','','',False,'')
                 return
 	if items != []:
                 num_f = 0
@@ -386,7 +393,8 @@ def FILMES_encontrar_fontes_filmes_TPT(url):
                                                 except: pass
                         except: pass
         else: num_f = 0
-        if num_f == 0: addDir1('- No Match Found -','','','',False,'')
+        if num_f == 0:
+                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','','','',False,'')
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
