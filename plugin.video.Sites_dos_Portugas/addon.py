@@ -269,7 +269,11 @@ if mode==None or url==None or len(url)<1:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode ==  1: Pesquisar.pesquisar()
+elif mode ==  1:
+        Pesquisar.pesquisar()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode ==  2: Pesquisar.encontrar_fontes_pesquisa_TFV(url,pesquisou)
 elif mode ==  3: Pesquisar.encontrar_fontes_filmes_TFC(url_pesquisa)
 elif mode ==  4: Pesquisar.encontrar_fontes_pesquisa_MVT(url)
@@ -367,8 +371,7 @@ elif mode == 71:
 elif mode == 72:
         TugaFilmesCom.TFC_encontrar_fontes_filmes(url)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        setViewMode()
-        #xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 73: TugaFilmesCom.TFC_encontrar_videos_filmes(name,url)
 elif mode == 74: TugaFilmesCom.TFC_pesquisar_filmes()
@@ -508,8 +511,7 @@ elif mode == 506: declara_variaveis(url)
 elif mode == 507:
         Mashup.Filmes_Filmes_Filmes(url)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        setViewMode()
-        #xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 

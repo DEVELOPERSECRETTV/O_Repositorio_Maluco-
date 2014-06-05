@@ -32,18 +32,24 @@ mensagemok = xbmcgui.Dialog().ok
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FILMES_pesquisar(nome_pesquisa):
+        mensagemprogresso = xbmcgui.DialogProgress()
+        mensagemprogresso.create('Progresso', 'A Pesquisar','Por favor aguarde...')
+        mensagemprogresso.update(0)
         if selfAddon.getSetting('movies-view') == "0":
                 addDir1('[B][COLOR blue]Procura: [/COLOR][/B]'+name,'','','',False,'')
                 addDir1('','','','',False,'')
         nome_pesquisa = nome_pesquisa.replace('[COLOR orange] | TFV[/COLOR]','').replace('[COLOR orange] | TFC[/COLOR]','').replace('[COLOR orange] | MVT[/COLOR]','').replace('[COLOR orange] | TPT[/COLOR]','')
         pesquisou = nome_pesquisa
+        #nome_pesquisa = nome_pesquisa.replace('-',' ')
+        #nome_pesquisa = nome_pesquisa.replace(':',' ')
         if '-' in nome_pesquisa:
                 nome_p = re.compile('(.+?)[-].+?').findall(nome_pesquisa)
                 if len(nome_p[0])>2:
                         nome_pesquisa = nome_p[0]
-        if ':' in nome_pesquisa:
-                nome_p = re.compile('(.+?)[:].+?').findall(nome_pesquisa)
-                nome_pesquisa = nome_p[0]
+        else:
+                if ':' in nome_pesquisa:
+                        nome_p = re.compile('(.+?)[:].+?').findall(nome_pesquisa)
+                        nome_pesquisa = nome_p[0]
         nome_pesquisa = nome_pesquisa.replace('é','e')
         nome_pesquisa = nome_pesquisa.replace('ê','e')
         nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -56,25 +62,35 @@ def FILMES_pesquisar(nome_pesquisa):
         nome_pesquisa = nome_pesquisa.replace('ú','u')
         nome_pesquisa = nome_pesquisa.replace('Ú','U')
         nome_pesquisa = nome_pesquisa.replace('ç','c')
-        a_q = re.compile('\w+')
-        qq_aa = a_q.findall(nome_pesquisa)
-        nome_pesquisa = ''
-        for q_a_q_a in qq_aa:
-                if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                        nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+        if '.' not in nome_pesquisa:
+                a_q = re.compile('\w+')
+                qq_aa = a_q.findall(nome_pesquisa)
+                nome_pesquisa = ''
+                conta = 0
+                for q_a_q_a in qq_aa:
+                        if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                        #if q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                if conta == 0:
+                                        nome_pesquisa = q_a_q_a
+                                        conta = 1
+                                if conta == 1: nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
         encode=urllib.quote(nome_pesquisa)
 	url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
 	FILMES_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
+	mensagemprogresso.update(25)
 	url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode)
 	FILMES_encontrar_fontes_filmes_TFC(url_pesquisa)
+	mensagemprogresso.update(50)
 	url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode)
 	FILMES_encontrar_fontes_pesquisa_MVT(url_pesquisa)
+	mensagemprogresso.update(75)
 	url_pesquisa = 'http://toppt.net/?s=' + str(encode)
 	FILMES_encontrar_fontes_filmes_TPT(url_pesquisa)
 	if selfAddon.getSetting('movies-view') == "0":
                 addDir1('','','',artfolder + 'banner.png',False,'')		
                 addDir('[COLOR yellow]Pesquisar[/COLOR]','url',1,artfolder + 'banner.png','nao','')
                 addDir('[COLOR yellow]Menu Principal[/COLOR]','','',artfolder + 'banner.png','nao','')
+        mensagemprogresso.update(100)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#

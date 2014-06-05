@@ -32,24 +32,29 @@ mensagemok = xbmcgui.Dialog().ok
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def SERIES_pesquisar(nome_pesquisa):
+        mensagemprogresso = xbmcgui.DialogProgress()
+        mensagemprogresso.create('Progresso', 'A Pesquisar','Por favor aguarde...')
+        mensagemprogresso.update(0)
         if selfAddon.getSetting('movies-view') == "0":
                 addDir1('[B][COLOR blue]Séries:[/COLOR][/B]','','','',False,'')
                 addDir1('','','','',False,'')
         pesquisou = nome_pesquisa
         #nome_pesquisa = nome_pesquisa.replace("'",'')
-        a_q = re.compile('\w+')
-        qq_aa = a_q.findall(nome_pesquisa)
-        nome_pesquisa = ''
-        for q_a_q_a in qq_aa:
-                if len(q_a_q_a) > 2 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                #if len(q_a_q_a) > 2:
-                        nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+        if '.' not in nome_pesquisa:
+                a_q = re.compile('\w+')
+                qq_aa = a_q.findall(nome_pesquisa)
+                nome_pesquisa = ''
+                for q_a_q_a in qq_aa:
+                        if len(q_a_q_a) > 2 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                        #if len(q_a_q_a) > 2:
+                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
         #a_q = re.compile('\w+')
         #qq_aa = a_q.findall(nome_pesquisa)
         #nome_pesquisa = max(qq_aa)
         encode=urllib.quote(nome_pesquisa)
 	url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
 	SERIES_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
+	mensagemprogresso.update(50)
 	#url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode)
 	#SERIES_encontrar_fontes_filmes_TFC(url_pesquisa)
 	#url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode)
@@ -60,6 +65,7 @@ def SERIES_pesquisar(nome_pesquisa):
                 addDir1('','','',artfolder + 'banner.png',False,'')		
                 addDir('[COLOR yellow]Pesquisar[/COLOR]','url',1,artfolder + 'banner.png','nao','')
                 addDir('[COLOR yellow]Menu Principal[/COLOR]','','',artfolder + 'banner.png','nao','')
+        mensagemprogresso.update(100)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
