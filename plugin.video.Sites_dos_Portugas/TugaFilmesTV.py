@@ -134,27 +134,32 @@ def TFV_Menu_Series_A_a_Z(artfolder):
                                 nome_pesquisa = nome_pesquisa.replace('Ú','U')
                                 nome_pesquisa = nome_pesquisa.replace('ç','c')
                                 nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                a_q = re.compile('\w+')
-                                qq_aa = a_q.findall(nome_pesquisa)
-                                nome_pesquisa = ''
-                                for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                if '.' not in nome_pesquisa:
+                                        a_q = re.compile('\w+')
+                                        qq_aa = a_q.findall(nome_pesquisa)
+                                        nome_pesquisa = ''
+                                        for q_a_q_a in qq_aa:
+                                                if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                        nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
                                 url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
                                 try:
-                                        html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                        html_pesquisa = TFV_abrir_url(endereco_series)
+                                        #html_pesquisa = TFV_abrir_url(url_pesquisa)
                                 except: html_pesquisa = ''
-                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                items_pesquisa = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_pesquisa, re.DOTALL)
+                                #items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
                                 if items_pesquisa != []:
-                                        thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                        thumbnail = re.compile('src="(.+?)"').findall(items_pesquisa[0])
+                                        #thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                         if thumbnail:
-                                                thumb = thumbnail[0].replace('w92','w600')
+                                                thumb = thumbnail[0].replace('s1600','s320')
+                                                #thumb = thumbnail[0].replace('w92','w600')
                                         else:
                                                 thumb = ''
                                                                 
                                 else: thumb = ''
                         except: pass
-                        addDir('[COLOR yellow]' + nome_series + '[/COLOR] ',endereco_series,47,thumb,'nao','')
+                        addDir('[COLOR yellow]' + nome_series + '[/COLOR] ',endereco_series,47,thumb.replace('s72-c','s320'),'nao','')
                         #---------------------------------------------------------------
                         conta_items = conta_items + 1   
                         if conta_items == 8:      
@@ -205,6 +210,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
 		print len(items)
 		for item in items:
                         thumb = ''
+                        fanart = ''
                         versao = ''
                         audio_filme = ''
                         if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
@@ -253,8 +259,8 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        fanart = artfolder + 'flag.jpg'
-                        if 'Temporada'not in nome_original:
+                        #fanart = artfolder + 'flag.jpg'
+                        if fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -282,8 +288,9 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                 except: html_pesquisa = ''
                                 items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
                                 if items_pesquisa != []:
-                                        thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                        if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                        if thumb == '' or 's1600' in thumb:
+                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
                                         url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
                                         if url_filme_pesquisa:
                                                 url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
@@ -299,6 +306,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                                                 else:
                                                                         fanart = thumb
                                 else: fanart = thumb
+                        if fanart == '': fanart = thumb
                         if qualidade:
                                 qualidade = qualidade[0]
                         else:
@@ -578,6 +586,43 @@ def TFV_encontrar_fontes_series_recentes(url):
                 if selfAddon.getSetting('movies-view') == "0": addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
                 addDir("Página Seguinte >>",proxima[0],44,artfolder + 'ze-TFV1.png','','')
         except: pass
+
+#----------------------------------------------------------------------------------------------------------------------------------------------#
+
+def TFV_encontrar_fontes_series_A_a_Z(url):
+        if selfAddon.getSetting('movies-view') == "0":
+                addDir1('[B][COLOR blue]' + name + '[/COLOR][/B]','','',artfolder + 'ze-TFV1.png',False,'')
+                addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
+	try:
+		html_source = TFV_abrir_url(url)
+	except: html_source = ''
+	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+	if items != []:
+		print len(items)
+		for item in items:
+			urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+			ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
+			qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
+			thumbnail = re.compile('src="(.+?)"').findall(item)
+			print urletitulo,thumbnail
+			nome = urletitulo[0][1]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+			try:
+				addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],42,thumbnail[0].replace('s72-c','s320'),'','')
+			except: pass
+	else:
+		items = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(html_source)
+		for endereco,nome in items:
+			addDir(nome,endereco,42,'','','')
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 

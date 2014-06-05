@@ -78,6 +78,11 @@ def TFC_Menu_Filmes_Por_Categorias(artfolder):
 
 def TFC_encontrar_fontes_filmes(url):
         pt_en = 0
+        conta_items = 1
+        if conta_items == 1:      
+                mensagemprogresso = xbmcgui.DialogProgress()
+                mensagemprogresso.create('Tuga-Filmes.com', 'A Pesquisar','Por favor aguarde...')
+                mensagemprogresso.update(0)
 	try:
 		html_source = TFC_abrir_url(url)
 	except: html_source = ''
@@ -85,6 +90,8 @@ def TFC_encontrar_fontes_filmes(url):
 	if items != []:
 		print len(items)
 		for item in items:
+                        fanart = ''
+                        thumb = ''
                         versao = ''
                         pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
                         if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
@@ -93,6 +100,7 @@ def TFC_encontrar_fontes_filmes(url):
 			urletitulo = re.compile("<a href=\'(.+?)\' title=\'(.+?)\'>").findall(item)
 			qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
 			thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
+			if thumbnail: thumb = thumbnail[0]
 			print urletitulo,thumbnail
 			ano = 'Ano'
 			qualidade = ''
@@ -163,9 +171,91 @@ def TFC_encontrar_fontes_filmes(url):
                                 qualidade = qualidade.replace('Pt Pt','PT-PT')
                         if 'PT PT' in qualidade:
                                 qualidade = qualidade.replace('PT PT','PT-PT')
+                        nome = urletitulo[0][1]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+                        if fanart == '':
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                if 'Temporada' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                try:
+                                        html_pesquisa = TFC_abrir_url(url_pesquisa)
+                                except: html_pesquisa = ''
+                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                if items_pesquisa != []:
+                                        if thumb == '':
+                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                        url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
+                                        if url_filme_pesquisa:
+                                                url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
+                                                try:
+                                                        html_pesquisa = TFC_abrir_url(url_pesquisa)
+                                                except: html_pesquisa = ''
+                                                url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                if url_fan:
+                                                        for urls_fanart in url_fan:
+                                                                url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
+                                                                if url_fanart:
+                                                                        fanart = url_fanart[0].replace('w300','w1280')
+                                                                else:
+                                                                        fanart = thumb
+                                else: fanart = thumb
+                        if fanart == '': fanart = thumb
 			try:
-				if 'ASSISTIR O FILME' in item: addDir('[B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
+				if 'ASSISTIR O FILME' in item: addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumb.replace('s1600','s320').replace('.gif','.jpg'),'',fanart,ano,'')
 			except: pass
+			#---------------------------------------------------------------
+                        conta_items = conta_items + 1   
+                        if conta_items == 2:      
+                                mensagemprogresso.update(10)
+                        if conta_items == 4:
+                                mensagemprogresso.update(20)
+                        if conta_items == 6:
+                                mensagemprogresso.update(30)
+                        if conta_items == 8:      
+                                mensagemprogresso.update(40)
+                        if conta_items == 10:
+                                mensagemprogresso.update(50)
+                        if conta_items == 12:
+                                mensagemprogresso.update(60)
+                        if conta_items == 14:      
+                                mensagemprogresso.update(70)
+                        if conta_items == 16:
+                                mensagemprogresso.update(80)
+                        if conta_items == 17:
+                                mensagemprogresso.update(90)
+                        if conta_items == len(items):
+                                mensagemprogresso.update(100)
+                                mensagemprogresso.close()
+                        #---------------------------------------------------------------
 	else:
 		items = re.compile("<a href=\'(.+?)\' title=.+?>Assistir Online - </div>(.+?)<div id=\'player\'>").findall(html_source)
 		for endereco,nome in items:
@@ -399,7 +489,19 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok
 
-
+def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
+        if fanart == '': fanart = artfolder + 'flag.jpg'
+        #text = checker
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
+        ok=True
+        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+	liz.setProperty('fanart_image',fanart)
+        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
+        #cm = []
+	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
+	#liz.addContextMenuItems(cm, replaceItems=True)
+        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
+        return ok
 	
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -413,6 +515,9 @@ mode=None
 checker=None
 iconimage=None
 fanart=None
+year=None
+plot=None
+genre=None
 
 try:
         url=urllib.unquote_plus(params["url"])
@@ -438,11 +543,25 @@ try:
         fanart=urllib.unquote_plus(params["fanart"])
 except:
         pass
+try:        
+        plot=urllib.unquote_plus(params["plot"])
+except:
+        pass
+try:        
+        year=urllib.unquote_plus(params["year"])
+except:
+        pass
+try:        
+        genre=urllib.unquote_plus(params["genre"])
+except:
+        pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
 print "Name: "+str(name)
 print "Checker: "+str(checker)
 print "Iconimage: "+str(iconimage)
-
+print "Plot: "+str(plot)
+print "Year: "+str(year)
+print "Genre: "+str(genre)
 

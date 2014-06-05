@@ -43,16 +43,6 @@ def MVT_MenuPrincipal(artfolder):
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'ze-MVT1.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',106,artfolder + 'ze-MVT1.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',102,artfolder + 'ze-MVT1.png','nao','')
-        addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
-	#addDir('[COLOR brown]ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_MovieTuga.txt',108,artfolder + 'ze-MVT1.png','nao','')
-
-def MVT_Menu_Filmes(artfolder):#105
-        addDir1('[B][COLOR blue]Menu Filmes[/COLOR][/B]','','',artfolder + 'ze-MVT1.png',False,'')
-        addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
-	addDir('[COLOR yellow]Ver Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'ze-MVT1.png','nao','')
-	addDir('[COLOR yellow]Categorias[/COLOR]','url',106,artfolder + 'ze-MVT1.png','nao','')
-        addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
-	addDir('Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 
 def MVT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.movie-tuga.blogspot.pt/'
@@ -74,6 +64,11 @@ def MVT_Menu_Filmes_Por_Categorias(artfolder):
 		
 
 def MVT_encontrar_fontes_filmes(url):
+        conta_items = 1
+        if conta_items == 1:      
+                mensagemprogresso = xbmcgui.DialogProgress()
+                mensagemprogresso.create('Movie-Tuga', 'A Pesquisar','Por favor aguarde...')
+                mensagemprogresso.update(0)
         try:
 		html_source = MVT_abrir_url(url)
 	except: html_source = ''
@@ -81,6 +76,8 @@ def MVT_encontrar_fontes_filmes(url):
 	if items != []:
 		print len(items)
 		for item in items:
+                        thumb = ''
+                        fanart = ''
                         url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
                         if 'http' not in url[0]:
                                 url[0] = 'http:' + url[0] 
@@ -94,17 +91,101 @@ def MVT_encontrar_fontes_filmes(url):
                         thumbnail = re.compile('src="(.+?)"').findall(item)
                         print url,thumbnail
                         if 'http' not in thumbnail[0]: thumbnail[0] = 'http:' + thumbnail[0]
+                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
                         titulo[0] = titulo[0].replace('&#8217;',"'")
                         titulo[0] = titulo[0].replace('&#8211;',"-")
                         if 'Dear John' in titulo[0] and ano[0] == '2013': titulo[0] = titulo[0].replace('Dear John','12 Anos Escravo')
+                        nome = titulo[0]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        nome = nome.replace('PT',"")
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+                        #fanart = artfolder + 'flag.jpg'
+                        if fanart == '':
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                if 'Temporada' in titulo[0]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                try:
+                                        html_pesquisa = MVT_abrir_url(url_pesquisa)
+                                except: html_pesquisa = ''
+                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                if items_pesquisa != []:
+                                        if thumb == '':
+                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                        url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
+                                        if url_filme_pesquisa:
+                                                url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
+                                                try:
+                                                        html_pesquisa = MVT_abrir_url(url_pesquisa)
+                                                except: html_pesquisa = ''
+                                                url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                if url_fan:
+                                                        for urls_fanart in url_fan:
+                                                                url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
+                                                                if url_fanart:
+                                                                        fanart = url_fanart[0].replace('w300','w1280')
+                                                                else:
+                                                                        fanart = thumb
+                                else: fanart = thumb
+                        if fanart == '': fanart = thumb
                         try:
-                                addDir('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumbnail[0].replace('s72-c','s320'),'','')
+                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumb,'',fanart,ano[0],'')
                         except: pass
+                        #---------------------------------------------------------------
+                        conta_items = conta_items + 1   
+                        if conta_items == 2:      
+                                mensagemprogresso.update(10)
+                        if conta_items == 4:
+                                mensagemprogresso.update(20)
+                        if conta_items == 6:
+                                mensagemprogresso.update(30)
+                        if conta_items == 8:      
+                                mensagemprogresso.update(40)
+                        if conta_items == 10:
+                                mensagemprogresso.update(50)
+                        if conta_items == 12:
+                                mensagemprogresso.update(60)
+                        if conta_items == 14:      
+                                mensagemprogresso.update(70)
+                        if conta_items == 16:
+                                mensagemprogresso.update(80)
+                        if conta_items == 17:
+                                mensagemprogresso.update(90)
+                        if conta_items == len(items):
+                                mensagemprogresso.update(100)
+                                mensagemprogresso.close()
+                        #---------------------------------------------------------------
 	proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
 	try:
                 proxima_p = proxima[0].replace('%3A',':')
-                addDir1('','','','',False,'')
-		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),102,"",'','')
+		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),102,artfolder + 'ze-MVT1.png','','')
 	except: pass
 
 
@@ -120,15 +201,9 @@ def MVT_encontrar_videos_filmes(name,url):
                 fonte_video = MVT_abrir_url(url)
         except: fonte_video = ''
         fontes_video = re.findall("<body>(.+?)</body>", fonte_video, re.DOTALL)
-        #addDir(fontes_video[0],url,1,iconimage,'','')
         numero_de_fontes = len(fontes_video)
         for fonte_e_url in fontes_video:
-                #parameters = {"nome_texto" : name, "url": url, "addonid": 'MVT'}
-                #nome_textbox = urllib.urlencode(parameters)
-                #addDir('[COLOR blue]Sinopse[/COLOR]'+url,nome_textbox,109,iconimage,'nao','')
-                #addDir(str(len(fontes_video)),url,1,iconimage,'','')
                 match = re.compile('<option value=(.+?)>(.+?)<').findall(fonte_e_url)
-                #addDir(str(len(match)),url,1,iconimage,'','')
                 if '<option' in fonte_e_url:
                         for url_video_url_id,cd in match:
                                 if url_video_url_id == '""':
@@ -139,7 +214,6 @@ def MVT_encontrar_videos_filmes(name,url):
                                         if 'Cole' in cd:
                                                 conta_id_video = 0
                                                 colecao = 'sim'
-                                                #addDir1('[COLOR blue]' + cd + '[/COLOR]','','',iconimage,False,'')
                                 else:
                                         url_video_url_id = url_video_url_id.replace('"','')
                                 if colecao == 'sim' and (('Breve' or 'breve') not in cd):
@@ -150,7 +224,6 @@ def MVT_encontrar_videos_filmes(name,url):
                                         url_video = 'http:' + url_video_url_id
                                 else:
                                         url_video = url_video_url_id
-                                #addDir(url_video,url,1,iconimage,'','')
                                 try:
                                         fonte = MVT_abrir_url(url_video)
                                 except: fonte = ''
@@ -262,6 +335,20 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok
+
+def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
+        if fanart == '': fanart = artfolder + 'flag.jpg'
+        #text = checker
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
+        ok=True
+        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+	liz.setProperty('fanart_image',fanart)
+        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
+        #cm = []
+	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
+	#liz.addContextMenuItems(cm, replaceItems=True)
+        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
+        return ok
         
 
 
@@ -277,6 +364,9 @@ mode=None
 checker=None
 iconimage=None
 fanart=None
+year=None
+plot=None
+genre=None
 
 try:
         url=urllib.unquote_plus(params["url"])
@@ -302,11 +392,26 @@ try:
         fanart=urllib.unquote_plus(params["fanart"])
 except:
         pass
+try:        
+        plot=urllib.unquote_plus(params["plot"])
+except:
+        pass
+try:        
+        year=urllib.unquote_plus(params["year"])
+except:
+        pass
+try:        
+        genre=urllib.unquote_plus(params["genre"])
+except:
+        pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
 print "Name: "+str(name)
 print "Checker: "+str(checker)
 print "Iconimage: "+str(iconimage)
+print "Plot: "+str(plot)
+print "Year: "+str(year)
+print "Genre: "+str(genre)
 
 

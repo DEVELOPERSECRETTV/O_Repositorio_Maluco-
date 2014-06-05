@@ -346,7 +346,11 @@ elif mode == 44:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 45: TugaFilmesTV.TFV_pesquisar_series()
 elif mode == 46: TugaFilmesTV.TFV_encontrar_fontes_pesquisa(url,pesquisou)
-elif mode == 47: TugaFilmesTV.TFV_encontrar_fontes_series_A_a_Z(url)
+elif mode == 47:
+        TugaFilmesTV.TFV_encontrar_fontes_series_A_a_Z(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 48:
         TugaFilmesTV.TFV_Menu_Filmes_Top_5(artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
