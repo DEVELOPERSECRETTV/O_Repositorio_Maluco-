@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-   <category label="Definicoes gerais">
+   <category label="Definições gerais">
+      <setting label="[B][COLOR green]Definições Gerais:[/B][/COLOR]" type="lsep" />
       <setting id="hide-porno" type="bool" label="Esconder menu porno" default="true"/>
+   <!--   <setting id="hide-thumb" type="bool" label="Pesquisar thumbs de séries" default="false"/>  -->
+   </category>
+   <category label="Filmes">
+      <setting label="[B][COLOR green]Definições para Filmes:[/B][/COLOR]" type="lsep" />
+      <setting id="movie-fanart" type="bool" label="Procurar Fanart" default="true"/>
+      <setting id="movie-trailer" type="bool" label="Procurar Trailers" default="false"/>
+    </category>
+   <category label="Séries">
+      <setting label="[B][COLOR green]Definições para Séries:[/B][/COLOR]" type="lsep" />
+      <setting id="series-thumb-mashup" type="bool" label="Procurar thumbnail de Mashup de séries (Menu Principal)" default="false"/>
+      <setting id="series-thumb-TFV" type="bool" label="Procurar thumbnail de séries A a Z (Tuga-Filmes.tv)" default="false"/>
+      <setting id="series-thumb-TPT" type="bool" label="Procurar thumbnail de séries A a Z (Top-pt.net)" default="false"/>
+  <!--    <setting id="series-fanart" type="bool" label="Procurar Fanart" default="true"/>
+      <setting id="series-season-poster" type="bool" label="Procurar poster da temporda" default="true"/>
+      <setting id="series-episode-thumbnails" type="bool" label="Procurar thumbnail do episodio" default="true"/>     -->
    </category>
    <category label="Tipos de vista">
       <setting label="[B][COLOR green]Definições de vista:[/B][/COLOR]" type="lsep" />

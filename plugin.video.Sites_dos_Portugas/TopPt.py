@@ -21,7 +21,7 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver,time,os
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os
 from array import array
 from string import capwords
 
@@ -105,97 +105,79 @@ def TPT_Menu_Filmes_Por_Categorias(artfolder):
                                 addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ',endereco_categoria,232,artfolder + 'ze-TPT1.png','nao','')
 
 def TPT_Menu_Series_A_a_Z(artfolder):
-        i = 0
+        i = 1
         conta = 0
         conta_items = 1
-        if conta_items == 1:      
-                mensagemprogresso = xbmcgui.DialogProgress()
-                mensagemprogresso.create('Top-pt.net', 'A Pesquisar','Por favor aguarde...')
-                mensagemprogresso.update(0)
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
         url_series = 'http://toppt.net/'
 	html_series_source = TPT_abrir_url(url_series)
 	html_items_series = re.findall('<h3 class="widgettitle">SERIES</h3>(.*?)<div id="footer-widgets" class="clearfix">', html_series_source, re.DOTALL)	
         print len(html_items_series)
         for item_series in html_items_series:
                 series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
+                num = len(series) + 0.0
                 for endereco_series,nome_series in series:
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(len(series))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(len(series))
+                        if selfAddon.getSetting('series-thumb-TPT') == "false": xbmc.sleep( 50 )
+                        if progress.iscanceled():
+                                break
                         nome_series = nome_series.replace('&amp;','&')
                         nome_series = nome_series.replace('&#39;',"'")
                         nome_series = nome_series.replace('&#8217;',"'")
                         nome_series = nome_series.replace('&#8230;',"...")
                         nome_series = nome_series.lower()
                         nome_series = nome_series.title()
-                        arr_series.append((nome_series,endereco_series))
+                        if selfAddon.getSetting('series-thumb-TPT') == "true":
+                                try:
+                                        nome_pesquisa = arr_series[x][0]
+                                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                        if '.' not in nome_pesquisa:
+                                                a_q = re.compile('\w+')
+                                                qq_aa = a_q.findall(nome_pesquisa)
+                                                nome_pesquisa = ''
+                                                for q_a_q_a in qq_aa:
+                                                        if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                        try:
+                                                html_pesquisa = TPT_abrir_url(arr_series[x][1])
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                thumbnail = re.compile('src="(.+?)"').findall(items_pesquisa[0])
+                                                if thumbnail:
+                                                        thumb = thumbnail[0].replace('w92','w600')
+                                                else:
+                                                        thumb = ''
+                                                                        
+                                        else: thumb = ''
+                                except: pass
+                        else: thumb = artfolder + 'ze-TPT1.png'
+                        arr_series.append((nome_series,endereco_series,thumb))
                         i = i + 1
-        arr_series.sort()
-        if selfAddon.getSetting('movies-view') == "0":
+        if selfAddon.getSetting('series-thumb-TPT') == "false":
                 addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(len(series)) + ')','','',artfolder + 'ze-TPT1.png',False,'')
                 addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
+        arr_series.sort()
         for x in range(len(arr_series)):
-                if arr_series[x][0] != '':
-                        try:
-                                nome_pesquisa = arr_series[x][0]
-                                nome_pesquisa = nome_pesquisa.replace('é','e')
-                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                nome_pesquisa = nome_pesquisa.replace('á','a')
-                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                nome_pesquisa = nome_pesquisa.replace('è','e')
-                                nome_pesquisa = nome_pesquisa.replace('í','i')
-                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                if '.' not in nome_pesquisa:
-                                        a_q = re.compile('\w+')
-                                        qq_aa = a_q.findall(nome_pesquisa)
-                                        nome_pesquisa = ''
-                                        for q_a_q_a in qq_aa:
-                                                if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                        nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                try:
-                                        html_pesquisa = TPT_abrir_url(arr_series[x][1])
-                                except: html_pesquisa = ''
-                                items_pesquisa = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_pesquisa, re.DOTALL)
-                                if items_pesquisa != []:
-                                        thumbnail = re.compile('src="(.+?)"').findall(items_pesquisa[0])
-                                        if thumbnail:
-                                                thumb = thumbnail[0].replace('w92','w600')
-                                        else:
-                                                thumb = ''
-                                                                
-                                else: thumb = ''
-                        #thumb = ''
-                        except: pass
-                        addDir('[COLOR yellow]' + arr_series[x][0] + '[/COLOR]',arr_series[x][1],232,thumb,'nao','')
-                        #---------------------------------------------------------------
-                        conta_items = conta_items + 1   
-                        if conta_items == 8:      
-                                mensagemprogresso.update(10)
-                        if conta_items == 16:
-                                mensagemprogresso.update(20)
-                        if conta_items == 24:
-                                mensagemprogresso.update(30)
-                        if conta_items == 32:      
-                                mensagemprogresso.update(40)
-                        if conta_items == 40:
-                                mensagemprogresso.update(50)
-                        if conta_items == 48:
-                                mensagemprogresso.update(60)
-                        if conta_items == 56:      
-                                mensagemprogresso.update(70)
-                        if conta_items == 64:
-                                mensagemprogresso.update(80)
-                        if conta_items == 72:
-                                mensagemprogresso.update(90)
-                        if conta_items == 80:
-                                mensagemprogresso.update(95)
-                        if conta_items == len(html_items_series):
-                                mensagemprogresso.update(100)
-                                mensagemprogresso.close()
-                        #---------------------------------------------------------------
+                addDir('[COLOR yellow]' + arr_series[x][0] + '[/COLOR]',arr_series[x][1]+'-series-',232,arr_series[x][2],'nao','')
 
 
 
@@ -205,6 +187,10 @@ def TPT_Menu_Series_A_a_Z(artfolder):
 		
 
 def TPT_encontrar_fontes_filmes(url,artfolder):
+        if '-series-' in url:
+                series = 1
+                url = url.replace('-series-','')
+        else: series = 0
         percent = 0
         message = ''
         progress.create('Progresso', 'A Pesquisar:')
@@ -223,11 +209,12 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
 		for item in items:
                         fanart = ''
                         thumb = ''
-                        percent = int( ( i / 10.0 ) * 100)
+                        num = len(items) + 0.0
+                        percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        xbmc.sleep( 500 )
+                        #xbmc.sleep( 500 )
                         if progress.iscanceled():
                                 break
                         audio_filme = ''
@@ -250,6 +237,15 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                         nome = nome.replace('(PT/PT)',"")
                         nome = nome.replace('[PT-PT]',"")
                         nome = nome.replace('[PT/PT]',"")
+                        nome = nome.replace('[PT-BR]',"")
+                        nome = nome.replace('[PT/BR]',"")
+                        nome = nome.replace(' (PT-PT)',"")
+                        nome = nome.replace(' (PT/PT)',"")
+                        nome = nome.replace(' [PT-PT]',"")
+                        nome = nome.replace(' [PT/PT]',"")
+                        nome = nome.replace(' [PT-BR]',"")
+                        nome = nome.replace(' [PT/BR]',"")
+                        nome = nome.replace('  '," ")
                         if audio:
                                 if len(audio[0]) > 15:
                                         audio = re.compile('<b>AUDIO: </b>(.+?)<span style="color: red;"><b>(.+?)</b></span><br/>').findall(item)
@@ -272,11 +268,11 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                         if not ano:
                                 ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
                                 if ano:
-                                        ano_filme = ': ' + ano[0]
+                                        ano_filme = ': ' + ano[0].replace(' ','')
                                 else:
                                         ano_filme = ''     
                         if ano:
-                                ano_filme = ano[0]
+                                ano_filme = ano[0].replace(' ','')
                                 a_q = re.compile('\d+')
                                 qq_aa = a_q.findall(nome)
                                 for q_a_q_a in qq_aa:
@@ -348,8 +344,21 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                                                         fanart = thumb
                                 else: fanart = thumb
                         if fanart == '': fanart = thumb
+                        ano_filme = '('+ano_filme+')'
+                        qualidade = '('+qualidade
+                        audio_filme = audio_filme+')'
+                        if series == 1:
+                                n = re.compile('[(](.+?)[)]').findall(nome)
+                                if n: nome = n[0]
+                                else:
+                                        n = re.compile('[[](.+?)[]]').findall(nome)
+                                        if n: nome = n[0]
+                                qualidade = ''
+                                ano_filme = ''
+                                audio_filme = ''
+                                
                         try:
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],233,thumb,'',fanart,ano_filme,'')
+                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0],233,thumb,'',fanart,ano_filme,'')
                         except: pass
                         i = i + 1
 	else:
@@ -499,15 +508,11 @@ def TPT_encontrar_videos_filmes(name,url):
                                                 lin = re.findall('.+?EPIS',newmatch[0],re.DOTALL)
                                                 linksseccao = re.findall('ODIO (.+?)<br.+?>\n(.+?)EPIS',newmatch[0],re.DOTALL)
                                                 linksseccaoultimo = re.findall('ODIO (.+?)<br.+?>\n(.+?)</p>',newmatch[0],re.DOTALL)
-                                                if len(lin) <= 5: divide = 5.0
-                                                if len(lin) > 5 and len(lin) <= 10: divide = 10.0
-                                                if len(lin) > 10 and len(lin) <= 15: divide = 15.0
-                                                if len(lin) > 15 and len(lin) <= 20: divide = 20.0
-                                                if len(lin) > 20: divide = 25.0
+                                                num = len(lin) + 0.0
                                                 if linksseccao:
                                                         ultima_parte = ''
                                                         for parte1,parte2 in linksseccao:
-                                                                percent = int( ( i / divide ) * 100)
+                                                                percent = int( ( i / num ) * 100)
                                                                 message = str(i) + " de " + str(len(lin))
                                                                 progress.update( percent, "", message, "" )
                                                                 print str(i) + " de " + str(len(lin))

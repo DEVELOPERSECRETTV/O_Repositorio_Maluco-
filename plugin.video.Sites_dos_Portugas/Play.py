@@ -33,10 +33,10 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def PLAY_movie(url,name,iconimage,checker,fanart):
-        if 'vk.com' not in url and 'video.mail.ru' not in url:
-                dp = xbmcgui.DialogProgress()
-                dp.create(name,'A sincronizar vídeos e legendas')
-                dp.update(0)
+        #if 'vk.com' not in url and 'video.mail.ru' not in url:
+                #dp = xbmcgui.DialogProgress()
+                #dp.create(name,'A sincronizar vídeos e legendas')
+                #dp.update(0)
 	nome = re.compile('///(.+?)[)].+?[(].+?[)]').findall(url)
 	if not nome:
                 nome = re.compile('///(.*)').findall(url)
@@ -409,18 +409,19 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
         #if 'vk.com' not in url and 'video.mail.ru' not in url and 'video.tt' not in url:
         if 'vk.com' not in url and 'video.mail.ru' not in url:
                 try:
-                        #addLink(name+url,match[0],'')
+                        ####addLink(name+url,match[0],'')
                         playlist = xbmc.PlayList(1)
                         playlist.clear()             
                         playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
                         addLink(name,url,iconimage)
-                        dp.update(33)
-                        if dp.iscanceled(): return
+                        #dp.update(33)
+                        #if dp.iscanceled(): return
                         xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
-                        dp.update(66)
+                        #dp.update(66)
                         xbmcPlayer.play(playlist)
-                        dp.update(100)
-                        dp.close()
+                        #dp.update(100)
+                        #dp.close()
+                        #xbmc.Player().play(url)
                         if checker == '' or checker == None: pass
                         else: xbmcPlayer.setSubtitles(checker)
                 except: pass

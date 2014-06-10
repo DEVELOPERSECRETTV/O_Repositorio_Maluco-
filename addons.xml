@@ -14,10 +14,11 @@
 	</extension>
 </addon>
 
-<addon id="plugin.video.Sites_dos_Portugas" name="[COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR]" version="0.3.4" provider-name="OMaluco">
+<addon id="plugin.video.Sites_dos_Portugas" name="[COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR]" version="0.3.5" provider-name="OMaluco">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.urlresolver" version="1.0.5"/>
+    <import addon="script.module.t0mm0.common" version="1.0.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>

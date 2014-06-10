@@ -21,7 +21,7 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver,time,os
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -101,90 +101,87 @@ def TFV_Menu_Filmes_Por_Categorias(artfolder):
                         addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ',endereco_categoria,32,artfolder + 'ze-TFV1.png','nao','')
 
 def TFV_Menu_Series_A_a_Z(artfolder):
-        conta_items = 1
-        if conta_items == 1:      
-                mensagemprogresso = xbmcgui.DialogProgress()
-                mensagemprogresso.create('Tuga-Filmes.tv', 'A Pesquisar','Por favor aguarde...')
-                mensagemprogresso.update(0)
+        i = 1
+        #conta_items = 1
+        #if conta_items == 1:      
+                #mensagemprogresso = xbmcgui.DialogProgress()
+                #mensagemprogresso.create('Tuga-Filmes.tv', 'A Pesquisar','Por favor aguarde...')
+                #mensagemprogresso.update(0)
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
         url_series = 'http://www.tuga-filmes.us'
 	html_series_source = TFV_abrir_url(url_series)
 	html_items_series = re.findall("<div class=\'widget Label\' id=\'Label3\'>(.*?)<div class=\'clear\'>", html_series_source, re.DOTALL)
         num_series = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(html_items_series[0])
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR blue]Séries[/COLOR][/B] ' + str(len(num_series)),'','',artfolder + 'ze-TFV1.png',False,'')
+        if selfAddon.getSetting('series-thumb-TFV') == "false":
+                addDir1('[B][COLOR blue]Séries[/COLOR][/B] ' + '('+str(len(num_series))+')','','',artfolder + 'ze-TFV1.png',False,'')
                 addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
         print len(html_items_series)
+        num = len(num_series) + 0.0
         for item_series in html_items_series:
                 series = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(item_series)
                 for endereco_series,nome_series in series:
+                        #percent = int( ( conta_items / num ) * 100)
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(len(num_series))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(len(num_series))
+                        if selfAddon.getSetting('series-thumb-TFV') == "false": xbmc.sleep( 50 )
+                        if progress.iscanceled():
+                                break
                         nome_series = nome_series.replace('&amp;','&')
                         nome_series = nome_series.replace('&#39;',"'")
-                        try:
-                                nome_pesquisa = nome_series
-                                nome_pesquisa = nome_pesquisa.replace('é','e')
-                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                nome_pesquisa = nome_pesquisa.replace('á','a')
-                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                nome_pesquisa = nome_pesquisa.replace('è','e')
-                                nome_pesquisa = nome_pesquisa.replace('í','i')
-                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                if '.' not in nome_pesquisa:
-                                        a_q = re.compile('\w+')
-                                        qq_aa = a_q.findall(nome_pesquisa)
-                                        nome_pesquisa = ''
-                                        for q_a_q_a in qq_aa:
-                                                if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                        nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                        nome_series = nome_series.lower()
+                        nome_series = nome_series.title()
+                        if selfAddon.getSetting('series-thumb-TFV') == "true":
                                 try:
-                                        html_pesquisa = TFV_abrir_url(endereco_series)
-                                        #html_pesquisa = TFV_abrir_url(url_pesquisa)
-                                except: html_pesquisa = ''
-                                items_pesquisa = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_pesquisa, re.DOTALL)
-                                #items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                if items_pesquisa != []:
-                                        thumbnail = re.compile('src="(.+?)"').findall(items_pesquisa[0])
-                                        #thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                        if thumbnail:
-                                                thumb = thumbnail[0].replace('s1600','s320')
-                                                #thumb = thumbnail[0].replace('w92','w600')
-                                        else:
-                                                thumb = ''
-                                                                
-                                else: thumb = ''
-                        except: pass
-                        addDir('[COLOR yellow]' + nome_series + '[/COLOR] ',endereco_series,47,thumb.replace('s72-c','s320'),'nao','')
+                                        nome_pesquisa = nome_series
+                                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                        if '.' not in nome_pesquisa:
+                                                a_q = re.compile('\w+')
+                                                qq_aa = a_q.findall(nome_pesquisa)
+                                                nome_pesquisa = ''
+                                                for q_a_q_a in qq_aa:
+                                                        if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                        url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                        try:
+                                                html_pesquisa = TFV_abrir_url(endereco_series)
+                                                #html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_pesquisa, re.DOTALL)
+                                        #items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                thumbnail = re.compile('src="(.+?)"').findall(items_pesquisa[0])
+                                                #thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail:
+                                                        thumb = thumbnail[0].replace('s1600','s320')
+                                                        #thumb = thumbnail[0].replace('w92','w600')
+                                                else:
+                                                        thumb = ''
+                                                                        
+                                        else: thumb = ''
+                                except: pass
+                        else: thumb = artfolder + 'ze-TFV1.png'
+                        addDir('[COLOR yellow]' + nome_series + '[/COLOR] ',endereco_series+'\/series\/'+nome_series+'\/',47,thumb.replace('s72-c','s320'),'nao','')
                         #---------------------------------------------------------------
-                        conta_items = conta_items + 1   
-                        if conta_items == 8:      
-                                mensagemprogresso.update(10)
-                        if conta_items == 16:
-                                mensagemprogresso.update(20)
-                        if conta_items == 24:
-                                mensagemprogresso.update(30)
-                        if conta_items == 32:      
-                                mensagemprogresso.update(40)
-                        if conta_items == 40:
-                                mensagemprogresso.update(50)
-                        if conta_items == 48:
-                                mensagemprogresso.update(60)
-                        if conta_items == 56:      
-                                mensagemprogresso.update(70)
-                        if conta_items == 64:
-                                mensagemprogresso.update(80)
-                        if conta_items == 72:
-                                mensagemprogresso.update(90)
-                        if conta_items == 80:
-                                mensagemprogresso.update(95)
-                        if conta_items == len(html_items_series):
-                                mensagemprogresso.update(100)
-                                mensagemprogresso.close()
+                        #mensagemprogresso.update(percent)
+                        #conta_items = conta_items + 1
+                        i = i + 1
                         #---------------------------------------------------------------
 
         
@@ -193,14 +190,18 @@ def TFV_Menu_Series_A_a_Z(artfolder):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #-------------------------------------------------------------------  Filmes  -----------------------------------------------------------------#
 
-		
 
 def TFV_encontrar_fontes_filmes(url,artfolder):
-        conta_items = 1
-        if conta_items == 1:      
-                mensagemprogresso = xbmcgui.DialogProgress()
-                mensagemprogresso.create('Tuga-Filmes.tv', 'A Pesquisar','Por favor aguarde...')
-                mensagemprogresso.update(0)
+        #conta_items = 1
+        #if conta_items == 1:      
+                #mensagemprogresso = xbmcgui.DialogProgress()
+                #mensagemprogresso.create('Tuga-Filmes.tv', 'A Pesquisar','Por favor aguarde...')
+                #mensagemprogresso.update(0)
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
 	try:
 		html_source = TFV_abrir_url(url)
 	except: html_source = ''
@@ -208,7 +209,16 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
 	conta_items = 0
 	if items != []:
 		print len(items)
+		num = len(items) + 0.0
 		for item in items:
+                        #percent = int( ( conta_items / num ) * 100)
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(len(items))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(len(items))
+                        #xbmc.sleep( 500 )
+                        if progress.iscanceled():
+                                break
                         thumb = ''
                         fanart = ''
                         versao = ''
@@ -316,31 +326,14 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                         num_mode = 42
                                 else:
                                         num_mode = 33
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                         except: pass
                         #---------------------------------------------------------------
-                        conta_items = conta_items + 1   
-                        if conta_items == 2:      
-                                mensagemprogresso.update(10)
-                        if conta_items == 4:
-                                mensagemprogresso.update(20)
-                        if conta_items == 6:
-                                mensagemprogresso.update(30)
-                        if conta_items == 8:      
-                                mensagemprogresso.update(40)
-                        if conta_items == 10:
-                                mensagemprogresso.update(50)
-                        if conta_items == 12:
-                                mensagemprogresso.update(60)
-                        if conta_items == 14:      
-                                mensagemprogresso.update(70)
-                        if conta_items == 16:
-                                mensagemprogresso.update(80)
-                        if conta_items == 17:
-                                mensagemprogresso.update(90)
-                        if conta_items == len(items):
-                                mensagemprogresso.update(100)
-                                mensagemprogresso.close()
+                        #mensagemprogresso.update(percent)
+                        #if mensagemprogresso.iscanceled():
+                                #break
+                        #conta_items = conta_items + 1
+                        i = i + 1
                         #---------------------------------------------------------------
 	else:
 		items = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(html_source)
@@ -551,13 +544,26 @@ def TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
 
                                 
 def TFV_encontrar_fontes_series_recentes(url):
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
 	try:
 		html_source = TFV_abrir_url(url)
 	except: html_source = ''
 	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
 	if items != []:
 		print len(items)
+		num = len(items) + 0.0
 		for item in items:
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(len(items))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(len(items))
+                        xbmc.sleep( 200 )
+                        if progress.iscanceled():
+                                break
 			urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
 			ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
 			qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
@@ -577,6 +583,7 @@ def TFV_encontrar_fontes_series_recentes(url):
 			try:
 				addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],42,thumbnail[0].replace('s72-c','s320'),'sim','')
 			except: pass
+			i = i + 1
 	else:
 		items = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(html_source)
 		for endereco,nome in items:
@@ -590,35 +597,118 @@ def TFV_encontrar_fontes_series_recentes(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def TFV_encontrar_fontes_series_A_a_Z(url):
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
+        url = url.replace('\/','|')
+        nome_orig = re.compile('[|].+?[|](.+?)[|]').findall(url)
+        nome_original = nome_orig[0]
         if selfAddon.getSetting('movies-view') == "0":
                 addDir1('[B][COLOR blue]' + name + '[/COLOR][/B]','','',artfolder + 'ze-TFV1.png',False,'')
                 addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
+        if '|series|' in url:
+                series = 1
+                u = re.compile('(.+?)[|].+?[|].+?[|]').findall(url)
+                url = u[0]
+        else: series = 0
 	try:
 		html_source = TFV_abrir_url(url)
 	except: html_source = ''
 	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
 	if items != []:
 		print len(items)
+		num = len(items) + 0.0
 		for item in items:
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(len(items))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(len(items))
+                        #xbmc.sleep( 500 )
+                        if progress.iscanceled():
+                                break
+                        thumb = ''
+                        fanart = ''
 			urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
 			ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
+			if ano: ano = '('+ano[0]+')'
 			qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
+			if qualidade: qualidade = '('+qualidade[0]+')'
 			thumbnail = re.compile('src="(.+?)"').findall(item)
+			if thumbnail: thumb = thumbnail[0]
+                        else: thumb = ''
 			print urletitulo,thumbnail
 			nome = urletitulo[0][1]
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('&#39;',"'")
                         nome = nome.replace('&amp;','&')
+                        nome = nome.replace('(PT-PT)',"")
+                        nome = nome.replace('(PT/PT)',"")
+                        nome = nome.replace('[PT-PT]',"")
+                        nome = nome.replace('[PT/PT]',"")
                         a_q = re.compile('\d+')
                         qq_aa = a_q.findall(nome)
                         for q_a_q_a in qq_aa:
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
+                        if fanart == '':
+                                nome_pesquisa = nome_original
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                try:
+                                        html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                except: html_pesquisa = ''
+                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                if items_pesquisa != []:
+                                        if thumb == '' or 's1600' in thumb:
+                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                        url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
+                                        if url_filme_pesquisa:
+                                                url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
+                                                try:
+                                                        html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                                except: html_pesquisa = ''
+                                                url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                if url_fan:
+                                                        for urls_fanart in url_fan:
+                                                                url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
+                                                                if url_fanart:
+                                                                        fanart = url_fanart[0].replace('w300','w1280')
+                                                                else:
+                                                                        fanart = thumb
+                                else: fanart = thumb
+                        if fanart == '': fanart = thumb
+                        if series == 1:
+                                n = re.compile('[(](.+?)[)]').findall(nome)
+                                qualidade = ''
+                                ano = ''
+                                if n: nome = n[0]
 			try:
-				addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],42,thumbnail[0].replace('s72-c','s320'),'','')
+				addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0],42,thumb.replace('s72-c','s320'),'',fanart,ano,'')
 			except: pass
+			i = i + 1
 	else:
 		items = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(html_source)
 		for endereco,nome in items:

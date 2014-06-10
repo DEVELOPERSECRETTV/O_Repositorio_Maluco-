@@ -17,12 +17,11 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver,urlparse,time,os
+
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,urlresolver,time,os
 import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TextBoxes,TopPt,FilmesAnima,Filmes,Series,Mashup,Armagedom,Filmes3D
 from array import array
 from string import capwords
-import xbmcvfs
-
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -37,25 +36,25 @@ thumb_filmes = ['' for i in range(100)]
 arr_filmes[4] = '6'
 i=arr_filmes[4]
 
-
 arr_filmes_animacao = ['' for i in range(100)]
 arrai_filmes_animacao  = ['' for i in range(100)]
 thumb_filmes_animacao  = ['' for i in range(100)]
 
-
-
-
 mensagemok = xbmcgui.Dialog().ok
-
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
 def MAIN_MENU():
+        url_toppt = 'http://toppt.net/'
         url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
-        url_TPT = 'http://toppt.net/?cat=68'
+        try:
+                toppt_source = abrir_url(url_toppt)
+        except: toppt_source = ''
+        saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
+        url_TPT = saber_url_todos[0]
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
         #addDir1('[B][COLOR blue]Menu Principal[/COLOR][/B]','',31,artfolder + 'MPrin.png',False,'')
@@ -66,7 +65,9 @@ def MAIN_MENU():
         url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
         url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
         url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
-        url_TPT = 'http://toppt.net/?cat=24'
+        saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
+        #saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
+        url_TPT = saber_url_animacao[0]
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
         addDir('[B][COLOR green]Ani[/COLOR][COLOR yellow]m[/COLOR][COLOR red]ação[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'animacao.png','nao','')
@@ -82,41 +83,6 @@ def MAIN_MENU():
         #addDir('[B][COLOR green]FILMES[/COLOR][COLOR yellow]3D[/COLOR][COLOR red]CINEMA[/COLOR][/B] - [COLOR orange](NOVO)[/COLOR]','http://direct',401,artfolder + 'ze-MVT1.png','nao','')
         #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B]','url',331,artfolder + 'SdB1.png','nao','')
-        #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
-        
-
-
-def Menu_IMDB():        
-        addDir('[B][COLOR green]Fi[/COLOR][COLOR yellow]l[/COLOR][COLOR red]mes[/COLOR][/B]','url',25,'','nao','')
-        addDir('[B][COLOR green]Sé[/COLOR][COLOR yellow]r[/COLOR][COLOR red]ies[/COLOR][/B]','url',26,'','nao','')
-        addDir('[B][COLOR green]Ani[/COLOR][COLOR yellow]m[/COLOR][COLOR red]ação[/COLOR][/B]','url',501,'','nao','')
-
-
-
-def Filmes_IMDB_antiga(url):
-        sim='sim'
-        #nome_filme_IMDB = 'croods'
-	#Filmes.FILMES_pesquisar(nome_filme_IMDB)
-        url = 'http://www.imdb.com/search/title?at=0&genres=animation&sort=moviemeter&title_type=feature'
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	items = re.findall('<td class="image">(.+?)<td class="title">', html_source, re.DOTALL)
-	if items != []:
-		print len(items)
-		for item in items:
-			nomethumb_IMDB = re.compile('<a href=".+?" title="(.+?)"><img src="(.+?)"').findall(item)
-			nome_filme_IMDB = nomethumb_IMDB[0][0]
-			nome_filme_IMDB = nome_filme_IMDB.replace('&#xF4;','ô')
-			nome_filme_IMDB = nome_filme_IMDB.replace('&#xE3;','ã')
-			nome_filme_IMDB = nome_filme_IMDB.replace('&#xE7;','ç')
-			nome_filme_IMDB = nome_filme_IMDB.replace('&#xF3;','ó')
-			nome_filme_IMDB = nome_filme_IMDB.replace('&#xC0;','À')
-			nome_filme_IMDB = nome_filme_IMDB.replace('&#xE1;','á')
-			nome_filme_IMDB = nome_filme_IMDB.replace('&#xF5;','õ')
-			nome_filme_IMDB = nome_filme_IMDB.replace('&#xF3;','ó')
-			#passar_nome_pesquisa(nome_filme_IMDB)
-			addDir(nome_filme_IMDB,'url',7,nomethumb_IMDB[0][1],'nao','')
 
 
 
@@ -223,7 +189,7 @@ def setViewMode():
                 elif selfAddon.getSetting('movies-view') == "7": # Media info 3
                     xbmc.executebuiltin('Container.SetViewMode(515)')
             except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting.getSetting('movies-view'))
+                addon_log("SetViewMode Failed: "+selfAddon.getSetting('movies-view'))
                 addon_log("Skin: "+xbmc.getSkinDir())
         
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -264,7 +230,6 @@ except: pass
 if mode==None or url==None or len(url)<1:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(500)")
-        #xbmcplugin.endOfDirectory(int(sys.argv[1]))
         MAIN_MENU()
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(500)")
@@ -299,9 +264,14 @@ elif mode == 24: Filmes.FILMES_fontes_filmes_TPT(url_pesquisa)
 elif mode == 25: Filmes_Filmes()
 elif mode == 26:
         Mashup.Series_Series(url)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(502)")
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        if selfAddon.getSetting('series-thumb-mashup') == "true":
+                xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+                xbmc.executebuiltin("Container.SetViewMode(500)")
+                xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        if selfAddon.getSetting('series-thumb-mashup') == "false":
+                xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+                xbmc.executebuiltin("Container.SetViewMode(502)")
+                xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 27: Series.SERIES_pesquisar(nome_pesquisa)
 elif mode == 28: Series.SERIES_fontes_pesquisa_TFV(url,pesquisou)
 elif mode == 29: Series.SERIES_fontes_TPT(url_pesquisa)
@@ -334,9 +304,14 @@ elif mode == 39: TugaFilmesTV.TFV_Menu_Filmes_Por_Ano(artfolder)
 elif mode == 40: TugaFilmesTV.TFV_Menu_Series(artfolder)
 elif mode == 41:
         TugaFilmesTV.TFV_Menu_Series_A_a_Z(artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        if selfAddon.getSetting('series-thumb-TFV') == "true":
+                xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+                xbmc.executebuiltin("Container.SetViewMode(500)")
+                xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        if selfAddon.getSetting('series-thumb-TFV') == "false":
+                xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+                xbmc.executebuiltin("Container.SetViewMode(502)")
+                xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 42: TugaFilmesTV.TFV_encontrar_videos_series(name,url)
 elif mode == 43: TugaFilmesTV.TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
 elif mode == 44:
@@ -439,15 +414,18 @@ elif mode == 239: TopPt.TPT_Menu_Filmes_Por_Ano(artfolder)
 elif mode == 240: TopPt.TPT_Menu_Series(artfolder)
 elif mode == 241:
         TopPt.TPT_Menu_Series_A_a_Z(artfolder)
-        TopPt.TPT_encontrar_fontes_filmes(url,artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        if selfAddon.getSetting('series-thumb-TPT') == "true":
+                xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+                xbmc.executebuiltin("Container.SetViewMode(500)")
+                xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        if selfAddon.getSetting('series-thumb-TPT') == "false":
+                xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+                xbmc.executebuiltin("Container.SetViewMode(502)")
+                xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 242: TopPt.TPT_encontrar_videos_series(name,url)
 elif mode == 243: TopPt.TPT_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
 elif mode == 244:
         TopPt.TPT_encontrar_fontes_series_recentes(url)
-        TopPt.TPT_encontrar_fontes_filmes(url,artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))

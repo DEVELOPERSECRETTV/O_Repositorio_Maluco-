@@ -17,7 +17,7 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -141,7 +141,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                 else:
                                         qualidade = ''
                                 try:
-                                        addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
+                                        addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
                                         num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -246,7 +246,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url):
                                 if 'PT PT' in qualidade:
                                         qualidade = qualidade.replace('PT PT','PT-PT')
                                 try:
-                                        if 'ASSISTIR O FILME' in item: addDir('[B][COLOR green]- ' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
+                                        if 'ASSISTIR O FILME' in item: addDir('[B][COLOR green]- ' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
                                         num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -289,7 +289,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url):
                                 titulo[0] = titulo[0].replace('&#8217;',"'")
                                 titulo[0] = titulo[0].replace('&#8211;',"-")
                                 try:
-                                        addDir('[B][COLOR green]- ' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink,103,thumbnail.replace('s72-c','s320'),'','')
+                                        addDir('[B][COLOR green]- ' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink,103,thumbnail.replace('s72-c','s320'),'','')
                                         num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -345,6 +345,15 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url):
                                                 nome = nome.replace('(PT/PT)',"")
                                                 nome = nome.replace('[PT-PT]',"")
                                                 nome = nome.replace('[PT/PT]',"")
+                                                nome = nome.replace('[PT-BR]',"")
+                                                nome = nome.replace('[PT/BR]',"")
+                                                nome = nome.replace(' (PT-PT)',"")
+                                                nome = nome.replace(' (PT/PT)',"")
+                                                nome = nome.replace(' [PT-PT]',"")
+                                                nome = nome.replace(' [PT/PT]',"")
+                                                nome = nome.replace(' [PT-BR]',"")
+                                                nome = nome.replace(' [PT/BR]',"")
+                                                nome = nome.replace('  '," ")
                                                 generos = re.compile('id="post-.+?" class="post-.+? post type-post status-publish format-standard hentry (.+?)">').findall(item)
                                                 if not generos: generos = re.compile('post type-post status-publish format-standard hentry (.+?)id="post-.+?">').findall(item)
                                                 if generos:
@@ -373,11 +382,11 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url):
                                                 if not ano:
                                                         ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
                                                         if ano:
-                                                                ano_filme = ': ' + ano[0]
+                                                                ano_filme = ': ' + ano[0].replace(' ','')
                                                         else:
                                                                 ano_filme = ''     
                                                 if ano:
-                                                        ano_filme = ano[0]
+                                                        ano_filme = ano[0].replace(' ','')
                                                         a_q = re.compile('\d+')
                                                         qq_aa = a_q.findall(nome)
                                                         for q_a_q_a in qq_aa:
@@ -400,7 +409,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url):
                                                         #addDir(nome,urletitulo[0][0],233,'','','')
                                                         if 'online' in genero and not 'series' in genero:
                                                                 #if 'OP\xc3\x87\xc3\x83O' in item:
-                                                                addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url,233,thumbnail[0].replace('s72-c','s320'),'','')
+                                                                addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url,233,thumbnail[0].replace('s72-c','s320'),'','')
                                                                 num_f = num_f + 1
                                                 except: pass
                         except: pass

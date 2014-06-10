@@ -17,7 +17,7 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket
 
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
@@ -404,7 +404,7 @@ def FILMES_encontrar_fontes_filmes_TPT(url):
                                                         #addDir(nome,urletitulo[0][0],233,'','','')
                                                         if 'online' in genero and not 'series' in genero:
                                                                 #if 'OP\xc3\x87\xc3\x83O' in item:
-                                                                addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url,233,thumbnail[0].replace('s72-c','s320'),'','')
+                                                                addDir('[B][COLOR green]- ' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url,233,thumbnail[0].replace('s72-c','s320'),'','')
                                                                 num_f = num_f + 1
                                                 except: pass
                         except: pass
