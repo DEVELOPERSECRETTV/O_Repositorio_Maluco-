@@ -21,7 +21,7 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlresolver,time,os
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -33,6 +33,7 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def PLAY_movie(url,name,iconimage,checker,fanart):
+        import urlresolver
         #if 'vk.com' not in url and 'video.mail.ru' not in url:
                 #dp = xbmcgui.DialogProgress()
                 #dp.create(name,'A sincronizar vídeos e legendas')
@@ -425,7 +426,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                         if checker == '' or checker == None: pass
                         else: xbmcPlayer.setSubtitles(checker)
                 except: pass
-        #return
+
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
 def PLAY_abrir_url(url):

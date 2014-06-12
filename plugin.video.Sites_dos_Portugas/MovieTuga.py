@@ -64,18 +64,27 @@ def MVT_Menu_Filmes_Por_Categorias(artfolder):
 		
 
 def MVT_encontrar_fontes_filmes(url):
-        conta_items = 1
-        if conta_items == 1:      
-                mensagemprogresso = xbmcgui.DialogProgress()
-                mensagemprogresso.create('Movie-Tuga', 'A Pesquisar','Por favor aguarde...')
-                mensagemprogresso.update(0)
+        progress = xbmcgui.DialogProgress()
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
         try:
 		html_source = MVT_abrir_url(url)
 	except: html_source = ''
 	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
 	if items != []:
 		print len(items)
+		num = len(items) + 0.0
 		for item in items:
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(len(items))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(len(items))
+                        #xbmc.sleep( 500 )
+                        if progress.iscanceled():
+                                break
                         thumb = ''
                         fanart = ''
                         url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
@@ -159,28 +168,7 @@ def MVT_encontrar_fontes_filmes(url):
                                 addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumb,'',fanart,ano[0],'')
                         except: pass
                         #---------------------------------------------------------------
-                        conta_items = conta_items + 1   
-                        if conta_items == 2:      
-                                mensagemprogresso.update(10)
-                        if conta_items == 4:
-                                mensagemprogresso.update(20)
-                        if conta_items == 6:
-                                mensagemprogresso.update(30)
-                        if conta_items == 8:      
-                                mensagemprogresso.update(40)
-                        if conta_items == 10:
-                                mensagemprogresso.update(50)
-                        if conta_items == 12:
-                                mensagemprogresso.update(60)
-                        if conta_items == 14:      
-                                mensagemprogresso.update(70)
-                        if conta_items == 16:
-                                mensagemprogresso.update(80)
-                        if conta_items == 17:
-                                mensagemprogresso.update(90)
-                        if conta_items == len(items):
-                                mensagemprogresso.update(100)
-                                mensagemprogresso.close()
+                        i = i + 1
                         #---------------------------------------------------------------
 	proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
 	try:

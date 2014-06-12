@@ -102,11 +102,6 @@ def TFV_Menu_Filmes_Por_Categorias(artfolder):
 
 def TFV_Menu_Series_A_a_Z(artfolder):
         i = 1
-        #conta_items = 1
-        #if conta_items == 1:      
-                #mensagemprogresso = xbmcgui.DialogProgress()
-                #mensagemprogresso.create('Tuga-Filmes.tv', 'A Pesquisar','Por favor aguarde...')
-                #mensagemprogresso.update(0)
         percent = 0
         message = ''
         progress.create('Progresso', 'A Pesquisar:')
@@ -123,7 +118,6 @@ def TFV_Menu_Series_A_a_Z(artfolder):
         for item_series in html_items_series:
                 series = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(item_series)
                 for endereco_series,nome_series in series:
-                        #percent = int( ( conta_items / num ) * 100)
                         percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(len(num_series))
                         progress.update( percent, "", message, "" )
@@ -179,8 +173,6 @@ def TFV_Menu_Series_A_a_Z(artfolder):
                         else: thumb = artfolder + 'ze-TFV1.png'
                         addDir('[COLOR yellow]' + nome_series + '[/COLOR] ',endereco_series+'\/series\/'+nome_series+'\/',47,thumb.replace('s72-c','s320'),'nao','')
                         #---------------------------------------------------------------
-                        #mensagemprogresso.update(percent)
-                        #conta_items = conta_items + 1
                         i = i + 1
                         #---------------------------------------------------------------
 
@@ -192,11 +184,6 @@ def TFV_Menu_Series_A_a_Z(artfolder):
 
 
 def TFV_encontrar_fontes_filmes(url,artfolder):
-        #conta_items = 1
-        #if conta_items == 1:      
-                #mensagemprogresso = xbmcgui.DialogProgress()
-                #mensagemprogresso.create('Tuga-Filmes.tv', 'A Pesquisar','Por favor aguarde...')
-                #mensagemprogresso.update(0)
         i = 1
         percent = 0
         message = ''
@@ -211,7 +198,6 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
 		print len(items)
 		num = len(items) + 0.0
 		for item in items:
-                        #percent = int( ( conta_items / num ) * 100)
                         percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
@@ -329,10 +315,6 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                 addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                         except: pass
                         #---------------------------------------------------------------
-                        #mensagemprogresso.update(percent)
-                        #if mensagemprogresso.iscanceled():
-                                #break
-                        #conta_items = conta_items + 1
                         i = i + 1
                         #---------------------------------------------------------------
 	else:
@@ -731,28 +713,29 @@ def TFV_encontrar_videos_series(name,url):
         if 'http://js.tuga-filmes.tv/counter/counter.html' in link_series: numero_de_fontes = numero_de_fontes - 1
         addDir1(name + ' ' + str(numero_de_fontes) + ' links','','',iconimage,False,'')
         addDir1('','','',iconimage,False,'')
-	if numero_de_fontes <= 5: divide = 5.0
-	if numero_de_fontes > 5 and numero_de_fontes <= 10: divide = 10.0
-	if numero_de_fontes > 10 and numero_de_fontes <= 15: divide = 15.0
-	if numero_de_fontes > 15 and numero_de_fontes <= 20: divide = 20.0
-	if numero_de_fontes > 20: divide = 25.0
 	if link_series:
                 try:
                         items_series = re.findall("<div class=\'id(.*?)</p>", link_series, re.DOTALL)
+                        divide = numero_de_fontes + 0.0
                         for item_vid_series in items_series:
                                 try:
                                         percent = int( ( i / divide ) * 100)
                                         message = str(i) + " de " + str(numero_de_fontes) + ' Links'
                                         progress.update( percent, "", message, "" )
                                         print str(i) + " de " + str(numero_de_fontes) + ' Links'
-                                        xbmc.sleep( 500 )
+                                        xbmc.sleep( 50 )
                                         if progress.iscanceled():
                                                 break
                                         if 'videomega' in item_vid_series:
                                                 try:                                      
                                                         videomega_video_nome = re.compile('>(.+?)</div></h3><p>').findall(item_vid_series)
                                                         videomega_video_url = re.compile('<iframe .+? src="(.+?)"').findall(item_vid_series)
-                                                        addDir('[B][COLOR green]' + videomega_video_nome[0] + '[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',videomega_video_url[0],30,iconimage,'','')
+                                                        nome = videomega_video_nome[0]
+                                                        nome = nome.replace('&#8217;',"'")
+                                                        nome = nome.replace('&#8211;',"-")
+                                                        nome = nome.replace('&#39;',"'")
+                                                        nome = nome.replace('&amp;','&')
+                                                        addDir('[B][COLOR green]' + nome + '[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',videomega_video_url[0],30,iconimage,'','')
                                                 except:pass
                                         if 'ep' and 'src' and 'iframe' in item_vid_series:
                                                 try:
@@ -763,6 +746,10 @@ def TFV_encontrar_videos_series(name,url):
                                                         identifica_video = re.compile('=(.*)').findall(not_videomega_video_url[0])                                                        
                                                         id_video = identifica_video[0]
                                                         src_href = 'src'
+                                                        nome_cada_episodio = nome_cada_episodio.replace('&#8217;',"'")
+                                                        nome_cada_episodio = nome_cada_episodio.replace('&#8211;',"-")
+                                                        nome_cada_episodio = nome_cada_episodio.replace('&#39;',"'")
+                                                        nome_cada_episodio = nome_cada_episodio.replace('&amp;','&')
                                                         TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
                                                 except:pass
                                         if 'href' and 'Clique' in item_vid_series:
@@ -774,6 +761,10 @@ def TFV_encontrar_videos_series(name,url):
                                                         identifica_video = re.compile('=(.*)').findall(not_videomega_video_url[0])                                                        
                                                         id_video = identifica_video[0]
                                                         src_href = 'href'
+                                                        nome_cada_episodio = nome_cada_episodio.replace('&#8217;',"'")
+                                                        nome_cada_episodio = nome_cada_episodio.replace('&#8211;',"-")
+                                                        nome_cada_episodio = nome_cada_episodio.replace('&#39;',"'")
+                                                        nome_cada_episodio = nome_cada_episodio.replace('&amp;','&')
                                                         TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
                                                 except:pass
                                         i = i + 1

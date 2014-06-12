@@ -34,18 +34,17 @@ artfolder = addonfolder + '/resources/img/'
 
 arr_series1 = [['' for i in range(87)] for j in range(1)]
 
-arr_filmes = ['' for i in range(100)]
-arrai_filmes = ['' for i in range(100)]
-thumb_filmes = ['' for i in range(100)]
+arr_series = ['' for i in range(200)]
+arrai_series = ['' for i in range(200)]
+_series = []
+arr_filmes = ['' for i in range(200)]
+arrai_filmes = ['' for i in range(200)]
+thumb_filmes = ['' for i in range(200)]
 arr_filmes[4] = '0'
 i=arr_filmes[4]
 
 arr_filmes_anima = []
 arrai_filmes_anima = []
-arr_series = []
-arry_series = []
-end_series = []
-_series = []
 
 progress = xbmcgui.DialogProgress()
 
@@ -57,8 +56,9 @@ def Filmes_Filmes_Filmes(url):
         a = 1
         percent = 0
         message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
+        site = ''
+        progress.create('Progresso', 'A Procurar')
+        progress.update( percent, 'A Procurar...'+site, message, "" )
         urlss = urllib.unquote(url)
         print urlss
         urls=re.compile('url_TFC=(.+?)&url_MVT=(.+?)&url_TFV=(.+?)&xpto=xpto&url_TPT=(.+?)&fim=fim').findall(urlss)
@@ -101,11 +101,12 @@ def Filmes_Filmes_Filmes(url):
 	if items != []:
 		print len(items)
 		num_perc = len(items)*.01
+		site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
 		#addDir(str(num_perc)+'  '+str(len(items)),'',507,artfolder + 'ze-TFV1.png','','')
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
-                        progress.update( percent, "", message, "" )
+                        progress.update(percent, 'A Procurar em '+site, message, "")
                         print str(a) + " de " + str(int(num))
                         xbmc.sleep( 100 )
                         if progress.iscanceled():
@@ -133,7 +134,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('&#8230;',"...")
                         nome = nome.replace('  '," ")
                         nome = nome.replace('&#8211;',"-")
-                        nome_filme = nome+'[COLOR orange] | TFV[/COLOR]'
+                        nome_filme = nome#+'[COLOR orange] | TFV[/COLOR]'
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
                         nome = nome.replace('   ',"")
@@ -160,6 +161,7 @@ def Filmes_Filmes_Filmes(url):
 	if items != []:
 		print len(items)
 		num_perc = len(items)*.01
+		site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
 		#addDir(str(num_perc)+'  '+str(len(items)),'',507,artfolder + 'ze-TFV1.png','','')
 		for item in items:
 			urletitulo = re.compile("<a href=\'(.+?)\' title=\'(.+?)\'>").findall(item)
@@ -183,7 +185,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('&#8230;',"...")
                         nome = nome.replace('  '," ")
                         nome = nome.replace('&#8211;',"-")
-                        nome_filme = nome+'[COLOR orange] | TFC[/COLOR]'
+                        nome_filme = nome#+'[COLOR orange] | TFC[/COLOR]'
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
                         nome = nome.replace('   ',"")
@@ -191,7 +193,7 @@ def Filmes_Filmes_Filmes(url):
                                 if 'ASSISTIR O FILME' in item:
                                         percent = int( ( a / num ) * 100)
                                         message = str(a) + " de " + str(int(num))
-                                        progress.update( percent, "", message, "" )
+                                        progress.update( percent, 'A Procurar em '+site, message, "" )
                                         print str(a) + " de " + str(int(num))
                                         xbmc.sleep( 100 )
                                         if progress.iscanceled():
@@ -200,7 +202,7 @@ def Filmes_Filmes_Filmes(url):
                                         arr_filmes.insert(i,nome)
                                         arrai_filmes.insert(i,nome_filme)
                                         thumb_filmes.insert(i,thumb)
-                        else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'[COLOR orange] | TFC[/COLOR]'
+                        else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]#+'[COLOR orange] | TFC[/COLOR]'
                         i = i + 1
         else: pass
         if items != []:
@@ -216,6 +218,7 @@ def Filmes_Filmes_Filmes(url):
 	if items != []:
 		print len(items)
 		num_perc = len(items)*.01
+		site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
 		#addDir(str(num_perc)+'  '+str(len(items)),'',507,artfolder + 'ze-TFV1.png','','')
 		for item in items:
 			url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
@@ -235,14 +238,14 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('&#8230;',"...")
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('  '," ")
-                        nome_filme = nome+'[COLOR orange] | MVT[/COLOR]'
+                        nome_filme = nome#+'[COLOR orange] | MVT[/COLOR]'
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
                         nome = nome.replace('   ',"")
                         if nome not in arr_filmes:
                                 percent = int( ( a / num ) * 100)
                                 message = str(a) + " de " + str(int(num))
-                                progress.update( percent, "", message, "" )
+                                progress.update( percent, 'A Procurar em '+site, message, "" )
                                 print str(a) + " de " + str(int(num))
                                 xbmc.sleep( 100 )
                                 if progress.iscanceled():
@@ -251,7 +254,7 @@ def Filmes_Filmes_Filmes(url):
                                 arr_filmes.insert(i,nome)
                                 arrai_filmes.insert(i,nome_filme)
                                 thumb_filmes.insert(i,thumbnail.replace('s72-c','s320'))
-                        else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]+'[COLOR orange] | MVT[/COLOR]'
+                        else: arrai_filmes[arr_filmes.index(nome)]=arrai_filmes[arr_filmes.index(nome)]#+'[COLOR orange] | MVT[/COLOR]'
                         i = i + 1
         else: pass
         if items != []:
@@ -271,6 +274,7 @@ def Filmes_Filmes_Filmes(url):
 	if items != []:
 		print len(items)
 		num_perc = len(items)*.01
+		site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
 		#addDir(str(num_perc)+'  '+str(len(items)),'',507,artfolder + 'ze-TFV1.png','','')
 		for item in items:
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
@@ -307,14 +311,14 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('[PT-PT]',"")
                         nome = nome.replace('[PT/PT]',"")
                         nome = nome.replace('  '," ")
-                        nome_filme = nome+'[COLOR orange] | TPT[/COLOR]'
+                        nome_filme = nome#+'[COLOR orange] | TPT[/COLOR]'
                         nome = nome.replace(' ',"")
                         nome = nome.replace('  ',"")
                         nome = nome.replace('   ',"")
                         if nome not in arr_filmes:
                                 percent = int( ( a / num ) * 100)
                                 message = str(a) + " de " + str(int(num))
-                                progress.update( percent, "", message, "" )
+                                progress.update( percent, 'A Procurar em '+site, message, "" )
                                 print str(a) + " de " + str(int(num))
                                 xbmc.sleep( 100 )
                                 if progress.iscanceled():
@@ -348,8 +352,9 @@ def Filmes_Filmes_Filmes(url):
 def Series_Series(url):
         percent = 0
         message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
+        site = ''
+        progress.create('Progresso', 'A Procurar')
+        progress.update( percent, 'A Procurar...'+site, message, "" )
         #---------------------------------------------------------------------------
         s = 1
         try:
@@ -391,19 +396,18 @@ def Series_Series(url):
 				s = s + 1
 	#------------------------------------------------------------------------------
         num = s + 0.0
+        site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
         try:
                 html_series_source = MASH_abrir_url(url)
         except: html_series_source = ''
 	html_items_series = re.findall("<div class=\'widget Label\' id=\'Label3\'>\n<h2>S\xc3\xa9ries(.*?)<div class=\'clear\'>", html_series_source, re.DOTALL)
-        #print len(html_items_series)
         i=1
         for item_series in html_items_series:
                 series = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(item_series)
-                #if series: addDir1('Existe'+str(len(series)),'','',artfolder + 'ze-TFV1.png',False,'')
                 for endereco_series,nome_series in series:
                         percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(s)
-                        progress.update( percent, "", message, "" )
+                        progress.update( percent, 'A Procurar em '+site, message, "" )
                         print str(i) + " de " + str(s)
                         if selfAddon.getSetting('series-thumb-mashup') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
@@ -425,11 +429,11 @@ def Series_Series(url):
                                         thumbnail = re.compile('src="(.+?)"').findall(items[0])
                                         if thumbnail : thumb = thumbnail[0]
                         else: thumb = artfolder + 'series.png'
-                        end_series.append((endereco_series))
-                        arr_series.append(nome_series)
-                        arry_series.append((nome_series,endereco_series,thumb))
+                        arr_series[i]=nome_series
+                        arrai_series[i]=nome_series+'[COLOR orange] \/ TFV[/COLOR]'+'|'+thumb+'|'+endereco_series
                         i=i+1
         url = 'http://toppt.net/'
+        site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
         try:
                 html_series_source = MASH_abrir_url(url)
         except: html_series_source = ''
@@ -454,28 +458,32 @@ def Series_Series(url):
                                 if items != []:
                                         thumbnail = re.compile('src="(.+?)"').findall(items[0])
                                         if thumbnail : thumb = thumbnail[0]
-                                        #if 'Ver Aqui' in items[0]:
                         else: thumb = artfolder + 'series.png'
                         if nome_series in arr_series:
-                                n_i =''
+                                arrai_series[arr_series.index(nome_series)]=arrai_series[arr_series.index(nome_series)].replace('[COLOR orange] \/ TFV[/COLOR]','[COLOR orange] \/ TFV \/ TPT[/COLOR]')
+                                arrai_series[arr_series.index(nome_series)]=arrai_series[arr_series.index(nome_series)]+'|'+endereco_series
                         if nome_series not in arr_series:
                                 percent = int( ( i / num ) * 100)
                                 message = str(i) + " de " + str(s)
-                                progress.update( percent, "", message, "" )
+                                progress.update( percent, 'A Procurar em '+site, message, "" )
                                 print str(i) + " de " + str(s)
                                 if selfAddon.getSetting('series-thumb-mashup') == "false": xbmc.sleep( 50 )
                                 if progress.iscanceled():
                                         break
-                                arr_series.append(nome_series)
-                                arry_series.append((nome_series,endereco_series,thumb))
+                                arr_series[i]=nome_series
+                                arrai_series[i]=nome_series+'[COLOR orange] \/ TPT[/COLOR]'+'|'+thumb+'|'+endereco_series
                                 i=i+1
         if selfAddon.getSetting('series-thumb-mashup') == "false":
                 addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(i) + ')','','',artfolder + 'series.png',False,'')
                 addDir1('','','',artfolder + 'series.png',False,'')
-        arry_series.sort()
-        end_series.sort()
-        for x in range(len(arry_series)):
-                addDir(arry_series[x][0],arry_series[x][1],9,arry_series[x][2],'nao','')
+        arrai_series.sort()
+        for x in range(len(arrai_series)):
+                if arrai_series[x] != '':
+                        _s = re.compile('(.+?)[|](.+?)[|](.+?)[|](.*)').findall(arrai_series[x])
+                        if _s: addDir(_s[0][0].replace('\/','|'),_s[0][2]+'|'+_s[0][3],9,_s[0][1],'nao','')
+                        else:
+                                _s = re.compile('(.+?)[|](.+?)[|](.*)').findall(arrai_series[x])
+                                addDir(_s[0][0].replace('\/','|'),_s[0][2],9,_s[0][1],'nao','')
 
 
 
@@ -483,8 +491,9 @@ def Filmes_Animacao(url):
         a = 1
         percent = 0
         message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
+        site = ''
+        progress.create('Progresso', 'A Procurar')
+        progress.update( percent, 'A Procurar...'+site, message, "" )
         urlss = urllib.unquote(url)
         print urlss
         urls=re.compile('url_TFC=(.+?)&url_MVT=(.+?)&url_TFV=(.+?)&xpto=xpto&url_TPT=(.+?)&fim=fim').findall(urlss)
@@ -520,6 +529,7 @@ def Filmes_Animacao(url):
 		num = num + len(items)
 	num = num + 0.0
 	#--------------------------------------------------
+	site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
         try:
 		html_source = MASH_abrir_url(url_TFV)
 	except: html_source = ''
@@ -529,7 +539,7 @@ def Filmes_Animacao(url):
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
-                        progress.update( percent, "", message, "" )
+                        progress.update( percent, 'A Procurar em '+site, message, "" )
                         print str(a) + " de " + str(int(num))
                         xbmc.sleep( 100 )
                         if progress.iscanceled():
@@ -576,6 +586,7 @@ def Filmes_Animacao(url):
         else: pass
         #----------------------------------------------------------------------------------------------------
         i = 1
+        site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
         try:
 		html_source = MASH_abrir_url(url_TFC)
 	except: html_source = ''
@@ -616,7 +627,7 @@ def Filmes_Animacao(url):
                                 if 'ASSISTIR O FILME' in item:
                                         percent = int( ( a / num ) * 100)
                                         message = str(a) + " de " + str(int(num))
-                                        progress.update( percent, "", message, "" )
+                                        progress.update( percent, 'A Procurar em '+site, message, "" )
                                         print str(a) + " de " + str(int(num))
                                         xbmc.sleep( 100 )
                                         if progress.iscanceled():
@@ -633,6 +644,7 @@ def Filmes_Animacao(url):
         else: pass
         #----------------------------------------------------------------------------------------------------
         i = 3
+        site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
 	try:
 		html_source = MASH_abrir_url(url_MVT)
 	except: html_source = ''
@@ -671,7 +683,7 @@ def Filmes_Animacao(url):
                         if nome not in arr_filmes_anima:
                                 percent = int( ( a / num ) * 100)
                                 message = str(a) + " de " + str(int(num))
-                                progress.update( percent, "", message, "" )
+                                progress.update( percent, 'A Procurar em '+site, message, "" )
                                 print str(a) + " de " + str(int(num))
                                 xbmc.sleep( 100 )
                                 if progress.iscanceled():
@@ -691,6 +703,7 @@ def Filmes_Animacao(url):
         else: pass
         #----------------------------------------------------------------------------------------------------
         i = 0
+        site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
         try:
 		html_source = MASH_abrir_url(url_TPT)
 	except: html_source = ''
@@ -755,7 +768,7 @@ def Filmes_Animacao(url):
                         if nome not in arr_filmes_anima:
                                 percent = int( ( a / num ) * 100)
                                 message = str(a) + " de " + str(int(num))
-                                progress.update( percent, "", message, "" )
+                                progress.update( percent, 'A Procurar em '+site, message, "" )
                                 print str(a) + " de " + str(int(num))
                                 xbmc.sleep( 100 )
                                 if progress.iscanceled():
@@ -779,7 +792,7 @@ def Filmes_Animacao(url):
         #x = int(arr_filmes[5])
         sinopse = ''
         for x in range(len(arrai_filmes_anima)):
-                addDir(arr_filmes_anima[x]+'M','url',7,arrai_filmes_anima[x][2],sinopse,'')
+                addDir(arr_filmes_anima[x],'url',7,arrai_filmes_anima[x][2],sinopse,'')
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
         addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_animacao,6,artfolder + 'animacao.png','','')

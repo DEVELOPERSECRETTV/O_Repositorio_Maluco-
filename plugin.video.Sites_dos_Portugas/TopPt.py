@@ -36,7 +36,7 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
-mensagemprogresso = xbmcgui.DialogProgress()
+#mensagemprogresso = xbmcgui.DialogProgress()
 progress = xbmcgui.DialogProgress()
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -187,15 +187,17 @@ def TPT_Menu_Series_A_a_Z(artfolder):
 		
 
 def TPT_encontrar_fontes_filmes(url,artfolder):
-        if '-series-' in url:
-                series = 1
-                url = url.replace('-series-','')
-        else: series = 0
         percent = 0
         message = ''
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
         i = 1
+        n_name = name.replace('[COLOR yellow]','')
+        n_name = n_name.replace('[/COLOR]','')
+        if '-series-' in url:
+                series = 1
+                url = url.replace('-series-','')
+        else: series = 0
         if 'Seguinte' not in name:
                 if selfAddon.getSetting('movies-view') == "0":
                         addDir1(name + ':','','',iconimage,False,'')
@@ -298,7 +300,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         if fanart == '':
-                                nome_pesquisa = nome
+                                nome_pesquisa = n_name
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -318,7 +320,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                if 'Temporada' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                if 'Temporada' in urletitulo[0][1] or 'Season' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
                                 else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
                                 try:
                                         html_pesquisa = TPT_abrir_url(url_pesquisa)
@@ -356,7 +358,6 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 qualidade = ''
                                 ano_filme = ''
                                 audio_filme = ''
-                                
                         try:
                                 addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0],233,thumb,'',fanart,ano_filme,'')
                         except: pass
@@ -516,7 +517,7 @@ def TPT_encontrar_videos_filmes(name,url):
                                                                 message = str(i) + " de " + str(len(lin))
                                                                 progress.update( percent, "", message, "" )
                                                                 print str(i) + " de " + str(len(lin))
-                                                                xbmc.sleep( 500 )
+                                                                xbmc.sleep( 100 )
                                                                 if progress.iscanceled():
                                                                         break
                                                                 conta_id_video = 0

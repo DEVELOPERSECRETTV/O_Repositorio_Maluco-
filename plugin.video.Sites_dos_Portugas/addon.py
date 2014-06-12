@@ -18,7 +18,7 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,urlresolver,time,os
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,time,os
 import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TextBoxes,TopPt,FilmesAnima,Filmes,Series,Mashup,Armagedom,Filmes3D
 from array import array
 from string import capwords
@@ -40,7 +40,7 @@ arr_filmes_animacao = ['' for i in range(100)]
 arrai_filmes_animacao  = ['' for i in range(100)]
 thumb_filmes_animacao  = ['' for i in range(100)]
 
-mensagemok = xbmcgui.Dialog().ok
+#mensagemok = xbmcgui.Dialog().ok
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
@@ -221,11 +221,11 @@ except: pass
 try: fanart=urllib.unquote_plus(params["fanart"])
 except: pass
 
-#print "Mode: "+str(mode)
-#print "URL: "+str(url)
-#print "Name: "+str(name)
-#print "Checker: "+str(checker)
-#print "Iconimage: "+str(iconimage)
+print "Mode: "+str(mode)
+print "URL: "+str(url)
+print "Name: "+str(name)
+print "Checker: "+str(checker)
+print "Iconimage: "+str(iconimage)
 
 if mode==None or url==None or len(url)<1:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -272,9 +272,21 @@ elif mode == 26:
                 xbmcplugin.setContent(int(sys.argv[1]), 'movies')
                 xbmc.executebuiltin("Container.SetViewMode(502)")
                 xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode == 27: Series.SERIES_pesquisar(nome_pesquisa)
-elif mode == 28: Series.SERIES_fontes_pesquisa_TFV(url,pesquisou)
-elif mode == 29: Series.SERIES_fontes_TPT(url_pesquisa)
+elif mode == 27:
+        Series.SERIES_pesquisar(nome_pesquisa)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 28:
+        Series.SERIES_fontes_pesquisa_TFV(url,pesquisou)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 29:
+        Series.SERIES_fontes_TPT(url_pesquisa)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 #elif mode==5: toppt.listar_texto(name,url)
 #elif mode==7: toppt.play_movie(url,name,iconimage,checker,fanart)
 #elif mode==16: toppt.top_pt_encontrar_categorias(name,url,siteurl,pornID)

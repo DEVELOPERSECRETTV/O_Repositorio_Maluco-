@@ -29,6 +29,8 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
+progress = xbmcgui.DialogProgress()
+
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENUS    -----------------------------------------------------------------#
 
@@ -78,18 +80,26 @@ def TFC_Menu_Filmes_Por_Categorias(artfolder):
 
 def TFC_encontrar_fontes_filmes(url):
         pt_en = 0
-        conta_items = 1
-        if conta_items == 1:      
-                mensagemprogresso = xbmcgui.DialogProgress()
-                mensagemprogresso.create('Tuga-Filmes.com', 'A Pesquisar','Por favor aguarde...')
-                mensagemprogresso.update(0)
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
 	try:
 		html_source = TFC_abrir_url(url)
 	except: html_source = ''
 	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
 	if items != []:
 		print len(items)
+		num = len(items) + 0.0
 		for item in items:
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(len(items))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(len(items))
+                        #xbmc.sleep( 500 )
+                        if progress.iscanceled():
+                                break
                         fanart = ''
                         thumb = ''
                         versao = ''
@@ -233,28 +243,7 @@ def TFC_encontrar_fontes_filmes(url):
 				if 'ASSISTIR O FILME' in item: addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumb.replace('s1600','s320').replace('.gif','.jpg'),'',fanart,ano,'')
 			except: pass
 			#---------------------------------------------------------------
-                        conta_items = conta_items + 1   
-                        if conta_items == 2:      
-                                mensagemprogresso.update(10)
-                        if conta_items == 4:
-                                mensagemprogresso.update(20)
-                        if conta_items == 6:
-                                mensagemprogresso.update(30)
-                        if conta_items == 8:      
-                                mensagemprogresso.update(40)
-                        if conta_items == 10:
-                                mensagemprogresso.update(50)
-                        if conta_items == 12:
-                                mensagemprogresso.update(60)
-                        if conta_items == 14:      
-                                mensagemprogresso.update(70)
-                        if conta_items == 16:
-                                mensagemprogresso.update(80)
-                        if conta_items == 17:
-                                mensagemprogresso.update(90)
-                        if conta_items == len(items):
-                                mensagemprogresso.update(100)
-                                mensagemprogresso.close()
+                        i = i + 1
                         #---------------------------------------------------------------
 	else:
 		items = re.compile("<a href=\'(.+?)\' title=.+?>Assistir Online - </div>(.+?)<div id=\'player\'>").findall(html_source)
