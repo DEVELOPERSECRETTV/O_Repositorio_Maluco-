@@ -56,9 +56,11 @@ def FILMES_pesquisar(nome_pesquisa):
                 if ':' in nome_pesquisa:
                         nome_p = re.compile('(.+?)[:].+?').findall(nome_pesquisa)
                         nome_pesquisa = nome_p[0]
+        #addDir1(nome_pesquisa,'','','',False,'')
         nome_pesquisa = nome_pesquisa.replace('é','e')
         nome_pesquisa = nome_pesquisa.replace('ê','e')
         nome_pesquisa = nome_pesquisa.replace('á','a')
+        nome_pesquisa = nome_pesquisa.replace('à','a')
         nome_pesquisa = nome_pesquisa.replace('ã','a')
         nome_pesquisa = nome_pesquisa.replace('è','e')
         nome_pesquisa = nome_pesquisa.replace('í','i')
@@ -72,18 +74,17 @@ def FILMES_pesquisar(nome_pesquisa):
                 a_q = re.compile('\w+')
                 qq_aa = a_q.findall(nome_pesquisa)
                 nome_pesquisa = ''
-                conta = 0
+                conta = 0 
                 for q_a_q_a in qq_aa:
-                        if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                        #if q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                        if len(q_a_q_a) > 0 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                 if conta == 0:
                                         nome_pesquisa = q_a_q_a
                                         conta = 1
                                 else: nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
         nome_pesquisa = nome_pesquisa.lower()
         nome_pesquisa = nome_pesquisa.replace('  ','')
+        #addDir1(nome_pesquisa,'','','',False,'')
         encode=urllib.quote(nome_pesquisa)
-        addDir1(str(encode),'','','',False,'')
         a = 0
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
         percent = int( ( a / 4.0 ) * 100)
@@ -219,15 +220,15 @@ def FILMES_encontrar_fontes_filmes_TFC(url):
                                 qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
                                 thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
                                 print urletitulo,thumbnail
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#8217;',"'")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#8211;',"-")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#038;',"&")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#39;',"'")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&amp;','&')
                                 ano = 'Ano'
                                 qualidade = ''
                                 e_qua = 'nao'
                                 calid = ''
-                                urletitulo[0][1] = urletitulo[0][1].replace('&#8217;',"'")
-                                urletitulo[0][1] = urletitulo[0][1].replace('&#8211;',"-")
-                                urletitulo[0][1] = urletitulo[0][1].replace('&#038;',"&")
-                                urletitulo[0][1] = urletitulo[0][1].replace('&#39;',"'")
-                                urletitulo[0][1] = urletitulo[0][1].replace('&amp;','&')
                                 if qualidade_ano != []:
                                         for q_a in qualidade_ano:
                                                 #addDir1(q_a,'','','',False,'')
@@ -290,14 +291,13 @@ def FILMES_encontrar_fontes_filmes_TFC(url):
                                                                 qualidade = qualidade.replace(q_t,'')
                                                 if qualidade == 'Pt Pt':
                                                         qualidade = 'PT-PT'
-                                                else:
-                                                        qualidade = ''
+                                else:
+                                        qualidade = ''
                                 if 'Pt Pt' in qualidade:
                                         qualidade = qualidade.replace('Pt Pt','PT-PT')
                                 if 'PT PT' in qualidade:
                                         qualidade = qualidade.replace('PT PT','PT-PT')
                                 try:
-                                        
                                         addDir('[B][COLOR orange]TFC | [/COLOR][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
                                         num_f = num_f + 1
                                 except: pass
@@ -403,6 +403,15 @@ def FILMES_encontrar_fontes_filmes_TPT(url):
                                                 nome = nome.replace('(PT/PT)',"")
                                                 nome = nome.replace('[PT-PT]',"")
                                                 nome = nome.replace('[PT/PT]',"")
+                                                nome = nome.replace('[PT-BR]',"")
+                                                nome = nome.replace('[PT/BR]',"")
+                                                nome = nome.replace(' (PT-PT)',"")
+                                                nome = nome.replace(' (PT/PT)',"")
+                                                nome = nome.replace(' [PT-PT]',"")
+                                                nome = nome.replace(' [PT/PT]',"")
+                                                nome = nome.replace(' [PT-BR]',"")
+                                                nome = nome.replace(' [PT/BR]',"")
+                                                nome = nome.replace('  '," ")
                                                 generos = re.compile('id="post-.+?" class="post-.+? post type-post status-publish format-standard hentry (.+?)">').findall(item)
                                                 if not generos: generos = re.compile('post type-post status-publish format-standard hentry (.+?)id="post-.+?">').findall(item)
                                                 if generos:

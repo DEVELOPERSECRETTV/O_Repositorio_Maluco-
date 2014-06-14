@@ -148,7 +148,7 @@ def Filmes_Filmes_Filmes(url):
         if items != []:
                 proxima_TFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
                 url_TFV = proxima_TFV[0].replace('&amp;','&')
-        else: mensagemprogresso.update(25)
+        else: pass
         #----------------------------------------------------------------------------------------------------
         i = 1
         #mensagemprogresso.create('Tuga-Filmes.com', 'A Pesquisar','Por favor aguarde...')
@@ -341,10 +341,11 @@ def Filmes_Filmes_Filmes(url):
         #x = int(arr_filmes[5])        
         for x in range(len(arrai_filmes)):
         #for x in range(12):
-                if arrai_filmes[x] != '':
+                if arrai_filmes[x] != '':           #8
                         addDir(arrai_filmes[x],'url',8,thumb_filmes[x],'nao','')
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
+        #Filmes_Filmes_Filmes(url_filmes_filmes)
         addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_filmes,507,artfolder + 'filmes.png','','')
 
 
@@ -658,7 +659,8 @@ def Filmes_Animacao(url):
                                 url = 'http:' + url[0]
                                 endereco_filme = url
                         else: endereco_filme = url[0]
-                        titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
+                        titulo = re.compile("<div id='titulosingle'><h3>(.+?)</h3></div>").findall(item)
+                        if not titulo: titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
                         ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
                         thumb = re.compile('src="(.+?)"').findall(item)
                         if 'http' not in thumb[0]:

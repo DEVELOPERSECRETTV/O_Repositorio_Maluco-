@@ -194,6 +194,11 @@ def encontrar_fontes_filmes_TFC(url):
                                 qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
                                 thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
                                 print urletitulo,thumbnail
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#8217;',"'")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#8211;',"-")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#038;',"&")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#39;',"'")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&amp;','&')
                                 ano = 'Ano'
                                 qualidade = ''
                                 e_qua = 'nao'
@@ -260,8 +265,9 @@ def encontrar_fontes_filmes_TFC(url):
                                                                 qualidade = qualidade.replace(q_t,'')
                                                 if qualidade == 'Pt Pt':
                                                         qualidade = 'PT-PT'
-                                                else:
-                                                        qualidade = ''
+                                else:
+                                        qualidade = ''
+                                #addDir1(url,'','','',False,'')
                                 if 'Pt Pt' in qualidade:
                                         qualidade = qualidade.replace('Pt Pt','PT-PT')
                                 if 'PT PT' in qualidade:

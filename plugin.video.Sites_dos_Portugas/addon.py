@@ -251,17 +251,61 @@ elif mode ==  6:
 elif mode ==  7: passar_nome_pesquisa_animacao(name)
 elif mode ==  8: passar_nome_pesquisa_filmes(name)
 elif mode ==  9: passar_nome_pesquisa_series(name)
-elif mode == 10: FilmesAnima.FILMES_ANIMACAO_pesquisar(nome_pesquisa)
-elif mode == 11: FilmesAnima.FILMES_ANIMACAO_fontes_pesquisa_TFV(url,pesquisou)
-elif mode == 12: FilmesAnima.FILMES_ANIMACAO_fontes_filmes_TFC(url_pesquisa)
-elif mode == 13: FilmesAnima.FILMES_ANIMACAO_fontes_pesquisa_MVT(url)
-elif mode == 14: FilmesAnima.FILMES_ANIMACAO_fontes_filmes_TPT(url_pesquisa)
-elif mode == 20: Filmes.FILMES_pesquisar(nome_pesquisa)
-elif mode == 21: Filmes.FILMES_fontes_pesquisa_TFV(url,pesquisou)
-elif mode == 22: Filmes.FILMES_fontes_filmes_TFC(url_pesquisa)
-elif mode == 23: Filmes.FILMES_fontes_pesquisa_MVT(url)
-elif mode == 24: Filmes.FILMES_fontes_filmes_TPT(url_pesquisa)
-elif mode == 25: Filmes_Filmes()
+elif mode == 10:
+        FilmesAnima.FILMES_ANIMACAO_pesquisar(nome_pesquisa)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 11:
+        FilmesAnima.FILMES_ANIMACAO_fontes_pesquisa_TFV(url,pesquisou)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 12:
+        FilmesAnima.FILMES_ANIMACAO_fontes_filmes_TFC(url_pesquisa)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 13:
+        FilmesAnima.FILMES_ANIMACAO_fontes_pesquisa_MVT(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 14:
+        FilmesAnima.FILMES_ANIMACAO_fontes_filmes_TPT(url_pesquisa)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 20:
+        Filmes.FILMES_pesquisar(nome_pesquisa)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 21:
+        Filmes.FILMES_fontes_pesquisa_TFV(url,pesquisou)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 22:
+        Filmes.FILMES_fontes_filmes_TFC(url_pesquisa)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 23:
+        Filmes.FILMES_fontes_pesquisa_MVT(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 24:
+        Filmes.FILMES_fontes_filmes_TPT(url_pesquisa)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 25:
+        Filmes_Filmes()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 26:
         Mashup.Series_Series(url)
         if selfAddon.getSetting('series-thumb-mashup') == "true":

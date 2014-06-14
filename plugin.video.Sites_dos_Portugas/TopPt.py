@@ -380,10 +380,6 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
 
 def TPT_encontrar_videos_filmes(name,url):
         i = 1
-        percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
         conta_id_video = 0
         contaultimo = 0
         addDir1(name,'','',iconimage,False,'')
@@ -511,6 +507,10 @@ def TPT_encontrar_videos_filmes(name,url):
                                                 linksseccaoultimo = re.findall('ODIO (.+?)<br.+?>\n(.+?)</p>',newmatch[0],re.DOTALL)
                                                 num = len(lin) + 0.0
                                                 if linksseccao:
+                                                        percent = 0
+                                                        message = ''
+                                                        progress.create('Progresso', 'A Pesquisar:')
+                                                        progress.update( percent, "", message, "" )
                                                         ultima_parte = ''
                                                         for parte1,parte2 in linksseccao:
                                                                 percent = int( ( i / num ) * 100)

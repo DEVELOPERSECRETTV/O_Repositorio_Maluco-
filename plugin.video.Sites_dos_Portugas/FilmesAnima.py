@@ -57,6 +57,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa):
         nome_pesquisa = nome_pesquisa.replace('é','e')
         nome_pesquisa = nome_pesquisa.replace('ê','e')
         nome_pesquisa = nome_pesquisa.replace('á','a')
+        nome_pesquisa = nome_pesquisa.replace('à','a')
         nome_pesquisa = nome_pesquisa.replace('ã','a')
         nome_pesquisa = nome_pesquisa.replace('è','e')
         nome_pesquisa = nome_pesquisa.replace('í','i')
@@ -74,13 +75,15 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa):
                 qq_aa = a_q.findall(nome_pesquisa)
                 nome_pesquisa = ''
                 for q_a_q_a in qq_aa:
-                        if len(q_a_q_a) > 2 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                        if len(q_a_q_a) > 0 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                         #if len(q_a_q_a) > 1:
                                 if conta == 0:
                                         nome_pesquisa = q_a_q_a
                                         conta = 1
                                 else:
                                         nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+        nome_pesquisa = nome_pesquisa.lower()
+        nome_pesquisa = nome_pesquisa.replace('  ','')
         encode=urllib.quote(nome_pesquisa)
         a = 0
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
@@ -167,6 +170,9 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                 nome = urletitulo[0][1]
                                 nome = nome.replace('&#8217;',"'")
                                 nome = nome.replace('&#8211;',"-")
+                                nome = nome.replace('&#038;',"&")
+                                nome = nome.replace('&#39;',"'")
+                                nome = nome.replace('&amp;','&')
                                 nome = nome.replace('(PT-PT)',"")
                                 nome = nome.replace('(PT/PT)',"")
                                 nome = nome.replace('[PT-PT]',"")
@@ -215,6 +221,11 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url):
                                 qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
                                 thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
                                 print urletitulo,thumbnail
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#8217;',"'")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#8211;',"-")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#038;',"&")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&#39;',"'")
+                                #urletitulo[0][1] = urletitulo[0][1].replace('&amp;','&')
                                 ano = 'Ano'
                                 qualidade = ''
                                 e_qua = 'nao'
@@ -283,16 +294,17 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url):
                                                         qualidade = 'PT-PT'
                                 else:
                                         qualidade = ''
+                                #addDir1(url,'','','',False,'')
                                 if 'Pt Pt' in qualidade:
                                         qualidade = qualidade.replace('Pt Pt','PT-PT')
                                 if 'PT PT' in qualidade:
                                         qualidade = qualidade.replace('PT PT','PT-PT')
                                 try:
-                                        if 'ASSISTIR O FILME' in item: addDir('[B][COLOR orange]TFC | [/COLOR][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
+                                        addDir('[B][COLOR orange]TFC | [/COLOR][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
                                         num_f = num_f + 1
                                 except: pass
                         except: pass
-	else: num_f = 0
+        else: num_f = 0
 	if num_f == 0:
                 if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','','','',False,'')
 	return
@@ -316,7 +328,8 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url):
                                 if 'http' not in url[0]:
                                         urllink = 'http:' + url[0]
                                 else: urllink = url[0]
-                                titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
+                                titulo = re.compile("<div id='titulosingle'><h3>(.+?)</h3></div>").findall(item)
+                                if not titulo: titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
                                 if 'Qualidade:' in item:
                                         qualidade = re.compile("<strong>Qualidade:</strong>(.+?)</div>").findall(item)
                                         qualidade_filme = qualidade[0].replace('&#8211;',"-")
@@ -330,6 +343,9 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url):
                                 print url,thumbnail
                                 titulo[0] = titulo[0].replace('&#8217;',"'")
                                 titulo[0] = titulo[0].replace('&#8211;',"-")
+                                titulo[0] = titulo[0].replace('&#038;',"&")
+                                titulo[0] = titulo[0].replace('&#39;',"'")
+                                titulo[0] = titulo[0].replace('&amp;','&')
                                 try:
                                         addDir('[B][COLOR orange]MVT | [/COLOR][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink,103,thumbnail.replace('s72-c','s320'),'','')
                                         num_f = num_f + 1
@@ -383,6 +399,8 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url):
                                                 nome = nome.replace('&#8217;',"'")
                                                 nome = nome.replace('&#8211;',"-")
                                                 nome = nome.replace('&#038;',"&")
+                                                nome = nome.replace('&#39;',"'")
+                                                nome = nome.replace('&amp;','&')
                                                 nome = nome.replace('(PT-PT)',"")
                                                 nome = nome.replace('(PT/PT)',"")
                                                 nome = nome.replace('[PT-PT]',"")
