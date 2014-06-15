@@ -33,12 +33,17 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def PLAY_movie(url,name,iconimage,checker,fanart):
-        import urlresolver
+        #addLink(url,'','')
+        url = url.replace('////','///')
+        try:
+                import urlresolver
+        except: pass
         #if 'vk.com' not in url and 'video.mail.ru' not in url:
                 #dp = xbmcgui.DialogProgress()
                 #dp.create(name,'A sincronizar vídeos e legendas')
                 #dp.update(0)
-	nome = re.compile('///(.+?)[)].+?[(].+?[)]').findall(url)
+        if '////' in url: nome = re.compile('////(.+?)[)].+?[(].+?[)]').findall(url)
+	else: nome = re.compile('///(.+?)[)].+?[(].+?[)]').findall(url)
 	if not nome:
                 nome = re.compile('///(.*)').findall(url)
                 nomefilme = nome[0]

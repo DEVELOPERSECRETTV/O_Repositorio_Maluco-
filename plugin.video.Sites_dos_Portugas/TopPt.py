@@ -208,10 +208,10 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
 	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
 	if items != []:
 		print len(items)
+		num = len(items) + 0.0
 		for item in items:
                         fanart = ''
                         thumb = ''
-                        num = len(items) + 0.0
                         percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
@@ -300,7 +300,12 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         if fanart == '':
-                                nome_pesquisa = n_name
+                                if series == 1: nome_pesquisa = n_name
+                                else:
+                                        n = re.compile('(.+?)[[].+?[]]').findall(nome)
+                                        if n: nome_pesquisa = n[0]
+                                        else: nome_pesquisa = nome
+                                #addDir1(nome_pesquisa,'','',iconimage,False,'')
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -327,23 +332,46 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 except: html_pesquisa = ''
                                 items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
                                 if items_pesquisa != []:
-                                        if thumb == '':
-                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                        url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
-                                        if url_filme_pesquisa:
-                                                url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
-                                                try:
-                                                        html_pesquisa = TPT_abrir_url(url_pesquisa)
-                                                except: html_pesquisa = ''
-                                                url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                if url_fan:
-                                                        for urls_fanart in url_fan:
-                                                                url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
-                                                                if url_fanart:
-                                                                        fanart = url_fanart[0].replace('w300','w1280')
-                                                                else:
-                                                                        fanart = thumb
+                                        if n:
+                                                for its in items_pesquisa:
+                                                        y = re.compile('<h3><a href=".+?" title=".+?">.+?</a> <span>[(](.+?)[)]</span></h3>').findall(its)
+                                                        if y: year = y[0]
+                                                        if str(year) == str(ano_filme):
+                                                                if thumb == '':
+                                                                        thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(its)
+                                                                        if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                                                url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(its)
+                                                                if url_filme_pesquisa:
+                                                                        url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
+                                                                        try:
+                                                                                html_pesquisa = TPT_abrir_url(url_pesquisa)
+                                                                        except: html_pesquisa = ''
+                                                                        url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                                        if url_fan:
+                                                                                for urls_fanart in url_fan:
+                                                                                        url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
+                                                                                        if url_fanart:
+                                                                                                fanart = url_fanart[0].replace('w300','w1280')
+                                                                                        else:
+                                                                                                fanart = thumb
+                                        else:
+                                                if thumb == '':
+                                                        thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                        if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                                url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
+                                                if url_filme_pesquisa:
+                                                        url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
+                                                        try:
+                                                                html_pesquisa = TPT_abrir_url(url_pesquisa)
+                                                        except: html_pesquisa = ''
+                                                        url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                        if url_fan:
+                                                                for urls_fanart in url_fan:
+                                                                        url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
+                                                                        if url_fanart:
+                                                                                fanart = url_fanart[0].replace('w300','w1280')
+                                                                        else:
+                                                                                fanart = thumb     
                                 else: fanart = thumb
                         if fanart == '': fanart = thumb
                         ano_filme = '('+ano_filme+')'

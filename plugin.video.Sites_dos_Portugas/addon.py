@@ -56,7 +56,7 @@ def MAIN_MENU():
         saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
         url_TPT = saber_url_todos[0]
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
-        url_filmes_filmes = urllib.urlencode(parameters)
+        url_filmes_filmes = urllib.urlencode(parameters)        #31
         #addDir1('[B][COLOR blue]Menu Principal[/COLOR][/B]','',31,artfolder + 'MPrin.png',False,'')
         #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         #addDir1('','','',artfolder,False,'')
@@ -83,6 +83,7 @@ def MAIN_MENU():
         #addDir('[B][COLOR green]FILMES[/COLOR][COLOR yellow]3D[/COLOR][COLOR red]CINEMA[/COLOR][/B] - [COLOR orange](NOVO)[/COLOR]','http://direct',401,artfolder + 'ze-MVT1.png','nao','')
         #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B]','url',331,artfolder + 'SdB1.png','nao','')
+        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]NI[/COLOR][COLOR red]ÇÕES[/COLOR][/B]','url',1000,artfolder + 'ze-icon3.png','nao','')
 
 
 
@@ -239,18 +240,46 @@ elif mode ==  1:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode ==  2: Pesquisar.encontrar_fontes_pesquisa_TFV(url,pesquisou)
-elif mode ==  3: Pesquisar.encontrar_fontes_filmes_TFC(url_pesquisa)
-elif mode ==  4: Pesquisar.encontrar_fontes_pesquisa_MVT(url)
-elif mode ==  5: Pesquisar.encontrar_fontes_filmes_TPT(url_pesquisa)
+elif mode ==  2:
+        Pesquisar.encontrar_fontes_pesquisa_TFV(url,pesquisou)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode ==  3:
+        Pesquisar.encontrar_fontes_filmes_TFC(url_pesquisa)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode ==  4:
+        Pesquisar.encontrar_fontes_pesquisa_MVT(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode ==  5:
+        Pesquisar.encontrar_fontes_filmes_TPT(url_pesquisa)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode ==  6:
         Mashup.Filmes_Animacao(url)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode ==  7: passar_nome_pesquisa_animacao(name)
-elif mode ==  8: passar_nome_pesquisa_filmes(name)
-elif mode ==  9: passar_nome_pesquisa_series(name)
+elif mode ==  7:
+        passar_nome_pesquisa_animacao(name)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode ==  8:
+        passar_nome_pesquisa_filmes(name)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode ==  9:
+        passar_nome_pesquisa_series(name)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 10:
         FilmesAnima.FILMES_ANIMACAO_pesquisar(nome_pesquisa)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -341,6 +370,7 @@ elif mode == 29:
 #----------------------------------------------  Tuga-Filmes.tv  ----------------------------------------------------
 elif mode == 30: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 31:
+        #addon.show_settings()
         TugaFilmesTV.TFV_MenuPrincipal(artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(502)")
@@ -546,8 +576,16 @@ elif mode == 503: Filmes_Filmes_TFC(i)
 elif mode == 504: Filmes_Filmes_MVT(i)
 elif mode == 505: Filmes_Filmes_TPT(i)
 elif mode == 506: declara_variaveis(url)
+#----------------------------------------------------------------------------------------------------------------------------------------------
 elif mode == 507:
         Mashup.Filmes_Filmes_Filmes(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+elif mode == 1000:
+        selfAddon.openSettings()
+        MAIN_MENU()
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
