@@ -82,7 +82,7 @@ def MVT_encontrar_fontes_filmes(url):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        #xbmc.sleep( 500 )
+                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 200 )
                         if progress.iscanceled():
                                 break
                         thumb = ''
@@ -140,30 +140,37 @@ def MVT_encontrar_fontes_filmes(url):
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
                                 if 'Temporada' in titulo[0]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
                                 else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                try:
-                                        html_pesquisa = MVT_abrir_url(url_pesquisa)
-                                except: html_pesquisa = ''
-                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                if items_pesquisa != []:
-                                        if thumb == '':
+                                if thumb == '' or 's1600' in thumb:
+                                        try:
+                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                        url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
-                                        if url_filme_pesquisa:
-                                                url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
-                                                try:
-                                                        html_pesquisa = MVT_abrir_url(url_pesquisa)
-                                                except: html_pesquisa = ''
-                                                url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                if url_fan:
-                                                        for urls_fanart in url_fan:
-                                                                url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
-                                                                if url_fanart:
-                                                                        fanart = url_fanart[0].replace('w300','w1280')
-                                                                else:
-                                                                        fanart = thumb
-                                else: fanart = thumb
-                        if fanart == '': fanart = thumb
+                                if selfAddon.getSetting('movie-fanart-MVT') == "true":
+                                        try:
+                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
+                                                if url_filme_pesquisa:
+                                                        url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
+                                                        try:
+                                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
+                                                        except: html_pesquisa = ''
+                                                        url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                        if url_fan:
+                                                                for urls_fanart in url_fan:
+                                                                        url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
+                                                                        if url_fanart:
+                                                                                fanart = url_fanart[0].replace('w300','w1280')
+                                                                        else:
+                                                                                fanart = thumb
+                                        else: fanart = thumb
+                        if selfAddon.getSetting('movie-fanart-MVT') == "true":
+                                if fanart == '': fanart = thumb
                         try:
                                 addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumb,'',fanart,ano[0],'')
                         except: pass

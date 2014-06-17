@@ -420,14 +420,8 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                         playlist.clear()             
                         playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
                         addLink(name,url,iconimage)
-                        #dp.update(33)
-                        #if dp.iscanceled(): return
                         xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
-                        #dp.update(66)
                         xbmcPlayer.play(playlist)
-                        #dp.update(100)
-                        #dp.close()
-                        #xbmc.Player().play(url)
                         if checker == '' or checker == None: pass
                         else: xbmcPlayer.setSubtitles(checker)
                 except: pass

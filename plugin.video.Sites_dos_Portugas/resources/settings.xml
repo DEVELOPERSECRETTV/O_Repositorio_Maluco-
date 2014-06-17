@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
    <category label="Definições gerais">
-      <setting label="[B][COLOR green]Definições Gerais:[/B][/COLOR]" type="lsep" />
-      <setting id="hide-porno" type="bool" label="Esconder menu porno" default="true"/>
+      <setting label="[COLOR yellow]Definições Gerais:[/COLOR]" type="lsep" />
+      <setting id="hide-porno" type="bool" label="Esconder menu M18" default="true"/>
    <!--   <setting id="hide-thumb" type="bool" label="Pesquisar thumbs de séries" default="false"/>  -->
    </category>
    <category label="Filmes">
-      <setting label="[B][COLOR green]Definições para Filmes:[/B][/COLOR]" type="lsep" />
-      <setting id="movie-fanart" type="bool" label="Procurar Fanart" default="true"/>
-      <setting id="movie-trailer" type="bool" label="Procurar Trailers" default="false"/>
+      <setting label="[COLOR yellow]Definições para Filmes:[/COLOR]" type="lsep" />
+      <setting label="[COLOR green]Fanart:[/COLOR]" type="lsep" />
+      <setting id="movie-fanart-TFV" type="bool" label="Procurar Fanart em TUGA-FILMES.tv" default="true"/>
+      <setting id="movie-fanart-TFC" type="bool" label="Procurar Fanart em TUGA-FILMES.com" default="true"/>
+      <setting id="movie-fanart-MVT" type="bool" label="Procurar Fanart em MOVIE-TUGA" default="true"/>
+      <setting id="movie-fanart-TPT" type="bool" label="Procurar Fanart em TOP-PT.net" default="true"/>
+  <!--<setting id="movie-trailer" type="bool" label="Procurar Trailers" default="false"/>  -->
     </category>
    <category label="Séries">
-      <setting label="[B][COLOR green]Definições para Séries:[/B][/COLOR]" type="lsep" />
+      <setting label="[COLOR yellow]Definições para Séries:[/COLOR]" type="lsep" />
+      <setting label="[COLOR green]Thumbnail:[/COLOR]" type="lsep" />
       <setting id="series-thumb-mashup" type="bool" label="Procurar thumbnail de Mashup de séries (Menu Principal)" default="false"/>
       <setting id="series-thumb-TFV" type="bool" label="Procurar thumbnail de séries A a Z (Tuga-Filmes.tv)" default="false"/>
       <setting id="series-thumb-TPT" type="bool" label="Procurar thumbnail de séries A a Z (Top-pt.net)" default="false"/>
+      <setting label="[COLOR green]Fanart:[/COLOR]" type="lsep" />
+      <setting id="series-fanart-TFV" type="bool" label="Procurar Fanart em TUGA-FILMES.tv" default="true"/>
+  <!--    <setting id="series-fanart-TFC" type="bool" label="Procurar Fanart em TUGA-FILMES.com" default="true"/>
+      <setting id="series-fanart-MVT" type="bool" label="Procurar Fanart em MOVIE-TUGA" default="true"/>    -->
+      <setting id="series-fanart-TPT" type="bool" label="Procurar Fanart em TOP-PT.net" default="true"/>
   <!--    <setting id="series-fanart" type="bool" label="Procurar Fanart" default="true"/>
       <setting id="series-season-poster" type="bool" label="Procurar poster da temporda" default="true"/>
       <setting id="series-episode-thumbnails" type="bool" label="Procurar thumbnail do episodio" default="true"/>     -->
    </category>
    <category label="Tipos de vista">
-      <setting label="[B][COLOR green]Definições de vista:[/B][/COLOR]" type="lsep" />
+      <setting label="[COLOR yellow]Definições de vista:[/COLOR]" type="lsep" />
       <setting id="menu-view" type="enum" label="Vista - Menus" values="Lista|Lista Grande|Miniatura" default="0"/>
       <setting id="movies-view" type="enum" label="Vista - Filmes" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="6"/>
       <setting id="series-view" type="enum" label="Vista - Séries" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="3"/>

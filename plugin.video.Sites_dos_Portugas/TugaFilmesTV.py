@@ -202,7 +202,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        #xbmc.sleep( 500 )
+                        if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 200 )
                         if progress.iscanceled():
                                 break
                         thumb = ''
@@ -271,6 +271,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                 nome_pesquisa = nome_pesquisa.replace('Ú','U')
                                 nome_pesquisa = nome_pesquisa.replace('ç','c')
                                 nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                nome_pesquisa = nome_pesquisa.replace('.',"")
                                 a_q = re.compile('\w+')
                                 qq_aa = a_q.findall(nome_pesquisa)
                                 nome_pesquisa = ''
@@ -279,30 +280,37 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
                                 if 'Temporada' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
                                 else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                try:
-                                        html_pesquisa = TFV_abrir_url(url_pesquisa)
-                                except: html_pesquisa = ''
-                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                if items_pesquisa != []:
-                                        if thumb == '' or 's1600' in thumb:
+                                if thumb == '' or 's1600' in thumb:
+                                        try:
+                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                        url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
-                                        if url_filme_pesquisa:
-                                                url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
-                                                try:
-                                                        html_pesquisa = TFV_abrir_url(url_pesquisa)
-                                                except: html_pesquisa = ''
-                                                url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                if url_fan:
-                                                        for urls_fanart in url_fan:
-                                                                url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
-                                                                if url_fanart:
-                                                                        fanart = url_fanart[0].replace('w300','w1280')
-                                                                else:
-                                                                        fanart = thumb
-                                else: fanart = thumb
-                        if fanart == '': fanart = thumb
+                                if selfAddon.getSetting('movie-fanart-TFV') == "true":
+                                        try:
+                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
+                                                if url_filme_pesquisa:
+                                                        url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
+                                                        try:
+                                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                                        except: html_pesquisa = ''
+                                                        url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                        if url_fan:
+                                                                for urls_fanart in url_fan:
+                                                                        url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
+                                                                        if url_fanart:
+                                                                                fanart = url_fanart[0].replace('w300','w1280')
+                                                                        else:
+                                                                                fanart = thumb
+                                        else: fanart = thumb
+                        if selfAddon.getSetting('movie-fanart-TFV') == "true":
+                                if fanart == '': fanart = thumb
                         if qualidade:
                                 qualidade = qualidade[0]
                         else:
@@ -350,23 +358,26 @@ def TFV_encontrar_videos_filmes(name,url):
         if 'Parte 1' and 'Parte 2' not in link2:
                 num_leg = 1
                 num_ptpt = 1
-                matchvid = re.findall("Assistir(.+?)\n</p>", link2, re.DOTALL)
+                matchvid = re.findall("Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("Assistir(.+?)</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("Assistir(.+?)\n</p>", link2, re.DOTALL)
                 if matchvid:
                         for matchsvids in matchvid:
                                 if 'Legendado' in matchsvids and num_leg == 1:
                                         num_leg = 0
                                         if num_ptpt == 0: conta_id_video = 0
                                         addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
-                                if 'Portug' in matchsvids and num_ptpt == 1:
-                                        num_ptpt = 0
-                                        if num_leg == 0: conta_id_video = 0
-                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                if 'Portug' in matchsvids or 'PT-PT' in matchsvids:
+                                        if num_ptpt == 1:
+                                                num_ptpt = 0
+                                                if num_leg == 0: conta_id_video = 0
+                                                addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                 if '</iframe>' in matchsvids:
                                         videomeg = re.compile('<iframe frameborder="0" height="400" scrolling="no" src="(.+?)"').findall(matchsvids)
                                         if videomeg:
                                                 conta_id_video = conta_id_video + 1
                                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'','')
-                                match = re.compile('<a href="(.+?)"').findall(matchsvids)
+                                match = re.compile('href="(.+?)"').findall(matchsvids)
                                 url = match[0] 
                                 if url != '':
                                         try:
@@ -383,7 +394,9 @@ def TFV_encontrar_videos_filmes(name,url):
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'','')
 
         if 'Parte 1' and 'Parte 2' in link2:
-                matchvideo = re.findall("Assistir(.+?)\n</p>", link2, re.DOTALL)
+                matchvid = re.findall("Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("Assistir(.+?)</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("Assistir(.+?)\n</p>", link2, re.DOTALL)
                 if matchvideo:
                         for parte in matchvideo:
                                 nome_video = re.compile('(.+?)</div></h3><p>').findall(parte)
@@ -539,17 +552,23 @@ def TFV_encontrar_fontes_series_recentes(url):
 		print len(items)
 		num = len(items) + 0.0
 		for item in items:
+                        thumb = ''
+                        fanart = ''
                         percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        xbmc.sleep( 200 )
+                        if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 200 )
                         if progress.iscanceled():
                                 break
 			urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
 			ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
+			if ano: ano = '('+ano[0]+')'
 			qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
+			if qualidade: qualidade = '('+qualidade[0]+')'
 			thumbnail = re.compile('src="(.+?)"').findall(item)
+			if thumbnail: thumb = thumbnail[0]
+                        else: thumb = ''
 			print urletitulo,thumbnail
 			nome = urletitulo[0][1]
                         nome = nome.replace('&#8217;',"'")
@@ -562,8 +581,67 @@ def TFV_encontrar_fontes_series_recentes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
+                        n = re.compile('(.+?)[(].+?[)]').findall(nome)
+                        if n: nome_original = n[0]
+                        else: nome_original = nome
+                        if fanart == '':
+                                nome_pesquisa = nome_original
+                                #addDir1(nome_pesquisa,'','',artfolder + 'ze-TFV1.png',False,'')
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                nome_pesquisa = nome_pesquisa.replace('Agents Of S.H.I.E.L.D',"Agents Of S.H.I.E.L.D.")
+                                nome_pesquisa = nome_pesquisa.replace('.',"")
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                if thumb == '' or 's1600' in thumb:
+                                        try:
+                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                if selfAddon.getSetting('series-fanart-TFV') == "true":
+                                        try:
+                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
+                                                if url_filme_pesquisa:
+                                                        url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
+                                                        try:
+                                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                                        except: html_pesquisa = ''
+                                                        url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                        if url_fan:
+                                                                for urls_fanart in url_fan:
+                                                                        url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
+                                                                        if url_fanart:
+                                                                                fanart = url_fanart[0].replace('w300','w1280')
+                                                                        else:
+                                                                                fanart = thumb
+                                        else: fanart = thumb
+                        if selfAddon.getSetting('series-fanart-TFV') == "true":
+                                if fanart == '': fanart = thumb
 			try:
-				addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],42,thumbnail[0].replace('s72-c','s320'),'sim','')
+				addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0],42,thumb.replace('s72-c','s320'),'',fanart,ano,'')
 			except: pass
 			i = i + 1
 	else:
@@ -607,7 +685,7 @@ def TFV_encontrar_fontes_series_A_a_Z(url):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        #xbmc.sleep( 500 )
+                        if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 200 )
                         if progress.iscanceled():
                                 break
                         thumb = ''
@@ -651,6 +729,8 @@ def TFV_encontrar_fontes_series_A_a_Z(url):
                                 nome_pesquisa = nome_pesquisa.replace('Ú','U')
                                 nome_pesquisa = nome_pesquisa.replace('ç','c')
                                 nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                nome_pesquisa = nome_pesquisa.replace('Agents Of S.H.I.E.L.D',"Agents Of S.H.I.E.L.D.")
+                                nome_pesquisa = nome_pesquisa.replace('.',"")
                                 a_q = re.compile('\w+')
                                 qq_aa = a_q.findall(nome_pesquisa)
                                 nome_pesquisa = ''
@@ -658,30 +738,37 @@ def TFV_encontrar_fontes_series_A_a_Z(url):
                                         if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
                                 url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
-                                try:
-                                        html_pesquisa = TFV_abrir_url(url_pesquisa)
-                                except: html_pesquisa = ''
-                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                if items_pesquisa != []:
-                                        if thumb == '' or 's1600' in thumb:
+                                if thumb == '' or 's1600' in thumb:
+                                        try:
+                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                        url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
-                                        if url_filme_pesquisa:
-                                                url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
-                                                try:
-                                                        html_pesquisa = TFV_abrir_url(url_pesquisa)
-                                                except: html_pesquisa = ''
-                                                url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                if url_fan:
-                                                        for urls_fanart in url_fan:
-                                                                url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
-                                                                if url_fanart:
-                                                                        fanart = url_fanart[0].replace('w300','w1280')
-                                                                else:
-                                                                        fanart = thumb
-                                else: fanart = thumb
-                        if fanart == '': fanart = thumb
+                                if selfAddon.getSetting('series-fanart-TFV') == "true":
+                                        try:
+                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
+                                                if url_filme_pesquisa:
+                                                        url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
+                                                        try:
+                                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
+                                                        except: html_pesquisa = ''
+                                                        url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                        if url_fan:
+                                                                for urls_fanart in url_fan:
+                                                                        url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
+                                                                        if url_fanart:
+                                                                                fanart = url_fanart[0].replace('w300','w1280')
+                                                                        else:
+                                                                                fanart = thumb
+                                        else: fanart = thumb
+                        if selfAddon.getSetting('series-fanart-TFV') == "true":
+                                if fanart == '': fanart = thumb
                         if series == 1:
                                 n = re.compile('[(](.+?)[)]').findall(nome)
                                 qualidade = ''
