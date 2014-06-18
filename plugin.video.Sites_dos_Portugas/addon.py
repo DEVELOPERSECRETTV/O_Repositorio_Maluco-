@@ -194,6 +194,7 @@ def setViewMode_filmes():
                 addon_log("Skin: "+xbmc.getSkinDir())
 
 def setViewMode_series():
+        xbmcplugin.setContent(int(sys.argv[1]), 'series')
         if not selfAddon.getSetting('series-view') == "8":
             try:
                 if selfAddon.getSetting('series-view') == "0": # List
@@ -217,6 +218,7 @@ def setViewMode_series():
                 addon_log("Skin: "+xbmc.getSkinDir())
 
 def setViewMode_menuPrincipal():
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         if not selfAddon.getSetting('menu-principal-view') == "3":
             try:
                 if selfAddon.getSetting('menu-principal-view') == "0": # List
@@ -230,6 +232,7 @@ def setViewMode_menuPrincipal():
                 addon_log("Skin: "+xbmc.getSkinDir())
 
 def setViewMode_menuTFV():
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         if not selfAddon.getSetting('menu-TFV-view') == "3":
             try:
                 if selfAddon.getSetting('menu-TFV-view') == "0": # List
@@ -243,6 +246,7 @@ def setViewMode_menuTFV():
                 addon_log("Skin: "+xbmc.getSkinDir())
 
 def setViewMode_menuTFC():
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         if not selfAddon.getSetting('menu-TFC-view') == "3":
             try:
                 if selfAddon.getSetting('menu-TFC-view') == "0": # List
@@ -256,6 +260,7 @@ def setViewMode_menuTFC():
                 addon_log("Skin: "+xbmc.getSkinDir())
 
 def setViewMode_menuMVT():
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         if not selfAddon.getSetting('menu-MVT-view') == "3":
             try:
                 if selfAddon.getSetting('menu-MVT-view') == "0": # List
@@ -269,6 +274,7 @@ def setViewMode_menuMVT():
                 addon_log("Skin: "+xbmc.getSkinDir())
 
 def setViewMode_menuTPT():
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         if not selfAddon.getSetting('menu-TPT-view') == "3":
             try:
                 if selfAddon.getSetting('menu-TPT-view') == "0": # List
@@ -460,7 +466,7 @@ elif mode == 29:
 #----------------------------------------------  Tuga-Filmes.tv  ----------------------------------------------------
 elif mode == 30: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 31:
-        setViewMode_menuTFV()
+        #setViewMode_menuTFV()
         TugaFilmesTV.TFV_MenuPrincipal(artfolder)
         setViewMode_menuTFV()
         #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -520,7 +526,7 @@ elif mode == 57: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 #----------------------------------------------  Tuga-Filmes.com  --------------------------------------------------
 elif mode == 70: print "", Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 71:
-        setViewMode_menuTFC()
+        #setViewMode_menuTFC()
         TugaFilmesCom.TFC_MenuPrincipal(artfolder)
         setViewMode_menuTFC()
         #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -555,7 +561,7 @@ elif mode == 89: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 #----------------------------------------------  MOVIETUGA  -------------------------------------------------------
 elif mode == 100: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 101:
-        setViewMode_menuMVT()
+        #setViewMode_menuMVT()
         MovieTuga.MVT_MenuPrincipal(artfolder)
         setViewMode_menuMVT()
         #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -576,7 +582,7 @@ elif mode == 109: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 #-----------------------------------------------  Top-Pt.com  ------------------------------------------------------
 #elif mode == 230: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 231:
-        setViewMode_menuTPT()
+        #setViewMode_menuTPT()
         TopPt.TPT_MenuPrincipal(artfolder)
         setViewMode_menuTPT()
         #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
