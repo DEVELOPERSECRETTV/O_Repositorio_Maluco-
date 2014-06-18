@@ -415,6 +415,8 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
         #if 'vk.com' not in url and 'video.mail.ru' not in url and 'video.tt' not in url:
         if 'vk.com' not in url and 'video.mail.ru' not in url:
                 try:
+                        #win = xbmcgui.Window(10000)
+                        #win.setProperty('1ch.playing.title', name)
                         ####addLink(name+url,match[0],'')
                         playlist = xbmc.PlayList(1)
                         playlist.clear()             

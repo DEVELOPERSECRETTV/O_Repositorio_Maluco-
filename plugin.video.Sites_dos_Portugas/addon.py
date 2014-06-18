@@ -170,7 +170,7 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         return ok
 
 
-def setViewMode():
+def setViewMode_filmes():
         if not selfAddon.getSetting('movies-view') == "8":
             try:
                 if selfAddon.getSetting('movies-view') == "0": # List
@@ -191,6 +191,94 @@ def setViewMode():
                     xbmc.executebuiltin('Container.SetViewMode(515)')
             except:
                 addon_log("SetViewMode Failed: "+selfAddon.getSetting('movies-view'))
+                addon_log("Skin: "+xbmc.getSkinDir())
+
+def setViewMode_series():
+        if not selfAddon.getSetting('series-view') == "8":
+            try:
+                if selfAddon.getSetting('series-view') == "0": # List
+                    xbmc.executebuiltin('Container.SetViewMode(502)')
+                elif selfAddon.getSetting('series-view') == "1": # Big List
+                    xbmc.executebuiltin('Container.SetViewMode(51)')
+                elif selfAddon.getSetting('series-view') == "2": # Thumbnails
+                    xbmc.executebuiltin('Container.SetViewMode(500)')
+                elif selfAddon.getSetting('series-view') == "3": # Poster Wrap
+                    xbmc.executebuiltin('Container.SetViewMode(501)')
+                elif selfAddon.getSetting('series-view') == "4": # Fanart
+                    xbmc.executebuiltin('Container.SetViewMode(508)')
+                elif selfAddon.getSetting('series-view') == "5":  # Media info
+                    xbmc.executebuiltin('Container.SetViewMode(504)')
+                elif selfAddon.getSetting('series-view') == "6": # Media info 2
+                    xbmc.executebuiltin('Container.SetViewMode(503)')
+                elif selfAddon.getSetting('series-view') == "7": # Media info 3
+                    xbmc.executebuiltin('Container.SetViewMode(515)')
+            except:
+                addon_log("SetViewMode Failed: "+selfAddon.getSetting('series-view'))
+                addon_log("Skin: "+xbmc.getSkinDir())
+
+def setViewMode_menuPrincipal():
+        if not selfAddon.getSetting('menu-principal-view') == "3":
+            try:
+                if selfAddon.getSetting('menu-principal-view') == "0": # List
+                    xbmc.executebuiltin('Container.SetViewMode(502)')
+                elif selfAddon.getSetting('menu-principal-view') == "1": # Big List
+                    xbmc.executebuiltin('Container.SetViewMode(51)')
+                elif selfAddon.getSetting('menu-principal-view') == "2": # Thumbnails
+                    xbmc.executebuiltin('Container.SetViewMode(500)')
+            except:
+                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-principal-view'))
+                addon_log("Skin: "+xbmc.getSkinDir())
+
+def setViewMode_menuTFV():
+        if not selfAddon.getSetting('menu-TFV-view') == "3":
+            try:
+                if selfAddon.getSetting('menu-TFV-view') == "0": # List
+                    xbmc.executebuiltin('Container.SetViewMode(502)')
+                elif selfAddon.getSetting('menu-TFV-view') == "1": # Big List
+                    xbmc.executebuiltin('Container.SetViewMode(51)')
+                elif selfAddon.getSetting('menu-TFV-view') == "2": # Thumbnails
+                    xbmc.executebuiltin('Container.SetViewMode(500)')
+            except:
+                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-TFV-view'))
+                addon_log("Skin: "+xbmc.getSkinDir())
+
+def setViewMode_menuTFC():
+        if not selfAddon.getSetting('menu-TFC-view') == "3":
+            try:
+                if selfAddon.getSetting('menu-TFC-view') == "0": # List
+                    xbmc.executebuiltin('Container.SetViewMode(502)')
+                elif selfAddon.getSetting('menu-TFC-view') == "1": # Big List
+                    xbmc.executebuiltin('Container.SetViewMode(51)')
+                elif selfAddon.getSetting('menu-TFC-view') == "2": # Thumbnails
+                    xbmc.executebuiltin('Container.SetViewMode(500)')
+            except:
+                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-TFC-view'))
+                addon_log("Skin: "+xbmc.getSkinDir())
+
+def setViewMode_menuMVT():
+        if not selfAddon.getSetting('menu-MVT-view') == "3":
+            try:
+                if selfAddon.getSetting('menu-MVT-view') == "0": # List
+                    xbmc.executebuiltin('Container.SetViewMode(502)')
+                elif selfAddon.getSetting('menu-MVT-view') == "1": # Big List
+                    xbmc.executebuiltin('Container.SetViewMode(51)')
+                elif selfAddon.getSetting('menu-MVT-view') == "2": # Thumbnails
+                    xbmc.executebuiltin('Container.SetViewMode(500)')
+            except:
+                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-MVT-view'))
+                addon_log("Skin: "+xbmc.getSkinDir())
+
+def setViewMode_menuTPT():
+        if not selfAddon.getSetting('menu-TPT-view') == "3":
+            try:
+                if selfAddon.getSetting('menu-TPT-view') == "0": # List
+                    xbmc.executebuiltin('Container.SetViewMode(502)')
+                elif selfAddon.getSetting('menu-TPT-view') == "1": # Big List
+                    xbmc.executebuiltin('Container.SetViewMode(51)')
+                elif selfAddon.getSetting('menu-TPT-view') == "2": # Thumbnails
+                    xbmc.executebuiltin('Container.SetViewMode(500)')
+            except:
+                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-TPT-view'))
                 addon_log("Skin: "+xbmc.getSkinDir())
         
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -229,11 +317,13 @@ print "Checker: "+str(checker)
 print "Iconimage: "+str(iconimage)
 
 if mode==None or url==None or len(url)<1:
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        setViewMode_menuPrincipal()
+        #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        #xbmc.executebuiltin("Container.SetViewMode(500)")
         MAIN_MENU()
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        setViewMode_menuPrincipal()
+        #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        #xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode ==  1:
         Pesquisar.pesquisar()
@@ -370,10 +460,11 @@ elif mode == 29:
 #----------------------------------------------  Tuga-Filmes.tv  ----------------------------------------------------
 elif mode == 30: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 31:
-        #addon.show_settings()
+        setViewMode_menuTFV()
         TugaFilmesTV.TFV_MenuPrincipal(artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(502)")
+        setViewMode_menuTFV()
+        #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        #xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 32:
         TugaFilmesTV.TFV_encontrar_fontes_filmes(url,artfolder)
@@ -429,9 +520,11 @@ elif mode == 57: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 #----------------------------------------------  Tuga-Filmes.com  --------------------------------------------------
 elif mode == 70: print "", Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 71:
+        setViewMode_menuTFC()
         TugaFilmesCom.TFC_MenuPrincipal(artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(502)")
+        setViewMode_menuTFC()
+        #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        #xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 72:
         TugaFilmesCom.TFC_encontrar_fontes_filmes(url)
@@ -462,9 +555,11 @@ elif mode == 89: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 #----------------------------------------------  MOVIETUGA  -------------------------------------------------------
 elif mode == 100: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 101:
+        setViewMode_menuMVT()
         MovieTuga.MVT_MenuPrincipal(artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(502)")
+        setViewMode_menuMVT()
+        #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        #xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 102:
         MovieTuga.MVT_encontrar_fontes_filmes(url)
@@ -481,9 +576,11 @@ elif mode == 109: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 #-----------------------------------------------  Top-Pt.com  ------------------------------------------------------
 #elif mode == 230: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 231:
+        setViewMode_menuTPT()
         TopPt.TPT_MenuPrincipal(artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(502)")
+        setViewMode_menuTPT()
+        #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        #xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 232:
         TopPt.TPT_encontrar_fontes_filmes(url,artfolder)

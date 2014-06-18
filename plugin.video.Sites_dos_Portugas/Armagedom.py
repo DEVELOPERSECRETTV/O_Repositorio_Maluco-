@@ -1158,7 +1158,7 @@ def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
                                                                         videolink = re.compile('proxy.link=(.+?)&proxy.image').findall(link3)
                                                                         if videolink: url_video = videolink[0]
                                                                         else: url_video = ''
-                                                                if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
+                                                                if '.jpg' not in url_video and '.png' not in url_video and 'images' not in url_video: num_fonte = num_fonte + 1
                                                                 ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)                                                                
                                                 if 'direito' in link2:
                                                         urls_videos = re.findall('<div class="direito">(.*?)</body>',link2,re.DOTALL)
@@ -1177,7 +1177,7 @@ def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
                                                                         videolink = re.compile('proxy.link=(.+?)&proxy.image').findall(link3)
                                                                         if videolink: url_video = videolink[0]
                                                                         else: url_video = ''
-                                                                if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
+                                                                if '.jpg' not in url_video and '.png' not in url_video and 'images' not in url_video: num_fonte = num_fonte + 1
                                                                 ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)
                                                 if 'direito' not in link2 and 'esquerdo' not in link2:
                                                         urls_video = re.compile('<a href="(.+?)"').findall(link2)
@@ -1193,7 +1193,7 @@ def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
                                                                         videolink = re.compile('proxy.link=(.+?)&proxy.image').findall(link3)
                                                                         if videolink: url_video = videolink[0]
                                                                         else: url_video = ''
-                                                                if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
+                                                                if '.jpg' not in url_video and '.png' not in url_video and 'images' not in url_video: num_fonte = num_fonte + 1
                                                                 ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)                               
                 
 
@@ -1218,7 +1218,7 @@ def ARM_encontrar_videos_series(name,url):
                                         id_video = re.compile('id=(.*)').findall(url_video)
                                         if id_video: id_video = id_video[0]
                                         else: id_video = ''
-                                        if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
+                                        if '.jpg' not in url_video and '.png' not in url_video and 'images' not in url_video: num_fonte = num_fonte + 1
                                         ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
                         urls_video = re.compile('SRC="(.+?)"').findall(match)
                         if urls_video:
@@ -1226,7 +1226,7 @@ def ARM_encontrar_videos_series(name,url):
                                         id_video = re.compile('id=(.*)').findall(url_video)
                                         if id_video: id_video = id_video[0]
                                         else: id_video = ''
-                                        if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
+                                        if '.jpg' not in url_video and '.png' not in url_video and 'images' not in url_video: num_fonte = num_fonte + 1
                                         ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
                 matchvideo = re.findall('<div class="post-content">(.*?)<!-- Post Content -->', link2, re.DOTALL)
                 for match in matchvideo:
@@ -1236,7 +1236,7 @@ def ARM_encontrar_videos_series(name,url):
                                         id_video = re.compile('id=(.*)').findall(url_video)
                                         if id_video: id_video = id_video[0]
                                         else: id_video = ''
-                                        if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
+                                        if '.jpg' not in url_video and '.png' not in url_video and 'images' not in url_video: num_fonte = num_fonte + 1
                                         ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
                         urls_video = re.compile('SRC="(.+?)"').findall(match)
                         if urls_video:
@@ -1244,7 +1244,7 @@ def ARM_encontrar_videos_series(name,url):
                                         id_video = re.compile('id=(.*)').findall(url_video)
                                         if id_video: id_video = id_video[0]
                                         else: id_video = ''
-                                        if '.jpg' not in url_video and '.png' not in url_video: num_fonte = num_fonte + 1
+                                        if '.jpg' not in url_video and '.png' not in url_video and 'images' not in url_video: num_fonte = num_fonte + 1
                                         ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
                 #matchvideo = re.findall('<div class="capa">(.*?)</div>', link2, re.DOTALL)#--------------------------------------------------
                 if 'megafilmeshd.net' in url:
@@ -1346,7 +1346,7 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                         url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
                 except:pass    
-        if "putlocker" in url or 'armage.php' in url:
+        if "putlocker" in url:
                 try:
                         url = 'http://www.firedrive.com/embed/' + id_video
                         print url
@@ -1359,6 +1359,19 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                         print url
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if 'armage.php' in url:
+                try:
+                        if len(id_video) == 16:
+                                url = 'http://www.firedrive.com/embed/' + id_video
+                                print url
+                                url = url + '///' + name
+                                addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
+                        if len(id_video) == 13:
+                                url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video
+                                print url
+                                url = url + '///' + name
+                                addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
     	if "primeshare" in url:
                 try:
