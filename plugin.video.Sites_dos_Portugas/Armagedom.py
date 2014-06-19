@@ -60,7 +60,7 @@ def ARM_MenuPrincipal():
 			addDir('[B][COLOR red]M+18 - [/COLOR][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.megavideoporno.org/porno/filmes',350,artfolder,'nao','')
         #----------------------------------------------------------------------
         addDir1('','','',artfolder,False,'')
-        addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/category/animacao',356,artfolder,'nao','')	
+        addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/',356,artfolder,'nao','')	
 	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/category/animacao',349,artfolder,'nao','')
 	#addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/',349,artfolder,'nao','')
 	addDir('Pesquisar - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/?s-btn=Enviar&s=',334,artfolder,'nao','')
@@ -131,8 +131,26 @@ def ARM_Menu_Filmes_Por_Categorias():
 def ARM_Menu_Filmes_Por_Categorias_MEGA_tv():
         addDir1(name,'','',artfolder,False,'')
         addDir1('','','',artfolder,False,'')
-        html_categorias_source = ARM_abrir_url(url)
-	html_items_categorias = re.findall('<div id="header_centro_menu">(.*?)<div id="header_centro_busca">', html_categorias_source, re.DOTALL)
+        try:
+                html_categorias_source = ARM_abrir_url(url)
+        except: html_categorias_source = ''
+        html_items_categorias = re.findall('<div class="menu">(.*?)</div><!--menu-->', html_categorias_source, re.DOTALL)
+        if html_items_categorias:
+                for item_categorias in html_items_categorias:
+                        filmes_por_categoria = re.compile('<li class=".+?"><a href="(.+?)">(.+?)</a></li>').findall(item_categorias)
+                        for endereco_categoria,nome_categoria in filmes_por_categoria:
+                                if 'megafilmeshd.tv' not in nome_categoria: endereco_categoria = 'http://megafilmeshd.tv' + endereco_categoria
+                                if 'Home' in nome_categoria and len(endereco_categoria)>2: nome_categoria = 'Recentes'
+                                if 'Seriados' not in nome_categoria and 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria and 'blank' not in endereco_categoria:
+                                        if 'ultimos' in nome_categoria:
+                                                nome_categoria = 'Últimos'
+                                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder,'nao','')
+        #else:
+        url_ = 'http://megafilmeshd.tv/category/animacao'
+        try:
+                html_categorias_source = ARM_abrir_url(url_)
+        except: html_categorias_source = ''
+        html_items_categorias = re.findall('<div id="header_centro_menu">(.*?)<div id="header_centro_busca">', html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile('href="(.+?)" target="_blank" title="(.+?)"').findall(item_categorias)
@@ -307,7 +325,7 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
                 items = re.findall('class="link-tumb">(.*?)<div class="cat', atualizados[0], re.DOTALL)
         else:
                 items = re.findall('class="link-tumb">(.*?)<div class="cat', html_source, re.DOTALL)
-	if not items: items = re.findall('<li class="create-tooltip"(.*?)</a></li>', html_source, re.DOTALL)
+	if not items: items = re.findall('<li class="create-tooltip"(.*?)</li>', html_source, re.DOTALL)
 	#addDir1(str(len(items)),'','',iconimage,False,'')
 	dubleg = ''
 	if items != []:
@@ -885,7 +903,7 @@ def ARM_encontrar_videos_filmes(name,url):
                                                                         vlink = re.findall('<embed(.*?)</object>', link2, re.DOTALL)
                                                                         if vlink: linkv = re.compile('src="(.+?)"').findall(vlink[0])
                                                                         if linkv: url_video = linkv[0]
-                                                                        addDir1(url_video+'----','','',iconimage,False,'')
+                                                                        #addDir1(url_video+'----','','',iconimage,False,'')
                                                                         if 'adsnewflut' not in url_video: num_fonte = num_fonte + 1
                                                                         if 'flashx.tv' not in url_video: ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)                                            
                                                                         else:
