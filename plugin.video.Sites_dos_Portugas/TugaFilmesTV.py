@@ -39,11 +39,11 @@ progress = xbmcgui.DialogProgress()
 
 def TFV_MenuPrincipal(artfolder):
         fanart = artfolder + 'flag.jpg'
-        addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','','',artfolder + 'ze-TFV1.png',False,fanart)
-        addDir1('','','',artfolder + 'ze-TFV1.png',False,fanart)
+        addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1004,artfolder + 'ze-TFV1.png',False,fanart)
+        addDir1('','url',1004,artfolder,False,fanart)
         addDir('- Pesquisar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
         addDir('[COLOR yellow]- Filmes/Séries Recentes[/COLOR]','http://www.tuga-filmes.us',32,artfolder + 'ze-TFV1.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','','',artfolder + 'ze-TFV1.png',False,fanart)
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'ze-TFV1.png',False,fanart)
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.us/search/label/Filmes',32,artfolder + 'ze-TFV1.png','nao','')
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',39,artfolder + 'ze-TFV1.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',38,artfolder + 'ze-TFV1.png','nao','')
@@ -51,7 +51,7 @@ def TFV_MenuPrincipal(artfolder):
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o',32,artfolder + 'ze-TFV1.png','nao',fanart)
 	if selfAddon.getSetting('hide-porno') == "false":
 			addDir('[B][COLOR red]M+18[/B][/COLOR]','url',49,artfolder + 'ze-TFV1.png','nao','')
-	addDir1('[COLOR blue]Séries:[/COLOR]','','',artfolder + 'ze-TFV1.png',False,fanart)
+	addDir1('[COLOR blue]Séries:[/COLOR]','url',1004,artfolder + 'ze-TFV1.png',False,fanart)
 	addDir('[COLOR yellow]- A a Z[/COLOR]','url',41,artfolder + 'ze-TFV1.png','nao','')
         addDir('[COLOR yellow]- Recentes[/COLOR]','http://www.tuga-filmes.us/search/label/Séries',44,artfolder + 'ze-TFV1.png','nao','')
 
@@ -59,8 +59,8 @@ def TFV_Menu_Filmes_Top_5(artfolder):
         url_top_5 = 'http://www.tuga-filmes.us'
         top_5_source = TFV_abrir_url(url_top_5)
         if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR blue]TOP 5 da Semana[/COLOR][/B]','','',artfolder + 'ze-TFV1.png',False,'')
-                addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
+                addDir1('[B][COLOR blue]TOP 5 da Semana[/COLOR][/B]','url',1004,artfolder + 'ze-TFV1.png',False,'')
+                addDir1('','url',1004,artfolder,False,'')
         filmes_top_5 = re.compile("<img alt=\'.+?\' height=\'50\' src=\'.+?\' width=\'50\'/>\n<a href=\'(.+?)\'").findall(top_5_source)
 	for endereco_top_5 in filmes_top_5:
                 try:
@@ -111,8 +111,8 @@ def TFV_Menu_Series_A_a_Z(artfolder):
 	html_items_series = re.findall("<div class=\'widget Label\' id=\'Label3\'>(.*?)<div class=\'clear\'>", html_series_source, re.DOTALL)
         num_series = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(html_items_series[0])
         if selfAddon.getSetting('series-thumb-TFV') == "false":
-                addDir1('[B][COLOR blue]Séries[/COLOR][/B] ' + '('+str(len(num_series))+')','','',artfolder + 'ze-TFV1.png',False,'')
-                addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
+                addDir1('[B][COLOR blue]Séries[/COLOR][/B] ' + '('+str(len(num_series))+')','url',1004,artfolder + 'ze-TFV1.png',False,'')
+                addDir1('','url',1004,artfolder,False,'')
         print len(html_items_series)
         num = len(num_series) + 0.0
         for item_series in html_items_series:
@@ -347,8 +347,8 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
 
 def TFV_encontrar_videos_filmes(name,url):
         conta_id_video = 0
-	addDir1(name,'','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')      
+	addDir1(name,'url',1004,iconimage,False,'')
+        addDir1('','url',1004,artfolder,False,'')     
 	try:
 		link2=TFV_abrir_url(url)
 	except: link2 = ''
@@ -650,7 +650,7 @@ def TFV_encontrar_fontes_series_recentes(url):
 			addDir(nome,endereco,42,'','','')
 	proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
         try:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
+                if selfAddon.getSetting('movies-view') == "0": addDir1('','url',1004,artfolder,False,'')
                 addDir("Página Seguinte >>",proxima[0],44,artfolder + 'ze-TFV1.png','','')
         except: pass
 
@@ -666,8 +666,8 @@ def TFV_encontrar_fontes_series_A_a_Z(url):
         nome_orig = re.compile('[|].+?[|](.+?)[|]').findall(url)
         nome_original = nome_orig[0]
         if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR blue]' + name + '[/COLOR][/B]','','',artfolder + 'ze-TFV1.png',False,'')
-                addDir1('','','',artfolder + 'ze-TFV1.png',False,'')
+                addDir1('[B][COLOR blue]' + name + '[/COLOR][/B]','url',1004,artfolder + 'ze-TFV1.png',False,'')
+                addDir1('','url',1004,artfolder,False,'')
         if '|series|' in url:
                 series = 1
                 u = re.compile('(.+?)[|].+?[|].+?[|]').findall(url)
@@ -798,8 +798,8 @@ def TFV_encontrar_videos_series(name,url):
 	fontes = re.findall("Epis(.+?)", link_series, re.DOTALL)
         numero_de_fontes = len(fontes)
         if 'http://js.tuga-filmes.tv/counter/counter.html' in link_series: numero_de_fontes = numero_de_fontes - 1
-        addDir1(name + ' ' + str(numero_de_fontes) + ' links','','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
+        addDir1(name + ' ' + str(numero_de_fontes) + ' links','url',1004,iconimage,False,'')
+        addDir1('','url',1004,artfolder,False,'')
 	if link_series:
                 try:
                         items_series = re.findall("<div class=\'id(.*?)</p>", link_series, re.DOTALL)

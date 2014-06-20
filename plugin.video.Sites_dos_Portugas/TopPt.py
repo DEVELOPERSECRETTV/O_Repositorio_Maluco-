@@ -52,17 +52,17 @@ def TPT_MenuPrincipal(artfolder):
         saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
         saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
         if not saber_url_series: saber_url_series = re.compile('<a href="(.+?)">SERIES</a></li>').findall(toppt_source)
-        addDir1('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]','','',artfolder + 'ze-TPT1.png',False,'')
-        addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
+        addDir1('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]','url',1001,artfolder + 'ze-TPT1.png',False,'')
+        addDir1('','url',1001,artfolder,False,'')
         addDir('- Pesquisar','url',1,artfolder + 'Ze-pesquisar2.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','','',artfolder + 'ze-TPT1.png',False,'')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1001,artfolder + 'ze-TPT1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]',saber_url_todos[0],232,artfolder + 'ze-TPT1.png','nao','')
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',239,artfolder + 'ze-TPT1.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',238,artfolder + 'ze-TPT1.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'ze-TPT1.png','nao','')
 	if selfAddon.getSetting('hide-porno') == "false":
 			addDir('[B][COLOR red]M+18[/B][/COLOR]','http://toppt.net/?cat=' + saber_url_M18[0],232,artfolder + 'ze-TPT1.png','nao','')		
-	addDir1('[COLOR blue]Séries:[/COLOR]','','',artfolder + 'ze-TPT1.png',False,'')
+	addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'ze-TPT1.png',False,'')
 	addDir('[COLOR yellow]- A a Z[/COLOR]','url',241,artfolder + 'ze-TPT1.png','nao','')
         addDir('[COLOR yellow]- Recentes[/COLOR]',saber_url_series[0],232,artfolder + 'ze-TPT1.png','nao','')
 
@@ -70,8 +70,8 @@ def TPT_Menu_Posts_Recentes(artfolder):
         url_recentes = 'http://toppt.net/'
         recentes_source = TPT_abrir_url(url_recentes)
         if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR blue]Recentes[/COLOR][/B]','','',artfolder + 'ze-TPT1.png',False,'')
-                addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
+                addDir1('[B][COLOR blue]Recentes[/COLOR][/B]','url',1001,artfolder + 'ze-TPT1.png',False,'')
+                addDir1('','url',1001,artfolder,False,'')
         posts_recentes = re.compile('<a href="(.+?)">.+?</a>\n</li>\n<li>\n').findall(recentes_source)
         for endereco_recentes in posts_recentes:                
                 try:
@@ -173,8 +173,8 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                         arr_series.append((nome_series,endereco_series,thumb))
                         i = i + 1
         if selfAddon.getSetting('series-thumb-TPT') == "false":
-                addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(len(series)) + ')','','',artfolder + 'ze-TPT1.png',False,'')
-                addDir1('','','',artfolder + 'ze-TPT1.png',False,'')
+                addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(len(series)) + ')','url',1001,artfolder + 'ze-TPT1.png',False,'')
+                addDir1('','url',1001,artfolder,False,'')
         arr_series.sort()
         for x in range(len(arr_series)):
                 addDir('[COLOR yellow]' + arr_series[x][0] + '[/COLOR]',arr_series[x][1]+'-series-',232,arr_series[x][2],'nao','')
@@ -200,8 +200,8 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
         else: series = 0
         if 'Seguinte' not in name:
                 if selfAddon.getSetting('movies-view') == "0":
-                        addDir1(name + ':','','',iconimage,False,'')
-                        addDir1('','','',iconimage,False,'')
+                        addDir1(name + ':','url',1001,iconimage,False,'')
+                        addDir1('','url',1001,artfolder,False,'')
         fan = 'nao'
         if selfAddon.getSetting('movie-fanart-TPT') == "false" and selfAddon.getSetting('series-fanart-TPT') == "false": fan = 'nao'
         if selfAddon.getSetting('movie-fanart-TPT') == "true" and selfAddon.getSetting('series-fanart-TPT') == "true": fan = 'sim'
@@ -453,8 +453,8 @@ def TPT_encontrar_videos_filmes(name,url):
         i = 1
         conta_id_video = 0
         contaultimo = 0
-        addDir1(name,'','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
+        addDir1(name,'url',1001,iconimage,False,'')
+        addDir1('','url',1001,artfolder,False,'')
 	try:
 		link2=TPT_abrir_url(url)
 	except: link2 = ''

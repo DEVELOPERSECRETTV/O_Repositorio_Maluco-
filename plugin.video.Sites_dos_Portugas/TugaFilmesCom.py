@@ -35,10 +35,10 @@ progress = xbmcgui.DialogProgress()
 #-----------------------------------------------------------------    MENUS    -----------------------------------------------------------------#
 
 def TFC_MenuPrincipal(artfolder):
-        addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','','',artfolder + 'ze-TFC1.png',False,'')
-        addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
+        addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','url',1003,artfolder + 'ze-TFC1.png',False,'')
+        addDir1('','url',1003,artfolder,False,'')
         addDir('- Pesquisar','http://www.tuga-filmes.info/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','','',artfolder + 'ze-TFC1.png',False,'')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1003,artfolder + 'ze-TFC1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.info/',72,artfolder + 'ze-TFC1.png','nao','')
 	addDir('[COLOR yellow]- Destaques[/COLOR]','http://www.tuga-filmes.info/search/label/destaque',72,artfolder + 'ze-TFC1.png','nao','')
 	addDir('[COLOR yellow]- 2013[/COLOR]','http://www.tuga-filmes.info/search/label/-%20Filmes%202013',72,artfolder + 'ze-TFC1.png','nao','')
@@ -52,8 +52,8 @@ def TFC_Menu_Filmes_Top_10(artfolder):
         url_top_10 = 'http://www.tuga-filmes.info/'
         top_10_source = TFC_abrir_url(url_top_10)
         if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR blue]TOP 10[/COLOR][/B]','','',artfolder + 'ze-TFC1.png',False,'')
-                addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
+                addDir1('[B][COLOR blue]TOP 10[/COLOR][/B]','url',1003,artfolder + 'ze-TFC1.png',False,'')
+                addDir1('','url',1003,artfolder,False,'')
         filmes_top_10 = re.compile("<img alt=\'\' border=\'0\' height=\'72\' src=\'(.+?)\' width=\'72\'/>\n</a>\n</div>\n<div class=\'item-title\'><a href=\'(.+?)\'>(.+?)</a></div>\n</div>\n<div style=\'clear: both;\'>").findall(top_10_source)
 	for iconimage_filmes_top_10,endereco_top_10,nome_top_10 in filmes_top_10:
 		addDir(nome_top_10,endereco_top_10,73,iconimage_filmes_top_10.replace('s72-c','s320').replace('.gif','.jpg'),'nao','')
@@ -61,8 +61,8 @@ def TFC_Menu_Filmes_Top_10(artfolder):
 def TFC_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.tuga-filmes.info/'
         html_categorias_source = TFC_abrir_url(url_categorias)
-        addDir1('[B][COLOR blue]Categorias[/COLOR][/B]','','',artfolder + 'ze-TFC1.png',False,'')
-        addDir1('','','',artfolder + 'ze-TFC1.png',False,'')
+        addDir1('[B][COLOR blue]Categorias[/COLOR][/B]','url',1003,artfolder + 'ze-TFC1.png',False,'')
+        addDir1('','url',1003,artfolder,False,'')
 	html_items_categorias = re.findall("<div id=\'nav-cat\'>(.*?)</div>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
@@ -306,8 +306,8 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
 
 def TFC_encontrar_videos_filmes(name,url):
         conta_id_video = 0
-	addDir1(name,'','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
+	addDir1(name,'url',1003,iconimage,False,'')
+        addDir1('','url',1003,artfolder,False,'')
         try:
                 fonte = TFC_abrir_url(url)
         except: fonte = ''

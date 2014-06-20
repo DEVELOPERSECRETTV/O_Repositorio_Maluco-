@@ -36,10 +36,10 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def MVT_MenuPrincipal(artfolder):
-        addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','','',artfolder + 'ze-MVT1.png',False,'')
-        addDir1('','','',artfolder + 'ze-MVT1.png',False,'')
+        addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','url',1002,artfolder + 'ze-MVT1.png',False,'')
+        addDir1('','url',1002,artfolder,False,'')
         addDir('- Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','','',artfolder + 'ze-MVT1.png',False,'')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'ze-MVT1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'ze-MVT1.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',106,artfolder + 'ze-MVT1.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',102,artfolder + 'ze-MVT1.png','nao','')
@@ -47,8 +47,8 @@ def MVT_MenuPrincipal(artfolder):
 def MVT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.movie-tuga.blogspot.pt/'
         html_categorias_source = MVT_abrir_url(url_categorias)
-        addDir1('[B][COLOR blue]Categorias[/COLOR][/B]','','',artfolder + 'ze-MVT1.png',False,'')
-        addDir1('','','',artfolder + 'ze-MVT11.png',False,'')
+        addDir1('[B][COLOR blue]Categorias[/COLOR][/B]','url',1002,artfolder + 'ze-MVT1.png',False,'')
+        addDir1('','url',1002,artfolder,False,'')
 	html_items_categorias = re.findall("<div id=\'menu-categorias\'>(.*?)</div>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
@@ -189,8 +189,8 @@ def MVT_encontrar_fontes_filmes(url):
 
 def MVT_encontrar_videos_filmes(name,url):
         colecao = 'nao'
-        addDir1(name,'','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
+        addDir1(name,'url',1002,iconimage,False,'')
+        addDir1('','url',1002,artfolder,False,'')
         conta_id_video = 0
         try:
                 fonte_video = MVT_abrir_url(url)

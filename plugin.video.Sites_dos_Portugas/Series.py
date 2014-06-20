@@ -40,8 +40,8 @@ def SERIES_pesquisar(nome_pesquisa):
         progress.update( percent, 'A Procurar...'+site, message, "" )
         xbmc.sleep( 500 )
         if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR blue]Séries:[/COLOR][/B]','','','',False,'')
-                addDir1('','','','',False,'')
+                addDir1('[B][COLOR blue]Séries:[/COLOR][/B]','url',1020,artfolder,False,'')
+                addDir1('','url',1020,artfolder,False,'')
         pesquisou = nome_pesquisa
         if '|' in url:
                 _url = re.compile('(.+?)[|](.*)').findall(url)
@@ -70,10 +70,10 @@ def SERIES_pesquisar(nome_pesquisa):
         print str(a) + " de " + str(int(a))
         xbmc.sleep( 100 )
 	SERIES_encontrar_fontes_TPT(url_TPT)
-	if selfAddon.getSetting('movies-view') == "0":
-                addDir1('','','',artfolder + 'banner.png',False,'')		
-                addDir('[COLOR yellow]Pesquisar[/COLOR]','url',1,artfolder + 'banner.png','nao','')
-                addDir('[COLOR yellow]Menu Principal[/COLOR]','','',artfolder + 'banner.png','nao','')
+	#if selfAddon.getSetting('movies-view') == "0":
+                #addDir1('','','',artfolder + 'banner.png',False,'')		
+                #addDir('[COLOR yellow]Pesquisar[/COLOR]','url',1,artfolder + 'banner.png','nao','')
+                #addDir('[COLOR yellow]Menu Principal[/COLOR]','','',artfolder + 'banner.png','nao','')
         a = 2
 	site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
 	percent = int( ( a / 2.0 ) * 100)
@@ -87,7 +87,7 @@ def SERIES_pesquisar(nome_pesquisa):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def SERIES_encontrar_fontes_pesquisa_TFV(url,pesquisou):
-        if selfAddon.getSetting('movies-view') == "0": addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv[B][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
+        if selfAddon.getSetting('movies-view') == "0": addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1020,artfolder,False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -109,14 +109,14 @@ def SERIES_encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-			try:
-				if 'Season' in nome or 'Temporada' in nome or 'Seasons' in nome or 'Temporadas' in nome:
-                                        n = re.compile('[(](.+?)[)]').findall(nome)
-                                        if n: nome = n[0]
-                                        addDir('[B][COLOR orange]TFV | [/COLOR][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],42,thumbnail[0].replace('s72-c','s320'),'sim','')
+			if 'Season' in nome or 'Temporada' in nome or 'Seasons' in nome or 'Temporadas' in nome:
+                                n = re.compile('[(](.+?)[)]').findall(nome)
+                                if n: nome = n[0]
+                        try:
+                                addDir('[B][COLOR orange]TFV | [/COLOR][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',urletitulo[0][0],42,thumbnail[0].replace('s72-c','s320'),'sim','')
 			except: pass
 	else:
-		if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','','','',False,'')
+		if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -124,13 +124,13 @@ def SERIES_encontrar_fontes_pesquisa_TFV(url,pesquisou):
 
 def SERIES_encontrar_fontes_TPT(url):
         if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR yellow]----- [/COLOR][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][COLOR yellow] -----[/COLOR][/B]','','','',False,'')
+                addDir1('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR]','url',1020,artfolder,False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
 	if '<div class="postmeta-primary">' in html_source: items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
 	else:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','','','',False,'')
+                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
                 return
 	if items != []:
                 num_f = 0
@@ -219,26 +219,26 @@ def SERIES_encontrar_fontes_TPT(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        try:
-                                if 'Season' in nome or 'Temporada' in nome or 'Seasons' in nome or 'Temporadas' in nome:
-                                        n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(nome)
+                        if 'Season' in nome or 'Temporada' in nome or 'Seasons' in nome or 'Temporadas' in nome:
+                                n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(nome)
+                                if n: nome = n[0][0]+' - '+n[0][1]
+                                else:
+                                        n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(nome)
                                         if n: nome = n[0][0]+' - '+n[0][1]
                                         else:
-                                                n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(nome)
-                                                if n: nome = n[0][0]+' - '+n[0][1]
-                                                else:
-                                                        n = re.compile('[[](.+?)[]]').findall(nome)
-                                                        if n: nome = n[0]
-                                        #if 'series' in genero:
-                                                #if 'online' in genero:
-                                                        #if 'OP\xc3\x87\xc3\x83O' in item:
-                                        nome = nome.replace('Season','Temporada')
-                                        nome = nome.replace('Seasons','Temporadas')
-                                        addDir('[B][COLOR orange]TPT | [/COLOR][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url,233,thumbnail[0].replace('s72-c','s320'),'','')
-                                        num_f = num_f + 1
+                                                n = re.compile('[[](.+?)[]]').findall(nome)
+                                                if n: nome = n[0]
+                        nome = nome.replace('Season','Temporada')
+                        nome = nome.replace('Seasons','Temporadas')
+                        try:
+                                #if 'series' in genero:
+                                        #if 'online' in genero:
+                                                #if 'OP\xc3\x87\xc3\x83O' in item:
+                                addDir('[B][COLOR orange]TPT | [/COLOR][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url,233,thumbnail[0].replace('s72-c','s320'),'','')
+                                num_f = num_f + 1
                         except: pass
         if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','','','',False,'')
+                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
         return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#

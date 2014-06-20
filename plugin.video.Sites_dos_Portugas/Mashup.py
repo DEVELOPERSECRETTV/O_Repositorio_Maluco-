@@ -475,8 +475,8 @@ def Series_Series(url):
                                 arrai_series[i]=nome_series+'[COLOR orange] \/ TPT[/COLOR]'+'|'+thumb+'|'+endereco_series
                                 i=i+1
         if selfAddon.getSetting('series-thumb-mashup') == "false":
-                addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(i) + ')','','',artfolder + 'series.png',False,'')
-                addDir1('','','',artfolder + 'series.png',False,'')
+                addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(i) + ')','url',1020,artfolder + 'series.png',False,'')
+                addDir1('','url',1020,artfolder,False,'')
         arrai_series.sort()
         for x in range(len(arrai_series)):
                 if arrai_series[x] != '':

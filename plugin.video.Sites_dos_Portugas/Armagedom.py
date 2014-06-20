@@ -43,9 +43,9 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def ARM_MenuPrincipal():
-        addDir1(name+'[COLOR blue] - Menu Principal[/COLOR]','','',artfolder,False,'')
+        addDir1(name+'[COLOR blue] - Menu Principal[/COLOR]','url',1005,artfolder,False,'')
         #----------------------------------------------------------------------
-        addDir1('','','',artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
         #addDir('[B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','url',337,artfolder,'nao','')
         #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv',356,artfolder,'nao','')
         #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','url',337,artfolder,'nao','')
@@ -59,17 +59,17 @@ def ARM_MenuPrincipal():
         if selfAddon.getSetting('hide-porno') == "false":
 			addDir('[B][COLOR red]M+18 - [/COLOR][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.megavideoporno.org/porno/filmes',350,artfolder,'nao','')
         #----------------------------------------------------------------------
-        addDir1('','','',artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
         addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/',356,artfolder,'nao','')	
 	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/category/animacao',349,artfolder,'nao','')
 	#addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/',349,artfolder,'nao','')
 	addDir('Pesquisar - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/?s-btn=Enviar&s=',334,artfolder,'nao','')
-	addDir1('','','',artfolder,False,'')
+	addDir1('','url',1005,artfolder,False,'')
         #----------------------------------------------------------------------
 	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','url',358,artfolder,'nao','')
 	addDir('Pesquisar - [B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','http://megaseriesonlinehd.com/?s=',334,artfolder,'nao','')
 	#----------------------------------------------------------------------
-        addDir1('','','',artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
         addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','url',337,artfolder,'nao','')
 	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/series/',353,artfolder,'nao','')	
 	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/category/animacao/',351,artfolder,'nao','')
@@ -77,13 +77,13 @@ def ARM_MenuPrincipal():
 	addDir('Pesquisar Filmes - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/?s=',334,artfolder,'nao','')
 	addDir('Pesquisar Séries - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/series/?pesquisaRapida=',334,artfolder,'nao','')
         #----------------------------------------------------------------------
-        addDir1('','','',artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
 	#addDir('Pesquisar','url',1,artfolder,'nao','')
 	#addDir('[COLOR brown]ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_TugaFilmesTV.txt',56,artfolder,'nao','')
  
 def ARM_Menu_Filmes():
-        addDir1(name,'','',artfolder,False,'')
-        addDir1('','','',artfolder,False,'')
+        addDir1(name,'url',1005,artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
         if name == '[COLOR blue]Filmes - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]':
                 addDir('[COLOR orange]Lançamentos[/COLOR]','http://www.armagedomfilmes.biz/?cat=3236',332,artfolder,'nao','')
                 addDir('[COLOR orange]Blu-Ray[/COLOR]','http://www.armagedomfilmes.biz/?cat=5529',332,artfolder,'nao','')
@@ -93,29 +93,29 @@ def ARM_Menu_Filmes():
                 addDir('[COLOR orange]Últimos[/COLOR]','http://megafilmeshd.net/ultimos',351,artfolder,'nao','')
 
 def ARM_Menu_Series():
-        addDir1('[B][COLOR yellow]Menu Séries[/COLOR][/B]','','',artfolder,False,'')
-        addDir1('','','',artfolder,False,'')
+        addDir1('[B][COLOR yellow]Menu Séries[/COLOR][/B]','url',1005,artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
 	addDir('[COLOR blue]A a Z[/COLOR]','url',341,artfolder,'nao','')
         addDir('[COLOR blue]Recentes[/COLOR]','http://www.armagedomfilmes.biz/?cat=21',332,artfolder,'nao','')
-        addDir1('','','',artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
 	#addDir('Pesquisar','http://www.tuga-filmes.tv/search?q=',1,artfolder,'nao','')
 
 def ARM_Menu_Series_MEGASERIESONLINEHD():
-        addDir1('[B][COLOR yellow]Menu Séries[/COLOR][/B]','','',artfolder,False,'')
-        addDir1('','','',artfolder,False,'')
+        addDir1('[B][COLOR yellow]Menu Séries[/COLOR][/B]','url',1005,artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
 	addDir('[COLOR blue]Lançamentos[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-lancamentos/',357,artfolder,'nao','')
         addDir('[COLOR blue]Animes/Desenhos[/COLOR]','http://megaseriesonlinehd.com/index.php/category/desenhos/',357,artfolder,'nao','')
         addDir('[COLOR blue]Atualizados[/COLOR]','http://megaseriesonlinehd.com',357,artfolder,'nao','')
         addDir('[COLOR blue]Completos[/COLOR]','http://megaseriesonlinehd.com/index.php/page/2/',357,artfolder,'nao','')
         addDir('[COLOR blue]Dublados[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-dublados/',357,artfolder,'nao','')
         addDir('[COLOR blue]Legendados[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-legendados/',357,artfolder,'nao','')
-        addDir1('','','',artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
 
 
 
 def ARM_Menu_Filmes_Por_Categorias():
-        addDir1(name,'','',artfolder,False,'')
-        addDir1('','','',artfolder,False,'')
+        addDir1(name,'url',1005,artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
         html_categorias_source = ARM_abrir_url(url)
 	html_items_categorias = re.findall('<h2 class="widgettitle">Categorias</h2>(.*?)<div class="clear"></div>', html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
@@ -129,8 +129,8 @@ def ARM_Menu_Filmes_Por_Categorias():
                         addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,332,artfolder,'nao','')
 
 def ARM_Menu_Filmes_Por_Categorias_MEGA_tv():
-        addDir1(name,'','',artfolder,False,'')
-        addDir1('','','',artfolder,False,'')
+        addDir1(name,'url',1005,artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
         try:
                 html_categorias_source = ARM_abrir_url(url)
         except: html_categorias_source = ''
@@ -174,8 +174,8 @@ def ARM_Menu_Filmes_Por_Categorias_MEGA_tv():
                 
 
 def ARM_Menu_Filmes_Por_Categorias_MEGA_net():
-        addDir1(name,'','',artfolder,False,'')
-        addDir1('','','',artfolder,False,'')
+        addDir1(name,'url',1005,artfolder,False,'')
+        addDir1('','url',1005,artfolder,False,'')
         html_categorias_source = ARM_abrir_url(url)
 	html_items_categorias = re.findall('<li id="menu_genero">(.*?)<ul id="category-thumbs">', html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
@@ -215,8 +215,8 @@ def ARM_pesquisar():
 
 def ARM_encontrar_fontes_filmes(url):        
         if 'Seguinte' not in name:
-                addDir1(name + ':','','',iconimage,False,'')
-                addDir1('','','',iconimage,False,'')
+                addDir1(name + ':','url',1005,iconimage,False,'')
+                addDir1('','url',1005,artfolder,False,'')
 	try:
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
@@ -259,14 +259,14 @@ def ARM_encontrar_fontes_filmes(url):
                         except: pass
 	proxima = re.compile('<link rel="next" href="(.+?)"/>').findall(html_source)		
 	try:
-                addDir1('','','',iconimage,False,'')
+                addDir1('','url',1005,artfolder,False,'')
 		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),332,artfolder,'nao','')
         except:pass
 
 def ARM_encontrar_fontes_filmes_MEGASERIESONLINEHD(url):        
         if 'Seguinte' not in name:
-                addDir1(name + ':','','',iconimage,False,'')
-                addDir1('','','',iconimage,False,'')
+                addDir1(name + ':','url',1005,iconimage,False,'')
+                addDir1('','url',1005,artfolder,False,'')
 	try:
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
@@ -315,8 +315,8 @@ def ARM_encontrar_fontes_filmes_MEGASERIESONLINEHD(url):
 
 def ARM_encontrar_fontes_filmes_MEGA_tv(url):        
         if 'Seguinte' not in name:
-                addDir1(name + ':','','',iconimage,False,'')
-                addDir1('','','',iconimage,False,'')
+                addDir1(name + ':','url',1005,iconimage,False,'')
+                addDir1('','url',1005,artfolder,False,'')
 	try:
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
@@ -380,15 +380,15 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
                         except: pass
 	proxima = re.compile('<a class="nextpostslink" href="(.+?)">»</a>').findall(html_source)		
 	try:
-                addDir1('','','',iconimage,False,'')
+                addDir1('','url',1005,artfolder,False,'')
 		addDir("Página Seguinte >>",proxima[0].replace('amp;',''),349,artfolder,'nao','')
         except:pass
 
 
 def ARM_encontrar_fontes_filmes_MEGA_net(url):        
         if 'Seguinte' not in name:
-                addDir1(name + ':','','',iconimage,False,'')
-                addDir1('','','',iconimage,False,'')
+                addDir1(name + ':','url',1005,iconimage,False,'')
+                addDir1('','url',1005,artfolder,False,'')
 	try:
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
@@ -419,14 +419,14 @@ def ARM_encontrar_fontes_filmes_MEGA_net(url):
                         except: pass
 	proxima = re.compile('<a href=\'(.+?)\' class=\'nextpostslink\'>').findall(html_source)		
 	try:
-                addDir1('','','',iconimage,False,'')
+                addDir1('','url',1005,artfolder,False,'')
 		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),351,artfolder,'nao','')
         except:pass
 
 def ARM_encontrar_fontes_filmes_pesquisa_MEGA_net(url,nome_pesquisa):
         if 'Seguinte' not in name:
-                addDir1('[B][COLOR blue]Pesquisou : [/COLOR][/B][COLOR yellow]' + nome_pesquisa.replace('%20',' ') + '[/COLOR]','','',iconimage,False,'')
-                addDir1('','','',iconimage,False,'')
+                addDir1('[B][COLOR blue]Pesquisou : [/COLOR][/B][COLOR yellow]' + nome_pesquisa.replace('%20',' ') + '[/COLOR]','url',1005,iconimage,False,'')
+                addDir1('','url',1005,artfolder,False,'')
 	try:
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
@@ -454,7 +454,7 @@ def ARM_encontrar_fontes_filmes_pesquisa_MEGA_net(url,nome_pesquisa):
                                 num_f = num_f + 1
                                 addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B]',urlfilme,354,thumb,'nao','')
                         except: pass
-	if num_f == 0: addDir1('[B][COLOR red]- No Match Found -[/COLOR][/B]','','','',False,'')
+	if num_f == 0: addDir1('[B][COLOR red]- No Match Found -[/COLOR][/B]','url',1005,'',False,'')
 	proxima = re.compile('</a><a href=\'(.+?)\' class=\'nextpostslink\'>></a>').findall(html_source)
 	if proxima:
                 try:
@@ -484,14 +484,14 @@ def ARM_encontrar_fontes_filmes_pesquisa_MEGA_net(url,nome_pesquisa):
                                         num_f = num_f + 1
                                         addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B]',urlfilme,354,thumb,'nao','')
                                 except: pass
-        addDir1('','','',artfolder + 'flag_brasil.jpg',False,'')		
-        addDir('[COLOR orange]Nova Pesquisa[/COLOR]','http://megafilmeshd.net/Filmes/',334,artfolder + 'flag_brasil.jpg','nao','')
-        addDir('[COLOR orange]Menu Principal[/COLOR]','','',artfolder + 'flag_brasil.jpg','nao','')
+        #addDir1('','url',1005,artfolder,False,'')		
+        #addDir('[COLOR orange]Nova Pesquisa[/COLOR]','http://megafilmeshd.net/Filmes/',334,artfolder + 'flag_brasil.jpg','nao','')
+        #addDir('[COLOR orange]Menu Principal[/COLOR]','','',artfolder + 'flag_brasil.jpg','nao','')
 
 def ARM_encontrar_fontes_series_MEGA_net(url):        
         if 'Seguinte' not in name:
-                addDir1(name + ':','','',iconimage,False,'')
-                addDir1('','','',iconimage,False,'')
+                addDir1(name + ':','url',1005,iconimage,False,'')
+                addDir1('','url',1005,artfolder,False,'')
 	try:
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
@@ -522,13 +522,13 @@ def ARM_encontrar_fontes_series_MEGA_net(url):
                         except: pass
 	proxima = re.compile('<a href=\'(.+?)\' class=\'nextpostslink\'>').findall(html_source)		
 	try:
-                addDir1('','','',iconimage,False,'')
+                addDir1('','url',1005,artfolder,False,'')
 		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),351,artfolder,'nao','')
         except:pass
 
 def ARM_encontrar_fontes_series_pesquisa_MEGA_net(url,nome_pesquisa):
-        addDir1('[B][COLOR blue]Pesquisou : [/COLOR][/B][COLOR yellow]' + nome_pesquisa + '[/COLOR]','','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
+        addDir1('[B][COLOR blue]Pesquisou : [/COLOR][/B][COLOR yellow]' + nome_pesquisa + '[/COLOR]','url',1005,iconimage,False,'')
+        addDir1('','url',1005,artfolder,False,'')
 	try:
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
@@ -560,18 +560,18 @@ def ARM_encontrar_fontes_series_pesquisa_MEGA_net(url,nome_pesquisa):
                                         num_f = num_f + 1
                                         addDir('[B][COLOR yellow] - ' + nome + '[/COLOR][COLOR green] (' + ano_filme + ')[/COLOR][/B]',urlfilme,354,thumb,'nao','')
                         except: pass
-        if num_f == 0: addDir1('[B][COLOR red]- No Match Found -[/COLOR][/B]','','','',False,'')
-        addDir1('','','',artfolder + 'flag_brasil.jpg',False,'')		
-        addDir('[COLOR orange]Nova Pesquisa[/COLOR]','http://megafilmeshd.net/Series/',334,artfolder + 'flag_brasil.jpg','nao','')
-        addDir('[COLOR orange]Menu Principal[/COLOR]','','',artfolder + 'flag_brasil.jpg','nao','')
+        if num_f == 0: addDir1('[B][COLOR red]- No Match Found -[/COLOR][/B]','url',1005,'',False,'')
+        #addDir1('','','',artfolder + 'flag_brasil.jpg',False,'')		
+        #addDir('[COLOR orange]Nova Pesquisa[/COLOR]','http://megafilmeshd.net/Series/',334,artfolder + 'flag_brasil.jpg','nao','')
+        #addDir('[COLOR orange]Menu Principal[/COLOR]','','',artfolder + 'flag_brasil.jpg','nao','')
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def ARM_encontrar_videos_filmes(name,url):
         num_fonte = 0
-	addDir1(name,'','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
+	addDir1(name,'url',1005,iconimage,False,'')
+        addDir1('','url',1005,artfolder,False,'')
 	try:
 		link2=ARM_abrir_url(url)
 	except: link2 = '' 
@@ -926,8 +926,8 @@ def ARM_encontrar_videos_filmes(name,url):
                                                 
 def ARM_encontrar_videos_filmes_MEGASERIESONLINEHD(name,url):
         num_fonte = 0
-	addDir1(name,'','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
+	addDir1(name,'url',1005,iconimage,False,'')
+        addDir1('','url',1005,artfolder,False,'')
 	try:
 		link2=ARM_abrir_url(url)
 	except: link2 = '' 
@@ -960,8 +960,8 @@ def ARM_encontrar_videos_filmes_MEGASERIESONLINEHD(name,url):
                                                 
 def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
         num_fonte = 0
-	addDir1(name,'','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
+	addDir1(name,'url',1005,iconimage,False,'')
+        addDir1('','url',1005,artfolder,False,'')
 	try:
 		link2=ARM_abrir_url(url)
 	except: link2 = '' 
@@ -1222,8 +1222,8 @@ def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
                 
 def ARM_encontrar_videos_series(name,url):
         num_fonte = 0
-	addDir1(name,'','',iconimage,False,'')
-        addDir1('','','',iconimage,False,'')
+	addDir1(name,'url',1005,iconimage,False,'')
+        addDir1('','url',1005,artfolder,False,'')
 	try:
 		link2=ARM_abrir_url(url)
 	except: link2 = '' 
@@ -1617,8 +1617,8 @@ def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
 
 def ARM_encontrar_fontes_filmes_M18():        
         if 'Seguinte' not in name:
-                addDir1(name + ':','','',iconimage,False,'')
-                addDir1('','','',iconimage,False,'')
+                addDir1(name + ':','url',1005,iconimage,False,'')
+                addDir1('','url',1005,artfolder,False,'')
 	try:
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''

@@ -672,6 +672,18 @@ elif mode == 1000:
         setViewMode_menuPrincipal()
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
+elif mode == 1001:
+        setViewMode_menuTPT()
+elif mode == 1002:
+        setViewMode_menuMVT()
+elif mode == 1003:
+        setViewMode_menuTFC()
+elif mode == 1004:
+        setViewMode_menuTFV()
+elif mode == 1005:
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
