@@ -453,14 +453,16 @@ elif mode == 25:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 26:
         Mashup.Series_Series(url)
-        if selfAddon.getSetting('series-thumb-mashup') == "true":
-                xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                xbmc.executebuiltin("Container.SetViewMode(500)")
-                xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        if selfAddon.getSetting('series-thumb-mashup') == "false":
-                xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                xbmc.executebuiltin("Container.SetViewMode(502)")
-                xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        setViewMode_series()
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        #if selfAddon.getSetting('series-thumb-mashup') == "true":
+                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+                #xbmc.executebuiltin("Container.SetViewMode(500)")
+                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        #if selfAddon.getSetting('series-thumb-mashup') == "false":
+                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+                #xbmc.executebuiltin("Container.SetViewMode(502)")
+                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 27:
         Series.SERIES_pesquisar(nome_pesquisa)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')

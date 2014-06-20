@@ -33,7 +33,7 @@
       <setting label="[COLOR yellow]Definições de vista:[/COLOR]" type="lsep" />
       <setting id="movies-view-movies" type="enum" label="Vista - Mashup de Filmes" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="2"/>
       <setting id="movies-view-anima" type="enum" label="Vista - Mashup de Filmes de Animação" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="2"/>
-<!--      <setting id="series-view" type="enum" label="Vista - Mashup de Filmes de AnimaSéries" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="2"/> -->
+      <setting id="series-view" type="enum" label="Vista - Mashup de Séries" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="0"/>
       <setting id="menu-principal-view" type="enum" label="Vista - Menu Principal" values="Lista|Lista Grande|Miniatura" default="2"/>
       <setting id="menu-TFV-view" type="enum" label="Vista - Menu TUGA-FILMES.tv" values="Lista|Lista Grande|Miniatura" default="0"/>
       <setting id="menu-TFC-view" type="enum" label="Vista - Menu TUGA-FILMES.com" values="Lista|Lista Grande|Miniatura" default="0"/>
