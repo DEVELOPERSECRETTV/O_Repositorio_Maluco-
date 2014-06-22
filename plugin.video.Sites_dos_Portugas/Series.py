@@ -82,6 +82,10 @@ def SERIES_pesquisar(nome_pesquisa):
         print str(a) + " de " + str(int(a))
         xbmc.sleep( 100 )
         
+        xbmcplugin.setContent(int(sys.argv[1]), 'tvshows')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
