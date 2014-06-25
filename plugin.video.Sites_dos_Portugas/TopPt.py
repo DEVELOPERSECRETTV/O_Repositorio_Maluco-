@@ -30,6 +30,7 @@ arrai_nome_series = ['' for i in range(50)]
 arrai_endereco_series = ['' for i in range(50)]
 arrai_series = [['' for j in range(2)] for i in range(200)]
 arr_series = []
+_series_ = []
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -112,6 +113,13 @@ def TPT_Menu_Series_A_a_Z(artfolder):
         message = ''
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
+        folder = addonfolder + '/resources/'
+        Series_File = open(folder + 'series.txt', 'a')
+        Series_Fi = open(folder + 'series.txt', 'r')
+        read_Series_File = ''
+        for line in Series_Fi:
+                read_Series_File = read_Series_File + line
+                if line!='':_series_.append(line)
         url_series = 'http://toppt.net/'
 	html_series_source = TPT_abrir_url(url_series)
 	html_items_series = re.findall('<h3 class="widgettitle">SERIES</h3>(.*?)<div id="footer-widgets" class="clearfix">', html_series_source, re.DOTALL)	
@@ -124,7 +132,8 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                         message = str(i) + " de " + str(len(series))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(series))
-                        if selfAddon.getSetting('series-thumb-TPT') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('series-thumb-TPT') == "false": xbmc.sleep( 50 )
+                        xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         nome_series = nome_series.replace('&amp;','&')
@@ -133,7 +142,13 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                         nome_series = nome_series.replace('&#8230;',"...")
                         nome_series = nome_series.lower()
                         nome_series = nome_series.title()
-                        if selfAddon.getSetting('series-thumb-TPT') == "true":
+                        if nome_series in read_Series_File:
+                                for x in range(len(_series_)):
+                                        if nome_series in _series_[x]:
+                                                thumbnail = re.compile('.+?[|](.*)').findall(_series_[x])
+                                                if thumbnail : thumb = thumbnail[0]
+                        else:
+                        #if selfAddon.getSetting('series-thumb-TPT') == "true":
                                 try:
                                         nome_pesquisa = arr_series[x][0]
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -167,18 +182,21 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                                                 else:
                                                         thumb = ''
                                                                         
-                                        else: thumb = ''
+                                        #else: thumb = ''
+                                        else: thumb = artfolder + 'ze-TPT1.png'
+                                        Series_File.write(nome_series+'|'+thumb+'\n')
                                 except: pass
-                        else: thumb = artfolder + 'ze-TPT1.png'
+                        #else: thumb = artfolder + 'ze-TPT1.png'
                         arr_series.append((nome_series,endereco_series,thumb))
                         i = i + 1
-        if selfAddon.getSetting('series-thumb-TPT') == "false":
+        if selfAddon.getSetting('series-view-TPT') == "0" or selfAddon.getSetting('series-view-TPT') == "0":
                 addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(len(series)) + ')','url',1001,artfolder + 'ze-TPT1.png',False,'')
                 addDir1('','url',1001,artfolder,False,'')
         arr_series.sort()
         for x in range(len(arr_series)):
                 addDir('[COLOR yellow]' + arr_series[x][0] + '[/COLOR]',arr_series[x][1]+'-series-',232,arr_series[x][2],'nao','')
-
+        Series_Fi.close()
+        Series_File.close()
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#

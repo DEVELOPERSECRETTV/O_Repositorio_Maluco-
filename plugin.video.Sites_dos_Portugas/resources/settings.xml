@@ -16,10 +16,10 @@
     </category>
    <category label="Séries">
       <setting label="[COLOR yellow]Definições para Séries:[/COLOR]" type="lsep" />
-      <setting label="[COLOR green]Thumbnail:[/COLOR]" type="lsep" />
+  <!--    <setting label="[COLOR green]Thumbnail:[/COLOR]" type="lsep" />
       <setting id="series-thumb-mashup" type="bool" label="Procurar thumbnail de Mashup de séries (Menu Principal)" default="false"/>
       <setting id="series-thumb-TFV" type="bool" label="Procurar thumbnail de séries A a Z (Tuga-Filmes.tv)" default="false"/>
-      <setting id="series-thumb-TPT" type="bool" label="Procurar thumbnail de séries A a Z (Top-pt.net)" default="false"/>
+      <setting id="series-thumb-TPT" type="bool" label="Procurar thumbnail de séries A a Z (Top-pt.net)" default="false"/>    -->
       <setting label="[COLOR green]Fanart:[/COLOR]" type="lsep" />
       <setting id="series-fanart-TFV" type="bool" label="Procurar Fanart em TUGA-FILMES.tv" default="true"/>
   <!--    <setting id="series-fanart-TFC" type="bool" label="Procurar Fanart em TUGA-FILMES.com" default="true"/>
@@ -33,9 +33,9 @@
       <setting label="[COLOR yellow]Definições de vista:[/COLOR]" type="lsep" />
       <setting id="movies-view-movies" type="enum" label="Vista - Mashup de Filmes" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="2"/>
       <setting id="movies-view-anima" type="enum" label="Vista - Mashup de Filmes de Animação" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="2"/>
-      <setting id="series-view" type="enum" label="Vista - Mashup de Séries" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="0"/>
-      <setting id="series-view-TFV" type="enum" label="Vista - Séries A a Z (Tuga-Filmes.tv)" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="0"/>
-      <setting id="series-view-TPT" type="enum" label="Vista - séries A a Z (Top-pt.net)" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="0"/>
+      <setting id="series-view" type="enum" label="Vista - Mashup de Séries" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="2"/>
+      <setting id="series-view-TFV" type="enum" label="Vista - Séries A a Z (Tuga-Filmes.tv)" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="2"/>
+      <setting id="series-view-TPT" type="enum" label="Vista - séries A a Z (Top-pt.net)" values="Lista|Lista Grande|Miniatura|Posters|Fanart|Media Info 1|Media Info 2|Media Info 3" default="2"/>
       <setting id="menu-principal-view" type="enum" label="Vista - Menu Principal" values="Lista|Lista Grande|Miniatura" default="2"/>
       <setting id="menu-TFV-view" type="enum" label="Vista - Menu TUGA-FILMES.tv" values="Lista|Lista Grande|Miniatura" default="0"/>
       <setting id="menu-TFC-view" type="enum" label="Vista - Menu TUGA-FILMES.com" values="Lista|Lista Grande|Miniatura" default="0"/>

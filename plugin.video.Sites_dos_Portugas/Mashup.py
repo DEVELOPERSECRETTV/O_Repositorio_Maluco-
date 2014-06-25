@@ -22,7 +22,7 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,os
 from array import array
 from string import capwords
 
@@ -37,6 +37,7 @@ arr_series1 = [['' for i in range(87)] for j in range(1)]
 arr_series = ['' for i in range(200)]
 arrai_series = ['' for i in range(200)]
 _series = []
+_series_ = []
 arr_filmes = ['' for i in range(200)]
 arrai_filmes = ['' for i in range(200)]
 thumb_filmes = ['' for i in range(200)]
@@ -45,6 +46,8 @@ i=arr_filmes[4]
 
 arr_filmes_anima = []
 arrai_filmes_anima = []
+
+
 
 progress = xbmcgui.DialogProgress()
 
@@ -351,13 +354,20 @@ def Filmes_Filmes_Filmes(url):
 
 
 def Series_Series(url):
+        folder = addonfolder + '/resources/'
+        Series_File = open(folder + 'series.txt', 'a')
+        Series_Fi = open(folder + 'series.txt', 'r')
+        read_Series_File = ''
+        for line in Series_Fi:
+                read_Series_File = read_Series_File + line
+                if line!='':_series_.append(line)
         percent = 0
         message = ''
         site = ''
         progress.create('Progresso', 'A Procurar')
         progress.update( percent, 'A Procurar...'+site, message, "" )
         #---------------------------------------------------------------------------
-        s = 1
+        s = 0
         try:
                 html_series_source = MASH_abrir_url(url)
         except: html_series_source = ''
@@ -402,7 +412,7 @@ def Series_Series(url):
                 html_series_source = MASH_abrir_url(url)
         except: html_series_source = ''
 	html_items_series = re.findall("<div class=\'widget Label\' id=\'Label3\'>\n<h2>S\xc3\xa9ries(.*?)<div class=\'clear\'>", html_series_source, re.DOTALL)
-        i=1
+        i=0
         for item_series in html_items_series:
                 series = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(item_series)
                 for endereco_series,nome_series in series:
@@ -410,7 +420,8 @@ def Series_Series(url):
                         message = str(i) + " de " + str(s)
                         progress.update( percent, 'A Procurar em '+site, message, "" )
                         print str(i) + " de " + str(s)
-                        if selfAddon.getSetting('series-thumb-mashup') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('series-thumb-mashup') == "false": xbmc.sleep( 50 )
+                        xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         nome_series = nome_series.replace('&amp;','&')
@@ -421,7 +432,12 @@ def Series_Series(url):
                         nome_series = nome_series.lower()
                         nome_series = nome_series.title()
                         nome_series = nome_series.replace('Agents Of S.H.I.E.L.D',"Agents Of S.H.I.E.L.D.")
-                        if selfAddon.getSetting('series-thumb-mashup') == "true":
+                        if nome_series in read_Series_File:
+                                for x in range(len(_series_)):
+                                        if nome_series in _series_[x]:
+                                                thumbnail = re.compile('.+?[|](.*)').findall(_series_[x])
+                                                if thumbnail : thumb = thumbnail[0]
+                        else:
                                 try:
                                         html_source = MASH_abrir_url(endereco_series)
                                 except: html_source = ''
@@ -429,10 +445,19 @@ def Series_Series(url):
                                 if items != []:
                                         thumbnail = re.compile('src="(.+?)"').findall(items[0])
                                         if thumbnail : thumb = thumbnail[0]
-                        else: thumb = artfolder + 'series.png'
+                                else: thumb = artfolder + 'series.png'
+                                Series_File.write(nome_series+'|'+thumb+'\n')
                         arr_series[i]=nome_series
                         arrai_series[i]=nome_series+'[COLOR orange] \/ TFV[/COLOR]'+'|'+thumb+'|'+endereco_series
                         i=i+1
+        Series_Fi.close()
+        Series_File.close()
+        Series_File = open(folder + 'series.txt', 'a')
+        Series_Fi = open(folder + 'series.txt', 'r')
+        read_Series_File = ''
+        for line in Series_Fi:
+                read_Series_File = read_Series_File + line
+                if line!='':_series_.append(line)
         url = 'http://toppt.net/'
         site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
         try:
@@ -451,7 +476,12 @@ def Series_Series(url):
                         nome_series = nome_series.replace('Da Vincis Demons',"Da Vinci'S Demons")
                         nome_series = nome_series.lower()
                         nome_series = nome_series.title()
-                        if selfAddon.getSetting('series-thumb-mashup') == "true":
+                        if nome_series in read_Series_File:
+                                for x in range(len(_series_)):
+                                        if nome_series in _series_[x]:
+                                                thumbnail = re.compile('.+?[|](.*)').findall(_series_[x])
+                                                if thumbnail : thumb = thumbnail[0]
+                        else:
                                 try:
                                         html_source = MASH_abrir_url(endereco_series)
                                 except: html_source = ''
@@ -459,7 +489,8 @@ def Series_Series(url):
                                 if items != []:
                                         thumbnail = re.compile('src="(.+?)"').findall(items[0])
                                         if thumbnail : thumb = thumbnail[0]
-                        else: thumb = artfolder + 'series.png'
+                                else: thumb = artfolder + 'series.png'
+                                Series_File.write(nome_series+'|'+thumb+'\n')
                         if nome_series in arr_series:
                                 arrai_series[arr_series.index(nome_series)]=arrai_series[arr_series.index(nome_series)].replace('[COLOR orange] \/ TFV[/COLOR]','[COLOR orange] \/ TFV \/ TPT[/COLOR]')
                                 arrai_series[arr_series.index(nome_series)]=arrai_series[arr_series.index(nome_series)]+'|'+endereco_series
@@ -468,23 +499,28 @@ def Series_Series(url):
                                 message = str(i) + " de " + str(s)
                                 progress.update( percent, 'A Procurar em '+site, message, "" )
                                 print str(i) + " de " + str(s)
-                                if selfAddon.getSetting('series-thumb-mashup') == "false": xbmc.sleep( 50 )
+                                #if selfAddon.getSetting('series-thumb-mashup') == "false": xbmc.sleep( 50 )
+                                xbmc.sleep( 50 )
                                 if progress.iscanceled():
                                         break
                                 arr_series[i]=nome_series
                                 arrai_series[i]=nome_series+'[COLOR orange] \/ TPT[/COLOR]'+'|'+thumb+'|'+endereco_series
                                 i=i+1
-        if selfAddon.getSetting('series-thumb-mashup') == "false":
+        #if selfAddon.getSetting('series-thumb-mashup') == "false":
+        if selfAddon.getSetting('series-view') == "0" or selfAddon.getSetting('series-view') == "1":
                 addDir1('[B][COLOR blue]Séries[/COLOR][/B] (' + str(i) + ')','url',1020,artfolder + 'series.png',False,'')
                 addDir1('','url',1020,artfolder,False,'')
         arrai_series.sort()
         for x in range(len(arrai_series)):
                 if arrai_series[x] != '':
                         _s = re.compile('(.+?)[|](.+?)[|](.+?)[|](.*)').findall(arrai_series[x])
-                        if _s: addDir(_s[0][0].replace('\/','|'),_s[0][2]+'|'+_s[0][3],9,_s[0][1],'nao','')
+                        if _s:
+                                addDir(_s[0][0].replace('\/','|'),_s[0][2]+'|'+_s[0][3],9,_s[0][1],'nao','')
                         else:
                                 _s = re.compile('(.+?)[|](.+?)[|](.*)').findall(arrai_series[x])
                                 addDir(_s[0][0].replace('\/','|'),_s[0][2],9,_s[0][1],'nao','')
+        Series_Fi.close()
+        Series_File.close()
 
 
 

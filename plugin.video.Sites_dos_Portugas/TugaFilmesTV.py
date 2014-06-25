@@ -30,6 +30,8 @@ artfolder = addonfolder + '/resources/img/'
 
 fanart = artfolder + 'flag.jpg'
 
+_series_ = []
+
 progress = xbmcgui.DialogProgress()
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -56,6 +58,11 @@ def TFV_MenuPrincipal(artfolder):
         addDir('[COLOR yellow]- Recentes[/COLOR]','http://www.tuga-filmes.us/search/label/Séries',44,artfolder + 'ze-TFV1.png','nao','')
 
 def TFV_Menu_Filmes_Top_5(artfolder):
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
         url_top_5 = 'http://www.tuga-filmes.us'
         top_5_source = TFV_abrir_url(url_top_5)
         if selfAddon.getSetting('movies-view') == "0":
@@ -70,6 +77,14 @@ def TFV_Menu_Filmes_Top_5(artfolder):
                 if items != []:
                         print len(items)
                         for item in items:
+                                percent = int( ( i / 5.0 ) * 100)
+                                message = str(i) + " de " + str(len(items))
+                                progress.update( percent, "", message, "" )
+                                print str(i) + " de " + str(len(items))
+                                #if selfAddon.getSetting('series-thumb-TFV') == "false": xbmc.sleep( 50 )
+                                xbmc.sleep( 50 )
+                                if progress.iscanceled():
+                                        break
                                 urletitulo = re.compile("<h1>(.+?)\n</h1>").findall(item)
                                 qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                                 ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
@@ -82,6 +97,7 @@ def TFV_Menu_Filmes_Top_5(artfolder):
                                                 num_mode = 33
                                         addDir('[B][COLOR green]' + urletitulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',endereco_top_5,num_mode,thumbnail[0].replace('s72-c','s320'),'','')
                                 except: pass
+                                i = i + 1
 
 def TFV_Menu_Filmes_Por_Ano(artfolder):
         url_ano = 'http://www.tuga-filmes.us'
@@ -106,11 +122,19 @@ def TFV_Menu_Series_A_a_Z(artfolder):
         message = ''
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
+        folder = addonfolder + '/resources/'
+        Series_File = open(folder + 'series.txt', 'a')
+        Series_Fi = open(folder + 'series.txt', 'r')
+        read_Series_File = ''
+        for line in Series_Fi:
+                read_Series_File = read_Series_File + line
+                if line!='':_series_.append(line)
         url_series = 'http://www.tuga-filmes.us'
 	html_series_source = TFV_abrir_url(url_series)
 	html_items_series = re.findall("<div class=\'widget Label\' id=\'Label3\'>(.*?)<div class=\'clear\'>", html_series_source, re.DOTALL)
         num_series = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(html_items_series[0])
-        if selfAddon.getSetting('series-thumb-TFV') == "false":
+        #if selfAddon.getSetting('series-thumb-TFV') == "false":
+        if selfAddon.getSetting('series-view-TFV') == "0" or selfAddon.getSetting('series-view-TFV') == "0":
                 addDir1('[B][COLOR blue]Séries[/COLOR][/B] ' + '('+str(len(num_series))+')','url',1004,artfolder + 'ze-TFV1.png',False,'')
                 addDir1('','url',1004,artfolder,False,'')
         print len(html_items_series)
@@ -122,14 +146,21 @@ def TFV_Menu_Series_A_a_Z(artfolder):
                         message = str(i) + " de " + str(len(num_series))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(num_series))
-                        if selfAddon.getSetting('series-thumb-TFV') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('series-thumb-TFV') == "false": xbmc.sleep( 50 )
+                        xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         nome_series = nome_series.replace('&amp;','&')
                         nome_series = nome_series.replace('&#39;',"'")
                         nome_series = nome_series.lower()
                         nome_series = nome_series.title()
-                        if selfAddon.getSetting('series-thumb-TFV') == "true":
+                        if nome_series in read_Series_File:
+                                for x in range(len(_series_)):
+                                        if nome_series in _series_[x]:
+                                                thumbnail = re.compile('.+?[|](.*)').findall(_series_[x])
+                                                if thumbnail : thumb = thumbnail[0]
+                        else:
+                        #if selfAddon.getSetting('series-thumb-TFV') == "true":
                                 try:
                                         nome_pesquisa = nome_series
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -168,14 +199,17 @@ def TFV_Menu_Series_A_a_Z(artfolder):
                                                 else:
                                                         thumb = ''
                                                                         
-                                        else: thumb = ''
+                                        #else: thumb = ''
+                                        else: thumb = artfolder + 'ze-TFV1.png'
+                                        Series_File.write(nome_series+'|'+thumb+'\n')
                                 except: pass
-                        else: thumb = artfolder + 'ze-TFV1.png'
+                        #else: thumb = artfolder + 'ze-TFV1.png'
                         addDir('[COLOR yellow]' + nome_series + '[/COLOR] ',endereco_series+'\/series\/'+nome_series+'\/',47,thumb.replace('s72-c','s320'),'nao','')
                         #---------------------------------------------------------------
                         i = i + 1
                         #---------------------------------------------------------------
-
+        Series_Fi.close()
+        Series_File.close()
         
         
 
