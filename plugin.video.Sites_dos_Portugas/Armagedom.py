@@ -841,7 +841,8 @@ def ARM_encontrar_videos_filmes(name,url):
                                                         linkv = re.compile('src="(.+?)"').findall(linkinho)
                                                         if linkv:
                                                                 if 'adsnewflut' not in linkv: url_video = linkv[0]
-                                                        else:
+                                                        else: url_video = ''
+                                                        if url_video == '':
                                                                 linkv = re.compile("src='(.+?)'").findall(linkinho)
                                                                 if linkv:
                                                                         if 'adsnewflut' not in linkv: url_video = linkv[0]
@@ -896,10 +897,17 @@ def ARM_encontrar_videos_filmes(name,url):
                                                                         vlink = re.findall('<iframe(.*?)</iframe>', link2, re.DOTALL)
                                                                         for vidurl in vlink:
                                                                                 linkinho=vidurl
+                                                                        #addDir1(linkinho,'','',iconimage,False,'')
                                                                         linkv = re.compile('src="(.+?)"').findall(linkinho)
                                                                         if linkv:
                                                                                 if 'adsnewflut' not in linkv: url_video = linkv[0]
                                                                         else: url_video = ''
+                                                                        if url_video == '':
+                                                                                linkv = re.compile("src='(.+?)'").findall(linkinho)
+                                                                                if linkv:
+                                                                                        if 'adsnewflut' not in linkv: url_video = linkv[0]
+                                                                                else: url_video = ''
+                                                                        #addDir1(url_video+'--','','',iconimage,False,'')
                                                                         vlink = re.findall('<embed(.*?)</object>', link2, re.DOTALL)
                                                                         if vlink: linkv = re.compile('src="(.+?)"').findall(vlink[0])
                                                                         if linkv: url_video = linkv[0]
@@ -1307,8 +1315,23 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                         url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Allmyvideos)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
-	if "drive.google" in url:
+	if "clipstube" in url:
 		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Clipstube)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+        if "drive.google" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](DG)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+	if "megahd/inde" in url:
+		try:
+                        try:
+                                link2=ARM_abrir_url(url)
+                        except: link2 = ''
+                        vlink = re.compile('<param name="FlashVars" value="plugins=plugins/proxy.swf&proxy.link=(.+?)" />').findall(link2)
+                        if vlink: url = vlink[0]
                         url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](DG)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
@@ -1473,8 +1496,23 @@ def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
                         url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
+	if "clipstube" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Clipstube)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
         if "drive.google" in url:
 		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](DG)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+	if "megahd/inde" in url:
+		try:
+                        try:
+                                link2=ARM_abrir_url(url)
+                        except: link2 = ''
+                        vlink = re.compile('<param name="FlashVars" value="plugins=plugins/proxy.swf&proxy.link=(.+?)" />').findall(link2)
+                        if vlink: url = vlink[0]
                         url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](DG)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass

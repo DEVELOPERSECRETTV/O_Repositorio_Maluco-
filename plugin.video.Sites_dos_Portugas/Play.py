@@ -51,6 +51,22 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 	urlvid = re.compile('(.+?)///').findall(url)
 	url = urlvid[0]
 	name = nomefilme + ' ' + name
+	if "clipstube" in url :
+		try:
+			iframe_url = url
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			#tit=re.compile('var vtitle = "(.+?)"').findall(link3)
+			match=re.compile("var hq_video_file = '(.+?)'").findall(link3)
+			if not match: match=re.compile("var normal_video_file = '(.+?)'").findall(link3)
+			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+			if subtitle == []:
+				checker = ''
+				url = match[0]
+			else:
+				checker = subtitle[0]
+				url = match[0]
+		except: pass
 	if "drive.google" in url or "docs.google" in url :
 		try:
 			iframe_url = url
