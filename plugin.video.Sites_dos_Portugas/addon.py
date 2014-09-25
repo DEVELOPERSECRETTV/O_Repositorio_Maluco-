@@ -493,7 +493,7 @@ elif mode == 29:
 #elif mode==21: toppt.top_pt_encontrar_videos(name,url)
 #elif mode==22: toppt.top_pt_pesquisa(siteurl)
 #----------------------------------------------  Tuga-Filmes.tv  ----------------------------------------------------
-elif mode == 30: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
+elif mode == 30: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)#,nomeAddon)
 elif mode == 31:
         TugaFilmesTV.TFV_MenuPrincipal(artfolder)
         setViewMode_menuTFV()

@@ -519,7 +519,8 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
         #_ligacao_[conta_os_items] = 'SUBMENU'
         # NAO # conta_os_items = conta_os_items + 1
         nometitulo = nomeescolha
-        if 'Season' not in nometitulo:
+        #if 'Season' not in nometitulo:
+        if nometitulo != '':
                 percent = 0
                 message = ''
                 progress.create('Progresso', 'A Procurar streams...')
@@ -533,7 +534,8 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
 		link2=TPT_abrir_url(url)
 	except: link2 = ''
 	if link2:
-                if 'Season' not in nometitulo:
+                #addDir1('sim','url',1001,artfolder,False,'')
+                if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
                         newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
                         l=1
                 else:
@@ -547,12 +549,23 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                 if not newmatch:
                         newmatch = re.findall('<span id=.+?<br/>\n<img',link2,re.DOTALL)
                         l=3
+                if not newmatch:
+                        if newmatch1 != [] and 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)\n</div></div><',newmatch1[0],re.DOTALL)
+                                for parte1,parte2 in linkseriesssss:
+                                        addDir1('[COLOR blue]'+parte1+'[/COLOR]','','',iconimage,False,'')
+                                        match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
+                                        for url in match:
+                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                        conta_id_video = conta_id_video + 1
+                                                        conta_os_items = conta_os_items + 1
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
                 if newmatch:
                         #addDir1('sim'+str(l),'url',1001,artfolder,False,'')
-                        if 'Season' not in nometitulo:
+                        if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
                                 match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(newmatch[0])
                                 for url in match:
-                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                 conta_id_video = conta_id_video + 1
                                                 conta_os_items = conta_os_items + 1
                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -562,7 +575,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                         addDir1('[COLOR blue]'+parte1+'[/COLOR]','','',iconimage,False,'')
                                         match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
                                         for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                         conta_id_video = conta_id_video + 1
                                                         conta_os_items = conta_os_items + 1
                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -585,7 +598,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                 for url in match:
-                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -612,7 +625,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                 for url in match:
-                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -638,7 +651,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                 for url in match:
-                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -667,7 +680,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
 						match = re.compile('<a href="(.+?)" target="_blank">').findall(parte2)
 						if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
 						for url in match:
-                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -696,7 +709,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                         match = re.compile('<a href="(.+?)" target="_blank">').findall(parte2)
                                                         if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                         for url in match:
-                                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                         conta_id_video = conta_id_video + 1
                                                                         conta_os_items = conta_os_items + 1
                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -741,7 +754,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                                 for url in match:
-                                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                 conta_id_video = conta_id_video + 1
                                                                                 conta_os_items = conta_os_items + 1
                                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -771,7 +784,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                         match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                                         if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                                         for url in match:
-                                                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         conta_os_items = conta_os_items + 1
                                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -803,7 +816,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(linksseccao[0])
                                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(linksseccao[0])
                                                                 for url in match:
-                                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                 conta_id_video = conta_id_video + 1
                                                                                 conta_os_items = conta_os_items + 1
                                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -824,7 +837,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                         match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(newmatch[0])
                                                         if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(newmatch[0])
                                                         for url in match:
-                                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                         conta_id_video = conta_id_video + 1
                                                                         conta_os_items = conta_os_items + 1
                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -853,7 +866,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
 						match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
 						if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
 						for url in match:
-                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -871,7 +884,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                         conta_id_video = 0
 							if parte1 != ultima_parte:
                                                                 conta_os_items = conta_os_items + 1
-                                                                _servidores_[conta_os_items] = ('[COLOR yellow] EpisÃ³dio '+parte1+'[/COLOR]')
+                                                                _servidores_[conta_os_items] = ('[COLOR yellow] Episódio '+parte1+'[/COLOR]')
                                                                 _ligacao_[conta_os_items] = 'SUBMENU'
                                                                 addDir('[COLOR yellow] Episódio '+parte1+'[/COLOR]',urlfinal,'',iconimage,False,'')
 							ultima_parte = parte1
@@ -884,7 +897,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
 							match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
 							match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
 							for url in match:
-                                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                         conta_id_video = conta_id_video + 1
                                                                         conta_os_items = conta_os_items + 1
                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -903,7 +916,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
 						match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(newmatch[0])
                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(newmatch[0])
 						for url in match:
-                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                        if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -943,6 +956,26 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         fonte_id = '(DropVideo)'
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'','')
 		except:pass
+	if "vidzi.tv" in url:
+                try:
+                        fonte_id = '(Vidzi.tv)'
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzi.tv)[/COLOR][/B]',url,30,iconimage,'','')
+                except:pass
+        if "cloudzilla" in url:
+                try:
+                        fonte_id = '(Cloudzilla)'
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "divxstage" in url:
+                try:
+                        fonte_id = '(Divxstage)'
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Divxstage)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
+    	if "vidzen" in url:
+                try:
+                        fonte_id = '(Vidzen)'
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzen)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
 	if "streamin.to" in url:
                 try:
                         fonte_id = '(Streamin)'

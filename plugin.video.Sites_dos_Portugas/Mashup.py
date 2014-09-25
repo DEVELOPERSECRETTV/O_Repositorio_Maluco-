@@ -434,7 +434,7 @@ def Series_Series(url):
         message = ''
         site = ''
         progress.create('Progresso', 'A Procurar')
-        progress.update( percent, 'A Procurar SÃ©ries...'+site, message, "" )
+        progress.update( percent, 'A Procurar Séries...'+site, message, "" )
         #---------------------------------------------------------------------------
         s = 0
         urltfv = 'http://www.tuga-filmes.us'
@@ -488,7 +488,7 @@ def Series_Series(url):
                 for endereco_series,nome_series in series:
                         percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(s)
-                        progress.update( percent, 'A Procurar SÃ©ries em '+site, message, "" )
+                        progress.update( percent, 'A Procurar Séries em '+site, message, "" )
                         print str(i) + " de " + str(s)
                         #if selfAddon.getSetting('series-thumb-mashup') == "false": xbmc.sleep( 50 )
                         xbmc.sleep( 50 )
@@ -569,7 +569,7 @@ def Series_Series(url):
                         if nome_series not in arr_series:
                                 percent = int( ( i / num ) * 100)
                                 message = str(i) + " de " + str(s)
-                                progress.update( percent, 'A Procurar SÃ©ries em '+site, message, "" )
+                                progress.update( percent, 'A Procurar Séries em '+site, message, "" )
                                 print str(i) + " de " + str(s)
                                 #if selfAddon.getSetting('series-thumb-mashup') == "false": xbmc.sleep( 50 )
                                 xbmc.sleep( 50 )
@@ -619,7 +619,7 @@ def Filmes_Animacao(url):
         message = ''
         site = ''
         progress.create('Progresso', 'A Procurar')
-        progress.update( percent, 'A Procurar AnimaÃ§Ã£o...'+site, message, "" )
+        progress.update( percent, 'A Procurar Animação...'+site, message, "" )
         urlss = urllib.unquote(url)
         print urlss
         urls=re.compile('url_TFC=(.+?)&url_MVT=(.+?)&url_TFV=(.+?)&xpto=xpto&url_TPT=(.+?)&fim=fim').findall(urlss)
@@ -659,7 +659,7 @@ def Filmes_Animacao(url):
 	num = num + 0.0
 	#--------------------------------------------------
 	site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
-	progress.update( percent, 'A Procurar AnimaÃ§Ã£o em '+site, message, "" )
+	progress.update( percent, 'A Procurar Animação em '+site, message, "" )
         try:
 		html_source = MASH_abrir_url(url_TFV)
 	except: html_source = ''
@@ -669,7 +669,7 @@ def Filmes_Animacao(url):
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
-                        progress.update( percent, 'A Procurar AnimaÃ§Ã£o em '+site, message, "" )
+                        progress.update( percent, 'A Procurar Animação em '+site, message, "" )
                         print str(a) + " de " + str(int(num))
                         #xbmc.sleep( 100 )
                         if progress.iscanceled():
@@ -717,7 +717,7 @@ def Filmes_Animacao(url):
         #----------------------------------------------------------------------------------------------------
         i = 1
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
-        progress.update( percent, 'A Procurar AnimaÃ§Ã£o em '+site, message, "" )
+        progress.update( percent, 'A Procurar Animação em '+site, message, "" )
         try:
 		html_source = MASH_abrir_url(url_TFC)
 	except: html_source = ''
@@ -758,7 +758,7 @@ def Filmes_Animacao(url):
                                 if 'ASSISTIR O FILME' in item:
                                         percent = int( ( a / num ) * 100)
                                         message = str(a) + " de " + str(int(num))
-                                        progress.update( percent, 'A Procurar AnimaÃ§Ã£o em '+site, message, "" )
+                                        progress.update( percent, 'A Procurar Animação em '+site, message, "" )
                                         print str(a) + " de " + str(int(num))
                                         #xbmc.sleep( 100 )
                                         if progress.iscanceled():
@@ -776,7 +776,7 @@ def Filmes_Animacao(url):
         #----------------------------------------------------------------------------------------------------
         i = 0
         site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
-        progress.update( percent, 'A Procurar AnimaÃ§Ã£o em '+site, message, "" )
+        progress.update( percent, 'A Procurar Animação em '+site, message, "" )
         try:
 		html_source = MASH_abrir_url(url_TPT)
 	except: html_source = ''
@@ -841,7 +841,7 @@ def Filmes_Animacao(url):
                         if nome not in arr_filmes_anima:
                                 percent = int( ( a / num ) * 100)
                                 message = str(a) + " de " + str(int(num))
-                                progress.update( percent, 'A Procurar AnimaÃ§Ã£o em '+site, message, "" )
+                                progress.update( percent, 'A Procurar Animação em '+site, message, "" )
                                 print str(a) + " de " + str(int(num))
                                 #xbmc.sleep( 100 )
                                 if progress.iscanceled():
@@ -864,7 +864,7 @@ def Filmes_Animacao(url):
         #----------------------------------------------------------------------------------------------------
         i = 3
         site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
-        progress.update( percent, 'A Procurar AnimaÃ§Ã£o em '+site, message, "" )
+        progress.update( percent, 'A Procurar Animação em '+site, message, "" )
         try:
 		html_source = MASH_abrir_url(url_MVT)
 	except: html_source = ''
@@ -904,7 +904,7 @@ def Filmes_Animacao(url):
                         if nome not in arr_filmes_anima:
                                 percent = int( ( a / num ) * 100)
                                 message = str(a) + " de " + str(int(num))
-                                progress.update( percent, 'A Procurar AnimaÃ§Ã£o em '+site, message, "" )
+                                progress.update( percent, 'A Procurar Animação em '+site, message, "" )
                                 print str(a) + " de " + str(int(num))
                                 #xbmc.sleep( 100 )
                                 if progress.iscanceled():

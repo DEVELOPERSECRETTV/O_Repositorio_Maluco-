@@ -43,7 +43,7 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def ARM_MenuPrincipal():
-        addDir1(name+'[COLOR blue] - Menu Principal[/COLOR]','url',1005,artfolder,False,'')
+        addDir1('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B][COLOR blue] - Menu Principal[/COLOR]','url',1005,artfolder,False,'')
         #----------------------------------------------------------------------
         addDir1('','url',1005,artfolder,False,'')
         #addDir('[B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','url',337,artfolder,'nao','')
@@ -80,6 +80,8 @@ def ARM_MenuPrincipal():
         addDir1('','url',1005,artfolder,False,'')
 	#addDir('Pesquisar','url',1,artfolder,'nao','')
 	#addDir('[COLOR brown]ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_TugaFilmesTV.txt',56,artfolder,'nao','')
+        #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        #xbmc.executebuiltin('Container.SetViewMode(502)')
  
 def ARM_Menu_Filmes():
         addDir1(name,'url',1005,artfolder,False,'')
@@ -134,17 +136,30 @@ def ARM_Menu_Filmes_Por_Categorias_MEGA_tv():
         try:
                 html_categorias_source = ARM_abrir_url(url)
         except: html_categorias_source = ''
-        html_items_categorias = re.findall('<div class="menu">(.*?)</div><!--menu-->', html_categorias_source, re.DOTALL)
+        html_items_categorias = re.findall("<div id='bluray-cat'>(.*?)</header><!-- Geral HEADER -->", html_categorias_source, re.DOTALL)
         if html_items_categorias:
+                #addDir('[B][COLOR orange]Lançamentos[/COLOR][/B] ','http://megafilmeshd.tv',349,artfolder,'nao','')
+                addDir('[B][COLOR orange]Últimos Adicionados[/COLOR][/B] ','http://megafilmeshd.tv/',349,artfolder,'nao','')
                 for item_categorias in html_items_categorias:
-                        filmes_por_categoria = re.compile('<li class=".+?"><a href="(.+?)">(.+?)</a></li>').findall(item_categorias)
+                        filmes_por_categoria = re.compile("<h3><a href='(.+?)' title='.+?'>(.+?)</a></h3>").findall(item_categorias)
                         for endereco_categoria,nome_categoria in filmes_por_categoria:
-                                if 'megafilmeshd.tv' not in nome_categoria: endereco_categoria = 'http://megafilmeshd.tv' + endereco_categoria
-                                if 'Home' in nome_categoria and len(endereco_categoria)>2: nome_categoria = 'Recentes'
-                                if 'Seriados' not in nome_categoria and 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria and 'blank' not in endereco_categoria:
-                                        if 'ultimos' in nome_categoria:
-                                                nome_categoria = 'Últimos'
-                                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder,'nao','')
+                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ','http://megafilmeshd.tv'+endereco_categoria,349,artfolder,'nao','')
+                        for item_categorias in html_items_categorias:
+                                filmes_por_categoria = re.compile('<li><a href="(.+?)" title=".+?">(.+?)</a></li>').findall(item_categorias)
+                                for endereco_categoria,nome_categoria in filmes_por_categoria:
+                                        addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ','http://megafilmeshd.tv'+endereco_categoria,349,artfolder,'nao','')
+        else:
+                html_items_categorias = re.findall('<div class="menu">(.*?)</div><!--menu-->', html_categorias_source, re.DOTALL)
+                if html_items_categorias:
+                        for item_categorias in html_items_categorias:
+                                filmes_por_categoria = re.compile('<li class=".+?"><a href="(.+?)">(.+?)</a></li>').findall(item_categorias)
+                                for endereco_categoria,nome_categoria in filmes_por_categoria:
+                                        if 'megafilmeshd.tv' not in nome_categoria: endereco_categoria = 'http://megafilmeshd.tv' + endereco_categoria
+                                        if 'Home' in nome_categoria and len(endereco_categoria)>2: nome_categoria = 'Recentes'
+                                        if 'Seriados' not in nome_categoria and 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria and 'blank' not in endereco_categoria:
+                                                if 'ultimos' in nome_categoria:
+                                                        nome_categoria = 'Últimos'
+                                                        addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder,'nao','')
         #else:
         url_ = 'http://megafilmeshd.tv/category/animacao'
         try:
@@ -306,7 +321,7 @@ def ARM_encontrar_fontes_filmes_MEGASERIESONLINEHD(url):
                         try:
                                 addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B][COLOR green] ' + dubleg + '[/COLOR]',urlfilme,359,thumb,'nao','')
                         except: pass
-	proxima = re.compile('<a class="nextpostslink" href="(.+?)">&raquo;</a>').findall(html_source)		
+	proxima = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a>').findall(html_source)		
 	try:
                 #addDir1('','','',iconimage,False,'')
 		addDir("Página Seguinte >>",proxima[0].replace('amp;',''),357,artfolder,'nao','')
@@ -321,22 +336,22 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
 	if url == 'http://megafilmeshd.tv/':
-                atualizados = re.findall('title="Novo Filmes Adicionados"(.*?)<div id="footer">', html_source, re.DOTALL)
-                items = re.findall('class="link-tumb">(.*?)<div class="cat', atualizados[0], re.DOTALL)
+                atualizados = re.findall('<div id="bloco_ult">(.*?)<div id="rodape">', html_source, re.DOTALL)
+                items = re.findall('<h2 class="titulo">(.*?)width="190" height="294"/>', atualizados[0], re.DOTALL)
         else:
-                items = re.findall('class="link-tumb">(.*?)<div class="cat', html_source, re.DOTALL)
+                items = re.findall('<h2 class="titulo">(.*?)width="190" height="294"/>', html_source, re.DOTALL)
 	if not items: items = re.findall('<li class="create-tooltip"(.*?)</li>', html_source, re.DOTALL)
 	#addDir1(str(len(items)),'','',iconimage,False,'')
 	dubleg = ''
 	if items != []:
 		print len(items)
 		for item in items:
-                        titulo = re.compile('title="(.+?)"').findall(item)
+                        titulo = re.compile('alt="(.+?)"').findall(item)
                         if titulo:
                                 nome = titulo[0].replace('720p','').replace('1080p','')
                         else:
                                 nome = ''
-                        urldofilme = re.compile('href="(.+?)"').findall(item)
+                        urldofilme = re.compile('href="(.+?)" class="assistir"></a>').findall(item)
                         if urldofilme:
                                 urlfilme = urldofilme[0]
                         else:
@@ -378,7 +393,7 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
                         try:
                                 addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B][COLOR blue]' + ano + '[/COLOR][COLOR green] - ' + dubleg + '[/COLOR]',urlfilme,333,thumb,'nao','')
                         except: pass
-	proxima = re.compile('<a class="nextpostslink" href="(.+?)">»</a>').findall(html_source)		
+	proxima = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">»</a>').findall(html_source)		
 	try:
                 addDir1('','url',1005,artfolder,False,'')
 		addDir("Página Seguinte >>",proxima[0].replace('amp;',''),349,artfolder,'nao','')
@@ -417,7 +432,7 @@ def ARM_encontrar_fontes_filmes_MEGA_net(url):
                         try:
                                 addDir('[B][COLOR yellow]' + nome + '[/COLOR][COLOR green] (' + ano_filme + ')[/COLOR][/B]',urlfilme,354,thumb,'nao','')
                         except: pass
-	proxima = re.compile('<a href=\'(.+?)\' class=\'nextpostslink\'>').findall(html_source)		
+	proxima = re.compile('<a class="nextpostslink" href="(.+?)">></a>').findall(html_source)		
 	try:
                 addDir1('','url',1005,artfolder,False,'')
 		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),351,artfolder,'nao','')
@@ -455,7 +470,7 @@ def ARM_encontrar_fontes_filmes_pesquisa_MEGA_net(url,nome_pesquisa):
                                 addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B]',urlfilme,354,thumb,'nao','')
                         except: pass
 	if num_f == 0: addDir1('[B][COLOR red]- No Match Found -[/COLOR][/B]','url',1005,'',False,'')
-	proxima = re.compile('</a><a href=\'(.+?)\' class=\'nextpostslink\'>></a>').findall(html_source)
+	proxima = re.compile('<a class="nextpostslink" href="(.+?)">></a>').findall(html_source)
 	if proxima:
                 try:
                         html_source = ARM_abrir_url(proxima[0].replace('#038;',''))
@@ -520,7 +535,7 @@ def ARM_encontrar_fontes_series_MEGA_net(url):
                         try:
                                 addDir('[B][COLOR yellow]' + nome + '[/COLOR][COLOR green] (' + ano_filme + ')[/COLOR][/B]',urlfilme,354,thumb,'nao','')
                         except: pass
-	proxima = re.compile('<a href=\'(.+?)\' class=\'nextpostslink\'>').findall(html_source)		
+	proxima = re.compile('<a class="nextpostslink" href="(.+?)">></a>').findall(html_source)		
 	try:
                 addDir1('','url',1005,artfolder,False,'')
 		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),351,artfolder,'nao','')
@@ -824,6 +839,7 @@ def ARM_encontrar_videos_filmes(name,url):
                 if 'megafilmeshd.tv' in url:
                         id_video = ''
                         matchvideo = re.findall('<li id=".+?" class="box-temp">(.*?)</li>', link2, re.DOTALL)
+                        if not matchvideo: matchvideo = re.findall('<li id=".+?">(.*?)</li>', link2, re.DOTALL)
                         #addDir1(str(len(matchvideo)),'','',iconimage,False,'')
                         if matchvideo:
                                 for vidlink in matchvideo:
@@ -931,6 +947,10 @@ def ARM_encontrar_videos_filmes(name,url):
                                                                                 except:pass
                                                                                 #url_video = url_video + '///' + name
                                                                                 #addDir(url_video+'[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]',url_video,30,iconimage,'','')
+                                else:
+                                        matchvideo = re.findall('<div class="btn-ver">(.*?)</div>', link2, re.DOTALL)
+                                        #addDir1(str(len(matchvideo)),'','',iconimage,False,'')
+                                        #if matchvideo:
                                                 
 def ARM_encontrar_videos_filmes_MEGASERIESONLINEHD(name,url):
         num_fonte = 0
@@ -1495,6 +1515,11 @@ def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
                         else: url = 'http://www.cloudzilla.to/embed/' + id_video
                         url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'','')
+		except: pass
+	if "vidbull" in url:
+		try:
+                        url = url + '///' + name
+			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Vidbull)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
 	if "clipstube" in url:
 		try:

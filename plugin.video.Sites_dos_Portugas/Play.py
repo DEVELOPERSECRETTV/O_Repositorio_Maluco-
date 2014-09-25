@@ -22,17 +22,25 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os
+import TugaFilmesTV,TopPt,TugaFilmesCom,MovieTuga,Series,Filmes,FilmesAnima,Pesquisar,Mashup
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
+progress = xbmcgui.DialogProgress()
+
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    PLAY    ------------------------------------------------------------------#
 
 
-def PLAY_movie(url,name,iconimage,checker,fanart):
+def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
+        nomeAddon = ''
+        percent = 0
+        message = ''
+        progress.create(name, 'A preparar vídeo...')
+        progress.update( percent, "", message, "" )
         #addLink(url,'','')
         url = url.replace('////','///')
         try:
@@ -42,15 +50,17 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
                 #dp = xbmcgui.DialogProgress()
                 #dp.create(name,'A sincronizar vídeos e legendas')
                 #dp.update(0)
-        if '////' in url: nome = re.compile('////(.+?)[)].+?[(].+?[)]').findall(url)
-	else: nome = re.compile('///(.+?)[)].+?[(].+?[)]').findall(url)
-	if not nome:
-                nome = re.compile('///(.*)').findall(url)
-                nomefilme = nome[0]
-	else: nomefilme = nome[0] + ')'
-	urlvid = re.compile('(.+?)///').findall(url)
-	url = urlvid[0]
-	name = nomefilme + ' ' + name
+        if '///' in url:
+                if '////' in url: nome = re.compile('////(.+?)[)].+?[(].+?[)]').findall(url)
+                else: nome = re.compile('///(.+?)[)].+?[(].+?[)]').findall(url)
+                if not nome:
+                        nome = re.compile('///(.*)').findall(url)
+                        if nome: nomefilme = nome[0]
+                else: nomefilme = nome[0] + ')'
+                urlvid = re.compile('(.+?)///').findall(url)
+                if urlvid: url = urlvid[0]
+                #if nomefilme.replace(' ','') != name.replace(' ',''):
+                name = nomefilme + ' ' + name
 	if "clipstube" in url :
 		try:
 			iframe_url = url
@@ -91,6 +101,62 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 			if source: 
 				url = source.resolve()
     			else: url = ''
+    			#return url
+		except: pass
+	if "vidzi.tv" in url:
+		try:
+			iframe_url = url#.replace('vidzi.tv/','vidzi.tv/embed-')
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			#tit=re.compile('var vtitle = "(.+?)"').findall(link3)
+			match=re.compile('file: "(.+?)"').findall(link3)
+			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+			if subtitle == []:
+				checker = ''
+				for link in match:
+                                        if 'vidzi.tv' not in link: url = link
+			else:
+				checker = subtitle[0]
+				for link in match:
+                                        if 'vidzi.tv' not in link: url = link
+		except: pass
+	if "vidzen" in url:
+		try:
+			iframe_url = url#.replace('vidzi.tv/','vidzi.tv/embed-')
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			#tit=re.compile('var vtitle = "(.+?)"').findall(link3)
+			match=re.compile('streamer: "(.+?)"').findall(link3)
+			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+			if subtitle == []:
+                                checker = ''
+				url = match[0]
+			else:
+				checker = subtitle[0]
+				url = match[0]
+			#addLink(match[0],match[0],'')
+		except: pass
+	if "divxstage" in url:
+		try:
+			sources = []
+			hosted_media = urlresolver.HostedMediaFile(url)
+			sources.append(hosted_media)
+			source = urlresolver.choose_source(sources)
+			if source: 
+				url = source.resolve()
+    			else: url = ''
+    			#return url
+		except: pass
+	if "vidbull" in url:
+		try:
+			sources = []
+			hosted_media = urlresolver.HostedMediaFile(url)
+			sources.append(hosted_media)
+			source = urlresolver.choose_source(sources)
+			if source: 
+				url = source.resolve()
+    			else: url = ''
+    			#addLink(match[0],match[0],'')
     			#return url
 		except: pass
 	if "cloudzilla" in url:
@@ -428,22 +494,69 @@ def PLAY_movie(url,name,iconimage,checker,fanart):
 				url = match[0]
 			#addLink(checker,match[0],'')
 		except: pass
+	nome_addon = nomeAddon
         #if 'vk.com' not in url and 'video.mail.ru' not in url and 'video.tt' not in url:
         if 'vk.com' not in url and 'video.mail.ru' not in url:
                 try:
-                        #win = xbmcgui.Window(10000)
-                        #win.setProperty('1ch.playing.title', name)
-                        ####addLink(name+url,match[0],'')
                         playlist = xbmc.PlayList(1)
                         playlist.clear()             
                         playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
-                        addLink(name,url,iconimage)
-                        xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
-                        xbmcPlayer.play(playlist)
-                        if checker == '' or checker == None: pass
-                        else: xbmcPlayer.setSubtitles(checker)
+                        MyPlayer(nome_addon=nome_addon,checker=checker).PlayStream(playlist)
                 except: pass
+                
+class MyPlayer(xbmc.Player):
+        def __init__( self, *args, **kwargs ):
+                xbmc.Player.__init__( self )
+                self.nomeaddon = kwargs[ "nome_addon" ]
+                self.checkerSubs = kwargs[ "checker" ]
+                self.Playable = 'Nao'
 
+        def PlayStream(self, playlist):  
+                self.play(playlist)
+                progress.close()
+                if self.checkerSubs == '' or self.checkerSubs == None: pass
+                else: self.setSubtitles(self.checkerSubs)
+                if not self.isPlaying() and self.Playable == 'Nao':
+                        xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
+                        if self.nomeaddon == 'TugaFilmesTV': TugaFilmesTV.TFV_MenuPrincipal('')#TugaFilmesTV.TFV_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesTV.TFV_MenuPrincipal(artfolder)
+                        elif self.nomeaddon == 'TugaFilmesCom': TugaFilmesCom.TFC_MenuPrincipal('')#TugaFilmesCom.TFC_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesCom.TFC_MenuPrincipal(artfolder)
+                        elif self.nomeaddon == 'MovieTuga': MovieTuga.MVT_MenuPrincipal('')#MovieTuga.MVT_ChamarBox_Icons_depois_de_fechar_fontes()#MovieTuga.MVT_MenuPrincipal(artfolder)
+                        elif self.nomeaddon == 'TopPt': TopPt.TPT_MenuPrincipal('')#TopPt.TPT_ChamarBox_Icons_depois_de_fechar_fontes()#TopPt.TPT_MenuPrincipal(artfolder)
+                        elif self.nomeaddon == 'Series': Series.ChamarBox_Series('')#Series.SERIES_ChamarBox_Icons_depois_de_fechar_fontes()#Series.ChamarBox_Series(nome_pesquisa)
+                        elif self.nomeaddon == 'Filmes': Filmes.ChamarBox_Filmes('')#Filmes.FILMES_ChamarBox_Icons_depois_de_fechar_fontes()
+                        elif self.nomeaddon == 'FilmesAnima': FilmesAnima.FILMESANIMA_ChamarBox_Icons_depois_de_fechar_fontes()
+                        elif self.nomeaddon == 'PesquisaGeral': Pesquisar.PG_ChamarBox_Icons_depois_de_fechar_fontes()
+                while self.isPlaying():
+                        xbmc.sleep(1000)
+
+        def onPlayBackStarted(self):
+                self.Playable = 'Sim'
+                progress.close()
+                            
+        def onPlayBackEnded(self):
+                progress.close()
+                if self.nomeaddon == 'TugaFilmesTV': TugaFilmesTV.TFV_MenuPrincipal('')#TugaFilmesTV.TFV_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesTV.TFV_MenuPrincipal(artfolder)
+                elif self.nomeaddon == 'TugaFilmesCom': TugaFilmesCom.TFC_MenuPrincipal('')#TugaFilmesCom.TFC_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesCom.TFC_MenuPrincipal(artfolder)
+                elif self.nomeaddon == 'MovieTuga': MovieTuga.MVT_MenuPrincipal('')#MovieTuga.MVT_ChamarBox_Icons_depois_de_fechar_fontes()#MovieTuga.MVT_MenuPrincipal(artfolder)
+                elif self.nomeaddon == 'TopPt': TopPt.TPT_MenuPrincipal('')#TopPt.TPT_ChamarBox_Icons_depois_de_fechar_fontes()#TopPt.TPT_MenuPrincipal(artfolder)
+                elif self.nomeaddon == 'Series': Series.ChamarBox_Series('')#Series.ChamarBox_Series('')#Series.SERIES_ChamarBox_Icons_depois_de_fechar_fontes()#Series.ChamarBox_Series(nome_pesquisa)
+                elif self.nomeaddon == 'Filmes': Filmes.ChamarBox_Filmes('')#Filmes.FILMES_ChamarBox_Icons_depois_de_fechar_fontes()
+                elif self.nomeaddon == 'FilmesAnima': FilmesAnima.FILMESANIMA_ChamarBox_Icons_depois_de_fechar_fontes()
+                elif self.nomeaddon == 'PesquisaGeral': Pesquisar.PG_ChamarBox_Icons_depois_de_fechar_fontes()
+
+        def onPlayBackStopped(self):
+                progress.close()
+                if self.Playable == 'Sim':
+                        if self.nomeaddon == 'TugaFilmesTV': TugaFilmesTV.TFV_MenuPrincipal('')#TugaFilmesTV.TFV_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesTV.TFV_MenuPrincipal(artfolder)
+                        elif self.nomeaddon == 'TugaFilmesCom': TugaFilmesCom.TFC_MenuPrincipal('')#TugaFilmesCom.TFC_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesCom.TFC_MenuPrincipal(artfolder)
+                        elif self.nomeaddon == 'MovieTuga': MovieTuga.MVT_MenuPrincipal('')#MovieTuga.MVT_ChamarBox_Icons_depois_de_fechar_fontes()#MovieTuga.MVT_MenuPrincipal(artfolder)
+                        elif self.nomeaddon == 'TopPt': TopPt.TPT_MenuPrincipal('')#TopPt.TPT_ChamarBox_Icons_depois_de_fechar_fontes()#TopPt.TPT_MenuPrincipal(artfolder)
+                        elif self.nomeaddon == 'Series': Series.ChamarBox_Series('')#Series.ChamarBox_Series('')#Series.SERIES_ChamarBox_Icons_depois_de_fechar_fontes()#Series.ChamarBox_Series(nome_pesquisa)
+                        elif self.nomeaddon == 'Filmes': Filmes.ChamarBox_Filmes('')#Filmes.FILMES_ChamarBox_Icons_depois_de_fechar_fontes()
+                        elif self.nomeaddon == 'FilmesAnima': FilmesAnima.FILMESANIMA_ChamarBox_Icons_depois_de_fechar_fontes()
+                        elif self.nomeaddon == 'PesquisaGeral': Pesquisar.PG_ChamarBox_Icons_depois_de_fechar_fontes()
+                else: pass
+                
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
 def PLAY_abrir_url(url):
