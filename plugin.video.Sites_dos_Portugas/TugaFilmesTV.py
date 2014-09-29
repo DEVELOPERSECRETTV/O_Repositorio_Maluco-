@@ -314,7 +314,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
                                 if 'Temporada' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
                                 else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                if thumb == '' or 's1600' in thumb:
+                                if thumb == '' or 'legendas.tv' in thumb:# or 's1600' in thumb:
                                         try:
                                                 html_pesquisa = TFV_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''

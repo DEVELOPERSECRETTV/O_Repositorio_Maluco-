@@ -459,7 +459,7 @@ def Series_Series(url):
         try:
                 html_series_source = MASH_abrir_url(urltpt)
         except: html_series_source = ''
-	html_items_series = re.findall('<h3 class="widgettitle">SERIES(.*?)<div id="footer-widgets" class="clearfix">', html_series_source, re.DOTALL)
+	html_items_series = re.findall('<h3 class="widgettitle">SERIES(.*?)OS 10 MAIS POPULARES POSTS', html_series_source, re.DOTALL)
         print len(html_items_series)
         for item_series in html_items_series:
                 series = re.compile('<a href=".+?">(.+?)</a>').findall(item_series)
@@ -533,7 +533,7 @@ def Series_Series(url):
         try:
                 html_series_source = MASH_abrir_url(url)
         except: html_series_source = ''
-	html_items_series = re.findall('<h3 class="widgettitle">SERIES(.*?)<div id="footer-widgets" class="clearfix">', html_series_source, re.DOTALL)
+	html_items_series = re.findall('<h3 class="widgettitle">SERIES(.*?)OS 10 MAIS POPULARES POSTS', html_series_source, re.DOTALL)
         print len(html_items_series)
         for item_series in html_items_series:
                 series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)

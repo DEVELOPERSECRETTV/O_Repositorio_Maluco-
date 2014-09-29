@@ -105,24 +105,31 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 		except: pass
 	if "vidzi.tv" in url:
 		try:
-			iframe_url = url#.replace('vidzi.tv/','vidzi.tv/embed-')
-			print iframe_url
-			link3 = PLAY_abrir_url(iframe_url)
-			#tit=re.compile('var vtitle = "(.+?)"').findall(link3)
-			match=re.compile('file: "(.+?)"').findall(link3)
-			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
-			if subtitle == []:
-				checker = ''
-				for link in match:
-                                        if 'vidzi.tv' not in link: url = link
-			else:
-				checker = subtitle[0]
-				for link in match:
-                                        if 'vidzi.tv' not in link: url = link
+                        sources = []
+			hosted_media = urlresolver.HostedMediaFile(url)
+			sources.append(hosted_media)
+			source = urlresolver.choose_source(sources)
+			if source: 
+				url = source.resolve()
+    			else:
+                                iframe_url = url#.replace('vidzi.tv/','vidzi.tv/embed-')
+                                print iframe_url
+                                link3 = PLAY_abrir_url(iframe_url)
+                                #tit=re.compile('var vtitle = "(.+?)"').findall(link3)
+                                match=re.compile('file: "(.+?)"').findall(link3)
+                                subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+                                if subtitle == []:
+                                        checker = ''
+                                        for link in match:
+                                                if 'vidzi.tv' not in link: url = link
+                                else:
+                                        checker = subtitle[0]
+                                        for link in match:
+                                                if 'vidzi.tv' not in link: url = link
 		except: pass
 	if "vidzen" in url:
 		try:
-			iframe_url = url#.replace('vidzi.tv/','vidzi.tv/embed-')
+			iframe_url = url
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
 			#tit=re.compile('var vtitle = "(.+?)"').findall(link3)
@@ -417,15 +424,16 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
 			tit=re.compile('title: "(.+?)"').findall(link3)
-			#match=re.compile('file: "(.+?)"').findall(link3)
+			match=re.compile('file: "(.+?)"').findall(link3)
 			subtitle=re.compile("addSubtitles[(]'(.+?)'").findall(link3)
 			iframe_url = url.replace('/embed/','/video-link/')
 			print iframe_url
-			link3 = PLAY_abrir_url(iframe_url)
-			#print iframe_url
-			#link3 = PLAY_abrir_url(iframe_url)
-			match=re.compile('"url":"(.+?)"}').findall(link3)
-			#subtitle = []
+			if not match:
+                                link3 = PLAY_abrir_url(iframe_url)
+                                #print iframe_url
+                                #link3 = PLAY_abrir_url(iframe_url)
+                                match=re.compile('"url":"(.+?)"}').findall(link3)
+                                #subtitle = []
 			if subtitle == []:
 				checker = ''
 				url = match[0].replace('\/','/')
