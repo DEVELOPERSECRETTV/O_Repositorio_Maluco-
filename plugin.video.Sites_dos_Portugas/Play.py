@@ -166,6 +166,29 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
     			#addLink(match[0],match[0],'')
     			#return url
 		except: pass
+	if "vodlocker" in url:
+		try:
+			sources = []
+			hosted_media = urlresolver.HostedMediaFile(url)
+			sources.append(hosted_media)
+			source = urlresolver.choose_source(sources)
+			if source: 
+				url = source.resolve()
+    			else: url = ''
+    			#return url
+		except: pass
+	if "played.to" in url:
+		try:
+			sources = []
+			hosted_media = urlresolver.HostedMediaFile(url)
+			sources.append(hosted_media)
+			source = urlresolver.choose_source(sources)
+			if source: 
+				url = source.resolve()
+    			else: url = ''
+    			#addLink(match[0],match[0],'')
+    			#return url
+		except: pass
 	if "cloudzilla" in url:
 		try:
 			iframe_url = url

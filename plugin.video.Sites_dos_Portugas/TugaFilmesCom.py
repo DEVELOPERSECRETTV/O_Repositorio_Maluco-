@@ -23,11 +23,31 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket
+import Play,Pesquisar,Mashup,TugaFilmesTV,TopPt,MovieTuga,Armagedom
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
+
+fanart = artfolder + 'flag.jpg'
+_series_ = []
+_servidores_ = ['' for i in range(2000)]
+_ligacao_ = ['' for i in range(2000)]
+_servid_ = ['' for i in range(2000)]
+_ligacThumb_ = ['' for i in range(2000)]
+_ligac_ = ['' for i in range(2000)]
+_servidPesquisa_ = ['' for i in range(2000)]
+_ligacThumbPesquisa_ = ['' for i in range(2000)]
+_ligacPesquisa_ = ['' for i in range(2000)]
+_servidAZ_ = ['' for i in range(2000)]
+_ligacThumbAZ_ = ['' for i in range(2000)]
+_ligacAZ_ = ['' for i in range(2000)]
+_ItemsMenu_ = ['' for i in range(2000)]
+_ligacUrl_ = ['' for i in range(2000)]
+_ItemsMenu2_ = ['' for i in range(2000)]
+_ligacUrl2_ = ['' for i in range(2000)]
+_PgSeguinte_ = ['' for i in range(2)]
 
 progress = xbmcgui.DialogProgress()
 
@@ -263,48 +283,69 @@ def TFC_encontrar_fontes_filmes(url):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
-def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
+def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items):
         url = url + '///' + name
         if "videomega" in url:
 		try:
+                        fonte_id = '(Videomega)'
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
         if "vidto.me" in url:
 		try:
                         print url
+                        fonte_id = '(Vidto.me)'
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,70,iconimage,'','')
 		except: pass
         if "dropvideo" in url:
 		try:
                         if '/video/' in url: url = url.replace('/video/','/embed/')
+                        fonte_id = '(DropVideo)'
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,70,iconimage,'','')
 		except:pass
 	if "streamin.to" in url:
                 try:
 			print url
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,70,iconimage,'','')
+			fonte_id = '(Streamin)'
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]NÃ£o funciona[/COLOR]',url,70,iconimage,'','')
                 except:pass                        
         if "putlocker" in url:
                 try:
                         print url
+                        fonte_id = '(Putlocker)'
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,70,iconimage,'','')
     		except:pass
     	if "nowvideo" in url:
                 try:
                         print url
+                        fonte_id = '(Nowvideo)'
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,70,iconimage,'','')
     		except:pass
     	if "videowood" in url:
                 try:
                         if '/video/' in url: url = url.replace('/video/','/embed/')
                         print url
+                        fonte_id = '(VideoWood)'
                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
     		except:pass
+    	_servidores_[conta_os_items] = '[B][COLOR yellow]'+fonte_id+'[/COLOR][/B]'
+        _ligacao_[conta_os_items] = url
     	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def TFC_encontrar_videos_filmes(name,url):
+        for x in range(len(_servidores_)):
+                _servidores_[x]=''
+        for x in range(len(_ligacao_)):
+                _ligacao_[x]=''
+        conta_os_items = 0
+        _servidores_[conta_os_items] = name
+        _ligacao_[conta_os_items] = 'SUBMENU'
+        conta_os_items = conta_os_items + 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Procurar streams...')
+        progress.update( percent, "", message, "" )
         conta_id_video = 0
 	addDir1(name,'url',1003,iconimage,False,'')
         addDir1('','url',1003,artfolder,False,'')
@@ -324,21 +365,32 @@ def TFC_encontrar_videos_filmes(name,url):
                                         conta_video = len(match)
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]LEGENDADO:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
                                                         addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
                                                 if 'PT/PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
                                                         addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
-                                                elif 'PT-PT' in assis[0]: addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                elif 'PT-PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                        conta_os_items = conta_os_items + 1
                                 assistir_fontes = re.findall("------------------------------<br />(.*?)='postmeta'>", fonte, re.DOTALL)
                                 assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
                                 conta_id_video = 0
@@ -348,21 +400,32 @@ def TFC_encontrar_videos_filmes(name,url):
                                         conta_video = len(match)
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]LEGENDADO:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
                                                         addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
                                                 if 'PT/PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
                                                         addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
-                                                elif 'PT-PT' in assis[0]: addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                elif 'PT-PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                        conta_os_items = conta_os_items + 1
                         else:
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
                                 conta_id_video = 0
@@ -372,28 +435,46 @@ def TFC_encontrar_videos_filmes(name,url):
                                         conta_video = len(match)
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]LEGENDADO:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
                                                         addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
                                                 if 'PT/PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
                                                         addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
-                                                elif 'PT-PT' in assis[0]: addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                elif 'PT-PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                        conta_os_items = conta_os_items + 1
                 else:
+                        match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
+                        for url in match:                                
+                                id_video = ''
+                                conta_id_video = conta_id_video + 1
+                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                conta_os_items = conta_os_items + 1
                         match = re.compile('<iframe .+? src="(.+?)"').findall(fonte)
                         conta_video = len(match)
                         for url in match:                                
                                 id_video = ''
                                 conta_id_video = conta_id_video + 1
-                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                conta_os_items = conta_os_items + 1
                         if numero_de_fontes > 0:
                                 conta_video = 0
                                 match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(fonte)
@@ -403,8 +484,12 @@ def TFC_encontrar_videos_filmes(name,url):
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                                        conta_os_items = conta_os_items + 1
                                         except:pass
+        percent = int( ( 100 / 100.0 ) * 100)
+        progress.update( percent, "", message, "" )
+        progress.close()
 
 
 
