@@ -120,12 +120,13 @@ def TPT_Menu_Filmes_Por_Categorias(artfolder):
         conta_os_items = 0
         url_categorias = 'http://toppt.net/'
         html_categorias_source = TPT_abrir_url(url_categorias)
-	html_items_categorias = re.findall('<h3 class="widgettitle">FILMES</h3>(.*?)<h3 class="widgettitle">SERIES [[]Completas[]]</h3>', html_categorias_source, re.DOTALL)
+	html_items_categorias = re.findall('id="menu-item-15291"(.*?)id="menu-item-15290"', html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        if nome_categoria != '2011' and nome_categoria != '2012' and nome_categoria != '2013' and nome_categoria != '2014' and nome_categoria != 'm18':
+                        #if nome_categoria != '2011' and nome_categoria != '2012' and nome_categoria != '2013' and nome_categoria != '2014':
+                        if nome_categoria != 'm18' and nome_categoria != 'FILMES':
                                 nome_categoria = nome_categoria.replace('filmes ','')
                                 nome_categoria = nome_categoria.lower()
                                 nome_categoria = nome_categoria.title()
@@ -242,10 +243,8 @@ def TPT_Menu_Series_A_a_Z(artfolder):
         Series_File.close()
         progress.close()
 
-#------------------------------------------------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------------------------------#
 #-------------------------------------------------------------------  Filmes  -----------------------------------------------------------------#
-
-		
 
 def TPT_encontrar_fontes_filmes(url,artfolder):
         percent = 0
@@ -521,6 +520,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
         nometitulo = nomeescolha
         #if 'Season' not in nometitulo:
         if nometitulo != '':
+                num = 0
                 percent = 0
                 message = ''
                 progress.create('Progresso', 'A Procurar streams...')
@@ -535,6 +535,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
 	except: link2 = ''
 	if link2:
                 #addDir1('sim','url',1001,artfolder,False,'')
+                #return
                 if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
                         newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
                         l=1
@@ -543,16 +544,40 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                         newmatch1 = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
                         newmatch = re.findall('<img style="height: 90px; width: 200px;".+?DOWNLOAD',link2,re.DOTALL)
                         l=5
+                #addDir1('sim'+str(l),'url',1001,artfolder,False,'')
+                #return
                 if not newmatch:
                         newmatch = re.findall('<span id=.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
                         l=2
+                #addDir1('sim'+str(l),'url',1001,artfolder,False,'')
+                #return
                 if not newmatch:
                         newmatch = re.findall('<span id=.+?<br/>\n<img',link2,re.DOTALL)
                         l=3
+                #addDir1('sim'+str(l),'url',1001,artfolder,False,'')
+                #return
                 if not newmatch:
+                        newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
+                        l=4
+                #addDir1('sim'+str(l),'url',1001,artfolder,False,'')
+                #return
+                if not newmatch:
+                        #addDir1('sim ya','url',1001,artfolder,False,'')
+                        #return
                         if newmatch1 != [] and 'Season' in nometitulo or 'Temporada' in nometitulo:
-                                linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)\n</div></div><',newmatch1[0],re.DOTALL)
+                                lin = re.findall('.+?EPIS',newmatch1[0],re.DOTALL)
+                                num = len(lin) + 0.0 - 1
+                                #addDir1(str(int(num)),'url',1001,artfolder,False,'')
+                                linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div><',newmatch1[0],re.DOTALL)
                                 for parte1,parte2 in linkseriesssss:
+                                        #addDir1(str(int(num)),'url',1001,artfolder,False,'')
+                                        percent = int( ( i / num ) * 100)
+                                        message = str(i) + " de " + str(int(num))
+                                        progress.update( percent, "", message, "" )
+                                        print str(i) + " de " + str(int(num))
+                                        xbmc.sleep( 100 )
+                                        if progress.iscanceled():
+                                                break
                                         conta_id_video = 0
                                         addDir1('[COLOR blue]'+parte1+'[/COLOR]','','',iconimage,False,'')
                                         match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
@@ -567,8 +592,10 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                         conta_id_video = conta_id_video + 1
                                                         conta_os_items = conta_os_items + 1
                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
+                                        i = i + 1
                 if newmatch:
                         #addDir1('sim'+str(l),'url',1001,artfolder,False,'')
+                        #return
                         if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
                                 #addDir1('sim'+str(l),'url',1001,artfolder,False,'')
                                 match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(newmatch[0])
@@ -578,8 +605,17 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                 conta_os_items = conta_os_items + 1
                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
                         else:
-                                linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)\n</div></div><',newmatch1[0],re.DOTALL)
+                                lin = re.findall('.+?EPIS',newmatch1[0],re.DOTALL)
+                                num = len(lin) + 0.0 - 1
+                                lin = re.findall('.+?EPIS',newmatch[0],re.DOTALL)
+                                num = num + len(lin) + 0.0
+                                linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div><',newmatch1[0],re.DOTALL)
                                 for parte1,parte2 in linkseriesssss:
+                                        percent = int( ( i / num ) * 100)
+                                        message = str(i) + " de " + str(int(num))
+                                        progress.update( percent, "", message, "" )
+                                        print str(i) + " de " + str(int(num))
+                                        xbmc.sleep( 100 )
                                         conta_id_video = 0
                                         addDir1('[COLOR blue]'+parte1+'[/COLOR]','','',iconimage,False,'')
                                         match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
@@ -594,6 +630,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                         conta_id_video = conta_id_video + 1
                                                         conta_os_items = conta_os_items + 1
                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
+                                        i = i + 1
 			linksseccaopartes = re.findall('.+?PARTE',newmatch[0],re.DOTALL)
 			if linksseccaopartes:
                                 #addDir1('1sim'+str(l),'url',1001,artfolder,False,'')
@@ -780,7 +817,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                                 parte1 = pp[0]
                                                                         conta_id_video = 0
                                                                         conta_os_items = conta_os_items + 1
-                                                                        _servidores_[conta_os_items] = ('[COLOR bue] '+parte1+'[/COLOR]')
+                                                                        _servidores_[conta_os_items] = ('[COLOR blue] '+parte1+'[/COLOR]')
                                                                         _ligacao_[conta_os_items] = 'SUBMENU'
                                                                         addDir1('[COLOR blue] '+parte1+'[/COLOR]','','',iconimage,False,'')					
                                                                         match = re.compile('<iframe src="(.+?)"').findall(parte2)	
@@ -806,22 +843,23 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                         if len(lin) == 1: linksseccao = re.findall('ODIO (.+?)<.+?>(.+?)<img',newmatch[0],re.DOTALL)
                                                         else: linksseccao = re.findall('ODIO (.+?)<.+?>\n(.+?)EPIS',newmatch[0],re.DOTALL)
                                                         linksseccaoultimo = re.findall('ODIO (.+?)<.+?>\n(.+?)</p>',newmatch[0],re.DOTALL)
-                                                        #addDir1('4sim'+str(len(lin)),'url',1001,artfolder,False,'')
-                                                        num = len(lin) + 0.0
+                                                        #addDir1(str(i)+' 4sim '+str(len(lin)),'url',1001,artfolder,False,'')
+                                                        #num = len(lin) + 0.0
+                                                        if i == 1: num = len(lin) + 0.0
                                                         if linksseccao:
                                                                 #addDir1('4sim'+str(l),'url',1001,artfolder,False,'')
                                                                 #addDir1('sim','url',1001,artfolder,False,'')
                                                                 #return
-                                                                percent = 0
-                                                                message = ''
-                                                                progress.create('Progresso', 'A Pesquisar:')
-                                                                progress.update( percent, "", message, "" )
+                                                                #percent = 0
+                                                                #message = ''
+                                                                #progress.create('Progresso', 'A Pesquisar:')
+                                                                #progress.update( percent, "", message, "" )
                                                                 ultima_parte = ''
                                                                 for parte1,parte2 in linksseccao:
                                                                         percent = int( ( i / num ) * 100)
-                                                                        message = str(i) + " de " + str(len(lin))
+                                                                        message = str(i) + " de " + str(int(num))
                                                                         progress.update( percent, "", message, "" )
-                                                                        print str(i) + " de " + str(len(lin))
+                                                                        print str(i) + " de " + str(int(num))
                                                                         xbmc.sleep( 100 )
                                                                         if progress.iscanceled():
                                                                                 break
@@ -864,6 +902,13 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                 linksseccao = re.findall('ODIO (.+?)</p>\n<p><b>(.+?)EPIS',nmatch[0],re.DOTALL)
                                                                 if linksseccao:
                                                                         for parte1,parte2 in linksseccao:
+                                                                                percent = int( ( i / num ) * 100)
+                                                                                message = str(i) + " de " + str(int(num))
+                                                                                progress.update( percent, "", message, "" )
+                                                                                print str(i) + " de " + str(int(num))
+                                                                                xbmc.sleep( 100 )
+                                                                                if progress.iscanceled():
+                                                                                        break
                                                                                 conta_os_items = conta_os_items + 1
                                                                                 _servidores_[conta_os_items] = ('[COLOR blue] Episódio '+parte1+'[/COLOR]')
                                                                                 _ligacao_[conta_os_items] = 'SUBMENU'
@@ -887,6 +932,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                                                         conta_os_items = conta_os_items + 1
                                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
+                                                                                i = i + 1
                                                                 conta_id_video = 0
                                                                 v_id = re.compile('=(.*)').findall(url)
                                                                 if not v_id: v_id = re.compile('//(.*)').findall(url)
@@ -922,15 +968,22 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
                                                                 ####################################################################
                                                         else:
-                                                                linksseccao = re.findall('<p>(.+?)EPISODIO<br/>(.+?)</iframe></p>',newmatch[0],re.DOTALL)
+                                                                linksseccao = re.findall('<p>(.+?)EPISODIO<br/>(.+?)</iframe>',newmatch[0],re.DOTALL)
                                                                 if linksseccao:
                                                                         #addDir1('sim1','url',1001,artfolder,False,'')
                                                                         for parte1,parte2 in linksseccao:
+                                                                                percent = int( ( i / num ) * 100)
+                                                                                message = str(i) + " de " + str(int(num))
+                                                                                progress.update( percent, "", message, "" )
+                                                                                print str(i) + " de " + str(int(num))
+                                                                                xbmc.sleep( 100 )
+                                                                                if progress.iscanceled():
+                                                                                        break
                                                                                 conta_id_video = 0
                                                                                 conta_os_items = conta_os_items + 1
-                                                                                _servidores_[conta_os_items] = ('[COLOR bue] Episódio '+parte1+'[/COLOR]')
+                                                                                _servidores_[conta_os_items] = ('[COLOR blue] '+parte1+' Episódio[/COLOR]')
                                                                                 _ligacao_[conta_os_items] = 'SUBMENU'
-                                                                                addDir1('[COLOR blue] Episódio '+parte1+'[/COLOR]','','',iconimage,False,'')					
+                                                                                addDir1('[COLOR blue] '+parte1+' Episódio[/COLOR]','','',iconimage,False,'')					
                                                                                 match = re.compile('<iframe src="(.+?)"').findall(parte2)	
                                                                                 for url in match:
                                                                                         conta_id_video = conta_id_video + 1
@@ -949,19 +1002,27 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                                                         conta_os_items = conta_os_items + 1
                                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
+                                                                                i = i + 1
                                                                         conta_id_video = 0
                                                                         v_id = re.compile('=(.*)').findall(url)
                                                                         if not v_id: v_id = re.compile('//(.*)').findall(url)
                                                                         #contamatch = re.findall('ODIO (.+?)</p>\n<p><b>',newmatch[0],re.DOTALL)
                                                                         #return
                                                                         nmatch = re.findall(v_id[0]+'(.+?)<img',newmatch[0],re.DOTALL)
-                                                                        linksseccao = re.findall('<p>(.+?)EPISODIO<br/>(.+?)</iframe></p>',nmatch[0],re.DOTALL)
+                                                                        linksseccao = re.findall('<p>(.+?)EPISODIO<br/>(.+?)</iframe>',nmatch[0],re.DOTALL)
                                                                         for parte1,parte2 in linksseccao:
+                                                                                percent = int( ( i / num ) * 100)
+                                                                                message = str(i) + " de " + str(int(num))
+                                                                                progress.update( percent, "", message, "" )
+                                                                                print str(i) + " de " + str(int(num))
+                                                                                xbmc.sleep( 100 )
+                                                                                if progress.iscanceled():
+                                                                                        break
                                                                                 conta_id_video = 0
                                                                                 conta_os_items = conta_os_items + 1
-                                                                                _servidores_[conta_os_items] = ('[COLOR bue] Episódio '+parte1+'[/COLOR]')
+                                                                                _servidores_[conta_os_items] = ('[COLOR blue] '+parte1+' Episódio[/COLOR]')
                                                                                 _ligacao_[conta_os_items] = 'SUBMENU'
-                                                                                addDir1('[COLOR blue] Episódio '+parte1+'[/COLOR]','','',iconimage,False,'')					
+                                                                                addDir1('[COLOR blue] '+parte1+' Episódio[/COLOR]','','',iconimage,False,'')					
                                                                                 match = re.compile('<iframe src="(.+?)"').findall(parte2)	
                                                                                 for url in match:
                                                                                         conta_id_video = conta_id_video + 1
@@ -980,6 +1041,50 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                                                         conta_os_items = conta_os_items + 1
                                                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
+                                                                                i = i + 1
+                                                                        if i != int(num):
+                                                                                #addDir1(str(l)+' '+str(i)+' '+str(int(num)),'url',1001,artfolder,False,'')
+                                                                                conta_id_video = 0
+                                                                                v_id = re.compile('=(.*)').findall(url)
+                                                                                if not v_id: v_id = re.compile('//(.*)').findall(url)
+                                                                                #contamatch = re.findall('ODIO (.+?)</p>\n<p><b>',newmatch[0],re.DOTALL)
+                                                                                #return
+                                                                                #addDir1(v_id[0],'url',1001,artfolder,False,'')
+                                                                                nmatch = re.findall(v_id[0]+'(.*)',newmatch[0],re.DOTALL)
+                                                                                #if nmatch: addDir1('sim','url',1001,artfolder,False,'')
+                                                                                linksseccao = re.findall('/>(.+?)EPISODIO<br/>(.+?)</iframe>',nmatch[0],re.DOTALL)
+                                                                                for parte1,parte2 in linksseccao:
+                                                                                        percent = int( ( i / num ) * 100)
+                                                                                        message = str(i) + " de " + str(int(num))
+                                                                                        progress.update( percent, "", message, "" )
+                                                                                        print str(i) + " de " + str(int(num))
+                                                                                        xbmc.sleep( 100 )
+                                                                                        if progress.iscanceled():
+                                                                                                break
+                                                                                        conta_id_video = 0
+                                                                                        conta_os_items = conta_os_items + 1
+                                                                                        _servidores_[conta_os_items] = ('[COLOR blue] '+parte1.replace('\n','')+' Episódio[/COLOR]')
+                                                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                                                        addDir1('[COLOR blue] '+parte1.replace('\n','')+' Episódio[/COLOR]','','',iconimage,False,'')					
+                                                                                        match = re.compile('<iframe src="(.+?)"').findall(parte2)	
+                                                                                        for url in match:
+                                                                                                conta_id_video = conta_id_video + 1
+                                                                                                conta_os_items = conta_os_items + 1
+                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
+                                                                                        match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
+                                                                                        if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
+                                                                                        for url in match:
+                                                                                                if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                                                        conta_id_video = conta_id_video + 1
+                                                                                                        conta_os_items = conta_os_items + 1
+                                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
+                                                                                        match = re.compile('"window.open(.+?)"').findall(parte2)
+                                                                                        for url in match:
+                                                                                                conta_id_video = conta_id_video + 1
+                                                                                                url = url.replace("'","").replace("(","").replace(")","")
+                                                                                                conta_os_items = conta_os_items + 1
+                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
+                                                                                        i = i + 1
                                                                 else:
                                                                         #addDir1('sim_é','url',1001,artfolder,False,'')
                                                                         match = re.compile('<iframe.+?src="(.+?)"').findall(newmatch[0])
