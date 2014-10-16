@@ -234,17 +234,20 @@ def MVT_encontrar_videos_filmes(name,url):
                                                 except:pass
                                         if 'vidto' in fonte_id:
                                                 try:
-                                                        match = re.compile('<iframe .+? src="//vidto.me/embed-(.+?)-755x390.html" .+?</iframe>').findall(fonte_id)
+                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
                                                         conta_id_video = conta_id_video + 1
+                                                        if match: match = re.compile('(.+?)-').findall(match[0])
                                                         id_video = match[0]
                                                         url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
                 else:
+                        #addDir1(url+name,'url',1002,iconimage,False,'')
  	                if fonte_video:
  		                for fonte_id in fontes_video:
                                         if 'videomega' in fonte_id:
                                                 try:
+                                                        #addDir1(url+name,'url',1002,iconimage,False,'')
                                                         match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
@@ -253,8 +256,10 @@ def MVT_encontrar_videos_filmes(name,url):
                                                 except:pass
                                         if 'vidto' in fonte_id:
                                                 try:
-                                                        match = re.compile('<iframe .+? src="//vidto.me/embed-(.+?)-755x390.html" .+?</iframe>').findall(fonte_id)
+                                                        #addDir1(url+name,'url',1002,iconimage,False,'')
+                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
                                                         conta_id_video = conta_id_video + 1
+                                                        if match: match = re.compile('(.+?)-').findall(match[0])
                                                         id_video = match[0]
                                                         url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')

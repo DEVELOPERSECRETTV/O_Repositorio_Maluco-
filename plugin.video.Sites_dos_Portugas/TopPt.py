@@ -162,7 +162,7 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                 if line!='':_series_.append(line)
         url_series = 'http://toppt.net/'
 	html_series_source = TPT_abrir_url(url_series)
-	html_items_series = re.findall('<h3 class="widgettitle">SERIES(.*?)OS 10 MAIS POPULARES POSTS', html_series_source, re.DOTALL)	
+	html_items_series = re.findall('<h3 class="widgettitle">SERIES(.*?)Recent Posts', html_series_source, re.DOTALL)	
         print len(html_items_series)
         for item_series in html_items_series:
                 series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
@@ -282,6 +282,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
 		print len(items)
 		num = len(items) + 0.0
 		for item in items:
+                        sinopse = ''
                         fanart = ''
                         thumb = ''
                         percent = int( ( i / num ) * 100)
@@ -296,6 +297,10 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
                         if not qualidade: qualidade = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        snpse = re.compile("<b>SINOPSE:.+?/b>(.+?)<br/>").findall(item)
+                        if not snpse: qualidade = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
+                        if snpse: sinopse = snpse[0]
+                        else: sinopse = ''
                         ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
                         audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)
                         thumbnail = re.compile('src="(.+?)"').findall(item)
@@ -487,7 +492,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 ano_filme = ''
                                 audio_filme = ''
                         try:
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0],233,thumb,'',fanart,ano_filme,'')
+                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0],233,thumb,sinopse,fanart,ano_filme,'')
                         except: pass
                         i = i + 1
 	else:
@@ -1190,6 +1195,11 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
         if 'Season' not in nometitulo or 'Temporada' not in nometitulo:
                 percent = int( ( 100 / 100.0 ) * 100)
                 progress.update( percent, "", message, "" )
+        #index = xbmcgui.Dialog().select('Inicio', _servidores_)
+        #if index > -1:
+                #escolha = idx[index]
+        #else: progress.close()
+        #if escolha == '[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]' : Mashup.MASHUP_Menu_Pricipal()
         progress.close()
         #return
 		
@@ -1250,7 +1260,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
 	if "streamin.to" in url:
                 try:
                         fonte_id = '(Streamin)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]NÃ£o funciona[/COLOR]',url,30,iconimage,'','')
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,30,iconimage,'','')
                 except:pass                        
     	if "nowvideo" in url:
                 try:
@@ -1364,7 +1374,8 @@ def addLink1(name,url,iconimage):
 	return ok
 
 def addDir(name,url,mode,iconimage,checker,fanart):
-        text = 'nnnnnn'
+        #text = 'nnnnnn'
+        text = ''
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
@@ -1377,7 +1388,8 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         return ok
 
 def addDir2(nome,url,mode,iconimage,checker,fanart):
-        text = 'nnnnnn'
+        #text = 'nnnnnn'
+        text = ''
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&nome="+urllib.quote_plus(nome)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(nome, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
@@ -1400,11 +1412,12 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
         if fanart == '': fanart = artfolder + 'flag.jpg'
-        #text = checker
+        #text = plot
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',fanart)
+        #liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
         #cm = []
 	#cm.append(('Sinopse', 'XBMC.Action(Info)'))

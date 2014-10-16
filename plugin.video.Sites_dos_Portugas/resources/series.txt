@@ -167,3 +167,4 @@ Need For Speed [O Filme]|C:\Users\Sandra\AppData\Roaming\XBMC\addons\plugin.vide
 Fotos íNtimas De Celebridades Circulam Na Net|C:\Users\Sandra\AppData\Roaming\XBMC\addons\plugin.video.Sites_dos_Portugas/resources/img/series.png
 Godzilla|C:\Users\Sandra\AppData\Roaming\XBMC\addons\plugin.video.Sites_dos_Portugas/resources/img/series.png
 Captain America The Winter Soldier [CapitãO AméRica: O Soldado Do Inverno]|C:\Users\Sandra\AppData\Roaming\XBMC\addons\plugin.video.Sites_dos_Portugas/resources/img/series.png
+Ncis New Orleans|http://2.bp.blogspot.com/-jtyabBk2RXQ/VC1EDgASmAI/AAAAAAAAFYI/BQKMqwRzPJw/s1600/h%2Cytrtrfdf.jpg

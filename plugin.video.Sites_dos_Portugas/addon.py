@@ -699,6 +699,7 @@ elif mode == 356: Armagedom.ARM_Menu_Filmes_Por_Categorias_MEGA_tv()
 elif mode == 357: Armagedom.ARM_encontrar_fontes_filmes_MEGASERIESONLINEHD(url)
 elif mode == 358: Armagedom.ARM_Menu_Series_MEGASERIESONLINEHD()
 elif mode == 359: Armagedom.ARM_encontrar_videos_filmes_MEGASERIESONLINEHD(name,url)
+elif mode == 360: Armagedom.ARM_Menu_Series_MEGA_net()
 #---------------------------------------------------------------   Filmes3D   -----------------------------------------------------------------#
 elif mode == 400: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 401: Filmes3D.FILMES3D_MenuPrincipal(artfolder)

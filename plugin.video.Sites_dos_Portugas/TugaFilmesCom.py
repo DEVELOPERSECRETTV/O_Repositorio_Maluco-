@@ -30,7 +30,7 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
-fanart = artfolder + 'flag.jpg'
+fanart = ''#artfolder + 'flag.jpg'
 _series_ = []
 _servidores_ = ['' for i in range(2000)]
 _ligacao_ = ['' for i in range(2000)]
@@ -123,12 +123,16 @@ def TFC_encontrar_fontes_filmes(url):
                         fanart = ''
                         thumb = ''
                         versao = ''
+                        sinopse = ''
                         pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
                         if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
                         assist = re.findall(">ASSISTIR.+?", item, re.DOTALL)
                         if len(assist) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
 			urletitulo = re.compile("<a href=\'(.+?)\' title=\'(.+?)\'>").findall(item)
 			qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
+			snpse = re.compile('<b>SINOPSE:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
+			if snpse: sinopse = snpse[0]
+			else: sinopse = ''
 			thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
 			if thumbnail: thumb = thumbnail[0]
 			print urletitulo,thumbnail
@@ -202,10 +206,16 @@ def TFC_encontrar_fontes_filmes(url):
                         if 'PT PT' in qualidade:
                                 qualidade = qualidade.replace('PT PT','PT-PT')
                         nome = urletitulo[0][1]
+                        nome = nome.replace('&#8216;',"'")
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('&#39;',"'")
                         nome = nome.replace('&amp;','&')
+                        sinopse = sinopse.replace('&#8216;',"'")
+                        sinopse = sinopse.replace('&#8217;',"'")
+                        sinopse = sinopse.replace('&#8211;',"-")
+                        sinopse = sinopse.replace('&#39;',"'")
+                        sinopse = sinopse.replace('&amp;','&')
                         a_q = re.compile('\d+')
                         qq_aa = a_q.findall(nome)
                         for q_a_q_a in qq_aa:
@@ -267,7 +277,7 @@ def TFC_encontrar_fontes_filmes(url):
                         if selfAddon.getSetting('movie-fanart-TFC') == "true":
                                 if fanart == '': fanart = thumb
 			try:
-				if 'ASSISTIR O FILME' in item: addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumb.replace('s1600','s320').replace('.gif','.jpg'),'',fanart,ano,'')
+				if 'ASSISTIR O FILME' in item: addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,'')
 			except: pass
 			#---------------------------------------------------------------
                         i = i + 1
@@ -284,9 +294,17 @@ def TFC_encontrar_fontes_filmes(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
 def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items):
+        if 'videomega' in url: vidv = url
         url = url + '///' + name
         if "videomega" in url:
 		try:
+                        if 'hashkey' in url:
+                                try:
+                                        urlvideomega = TFC_abrir_url(vidv)
+                                except: urlvideomega = ''
+                                if urlvideomega != '':
+                                        urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
+                                        if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
                         fonte_id = '(Videomega)'
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
 		except: pass
@@ -306,7 +324,7 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_i
                 try:
 			print url
 			fonte_id = '(Streamin)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]NÃ£o funciona[/COLOR]',url,70,iconimage,'','')
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,70,iconimage,'','')
                 except:pass                        
         if "putlocker" in url:
                 try:
@@ -357,6 +375,7 @@ def TFC_encontrar_videos_filmes(name,url):
         numero_de_fontes = len(fontes)
 	if fonte:
                 if len(assist) > 1:
+                        #addDir1('1','url',1003,artfolder,False,'')
                         assistir_fontes = re.findall('>ASSISTIR(.*?)------------------------------', fonte, re.DOTALL)
                         if assistir_fontes:
                                 for ass_fon in assistir_fontes:
@@ -428,9 +447,15 @@ def TFC_encontrar_videos_filmes(name,url):
                                         conta_os_items = conta_os_items + 1
                         else:
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
+                                #if not assistir_fontes:
+                                        #addDir1('ya','url',1003,artfolder,False,'')
+                                        #assistir_fontes = re.findall('>ASSISTIR(.*?)</script>', fonte, re.DOTALL)
+                                #else: addDir1('sim','url',1003,artfolder,False,'')
                                 conta_id_video = 0
                                 for ass_fon in assistir_fontes:
                                         match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
+                                        #if '<iframe' in ass_fon: match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
+                                        #elif '<script' in ass_fon: match = re.compile('src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
@@ -462,6 +487,7 @@ def TFC_encontrar_videos_filmes(name,url):
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
                                         conta_os_items = conta_os_items + 1
                 else:
+                        #addDir1('2','url',1003,artfolder,False,'')
                         match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
                         for url in match:                                
                                 id_video = ''
@@ -469,12 +495,22 @@ def TFC_encontrar_videos_filmes(name,url):
                                 TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
                                 conta_os_items = conta_os_items + 1
                         match = re.compile('<iframe .+? src="(.+?)"').findall(fonte)
-                        conta_video = len(match)
-                        for url in match:                                
-                                id_video = ''
-                                conta_id_video = conta_id_video + 1
-                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
-                                conta_os_items = conta_os_items + 1
+                        if match:
+                                conta_video = len(match)
+                                for url in match:
+                                        id_video = ''
+                                        conta_id_video = conta_id_video + 1
+                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                        conta_os_items = conta_os_items + 1
+                        else:
+                                match = re.compile("<script type='text/javascript' src='(.+?)'></script>").findall(fonte)
+                                conta_video = len(match)
+                                for url in match:
+                                        if 'hashkey' in url:
+                                                id_video = ''
+                                                conta_id_video = conta_id_video + 1
+                                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                                conta_os_items = conta_os_items + 1
                         if numero_de_fontes > 0:
                                 conta_video = 0
                                 match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(fonte)
@@ -553,25 +589,27 @@ def addLink2(name,url,iconimage,checker):
 	return ok
 
 def addDir(name,url,mode,iconimage,checker,fanart):
+        if fanart == '': fanart = artfolder + 'flag.jpg'#iconimage
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',fanart)#artfolder + 'flag.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
 
 def addDir1(name,url,mode,iconimage,folder,fanart):
+        if fanart == '': fanart = artfolder + 'flag.jpg'#iconimage
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',fanart)#artfolder + 'flag.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'flag.jpg'
+        if fanart == '': fanart = ''#fanart = artfolder + 'flag.jpg'
         #text = checker
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
