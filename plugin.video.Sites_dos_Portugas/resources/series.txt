@@ -168,3 +168,6 @@ Fotos íNtimas De Celebridades Circulam Na Net|C:\Users\Sandra\AppData\Roaming\X
 Godzilla|C:\Users\Sandra\AppData\Roaming\XBMC\addons\plugin.video.Sites_dos_Portugas/resources/img/series.png
 Captain America The Winter Soldier [CapitãO AméRica: O Soldado Do Inverno]|C:\Users\Sandra\AppData\Roaming\XBMC\addons\plugin.video.Sites_dos_Portugas/resources/img/series.png
 Ncis New Orleans|http://2.bp.blogspot.com/-jtyabBk2RXQ/VC1EDgASmAI/AAAAAAAAFYI/BQKMqwRzPJw/s1600/h%2Cytrtrfdf.jpg
+Alcatraz|http://2.bp.blogspot.com/-PgK8E_XSnHM/Um5FvqZHzGI/AAAAAAAABKg/JIzYlEn79CY/s320/Alcatraz+s1.jpg
+Carlos|http://1.bp.blogspot.com/-3Tsx3TlGQg8/UmVppngI6PI/AAAAAAAABCA/aGj_YUve3mQ/s320/qgmb0j0yk5982f5tk5yx.jpg
+Da Vincis Demons|C:\Users\Sandra\AppData\Roaming\XBMC\addons\plugin.video.Sites_dos_Portugas/resources/img/ze-TPT1.png

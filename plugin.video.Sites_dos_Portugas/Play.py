@@ -600,28 +600,27 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
     		except:pass
     	if "videomega" in url:
 		try:
-			if "iframe" not in url:
-				id_videomega = re.compile('ref=(.*)').findall(url)[0]
-				iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
-			else: iframe_url = url
-			print iframe_url
-			link3 = PLAY_abrir_url(iframe_url)
-			match=re.compile('document.write\(unescape\("(.+?)"\)').findall(link3)
-			print match
-			tit=re.compile('<div id="title">&nbsp;&nbsp;&nbsp;(.+?)</div>').findall(link3)
-			video_url_escape = urllib.unquote(match[0])
-			match=re.compile('file: "(.+?)"').findall(video_url_escape)
-			subtitle=re.compile('"file": "(.+?)"').findall(video_url_escape)
-			if subtitle==[]:
-                                subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)
-                                
-			if subtitle == []:
-				checker = ''
-				url = match[0]
-			else:
-				checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
-				url = match[0]
-			#addLink(checker,match[0],'')
+                        if "iframe" not in url:
+                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
+                                iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
+                        else: iframe_url = url
+                        print iframe_url
+                        link3 = PLAY_abrir_url(iframe_url)
+                        match=re.compile('document.write\(unescape\("(.+?)"\)').findall(link3)
+                        print match
+                        tit=re.compile('<div id="title">&nbsp;&nbsp;&nbsp;(.+?)</div>').findall(link3)
+                        video_url_escape = urllib.unquote(match[0])
+                        match=re.compile('file: "(.+?)"').findall(video_url_escape)
+                        subtitle=re.compile('"file": "(.+?)"').findall(video_url_escape)
+                        if subtitle==[]:
+                                subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)      
+                        if subtitle == []:
+                                checker = ''
+                                url = match[0]
+                        else:
+                                checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
+                                url = match[0]
+                        #addLink(checker,match[0],'')
 		except: pass
 	nome_addon = nomeAddon
 	#addLink(url+'+','','')

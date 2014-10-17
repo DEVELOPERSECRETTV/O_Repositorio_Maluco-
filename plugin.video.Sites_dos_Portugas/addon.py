@@ -19,7 +19,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,time,os
-import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TextBoxes,TopPt,FilmesAnima,Filmes,Series,Mashup,Armagedom,Filmes3D
+import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TextBoxes,TopPt,FilmesAnima,Filmes,Series,Mashup,Armagedom,Filmes3D,FoitaTuga,Cinematuga
 from array import array
 from string import capwords
 
@@ -60,8 +60,8 @@ def MAIN_MENU():
         #addDir1('[B][COLOR blue]Menu Principal[/COLOR][/B]','',31,artfolder + 'MPrin.png',False,'')
         #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         #addDir1('','','',artfolder,False,'')
-        addDir('[B][COLOR green]Fi[/COLOR][COLOR yellow]l[/COLOR][COLOR red]mes[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'filmes.png','nao','')
-        addDir('[B][COLOR green]Sé[/COLOR][COLOR yellow]r[/COLOR][COLOR red]ies[/COLOR][/B]','http://www.tuga-filmes.us',26,artfolder + 'series.png','nao','')
+        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'filmes.png','nao','')
+        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://www.tuga-filmes.us',26,artfolder + 'series.png','nao','')
         url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
         url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
         url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
@@ -70,8 +70,13 @@ def MAIN_MENU():
         url_TPT = saber_url_animacao[0]
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]Ani[/COLOR][COLOR yellow]m[/COLOR][COLOR red]ação[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'animacao.png','nao','')
-        addDir('Pesquisar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'animacao.png','nao','')
+        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
+        url_TPT = 'http://toppt.net/category/series/'
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+        url_ultimos_episodios = urllib.urlencode(parameters)
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S E[/COLOR][COLOR red]PISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,'','nao','')
+        addDir('PESQUISAR','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
         #addDir('[B][COLOR cyan]IMDB[/COLOR][/B]','url',500,'','nao','')
         #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         #addDir1('','','',artfolder,False,'')
@@ -80,10 +85,12 @@ def MAIN_MENU():
         addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','http://direct',71,artfolder + 'Ze-tc1.png','nao','')
         addDir('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','http://direct',101,artfolder + 'Ze-mv1.png','nao','')
         addDir('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]','http://direct',231,artfolder + 'Ze-tp1.png','nao','')
+        addDir('[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]','http://direct',601,'','nao','')
+        addDir('[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]','http://direct',701,'','nao','')
         #addDir('[B][COLOR green]FILMES[/COLOR][COLOR yellow]3D[/COLOR][COLOR red]CINEMA[/COLOR][/B] - [COLOR orange](NOVO)[/COLOR]','http://direct',401,artfolder + 'ze-MVT1.png','nao','')
         #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B]','url',331,artfolder + 'SdB1.png','nao','')
-        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]NI[/COLOR][COLOR red]ÇÕES[/COLOR][/B]','url',1000,artfolder + 'ze-icon3.png','nao','')
+        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]NI[/COLOR][COLOR red]ÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'ze-icon3.png','nao','')
 
 
 
@@ -722,6 +729,91 @@ elif mode == 507:
         Mashup.Filmes_Filmes_Filmes(url)
         setViewMode_filmes()
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 508:
+        Mashup.ultimos_episodios(url)
+        setViewMode_filmes()
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+#----------------------------------------------  FOITATUGA  -------------------------------------------------------
+elif mode == 600: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
+elif mode == 601:
+        FoitaTuga.FTT_MenuPrincipal(artfolder)
+        setViewMode_menuMVT()
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 602:
+        FoitaTuga.FTT_encontrar_fontes_filmes(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 603: FoitaTuga.FTT_encontrar_videos_filmes(name,url)
+elif mode == 604: FoitaTuga.FTT_pesquisar_filmes()
+elif mode == 605: FoitaTuga.FTT_Menu_Filmes(artfolder)
+elif mode == 606: FoitaTuga.FTT_Menu_Filmes_Por_Categorias(artfolder)
+elif mode == 607: FoitaTuga.FTT_Menu_Filmes_Brevemente(artfolder)
+#elif mode == 608: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
+#elif mode == 609: TextBoxes.TBOX_TextBoxes_Sinopse(url)
+#----------------------------------------------  CINEMATUGA  -------------------------------------------------------
+elif mode == 700: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)#,nomeAddon)
+elif mode == 701:
+        Cinematuga.CMT_MenuPrincipal(artfolder)
+        setViewMode_menuTFV()
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 702:
+        Cinematuga.CMT_encontrar_fontes_filmes(url,artfolder)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 703: Cinematuga.CMT_encontrar_videos_filmes(name,url)
+elif mode == 704: Cinematuga.CMT_pesquisar()
+elif mode == 705: Cinematuga.CMT_resolve_videomega_filmes(url,conta_id_video)
+elif mode == 706: Cinematuga.CMT_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,nome_fonte_video)
+elif mode == 707: Cinematuga.CMT_Menu_Filmes(artfolder)
+elif mode == 708:
+        Cinematuga.CMT_Menu_Filmes_Por_Categorias(artfolder)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 709:
+        Cinematuga.CMT_Menu_Filmes_Por_Ano(artfolder)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 710: TugaFilmesTV.TFV_Menu_Series(artfolder)
+elif mode == 711:
+        Cinematuga.CMT_Menu_Series_A_a_Z(artfolder)
+        setViewMode_series_AZ_TFV()
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        #if selfAddon.getSetting('series-thumb-TFV') == "true":
+                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+                #xbmc.executebuiltin("Container.SetViewMode(500)")
+                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        #if selfAddon.getSetting('series-thumb-TFV') == "false":
+                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+                #xbmc.executebuiltin("Container.SetViewMode(502)")
+                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 712: Cinematuga.CMT_encontrar_videos_series(name,url)
+elif mode == 713: Cinematuga.CMT_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
+elif mode == 714:
+        Cinematuga.CMT_encontrar_fontes_series_recentes(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'tvshows')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 715: TugaFilmesTV.TFV_pesquisar_series()
+elif mode == 716:
+        Cinematuga.CMT_encontrar_fontes_pesquisa(url,pesquisou)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 717:
+        Cinematuga.CMT_encontrar_fontes_series_A_a_Z(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'tvshows')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 718:
+        Cinematuga.CMT_Menu_Filmes_Top_5(artfolder)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+#-------------------------------------------------------------------------------------------------------------------------
 
 elif mode == 1000:
         selfAddon.openSettings()

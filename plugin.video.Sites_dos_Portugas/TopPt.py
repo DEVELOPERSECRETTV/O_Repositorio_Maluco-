@@ -146,7 +146,9 @@ def TPT_Menu_Series_A_a_Z(artfolder):
         conta_os_items = 0
         for x in range(len(_s_)):
                 _s_[x]=''
+        sri = []
         i = 1
+        num = 0
         conta = 0
         conta_items = 1
         percent = 0
@@ -162,16 +164,42 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                 if line!='':_series_.append(line)
         url_series = 'http://toppt.net/'
 	html_series_source = TPT_abrir_url(url_series)
-	html_items_series = re.findall('<h3 class="widgettitle">SERIES(.*?)Recent Posts', html_series_source, re.DOTALL)	
+	html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main">', html_series_source, re.DOTALL)
+	for item_series in html_items_series:
+                series = re.compile('<a href=".+?">(.+?)</a>').findall(item_series)
+                for nome_series in series:
+                        nome_series = nome_series.replace('&amp;','&')
+                        nome_series = nome_series.replace('&#39;',"'")
+                        nome_series = nome_series.replace('&#8217;',"'")
+                        nome_series = nome_series.replace('&#8230;',"...")
+                        nome_series = nome_series.replace('Da Vincis Demons',"Da Vinci'S Demons")
+                        nome_series = nome_series.lower()
+                        nome_series = nome_series.title()
+                        if nome_series not in sri:
+                                sri.append(nome_series)
+                                num = num + 1
+	html_items_series = re.findall('<h3 class="widgettitle">SERIES(.*?)Recent Posts', html_series_source, re.DOTALL)
+	for item_series in html_items_series:
+                series = re.compile('<a href=".+?">(.+?)</a>').findall(item_series)
+                for nome_series in series:
+                        nome_series = nome_series.replace('&amp;','&')
+                        nome_series = nome_series.replace('&#39;',"'")
+                        nome_series = nome_series.replace('&#8217;',"'")
+                        nome_series = nome_series.replace('&#8230;',"...")
+                        nome_series = nome_series.lower()
+                        nome_series = nome_series.title()
+                        if nome_series not in sri:
+                                sri.append(nome_series)
+                                num = num + 1
+        num = num + 0.0
         print len(html_items_series)
         for item_series in html_items_series:
                 series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
-                num = len(series) + 0.0
                 for endereco_series,nome_series in series:
                         percent = int( ( i / num ) * 100)
-                        message = str(i) + " de " + str(len(series))
+                        message = str(i) + " de " + str(int(num))
                         progress.update( percent, "", message, "" )
-                        print str(i) + " de " + str(len(series))
+                        print str(i) + " de " + str(int(num))
                         #if selfAddon.getSetting('series-thumb-TPT') == "false": xbmc.sleep( 50 )
                         xbmc.sleep( 50 )
                         if progress.iscanceled():
@@ -180,6 +208,7 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                         nome_series = nome_series.replace('&#39;',"'")
                         nome_series = nome_series.replace('&#8217;',"'")
                         nome_series = nome_series.replace('&#8230;',"...")
+                        nome_series = nome_series.replace('Da Vincis Demons',"Da Vinci'S Demons")
                         nome_series = nome_series.lower()
                         nome_series = nome_series.title()
                         if nome_series in read_Series_File:
@@ -230,7 +259,76 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                         if nome_series not in _s_:
                                 _s_.append(nome_series)
                                 arr_series.append((nome_series,endereco_series,thumb))
-                        i = i + 1
+                                i = i + 1
+        html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main">', html_series_source, re.DOTALL)	
+        print len(html_items_series)
+        for item_series in html_items_series:
+                series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
+                for endereco_series,nome_series in series:
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(int(num))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(int(num))
+                        #if selfAddon.getSetting('series-thumb-TPT') == "false": xbmc.sleep( 50 )
+                        xbmc.sleep( 50 )
+                        if progress.iscanceled():
+                                break
+                        nome_series = nome_series.replace('&amp;','&')
+                        nome_series = nome_series.replace('&#39;',"'")
+                        nome_series = nome_series.replace('&#8217;',"'")
+                        nome_series = nome_series.replace('&#8230;',"...")
+                        nome_series = nome_series.replace('Da Vincis Demons',"Da Vinci'S Demons")
+                        nome_series = nome_series.lower()
+                        nome_series = nome_series.title()
+                        if nome_series in read_Series_File:
+                                for x in range(len(_series_)):
+                                        if nome_series in _series_[x]:
+                                                thumbnail = re.compile('.+?[|](.*)').findall(_series_[x])
+                                                if thumbnail : thumb = thumbnail[0]
+                        else:
+                        #if selfAddon.getSetting('series-thumb-TPT') == "true":
+                                try:
+                                        nome_pesquisa = arr_series[x][0]
+                                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                        if '.' not in nome_pesquisa:
+                                                a_q = re.compile('\w+')
+                                                qq_aa = a_q.findall(nome_pesquisa)
+                                                nome_pesquisa = ''
+                                                for q_a_q_a in qq_aa:
+                                                        if len(q_a_q_a) > 1 or q_a_q_a == '1'or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                        try:
+                                                html_pesquisa = TPT_abrir_url(arr_series[x][1])
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                thumbnail = re.compile('src="(.+?)"').findall(items_pesquisa[0])
+                                                if thumbnail:
+                                                        thumb = thumbnail[0].replace('w92','w600')
+                                                else:
+                                                        thumb = ''
+                                                                        
+                                        #else: thumb = ''
+                                        else: thumb = artfolder + 'ze-TPT1.png'
+                                        Series_File.write(nome_series+'|'+thumb+'\n')
+                                except: pass
+                        #else: thumb = artfolder + 'ze-TPT1.png'
+                        if nome_series not in _s_:
+                                _s_.append(nome_series)
+                                arr_series.append((nome_series,endereco_series,thumb))
+                                i = i + 1
         arr_series.sort()
         for x in range(len(_s_)):
                 if _s_[x] != '':
