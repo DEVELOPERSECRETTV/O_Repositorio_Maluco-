@@ -101,6 +101,9 @@ def MAIN_MENU():
 
 def passar_nome_pesquisa_animacao(name):
         nome_pesquisa = str(name)
+        #addDir(nome_pesquisa,'url',7,iconimage,'','')
+        nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PESQUISAR FILME: [/COLOR]','')
+        #addDir(nome_pesquisa,'url',7,iconimage,'','')
         FilmesAnima.FILMES_ANIMACAO_pesquisar(str(nome_pesquisa))
         #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         #xbmc.executebuiltin("Container.SetViewMode(500)")
@@ -115,6 +118,7 @@ def passar_nome_pesquisa_filmes(name):
 
 def passar_nome_pesquisa_series(name):
         nome_pesquisa = str(name)
+        nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PESQUISAR FILME: [/COLOR]','')
         Series.SERIES_pesquisar(str(nome_pesquisa))
         #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         #xbmc.executebuiltin("Container.SetViewMode(500)")
@@ -575,6 +579,7 @@ elif mode == 54: M18.M18_TFV_pesquisar_M18()
 elif mode == 55: M18.M18_TFV_encontrar_fontes_pesquisa_M18(url,pesquisou)
 elif mode == 56: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
 elif mode == 57: TextBoxes.TBOX_TextBoxes_Sinopse(url)
+
 #----------------------------------------------  Tuga-Filmes.com  --------------------------------------------------
 elif mode == 70: print "", Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 71:
@@ -681,6 +686,16 @@ elif mode == 249: TopPt.TPT_encontrar_videos_series(name,url)
 #elif mode == 255: M18.M18_TPT_encontrar_fontes_pesquisa_M18(url,pesquisou)
 elif mode == 256: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
 elif mode == 257: TextBoxes.TBOX_TextBoxes_Sinopse(url)
+elif mode == 258:
+        TopPt.TPT_Menu_Top_Filmes(artfolder)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 259:
+        TopPt.TPT_Menu_Top_Series(artfolder)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 #----------------------------------------------------------------ARMAGEDOM--------------------------------------------------------------------#
 elif mode == 331: Armagedom.ARM_MenuPrincipal()
 elif mode == 332: Armagedom.ARM_encontrar_fontes_filmes(url)

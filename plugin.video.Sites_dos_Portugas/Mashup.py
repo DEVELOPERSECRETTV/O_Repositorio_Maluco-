@@ -359,7 +359,7 @@ def ultimos_episodios(url):
                                 ano_filme = ''
                                 audio_filme = ''
                         try:
-                                addDir_teste('[COLOR orange]TPT|[/COLOR]'+'[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0],233,thumb,sinopse,fanart,ano_filme,'')
+                                addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0],233,thumb,sinopse,fanart,ano_filme,'')
                         except: pass
                         i = i + 1
         else: pass
@@ -469,7 +469,7 @@ def ultimos_episodios(url):
                         if selfAddon.getSetting('series-fanart-TFV') == "true":
                                 if fanart == '': fanart = thumb
 			try:
-				addDir_teste('[COLOR orange]TFV|[/COLOR]'+'[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0],42,thumb.replace('s72-c','s320'),'',fanart,ano,'')
+				addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0],42,thumb.replace('s72-c','s320'),'',fanart,ano,'')
 			except: pass
 			i = i + 1
         else: pass
@@ -682,7 +682,7 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        if fanart == '':
+                        if fanart == 'dfgfgfg':
                                 n = re.compile('(.+?)[[].+?[]]').findall(nome)
                                 if n:
                                         nome_pesquisa = n[0]
@@ -865,7 +865,7 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        if fanart == '':
+                        if fanart == 'dfgfdgfdgfg':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -1024,7 +1024,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('()','(')
                                         
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == '':
+                        if fanart == 'dfgfdgdfgfg':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -1163,7 +1163,7 @@ def Filmes_Filmes_Filmes(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == '':
+                        if fanart == 'dfgdfgdfgfgf':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -1227,7 +1227,7 @@ def Filmes_Filmes_Filmes(url):
                                         num_mode = 712
                                 else:
                                         num_mode = 703
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -1309,7 +1309,7 @@ def Filmes_Filmes_Filmes(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == '':
+                        if fanart == 'fgfgfgfgfgf':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -1401,7 +1401,7 @@ def Filmes_Filmes_Filmes(url):
                         #xbmc.sleep( 100 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 200 )
+                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                         thumb = ''
                         fanart = ''
                         url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
@@ -1434,7 +1434,7 @@ def Filmes_Filmes_Filmes(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == '':
+                        if fanart == 'dgfgdfgdfgfgfdgf':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -1956,7 +1956,7 @@ def Filmes_Animacao(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        if fanart == '':
+                        if fanart == 'dfgfgfdggffg':
                                 n = re.compile('(.+?)[[].+?[]]').findall(nome)
                                 if n:
                                         nome_pesquisa = n[0]
@@ -2139,7 +2139,7 @@ def Filmes_Animacao(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        if fanart == '':
+                        if fanart == 'dfgfgfdgfgfd':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -2297,7 +2297,7 @@ def Filmes_Animacao(url):
                         nome = nome.replace('()','(')
                                         
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == '':
+                        if fanart == 'dfgfdgfdgfg':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -2436,7 +2436,7 @@ def Filmes_Animacao(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == '':
+                        if fanart == 'dfgdfgfdgfg':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -2500,7 +2500,7 @@ def Filmes_Animacao(url):
                                         num_mode = 712
                                 else:
                                         num_mode = 703
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -2582,7 +2582,7 @@ def Filmes_Animacao(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == '':
+                        if fanart == 'dfgfdgfgg':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -2674,7 +2674,7 @@ def Filmes_Animacao(url):
                         #xbmc.sleep( 100 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 200 )
+                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                         thumb = ''
                         fanart = ''
                         url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
@@ -2707,7 +2707,7 @@ def Filmes_Animacao(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == '':
+                        if fanart == 'fsdfgdfgdfgdfg':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')

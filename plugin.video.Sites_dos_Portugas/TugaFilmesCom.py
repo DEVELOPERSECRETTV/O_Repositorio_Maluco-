@@ -352,6 +352,7 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_i
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def TFC_encontrar_videos_filmes(name,url):
+        nomeescolha = name
         for x in range(len(_servidores_)):
                 _servidores_[x]=''
         for x in range(len(_ligacao_)):
@@ -367,6 +368,7 @@ def TFC_encontrar_videos_filmes(name,url):
         conta_id_video = 0
 	addDir1(name,'url',1003,iconimage,False,'')
         addDir1('','url',1003,artfolder,False,'')
+        #return
         try:
                 fonte = TFC_abrir_url(url)
         except: fonte = ''
@@ -523,6 +525,13 @@ def TFC_encontrar_videos_filmes(name,url):
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
                                                         conta_os_items = conta_os_items + 1
                                         except:pass
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('TFC | ','')
+        #addDir1(nn,'url',1004,artfolder,False,'')
+        n = re.compile('--(.+?)--').findall(nn)
+        addDir1('','url',1004,artfolder,False,'')
+        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
         percent = int( ( 100 / 100.0 ) * 100)
         progress.update( percent, "", message, "" )
         progress.close()

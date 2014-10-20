@@ -722,6 +722,7 @@ def ARM_encontrar_videos_filmes(name,url):
                                                                 num_fonte = num_fonte + 1
                                                                 ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
                 if 'Temporada' in link2 or 'TEMPORADA' in link2 or 'Epis' in link2:
+                        #addDir('ca estou','',342,iconimage,'','')
                         i = 0
                         num_temporada = 1
                         ep = 1
@@ -729,18 +730,24 @@ def ARM_encontrar_videos_filmes(name,url):
                         ultimoadicionado = ''
                         num_epi = ''
                         matchvideo = re.findall('<div id="HOTWordsTxt" name="HOTWordsTxt">(.+?)<a href="https://twitter.com/share"',link2,re.DOTALL)
+                        if not matchvideo: matchvideo = re.findall('<div id="HOTWordsTxt" name="HOTWordsTxt">(.+?)<div class="geral-extra">',link2,re.DOTALL)
                         if matchvideo:
+                                #addDir('ca estou eu','',342,iconimage,'','')
+                                #return
                                 for parte1 in matchvideo:
                                         matchvideolink = re.compile('<iframe src="(.+?)"').findall(parte1)
 					if matchvideolink:
+                                                #addDir('ca estou eu 1','',342,iconimage,'','')
+                                                #return
                                                 for url_video in matchvideolink:
                                                         id_video = re.compile('id=(.*)').findall(url_video)
                                                         if id_video: id_video = id_video[0]
                                                         else: id_video = ''
                                                         num_fonte = num_fonte + 1
-                                                        epi = epi.replace('&#8211;',"-").replace('>ASSISTIR','')
-                                                        epi = epi.replace('>Assistir','')
-                                                        addDir('[B]'+epi+'[/B]','',342,iconimage,'','')
+                                                        #epi = epi.replace('&#8211;',"-").replace('>ASSISTIR','')
+                                                        #epi = epi.replace('>Assistir','')
+                                                        #addDir('[B]'+epi+'[/B]','',342,iconimage,'','')
+                                        #return
                                         matchvideolink = re.compile('<a href="(.+?)".+?target="_blank">(.+?)</a>').findall(parte1)
                                         if matchvideolink:
                                                 for videolink,numepi in matchvideolink:

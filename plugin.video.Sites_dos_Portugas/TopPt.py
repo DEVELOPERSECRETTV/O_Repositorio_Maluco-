@@ -77,14 +77,16 @@ def TPT_MenuPrincipal(artfolder):
         addDir('- Pesquisar','url',1,artfolder + 'Ze-pesquisar2.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1001,artfolder + 'ze-TPT1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]',saber_url_todos[0],232,artfolder + 'ze-TPT1.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'ze-TPT1.png','nao','')
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',239,artfolder + 'ze-TPT1.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',238,artfolder + 'ze-TPT1.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'ze-TPT1.png','nao','')
+	addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://toppt.net/',258,artfolder + 'ze-TPT1.png','nao','')
 	if selfAddon.getSetting('hide-porno') == "false":
 			addDir('[B][COLOR red]M+18[/B][/COLOR]','http://toppt.net/?cat=' + saber_url_M18[0],232,artfolder + 'ze-TPT1.png','nao','')		
 	addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'ze-TPT1.png',False,'')
 	addDir('[COLOR yellow]- A a Z[/COLOR]','url',241,artfolder + 'ze-TPT1.png','nao','')
         addDir('[COLOR yellow]- Recentes[/COLOR]',saber_url_series[0],232,artfolder + 'ze-TPT1.png','nao','')
+        addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',259,artfolder + 'ze-TPT1.png','nao','')
 
 def TPT_Menu_Posts_Recentes(artfolder):
         url_recentes = 'http://toppt.net/'
@@ -112,6 +114,83 @@ def TPT_Menu_Filmes_Por_Ano(artfolder):
                 endereco_ano = 'http://toppt.net/?cat=' + str(num_cat)
 		addDir('[COLOR yellow]' + nome_ano + '[/COLOR] ',endereco_ano,232,artfolder + 'ze-TPT1.png','nao','')
 		if str(nome_ano) == '2014': break
+
+def TPT_Menu_Top_Filmes(artfolder):
+        i = 1
+        num = 22.0
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
+        url_ano = 'http://toppt.net/'
+        top_source = TPT_abrir_url(url_ano)
+        filmes_por_ano = re.findall('<h3 class="widgettitle">TOP FILMES</h3>(.+?)<ul class="widget-container">', top_source, re.DOTALL)
+        #addDir(str(len(filmes_por_ano)),'',232,'','nao','')
+	for tp_filmes in filmes_por_ano:
+                endereco_tf = re.compile('<a href="(.+?)".+?<img.+?src="(.+?)"').findall(tp_filmes)
+                for tpe,tph in endereco_tf:
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(int(num))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(int(num))
+                        if progress.iscanceled():
+                                break
+                        #addDir(tpe,'',232,'','nao','')
+                        try:
+                                html_source = TPT_abrir_url(tpe)
+                        except: html_source = ''
+                        items = re.findall('<div id="content">(.*?)<div class="postmeta-primary">', html_source, re.DOTALL)
+                        if items != []: urletitulo = re.compile('class="title">(.+?)<').findall(items[0])                        
+                        try:
+                                nome = urletitulo[0]
+                                nome = nome.replace('&#8217;',"'")
+                                nome = nome.replace('&#8211;',"-")
+                                nome = nome.replace('&#038;',"&")
+                                nome = nome.replace('&#39;',"'")
+                                nome = nome.replace('&amp;','&')
+                                addDir('[B][COLOR green]' + nome + '[/COLOR][/B]',tpe,233,tph,'nao','')
+                        except: pass
+                        i = i + 1
+        progress.close()
+
+def TPT_Menu_Top_Series(artfolder):
+        i = 1
+        num = 10.0
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
+        url_ano = 'http://toppt.net/'
+        top_source = TPT_abrir_url(url_ano)
+        filmes_por_ano = re.findall('<h3 class="widgettitle">TOP SÉRIES</h3>(.+?)<ul class="widget-container">', top_source, re.DOTALL)
+        #addDir(str(len(filmes_por_ano)),'',232,'','nao','')
+	for tp_filmes in filmes_por_ano:
+                endereco_tf = re.compile('<a href="(.+?)".+?<img.+?src="(.+?)"').findall(tp_filmes)
+                for tpe,tph in endereco_tf:
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(int(num))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(int(num))
+                        if progress.iscanceled():
+                                break
+                        #addDir(tpe,'',232,'','nao','')
+                        try:
+                                html_source = TPT_abrir_url(tpe)
+                        except: html_source = ''
+                        items = re.findall('<div id="content">(.*?)<div class="postmeta-primary">', html_source, re.DOTALL)
+                        if items != []: urletitulo = re.compile('class="title">(.+?)<').findall(items[0])
+                        
+                        try:
+                                nome = urletitulo[0]
+                                nome = nome.replace('&#8217;',"'")
+                                nome = nome.replace('&#8211;',"-")
+                                nome = nome.replace('&#038;',"&")
+                                nome = nome.replace('&#39;',"'")
+                                nome = nome.replace('&amp;','&')
+                                addDir('[B][COLOR green]' + nome + '[/COLOR][/B]',tpe,233,tph,'nao','')
+                        except: pass
+                        i = i + 1
+        progress.close()
 
 def TPT_Menu_Filmes_Por_Categorias(artfolder):
         for x in range(len(_ligacUrl2_)):
@@ -165,10 +244,10 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                 if line!='':_series_.append(line)
         url_series = 'http://toppt.net/'
 	html_series_source = TPT_abrir_url(url_series)
-	
 	html_items_series = re.findall('<a href="http://toppt.net/category/series/">SÈRIES NOVAS</a>(.*?)<div class="clearfix">', html_series_source, re.DOTALL)
 	for item_series in html_items_series:
                 series = re.compile('<a href=".+?">(.+?)</a>').findall(item_series)
+                #addDir1('1'+str(len(series)),'url',1001,artfolder,False,'')
                 for nome_series in series:
                         nome_series = nome_series.replace('&amp;','&')
                         nome_series = nome_series.replace('&#39;',"'")
@@ -180,9 +259,10 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                                 arrai_nome_series.append(nome_series)
                                 num = num + 1
         #addDir1(str(num),'url',1001,artfolder,False,'')
-        html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES/a>(.*?)<div id="main">', html_series_source, re.DOTALL)
+        html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main">', html_series_source, re.DOTALL)
 	for item_series in html_items_series:
                 series = re.compile('<a href=".+?">(.+?)</a>').findall(item_series)
+                #addDir1(str(len(series)),'url',1001,artfolder,False,'')
                 for nome_series in series:
                         nome_series = nome_series.replace('&amp;','&')
                         nome_series = nome_series.replace('&#39;',"'")
@@ -598,6 +678,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0],233,thumb,sinopse,fanart,ano_filme,'')
                         except: pass
                         i = i + 1
+                        
 	else:
 		items = re.compile('<h1 class="entry-title"><a href="(.+?)" .+?>(.+?)</a>').findall(html_source)
 		for endereco,nome in items:
@@ -1294,10 +1375,23 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                         conta_id_video = conta_id_video + 1
                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)                                                
-        if 'Season' not in nometitulo or 'Temporada' not in nometitulo:
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
+        #nometitulo = nometitulo.replace('[B][COLOR green]','').replace('[/COLOR][/B]','')
+        if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
                 percent = int( ( 100 / 100.0 ) * 100)
                 progress.update( percent, "", message, "" )
+                nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
+                nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+                nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('[/COLOR]','').replace('[','---').replace(']','---').replace('TPT | ','')
+                addDir1('','url',1004,artfolder,False,'')
+                if '---' in nn:
+                        n = re.compile('---(.+?)---').findall(nn)
+                        n1 = re.compile('--(.+?)--').findall(nn)
+                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'url',7,iconimage,'','')
+                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
+                else:
+                        n1 = re.compile('--(.+?)--').findall(nn)
+                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'url',7,iconimage,'','')
         #index = xbmcgui.Dialog().select('Inicio', _servidores_)
         #if index > -1:
                 #escolha = idx[index]

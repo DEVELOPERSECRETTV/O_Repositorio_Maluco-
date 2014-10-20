@@ -380,6 +380,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
 
 
 def TFV_encontrar_videos_filmes(name,url):
+        nomeescolha = name
         conta_id_video = 0
 	addDir1(name,'url',1004,iconimage,False,'')
         addDir1('','url',1004,artfolder,False,'')     
@@ -505,6 +506,12 @@ def TFV_encontrar_videos_filmes(name,url):
                                                         url = 'http://www.firedrive.com/file/' + id_video + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
                                                 except:pass
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('TFV | ','')
+        n = re.compile('--(.+?)--').findall(nn)
+        addDir1('','url',1004,artfolder,False,'')
+        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 

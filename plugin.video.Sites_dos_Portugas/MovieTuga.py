@@ -82,7 +82,7 @@ def MVT_encontrar_fontes_filmes(url):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 200 )
+                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         thumb = ''
@@ -188,6 +188,7 @@ def MVT_encontrar_fontes_filmes(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def MVT_encontrar_videos_filmes(name,url):
+        nomeescolha = name
         colecao = 'nao'
         addDir1(name,'url',1002,iconimage,False,'')
         addDir1('','url',1002,artfolder,False,'')
@@ -264,6 +265,12 @@ def MVT_encontrar_videos_filmes(name,url):
                                                         url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
+        n = re.compile('--(.+?)--').findall(nn)
+        addDir1('','url',1004,artfolder,False,'')
+        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
 
 
 

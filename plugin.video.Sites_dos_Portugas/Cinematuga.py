@@ -388,19 +388,30 @@ def CMT_encontrar_videos_filmes(name,url):
 	try:
 		link2=CMT_abrir_url(url)
 	except: link2 = ''
+	nao = 0
         matchvid = re.findall("Assitir online(.+?)</iframe>", link2, re.DOTALL)
+        if not matchvid:
+                nao = 1
+                matchvid = re.findall("<div class='video-item'>(.+?)<div class='clear'>", link2, re.DOTALL)
         #addDir1(str(len(matchvid)),'url',1004,artfolder,False,'')
         for matchs in matchvid:
                 try:
                         nome = re.compile('(.+?)\n.+?').findall(matchs)
                         if not nome: nome = re.compile('(.+?)</b>').findall(matchs)
-                        addDir1('[COLOR blue]'+nome[0]+':[/COLOR]','url',1004,artfolder,False,'')
+                        if nao == 0: addDir1('[COLOR blue]'+nome[0]+':[/COLOR]','url',1004,artfolder,False,'')
                         urlvideo = re.compile('<iframe.+?src="(.+?)"').findall(matchs)
+                        if not urlvideo: urlvideo = re.compile('src="(.+?)"').findall(matchs)
                         url = urlvideo[0]
                         conta_id_video = conta_id_video + 1
                         conta_os_items = conta_os_items + 1
                         CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
                 except: pass
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('CMT | ','')
+        n = re.compile('--(.+?)--').findall(nn)
+        addDir1('','url',1004,artfolder,False,'')
+        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
 
 
 

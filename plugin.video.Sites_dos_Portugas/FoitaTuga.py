@@ -271,6 +271,7 @@ def FTT_encontrar_fontes_filmes(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FTT_encontrar_videos_filmes(name,url):
+        nomeescolha = name
         colecao = 'nao'
         addDir1(name,'url',1002,iconimage,False,'')
         addDir1('','url',1002,artfolder,False,'')
@@ -280,10 +281,12 @@ def FTT_encontrar_videos_filmes(name,url):
         except: fonte_video = ''
         fontes_video = re.findall("<div class='post hentry'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
+        if 'BREVEMENTE ONLINE' in fonte_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
         for fonte_e_url in fontes_video:
+                #if 'BREVEMENTE ONLINE' in fontes_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
                 match1 = re.compile('<script src="(.+?)" type="text/javascript"></script>').findall(fonte_e_url)
                 #addDir1(str(len(match1)),'url',1002,artfolder,False,'')
-                for fonte_id in match1:
+                for fonte_id in match1: 
                         if 'videomega' in fonte_id:
                                 #addDir1(str(len(match1)),'url',1002,artfolder,False,'')
                                 try:  
@@ -325,6 +328,19 @@ def FTT_encontrar_videos_filmes(name,url):
                                         else: url = fonte_id + '///' + name
                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'','')
                                 except:pass
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[COLOR orange]','').replace('[/COLOR][/B]','--').replace('[/COLOR]','').replace('[','---').replace(']','---')
+        nn = nn.replace('(','---').replace(')','---').replace('FTT | ','')
+        addDir1('','url',1004,artfolder,False,'')
+        if '---' in nn:
+                n = re.compile('---(.+?)---').findall(nn)
+                n1 = re.compile('--(.+?)--').findall(nn)
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'url',7,iconimage,'','')
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
+        else:
+                n1 = re.compile('--(.+?)--').findall(nn)
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'url',7,iconimage,'','')
 
 def FTT_encontrar_videos_filmesllllllllllllllllllllllllllllll(name,url):
         colecao = 'nao'
