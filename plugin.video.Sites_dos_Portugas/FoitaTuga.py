@@ -92,7 +92,7 @@ def FTT_Top_Vistos(artfolder):
                 nome_f = nome_f.replace('&#39;',"'")
                 nome_f = nome_f.replace('&amp;','&')
                 nome_f = nome_f.replace('(Pedido)',"")
-                addDir('[COLOR yellow]' + nome_f + '[/COLOR]',url_titulo[0][0],603,thumb_f[0].replace('s72-c','s320'),'nao','')
+                addDir('[B][COLOR green]' + nome_f + '[/COLOR][/B]',url_titulo[0][0],603,thumb_f[0].replace('s72-c','s320'),'nao','')
 
 
 

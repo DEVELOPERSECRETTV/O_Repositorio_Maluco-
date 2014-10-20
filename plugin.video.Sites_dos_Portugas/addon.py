@@ -769,7 +769,11 @@ elif mode == 604: FoitaTuga.FTT_pesquisar_filmes()
 elif mode == 605: FoitaTuga.FTT_Menu_Filmes(artfolder)
 elif mode == 606: FoitaTuga.FTT_Menu_Filmes_Por_Categorias(artfolder)
 elif mode == 607: FoitaTuga.FTT_Menu_Filmes_Brevemente(artfolder)
-elif mode == 608: FoitaTuga.FTT_Top_Vistos(artfolder)
+elif mode == 608:
+        FoitaTuga.FTT_Top_Vistos(artfolder)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 #elif mode == 608: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
 #elif mode == 609: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 #----------------------------------------------  CINEMATUGA  -------------------------------------------------------

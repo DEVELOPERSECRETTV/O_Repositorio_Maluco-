@@ -76,7 +76,7 @@ def TFC_Menu_Filmes_Top_10(artfolder):
                 addDir1('','url',1003,artfolder,False,'')
         filmes_top_10 = re.compile("<img alt=\'\' border=\'0\' height=\'72\' src=\'(.+?)\' width=\'72\'/>\n</a>\n</div>\n<div class=\'item-title\'><a href=\'(.+?)\'>(.+?)</a></div>\n</div>\n<div style=\'clear: both;\'>").findall(top_10_source)
 	for iconimage_filmes_top_10,endereco_top_10,nome_top_10 in filmes_top_10:
-		addDir(nome_top_10,endereco_top_10,73,iconimage_filmes_top_10.replace('s72-c','s320').replace('.gif','.jpg'),'nao','')
+		addDir('[B][COLOR green]' + nome_top_10 + '[/COLOR][/B]',endereco_top_10,73,iconimage_filmes_top_10.replace('s72-c','s320').replace('.gif','.jpg'),'nao','')
 
 def TFC_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.tuga-filmes.info/'

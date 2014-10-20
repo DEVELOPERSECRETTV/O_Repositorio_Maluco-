@@ -91,7 +91,7 @@ def CMT_Menu_Filmes_Top_5(artfolder):
                                 num_mode = 712
                         else:
                                 num_mode = 703
-                        addDir('[B][COLOR green]' + urletitulo[0][1] + ' [/COLOR][/B]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                        addDir('[B][COLOR green]' + urletitulo[0][1] + '[/COLOR][/B]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')
                 except: pass
                 i = i + 1
 

@@ -78,11 +78,11 @@ def TFV_Menu_Filmes_Top_5(artfolder):
                         print len(items)
                         for item in items:
                                 percent = int( ( i / 5.0 ) * 100)
-                                message = str(i) + " de " + str(len(items))
+                                message = str(i) + " de " + '5'
                                 progress.update( percent, "", message, "" )
-                                print str(i) + " de " + str(len(items))
+                                print str(i) + " de " + '5'
                                 #if selfAddon.getSetting('series-thumb-TFV') == "false": xbmc.sleep( 50 )
-                                xbmc.sleep( 50 )
+                                #xbmc.sleep( 50 )
                                 if progress.iscanceled():
                                         break
                                 urletitulo = re.compile("<h1>(.+?)\n</h1>").findall(item)
