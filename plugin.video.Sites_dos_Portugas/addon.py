@@ -50,25 +50,30 @@ def MAIN_MENU():
         url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
+        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
+        url_CMT = 'http://www.cinematuga.net/search/label/Filmes'
         try:
                 toppt_source = abrir_url(url_toppt)
         except: toppt_source = ''
         saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
         url_TPT = saber_url_todos[0]
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)        #31
         #addDir1('[B][COLOR blue]Menu Principal[/COLOR][/B]','',31,artfolder + 'MPrin.png',False,'')
         #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         #addDir1('','','',artfolder,False,'')
+        #return
         addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'filmes.png','nao','')
         addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://www.tuga-filmes.us',26,artfolder + 'series.png','nao','')
         url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
         url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
         url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
+        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
+        url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'
         saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
         #saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
         url_TPT = saber_url_animacao[0]
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
         addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'animacao.png','nao','')
         url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
@@ -749,6 +754,7 @@ elif mode == 604: FoitaTuga.FTT_pesquisar_filmes()
 elif mode == 605: FoitaTuga.FTT_Menu_Filmes(artfolder)
 elif mode == 606: FoitaTuga.FTT_Menu_Filmes_Por_Categorias(artfolder)
 elif mode == 607: FoitaTuga.FTT_Menu_Filmes_Brevemente(artfolder)
+elif mode == 608: FoitaTuga.FTT_Top_Vistos(artfolder)
 #elif mode == 608: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
 #elif mode == 609: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 #----------------------------------------------  CINEMATUGA  -------------------------------------------------------
@@ -765,7 +771,7 @@ elif mode == 702:
 elif mode == 703: Cinematuga.CMT_encontrar_videos_filmes(name,url)
 elif mode == 704: Cinematuga.CMT_pesquisar()
 elif mode == 705: Cinematuga.CMT_resolve_videomega_filmes(url,conta_id_video)
-elif mode == 706: Cinematuga.CMT_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,nome_fonte_video)
+elif mode == 706: Cinematuga.CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
 elif mode == 707: Cinematuga.CMT_Menu_Filmes(artfolder)
 elif mode == 708:
         Cinematuga.CMT_Menu_Filmes_Por_Categorias(artfolder)

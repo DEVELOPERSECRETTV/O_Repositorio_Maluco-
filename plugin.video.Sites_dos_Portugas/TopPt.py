@@ -32,6 +32,7 @@ arrai_series = [['' for j in range(2)] for i in range(200)]
 arr_series = []
 _series_ = []
 _s_ = []
+sri = []
 
 _servidores_ = ['' for i in range(2000)]
 _ligacao_ = ['' for i in range(2000)]
@@ -146,7 +147,7 @@ def TPT_Menu_Series_A_a_Z(artfolder):
         conta_os_items = 0
         for x in range(len(_s_)):
                 _s_[x]=''
-        sri = []
+        
         i = 1
         num = 0
         conta = 0
@@ -164,7 +165,22 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                 if line!='':_series_.append(line)
         url_series = 'http://toppt.net/'
 	html_series_source = TPT_abrir_url(url_series)
-	html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main">', html_series_source, re.DOTALL)
+	
+	html_items_series = re.findall('<a href="http://toppt.net/category/series/">SÈRIES NOVAS</a>(.*?)<div class="clearfix">', html_series_source, re.DOTALL)
+	for item_series in html_items_series:
+                series = re.compile('<a href=".+?">(.+?)</a>').findall(item_series)
+                for nome_series in series:
+                        nome_series = nome_series.replace('&amp;','&')
+                        nome_series = nome_series.replace('&#39;',"'")
+                        nome_series = nome_series.replace('&#8217;',"'")
+                        nome_series = nome_series.replace('&#8230;',"...")
+                        nome_series = nome_series.lower()
+                        nome_series = nome_series.title()
+                        if nome_series not in arrai_nome_series:
+                                arrai_nome_series.append(nome_series)
+                                num = num + 1
+        #addDir1(str(num),'url',1001,artfolder,False,'')
+        html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES/a>(.*?)<div id="main">', html_series_source, re.DOTALL)
 	for item_series in html_items_series:
                 series = re.compile('<a href=".+?">(.+?)</a>').findall(item_series)
                 for nome_series in series:
@@ -175,24 +191,13 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                         nome_series = nome_series.replace('Da Vincis Demons',"Da Vinci'S Demons")
                         nome_series = nome_series.lower()
                         nome_series = nome_series.title()
-                        if nome_series not in sri:
-                                sri.append(nome_series)
+                        if nome_series not in arrai_nome_series:
+                                arrai_nome_series.append(nome_series)
                                 num = num + 1
-	html_items_series = re.findall('<h3 class="widgettitle">SERIES(.*?)Recent Posts', html_series_source, re.DOTALL)
-	for item_series in html_items_series:
-                series = re.compile('<a href=".+?">(.+?)</a>').findall(item_series)
-                for nome_series in series:
-                        nome_series = nome_series.replace('&amp;','&')
-                        nome_series = nome_series.replace('&#39;',"'")
-                        nome_series = nome_series.replace('&#8217;',"'")
-                        nome_series = nome_series.replace('&#8230;',"...")
-                        nome_series = nome_series.lower()
-                        nome_series = nome_series.title()
-                        if nome_series not in sri:
-                                sri.append(nome_series)
-                                num = num + 1
+        #addDir1(str(num),'url',1001,artfolder,False,'')
         num = num + 0.0
-        print len(html_items_series)
+        #addDir1(str(num),'url',1001,artfolder,False,'')
+        html_items_series = re.findall('<a href="http://toppt.net/category/series/">SÈRIES NOVAS</a>(.*?)<div class="clearfix">', html_series_source, re.DOTALL)
         for item_series in html_items_series:
                 series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
                 for endereco_series,nome_series in series:

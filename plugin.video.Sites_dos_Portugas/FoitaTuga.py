@@ -44,8 +44,9 @@ def FTT_MenuPrincipal(artfolder):
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O',602,'','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',606,'','nao','')
 	addDir('[COLOR yellow]- Por Ano[/COLOR]','url',606,'','nao','')
+	addDir('[COLOR yellow]- Top + Vistos[/COLOR]','url',608,'','nao','')
 
-def FTT_Menu_Filmes_Por_Categorias(artfolder):
+def ANTIGA_FTT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://foitatugacinemaonline.blogspot.pt/'
         html_categorias_source = FTT_abrir_url(url_categorias)
         addDir1('[B][COLOR blue]Categorias[/COLOR][/B]','url',1002,'',False,'')
@@ -60,6 +61,38 @@ def FTT_Menu_Filmes_Por_Categorias(artfolder):
                 #addDir1(str(len(filmes_por_categoria)),'url',1002,artfolder,False,'')
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
                         addDir('[COLOR yellow]' + nome_categoria.replace(' ','') + '[/COLOR]',endereco_categoria,602,'','nao','')
+
+def FTT_Menu_Filmes_Por_Categorias(artfolder):
+        url_categorias = 'http://foitatugacinemaonline.blogspot.pt/'
+        html_categorias_source = FTT_abrir_url(url_categorias)
+	if name == '[COLOR yellow]- Categorias[/COLOR]': html_items_categorias = re.findall("'http://foitatugacinemaonline.blogspot.pt/search/label/2014'>2014(.*?)<div id='searchbarright'>", html_categorias_source, re.DOTALL)
+	if name == '[COLOR yellow]- Por Ano[/COLOR]': html_items_categorias = re.findall("<option>ESCOLHA A CATEGORIA</option>(.*?)='http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'", html_categorias_source, re.DOTALL)
+        print len(html_items_categorias)
+        #addDir1(str(len(html_items_categorias)),'url',1002,artfolder,False,'')
+        for item_categorias in html_items_categorias:
+                filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n.+?[(](.+?)[)]\n.+?</option>").findall(item_categorias)
+                #addDir1(str(len(filmes_por_categoria)),'url',1002,artfolder,False,'')
+                for endereco_categoria,nome_categoria,total_categoria in filmes_por_categoria:
+                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ('+total_categoria+')',endereco_categoria,602,'','nao','')
+
+
+def FTT_Top_Vistos(artfolder):
+        url_categorias = 'http://foitatugacinemaonline.blogspot.pt/'
+        html_categorias_source = FTT_abrir_url(url_categorias)
+        html_items_categorias = re.findall("<div class='widget-content popular-posts'>(.*?)<div class='clear'>", html_categorias_source, re.DOTALL)
+        html_items_categorias = re.findall("<div class='item-thumbnail-only'>(.*?)<div style='clear: both;'>", html_items_categorias[0], re.DOTALL)
+        print len(html_items_categorias)
+        #addDir1(str(len(html_items_categorias)),'url',1002,artfolder,False,'')
+        for item_categorias in html_items_categorias:
+                url_titulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item_categorias)
+                thumb_f = re.compile("src='(.+?)'").findall(item_categorias)
+                nome_f = url_titulo[0][1]
+                nome_f = nome_f.replace('&#8217;',"'")
+                nome_f = nome_f.replace('&#8211;',"-")
+                nome_f = nome_f.replace('&#39;',"'")
+                nome_f = nome_f.replace('&amp;','&')
+                nome_f = nome_f.replace('(Pedido)',"")
+                addDir('[COLOR yellow]' + nome_f + '[/COLOR]',url_titulo[0][0],603,thumb_f[0].replace('s72-c','s320'),'nao','')
 
 
 
@@ -78,7 +111,7 @@ def FTT_encontrar_fontes_filmes(url):
         try:
 		html_source = FTT_abrir_url(url)
 	except: html_source = ''
-	items = re.findall("<div class='sompret-image'>(.+?)<div class='sompret-footer'>", html_source, re.DOTALL)
+	items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
 	#addDir1(str(len(items)),'url',1002,artfolder,False,'')
 	if items != []:
 		print len(items)
@@ -96,24 +129,22 @@ def FTT_encontrar_fontes_filmes(url):
                         fanart = ''
                         anofilme= ''
                         qualidade_filme = ''
-                        
-                        url = re.compile("href='(.+?)'").findall(item)
-                        if url: urlvideo = url[0]
-                        else: urlvideo = ''
-                        
-                        titulo = re.compile("<div class=\'sompret-header\'>\n(.+?)\n</div>").findall(item)
-                        if titulo:
-                                titulo[0] = titulo[0].replace('&#8217;',"'")
-                                titulo[0] = titulo[0].replace('&#8211;',"-")
-                                nome = titulo[0]
-                        else: nome = ''
+
+                        urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        if urletitulo:
+                                urlvideo = urletitulo[0][0]
+                                nome = urletitulo[0][1]
+                        else:
+                                urlvideo = ''
+                                nome = ''
                                 
                         ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
                         if ano: anofilme = ano[0]
                         else: anofilme = ''
                         
-                        thumbnail = re.compile('sompret_image_creator[(]"(.+?)"').findall(item)
-                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
+                        #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                        thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
+                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
                         else: thumb = ''
                         
                         nome = nome.replace('&#8217;',"'")
@@ -190,7 +221,7 @@ def FTT_encontrar_fontes_filmes(url):
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                if 'Temporada' in titulo[0]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                if 'Temporada' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
                                 else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
                                 if thumb == '':# or 's1600' in thumb:
                                         try:
@@ -229,7 +260,7 @@ def FTT_encontrar_fontes_filmes(url):
                         #---------------------------------------------------------------
                         i = i + 1
                         #---------------------------------------------------------------
-	proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link' title='Next Post'>").findall(html_source)	
+	proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)	
 	try:
                 proxima_p = proxima[0]#.replace('%3A',':').replace('%2B','+')
 		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),602,'','','')
@@ -247,7 +278,7 @@ def FTT_encontrar_videos_filmes(name,url):
         try:
                 fonte_video = FTT_abrir_url(url)
         except: fonte_video = ''
-        fontes_video = re.findall("<h1 class='post-title entry-title'>(.+?)<div id='fb-root'>", fonte_video, re.DOTALL)
+        fontes_video = re.findall("<div class='post hentry'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
         for fonte_e_url in fontes_video:
                 match1 = re.compile('<script src="(.+?)" type="text/javascript"></script>').findall(fonte_e_url)
