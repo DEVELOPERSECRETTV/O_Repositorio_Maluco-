@@ -84,15 +84,27 @@ def FTT_Top_Vistos(artfolder):
         print len(html_items_categorias)
         #addDir1(str(len(html_items_categorias)),'url',1002,artfolder,False,'')
         for item_categorias in html_items_categorias:
+                anofilme = ''
                 url_titulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item_categorias)
                 thumb_f = re.compile("src='(.+?)'").findall(item_categorias)
                 nome_f = url_titulo[0][1]
+                a_q = re.compile('\d+')
+                qq_aa = a_q.findall(nome_f)
+                for q_a_q_a in qq_aa:
+                        if len(q_a_q_a) == 4:
+                                anofilme = str(q_a_q_a)
+                                tirar_ano = '- ' + str(q_a_q_a)
+                                nome_f = nome_f.replace(tirar_ano,'')
+                                tirar_ano = '-' + str(q_a_q_a)
+                                nome_f = nome_f.replace(tirar_ano,'')
+                                tirar_ano = str(q_a_q_a)
+                                nome_f = nome_f.replace(tirar_ano,'')
                 nome_f = nome_f.replace('&#8217;',"'")
                 nome_f = nome_f.replace('&#8211;',"-")
                 nome_f = nome_f.replace('&#39;',"'")
                 nome_f = nome_f.replace('&amp;','&')
-                nome_f = nome_f.replace('(Pedido)',"")
-                addDir('[B][COLOR green]' + nome_f + '[/COLOR][/B]',url_titulo[0][0],603,thumb_f[0].replace('s72-c','s320'),'nao','')
+                nome_f = nome_f.replace('(Pedido)',"").replace('[Pedido]','')
+                addDir('[B][COLOR green]' + nome_f + '[/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',url_titulo[0][0],603,thumb_f[0].replace('s72-c','s320'),'nao','')
 
 
 
@@ -129,6 +141,11 @@ def FTT_encontrar_fontes_filmes(url):
                         fanart = ''
                         anofilme= ''
                         qualidade_filme = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
 
                         urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if urletitulo:
@@ -151,7 +168,7 @@ def FTT_encontrar_fontes_filmes(url):
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('&#39;',"'")
                         nome = nome.replace('&amp;','&')
-                        nome = nome.replace('(Pedido)',"")
+                        nome = nome.replace('(Pedido)',"").replace('[Pedido]','')
                         
                         a_q = re.compile('\d+')
                         qq_aa = a_q.findall(nome)
@@ -255,7 +272,7 @@ def FTT_encontrar_fontes_filmes(url):
                         if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                 if fanart == '': fanart = thumb
                         try:
-                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo,603,thumb,'',fanart,anofilme,'')
+                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -271,6 +288,12 @@ def FTT_encontrar_fontes_filmes(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FTT_encontrar_videos_filmes(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
         nomeescolha = name
         colecao = 'nao'
         addDir1(name,'url',1002,iconimage,False,'')
@@ -283,6 +306,10 @@ def FTT_encontrar_videos_filmes(name,url):
         numero_de_fontes = len(fontes_video)
         if 'BREVEMENTE ONLINE' in fonte_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
         for fonte_e_url in fontes_video:
+                if imdbcode == '':
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(fonte_e_url)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
                 #if 'BREVEMENTE ONLINE' in fontes_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
                 match1 = re.compile('<script src="(.+?)" type="text/javascript"></script>').findall(fonte_e_url)
                 #addDir1(str(len(match1)),'url',1002,artfolder,False,'')
@@ -336,11 +363,11 @@ def FTT_encontrar_videos_filmes(name,url):
         if '---' in nn:
                 n = re.compile('---(.+?)---').findall(nn)
                 n1 = re.compile('--(.+?)--').findall(nn)
-                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'url',7,iconimage,'','')
-                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
         else:
                 n1 = re.compile('--(.+?)--').findall(nn)
-                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'url',7,iconimage,'','')
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
 
 def FTT_encontrar_videos_filmesllllllllllllllllllllllllllllll(name,url):
         colecao = 'nao'

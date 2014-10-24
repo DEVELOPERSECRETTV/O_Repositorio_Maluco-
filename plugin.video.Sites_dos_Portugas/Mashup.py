@@ -590,6 +590,11 @@ def Filmes_Filmes_Filmes(url):
                         sinopse = ''
                         fanart = ''
                         thumb = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
@@ -728,7 +733,7 @@ def Filmes_Filmes_Filmes(url):
                         qualidade = '('+qualidade
                         audio_filme = audio_filme+')'
                         try:
-                                addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0],233,thumb,sinopse,fanart,ano_filme,'')
+                                addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme,'')
                         except: pass
                         i = i + 1
                         a = a + 1
@@ -767,6 +772,11 @@ def Filmes_Filmes_Filmes(url):
                         thumb = ''
                         versao = ''
                         sinopse = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
                         pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
                         if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
                         assist = re.findall(">ASSISTIR.+?", item, re.DOTALL)
@@ -920,7 +930,7 @@ def Filmes_Filmes_Filmes(url):
                         if selfAddon.getSetting('movie-fanart-TFC') == "true":
                                 if fanart == '': fanart = thumb
 			try:
-				if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,'')
+				if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,'')
 			except: pass
 			a = a + 1
                         i = i + 1
@@ -953,6 +963,11 @@ def Filmes_Filmes_Filmes(url):
                         fanart = ''
                         anofilme= ''
                         qualidade_filme = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
 
                         urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if urletitulo:
@@ -1079,7 +1094,7 @@ def Filmes_Filmes_Filmes(url):
                         if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                 if fanart == '': fanart = thumb
                         try:
-                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo,603,thumb,'',fanart,anofilme,'')
+                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
                         except: pass
                         i = i + 1
                         a = a + 1
@@ -1115,6 +1130,12 @@ def Filmes_Filmes_Filmes(url):
                         fanart = ''
                         versao = ''
                         audio_filme = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         #if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
                         genero = re.compile("nero</b>:(.+?)<br />").findall(item)
                         if genero: genre = genero[0]
@@ -1227,7 +1248,7 @@ def Filmes_Filmes_Filmes(url):
                                         num_mode = 712
                                 else:
                                         num_mode = 703
-                                addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -1262,6 +1283,12 @@ def Filmes_Filmes_Filmes(url):
                         fanart = ''
                         versao = ''
                         audio_filme = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
                         genero = re.compile("nero</b>:(.+?)<br />").findall(item)
                         if genero: genre = genero[0]
@@ -1280,6 +1307,28 @@ def Filmes_Filmes_Filmes(url):
                                 else: nome_original = ''
                                 #addDir1(nome_original,'','',artfolder + 'ze-TFV1.png',False,'')
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+                        
+                        tto=re.compile('tulo Original:</b>:(.+?)<br').findall(item)
+                        if tto: ttor = tto[0]
+                        else:
+                                tto=re.compile('tulo Original:</b>(.+?)<br').findall(item)
+                                if tto: ttor = tto[0]
+                        ttp=re.compile('<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>:(.+?)<br').findall(item)
+                        if ttp: ttpo = ttp[0]
+                        else:
+                                ttp=re.compile('<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br').findall(item)
+                                if ttp: ttpo = ttp[0]
+                        #urletitulo = re.compile("<h1>(.+?)\n</h1>").findall(item)
+                        if ttp and not tto: nome = ttp[0]
+                        elif not ttp and tto: nome = tto[0]
+                        elif ttp and tto:
+                                ttocomp = '['+ tto[0]
+                                ttpcomp = '['+ ttp[0]
+                                if ttpcomp.replace('[ ','') != ttocomp.replace('[ ',''): nome = ttp[0] +' ['+ tto[0] +']'
+                                else: nome = ttp[0]
+                        elif not ttp and not tto: nome = urletitulo[0][1]
+                        nome = nome.replace('[ ',"[")
+                        
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                         audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
@@ -1293,7 +1342,7 @@ def Filmes_Filmes_Filmes(url):
                         if thumbnail: thumb = thumbnail[0]
                         else: thumb = ''
                         print urletitulo,thumb
-                        nome = urletitulo[0][1]
+                        #nome = urletitulo[0][1]
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('&#39;',"'")
@@ -1373,7 +1422,7 @@ def Filmes_Filmes_Filmes(url):
                                         num_mode = 42
                                 else:
                                         num_mode = 33
-                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                         except: pass
                         i = i + 1
                         a = a + 1
@@ -1404,6 +1453,12 @@ def Filmes_Filmes_Filmes(url):
                         if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                         thumb = ''
                         fanart = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
                         if 'http' not in url[0]:
                                 url[0] = 'http:' + url[0] 
@@ -1489,7 +1544,7 @@ def Filmes_Filmes_Filmes(url):
                         if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                 if fanart == '': fanart = thumb
                         try:
-                                addDir_teste('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumb,'',fanart,ano[0],'')
+                                addDir_teste('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0]+'IMDB'+imdbcode+'IMDB',103,thumb,'',fanart,ano[0],'')
                         except: pass
                         a = a + 1
                         i = i + 1
@@ -1864,6 +1919,12 @@ def Filmes_Animacao(url):
                         sinopse = ''
                         fanart = ''
                         thumb = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
@@ -2002,7 +2063,7 @@ def Filmes_Animacao(url):
                         qualidade = '('+qualidade
                         audio_filme = audio_filme+')'
                         try:
-                                addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0],233,thumb,sinopse,fanart,ano_filme,'')
+                                addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme,'')
                         except: pass
                         i = i + 1
                         a = a + 1
@@ -2041,6 +2102,12 @@ def Filmes_Animacao(url):
                         thumb = ''
                         versao = ''
                         sinopse = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
                         if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
                         assist = re.findall(">ASSISTIR.+?", item, re.DOTALL)
@@ -2194,7 +2261,7 @@ def Filmes_Animacao(url):
                         if selfAddon.getSetting('movie-fanart-TFC') == "true":
                                 if fanart == '': fanart = thumb
 			try:
-				if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,'')
+				if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,'')
 			except: pass
 			a = a + 1
                         i = i + 1
@@ -2226,6 +2293,11 @@ def Filmes_Animacao(url):
                         fanart = ''
                         anofilme= ''
                         qualidade_filme = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
 
                         urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if urletitulo:
@@ -2352,7 +2424,7 @@ def Filmes_Animacao(url):
                         if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                 if fanart == '': fanart = thumb
                         try:
-                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo,603,thumb,'',fanart,anofilme,'')
+                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
                         except: pass
                         i = i + 1
                         a = a + 1
@@ -2388,6 +2460,12 @@ def Filmes_Animacao(url):
                         fanart = ''
                         versao = ''
                         audio_filme = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         #if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
                         genero = re.compile("nero</b>:(.+?)<br />").findall(item)
                         if genero: genre = genero[0]
@@ -2500,7 +2578,7 @@ def Filmes_Animacao(url):
                                         num_mode = 712
                                 else:
                                         num_mode = 703
-                                addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -2535,6 +2613,12 @@ def Filmes_Animacao(url):
                         fanart = ''
                         versao = ''
                         audio_filme = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
                         genero = re.compile("nero</b>:(.+?)<br />").findall(item)
                         if genero: genre = genero[0]
@@ -2553,6 +2637,28 @@ def Filmes_Animacao(url):
                                 else: nome_original = ''
                                 #addDir1(nome_original,'','',artfolder + 'ze-TFV1.png',False,'')
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+
+                        tto=re.compile('tulo Original:</b>:(.+?)<br').findall(item)
+                        if tto: ttor = tto[0]
+                        else:
+                                tto=re.compile('tulo Original:</b>(.+?)<br').findall(item)
+                                if tto: ttor = tto[0]
+                        ttp=re.compile('<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>:(.+?)<br').findall(item)
+                        if ttp: ttpo = ttp[0]
+                        else:
+                                ttp=re.compile('<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br').findall(item)
+                                if ttp: ttpo = ttp[0]
+                        #urletitulo = re.compile("<h1>(.+?)\n</h1>").findall(item)
+                        if ttp and not tto: nome = ttp[0]
+                        elif not ttp and tto: nome = tto[0]
+                        elif ttp and tto:
+                                ttocomp = '['+ tto[0]
+                                ttpcomp = '['+ ttp[0]
+                                if ttpcomp.replace('[ ','') != ttocomp.replace('[ ',''): nome = ttp[0] +' ['+ tto[0] +']'
+                                else: nome = ttp[0]
+                        elif not ttp and not tto: nome = urletitulo[0][1]
+                        nome = nome.replace('[ ',"[")
+                        
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                         audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
@@ -2566,7 +2672,7 @@ def Filmes_Animacao(url):
                         if thumbnail: thumb = thumbnail[0]
                         else: thumb = ''
                         print urletitulo,thumb
-                        nome = urletitulo[0][1]
+                        #nome = urletitulo[0][1]
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('&#39;',"'")
@@ -2646,7 +2752,7 @@ def Filmes_Animacao(url):
                                         num_mode = 42
                                 else:
                                         num_mode = 33
-                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                         except: pass
                         i = i + 1
                         a = a + 1
@@ -2677,6 +2783,12 @@ def Filmes_Animacao(url):
                         if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                         thumb = ''
                         fanart = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
                         if 'http' not in url[0]:
                                 url[0] = 'http:' + url[0] 
@@ -2762,7 +2874,7 @@ def Filmes_Animacao(url):
                         if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                 if fanart == '': fanart = thumb
                         try:
-                                addDir_teste('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumb,'',fanart,ano[0],'')
+                                addDir_teste('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0]+'IMDB'+imdbcode+'IMDB',103,thumb,'',fanart,ano[0],'')
                         except: pass
                         a = a + 1
                         i = i + 1

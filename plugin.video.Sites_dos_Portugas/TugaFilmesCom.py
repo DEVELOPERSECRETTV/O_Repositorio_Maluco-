@@ -60,11 +60,11 @@ def TFC_MenuPrincipal(artfolder):
         addDir('- Pesquisar','http://www.tuga-filmes.info/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1003,artfolder + 'ze-TFC1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.info/',72,artfolder + 'ze-TFC1.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20',72,artfolder + 'ze-TFC1.png','nao','')
 	addDir('[COLOR yellow]- Destaques[/COLOR]','http://www.tuga-filmes.info/search/label/destaque',72,artfolder + 'ze-TFC1.png','nao','')
 	addDir('[COLOR yellow]- 2013[/COLOR]','http://www.tuga-filmes.info/search/label/-%20Filmes%202013',72,artfolder + 'ze-TFC1.png','nao','')
         addDir('[COLOR yellow]- Top Filmes[/COLOR]','url',79,artfolder + 'ze-TFC1.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',78,artfolder + 'ze-TFC1.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20',72,artfolder + 'ze-TFC1.png','nao','')
 	if selfAddon.getSetting('hide-porno') == "false":
                 addDir('[B][COLOR red]M+18[/B][/COLOR]','url',86,artfolder + 'ze-TFC1.png','nao','')	
 
@@ -124,6 +124,12 @@ def TFC_encontrar_fontes_filmes(url):
                         thumb = ''
                         versao = ''
                         sinopse = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
                         if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
                         assist = re.findall(">ASSISTIR.+?", item, re.DOTALL)
@@ -277,7 +283,7 @@ def TFC_encontrar_fontes_filmes(url):
                         if selfAddon.getSetting('movie-fanart-TFC') == "true":
                                 if fanart == '': fanart = thumb
 			try:
-				if 'ASSISTIR O FILME' in item: addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,'')
+				if 'ASSISTIR O FILME' in item: addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,'')
 			except: pass
 			#---------------------------------------------------------------
                         i = i + 1
@@ -352,6 +358,12 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_i
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def TFC_encontrar_videos_filmes(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
         nomeescolha = name
         for x in range(len(_servidores_)):
                 _servidores_[x]=''
@@ -372,6 +384,11 @@ def TFC_encontrar_videos_filmes(name,url):
         try:
                 fonte = TFC_abrir_url(url)
         except: fonte = ''
+        items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", fonte, re.DOTALL)
+	if items != []:
+                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                if imdb: imdbcode = imdb[0]
+                else: imdbcode = ''
         assist = re.findall(">ASSISTIR.+?", fonte, re.DOTALL)
         fontes = re.findall("Ver Aqui.+?", fonte, re.DOTALL)
         numero_de_fontes = len(fontes)
@@ -531,7 +548,7 @@ def TFC_encontrar_videos_filmes(name,url):
         #addDir1(nn,'url',1004,artfolder,False,'')
         n = re.compile('--(.+?)--').findall(nn)
         addDir1('','url',1004,artfolder,False,'')
-        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
+        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
         percent = int( ( 100 / 100.0 ) * 100)
         progress.update( percent, "", message, "" )
         progress.close()

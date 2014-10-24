@@ -242,6 +242,12 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                         fanart = ''
                         versao = ''
                         audio_filme = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         #if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
                         genero = re.compile("nero</b>:(.+?)<br />").findall(item)
                         if genero: genre = genero[0]
@@ -354,7 +360,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         num_mode = 712
                                 else:
                                         num_mode = 703
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -380,6 +386,12 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
 
 
 def CMT_encontrar_videos_filmes(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
         nomeescolha = name
         conta_id_video = 0
         conta_os_items = 0
@@ -388,6 +400,12 @@ def CMT_encontrar_videos_filmes(name,url):
 	try:
 		link2=CMT_abrir_url(url)
 	except: link2 = ''
+	if imdbcode == '':
+                items = re.findall("<div class='video-item'>(.+?)<div class='clear'>", link2, re.DOTALL)
+                if items != []:
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
 	nao = 0
         matchvid = re.findall("Assitir online(.+?)</iframe>", link2, re.DOTALL)
         if not matchvid:
@@ -411,7 +429,7 @@ def CMT_encontrar_videos_filmes(name,url):
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('CMT | ','')
         n = re.compile('--(.+?)--').findall(nn)
         addDir1('','url',1004,artfolder,False,'')
-        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
+        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
 
 
 

@@ -520,7 +520,12 @@ def FILMES_encontrar_fontes_pesquisa_FTT(url):
                         fanart = ''
                         anofilme= ''
                         qualidade_filme = ''
+                        imdbcode = ''
 
+                        imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if urletitulo:
                                 urlvideo = urletitulo[0][0]

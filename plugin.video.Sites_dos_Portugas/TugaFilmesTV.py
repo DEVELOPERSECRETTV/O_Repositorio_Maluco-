@@ -47,10 +47,11 @@ def TFV_MenuPrincipal(artfolder):
         addDir('[COLOR yellow]- Filmes/Séries Recentes[/COLOR]','http://www.tuga-filmes.us',32,artfolder + 'ze-TFV1.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'ze-TFV1.png',False,fanart)
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.us/search/label/Filmes',32,artfolder + 'ze-TFV1.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o',32,artfolder + 'ze-TFV1.png','nao',fanart)
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',39,artfolder + 'ze-TFV1.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',38,artfolder + 'ze-TFV1.png','nao','')
 	addDir('[COLOR yellow]- Top 5 da Semana[/COLOR]','url',48,artfolder + 'ze-TFV1.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o',32,artfolder + 'ze-TFV1.png','nao',fanart)
+	
 	if selfAddon.getSetting('hide-porno') == "false":
 			addDir('[B][COLOR red]M+18[/B][/COLOR]','url',49,artfolder + 'ze-TFV1.png','nao','')
 	addDir1('[COLOR blue]Séries:[/COLOR]','url',1004,artfolder + 'ze-TFV1.png',False,fanart)
@@ -85,17 +86,52 @@ def TFV_Menu_Filmes_Top_5(artfolder):
                                 #xbmc.sleep( 50 )
                                 if progress.iscanceled():
                                         break
+                                tto=re.compile('tulo Original:</b>:(.+?)<br').findall(item)
+                                if tto: ttor = tto[0]
+                                else:
+                                        tto=re.compile('tulo Original:</b>(.+?)<br').findall(item)
+                                        if tto: ttor = tto[0]
+                                ttp=re.compile('<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>:(.+?)<br').findall(item)
+                                if ttp: ttpo = ttp[0]
+                                else:
+                                        ttp=re.compile('<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br').findall(item)
+                                        if ttp: ttpo = ttp[0]
                                 urletitulo = re.compile("<h1>(.+?)\n</h1>").findall(item)
+                                if ttp and not tto: nome = ttp[0]
+                                elif not ttp and tto: nome = tto[0]
+                                elif ttp and tto:
+                                        ttocomp = '['+ tto[0]
+                                        ttpcomp = '['+ ttp[0]
+                                        if ttpcomp.replace('[ ','') != ttocomp.replace('[ ',''): nome = ttp[0] +' ['+ tto[0] +']'
+                                        else: nome = ttp[0]
+                                elif not ttp and not tto: nome = urletitulo[0]
+                                nome = nome.replace('[ ',"[")
+
                                 qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                                 ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                                 thumbnail = re.compile('src="(.+?)"').findall(item)
+                                
+                                nome = nome.replace('&#8217;',"'")
+                                nome = nome.replace('&#8211;',"-")
+                                nome = nome.replace('&#39;',"'")
+                                nome = nome.replace('&amp;','&')
+                                nome = nome.replace('(PT-PT)',"")
+                                nome = nome.replace('(PT/PT)',"")
+                                nome = nome.replace('[PT-PT]',"")
+                                nome = nome.replace('[PT/PT]',"")
+                                a_q = re.compile('\d+')
+                                qq_aa = a_q.findall(nome)
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) == 4:
+                                                tirar_ano = '(' + str(q_a_q_a) + ')'
+                                                nome = nome.replace(tirar_ano,'')
                                 print urletitulo,thumbnail
                                 try:
                                         if "Temporada" in urletitulo[0]:
                                                 num_mode = 42
                                         else:
                                                 num_mode = 33
-                                        addDir('[B][COLOR green]' + urletitulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',endereco_top_5,num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                                        addDir('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',endereco_top_5,num_mode,thumbnail[0].replace('s72-c','s320'),'','')
                                 except: pass
                                 i = i + 1
 
@@ -243,6 +279,12 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                         fanart = ''
                         versao = ''
                         audio_filme = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
                         genero = re.compile("nero</b>:(.+?)<br />").findall(item)
                         if genero: genre = genero[0]
@@ -261,6 +303,28 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                 else: nome_original = ''
                                 #addDir1(nome_original,'','',artfolder + 'ze-TFV1.png',False,'')
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+
+                        tto=re.compile('tulo Original:</b>:(.+?)<br').findall(item)
+                        if tto: ttor = tto[0]
+                        else:
+                                tto=re.compile('tulo Original:</b>(.+?)<br').findall(item)
+                                if tto: ttor = tto[0]
+                        ttp=re.compile('<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>:(.+?)<br').findall(item)
+                        if ttp: ttpo = ttp[0]
+                        else:
+                                ttp=re.compile('<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br').findall(item)
+                                if ttp: ttpo = ttp[0]
+                        #urletitulo = re.compile("<h1>(.+?)\n</h1>").findall(item)
+                        if ttp and not tto: nome = ttp[0]
+                        elif not ttp and tto: nome = tto[0]
+                        elif ttp and tto:
+                                ttocomp = '['+ tto[0]
+                                ttpcomp = '['+ ttp[0]
+                                if ttpcomp.replace('[ ','') != ttocomp.replace('[ ',''): nome = ttp[0] +' ['+ tto[0] +']'
+                                else: nome = ttp[0]
+                        elif not ttp and not tto: nome = urletitulo[0][1]
+                        nome = nome.replace('[ ',"[")
+                        
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                         audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
@@ -274,7 +338,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                         if thumbnail: thumb = thumbnail[0]
                         else: thumb = ''
                         print urletitulo,thumb
-                        nome = urletitulo[0][1]
+                        #nome = urletitulo[0][1]
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('&#39;',"'")
@@ -354,7 +418,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                         num_mode = 42
                                 else:
                                         num_mode = 33
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -381,6 +445,12 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
 
 def TFV_encontrar_videos_filmes(name,url):
         nomeescolha = name
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
         conta_id_video = 0
 	addDir1(name,'url',1004,iconimage,False,'')
         addDir1('','url',1004,artfolder,False,'')     
@@ -390,6 +460,12 @@ def TFV_encontrar_videos_filmes(name,url):
 	fontes = re.findall("Clique aqui(.+?)", link2, re.DOTALL)
         numero_de_fontes = len(fontes)
         Partes = re.findall("PARTE(.+?)", link2, re.DOTALL)
+        if imdbcode == '':
+                items = re.findall('<div class=\'video-item\'>(.*?)<div class=\'clear\'>', link2, re.DOTALL)
+                if items != []:
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
         if 'Parte 1' and 'Parte 2' not in link2:
                 num_leg = 1
                 num_ptpt = 1
@@ -508,10 +584,16 @@ def TFV_encontrar_videos_filmes(name,url):
                                                 except:pass
         nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
         nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
-        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('TFV | ','')
-        n = re.compile('--(.+?)--').findall(nn)
+        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('[/COLOR]','').replace('[','---').replace(']','---').replace('TPT | ','')
         addDir1('','url',1004,artfolder,False,'')
-        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
+        if '---' in nn:
+                n = re.compile('---(.+?)---').findall(nn)
+                n1 = re.compile('--(.+?)--').findall(nn)
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+        else:
+                n1 = re.compile('--(.+?)--').findall(nn)
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 

@@ -87,6 +87,12 @@ def MVT_encontrar_fontes_filmes(url):
                                 break
                         thumb = ''
                         fanart = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
                         if 'http' not in url[0]:
                                 url[0] = 'http:' + url[0] 
@@ -172,7 +178,7 @@ def MVT_encontrar_fontes_filmes(url):
                         if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                 if fanart == '': fanart = thumb
                         try:
-                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0],103,thumb,'',fanart,ano[0],'')
+                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0]+'IMDB'+imdbcode+'IMDB',103,thumb,'',fanart,ano[0],'')
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -188,6 +194,12 @@ def MVT_encontrar_fontes_filmes(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def MVT_encontrar_videos_filmes(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
         nomeescolha = name
         colecao = 'nao'
         addDir1(name,'url',1002,iconimage,False,'')
@@ -196,7 +208,12 @@ def MVT_encontrar_videos_filmes(name,url):
         try:
                 fonte_video = MVT_abrir_url(url)
         except: fonte_video = ''
+        
         fontes_video = re.findall("<body>(.+?)</body>", fonte_video, re.DOTALL)
+        if imdbcode == '':
+                imdb = re.compile('imdb.com/title/(.+?)/').findall(fonte_video)
+                if imdb: imdbcode = imdb[0]
+                else: imdbcode = ''
         numero_de_fontes = len(fontes_video)
         for fonte_e_url in fontes_video:
                 match = re.compile('<option value=(.+?)>(.+?)<').findall(fonte_e_url)
@@ -270,7 +287,7 @@ def MVT_encontrar_videos_filmes(name,url):
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
         n = re.compile('--(.+?)--').findall(nn)
         addDir1('','url',1004,artfolder,False,'')
-        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
+        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
 
 
 

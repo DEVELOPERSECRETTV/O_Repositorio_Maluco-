@@ -476,6 +476,13 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                         if progress.iscanceled():
                                 break
                         audio_filme = ''
+
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
@@ -675,7 +682,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 ano_filme = ''
                                 audio_filme = ''
                         try:
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0],233,thumb,sinopse,fanart,ano_filme,'')
+                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme,'')
                         except: pass
                         i = i + 1
                         
@@ -698,6 +705,12 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
                 
 def TPT_encontrar_videos_filmes(nomeescolha,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
         #for x in range(len(_servidores_)):
                 #_servidores_[x]=''
         #for x in range(len(_ligacao_)):
@@ -723,6 +736,12 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
 		link2=TPT_abrir_url(url)
 	except: link2 = ''
 	if link2:
+                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and imdbcode == '':
+                        items = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', link2, re.DOTALL)
+                        if items != []:
+                                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
+                                if imdb: imdbcode = imdb[0]
+                                else: imdbcode = ''
                 #addDir1('sim','url',1001,artfolder,False,'')
                 #return
                 if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
@@ -1387,11 +1406,11 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                 if '---' in nn:
                         n = re.compile('---(.+?)---').findall(nn)
                         n1 = re.compile('--(.+?)--').findall(nn)
-                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'url',7,iconimage,'','')
-                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'url',7,iconimage,'','')
+                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
                 else:
                         n1 = re.compile('--(.+?)--').findall(nn)
-                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'url',7,iconimage,'','')
+                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
         #index = xbmcgui.Dialog().select('Inicio', _servidores_)
         #if index > -1:
                 #escolha = idx[index]

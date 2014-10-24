@@ -438,6 +438,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 			if source: 
 				url = source.resolve()
     			else: url = ''
+    			#checker = url.replace('.avi','.srt')
 		except: pass
 	if "dropvideo" in url:
 		try:
@@ -597,6 +598,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                         #addLink(tt[0],vlink,'')
                         #addLink(v_key[0],vlink,'')
                         #addLink(vlink,vlink,'')
+			#addLink(url,'','')
     		except:pass
     	if "videomega" in url:
 		try:
@@ -623,7 +625,8 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                         #addLink(checker,match[0],'')
 		except: pass
 	nome_addon = nomeAddon
-	#addLink(url+'+','','')
+	#addLink(url+'  ','','')
+	#return
         #if 'vk.com' not in url and 'video.mail.ru' not in url and 'video.tt' not in url:
         if 'vk.com' not in url and 'video.mail.ru' not in url:# and 'iiiiiiiiii' in url:
                 try:
