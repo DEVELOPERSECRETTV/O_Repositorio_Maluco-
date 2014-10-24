@@ -429,7 +429,7 @@ def CMT_encontrar_videos_filmes(name,url):
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('CMT | ','')
         n = re.compile('--(.+?)--').findall(nn)
         addDir1('','url',1004,artfolder,False,'')
-        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
 
 
 

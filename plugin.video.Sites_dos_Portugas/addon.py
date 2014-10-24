@@ -63,8 +63,9 @@ def MAIN_MENU():
         #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         #addDir1('','','',artfolder,False,'')
         #return
-        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'filmes.png','nao','')
-        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://www.tuga-filmes.us',26,artfolder + 'series.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B] (Mashup)',url_filmes_filmes,507,artfolder + 'filmes.png','nao','')
+        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (Mashup)','http://www.tuga-filmes.us',26,artfolder + 'series.png','nao','')
         url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
         url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
         url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
@@ -75,27 +76,31 @@ def MAIN_MENU():
         url_TPT = saber_url_animacao[0]
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'animacao.png','nao','')
+        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B] (Mashup)',url_filmes_animacao,6,artfolder + 'animacao.png','nao','')
+        
+        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','http://www.themoviedb.org/movie/now-playing',3002,'','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','http://www.themoviedb.org/movie/top-rated',3001,'','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','http://www.themoviedb.org/movie',3000,'','nao','')
         url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
         url_TPT = 'http://toppt.net/category/series/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_ultimos_episodios = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S E[/COLOR][COLOR red]PISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,'','nao','')
-        addDir('PESQUISAR','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B] (Séries)',url_ultimos_episodios,508,'','nao','')
+        
         #addDir('[B][COLOR cyan]IMDB[/COLOR][/B]','url',500,'','nao','')
         #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
         #addDir1('','','',artfolder,False,'')
-        #addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','',None,artfolder + 'Ze-tv1.png','nao','')
-        addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','http://direct',31,artfolder + 'Ze-tv1.png','nao','')
-        addDir('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','http://direct',71,artfolder + 'Ze-tc1.png','nao','')
-        addDir('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','http://direct',101,artfolder + 'Ze-mv1.png','nao','')
-        addDir('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]','http://direct',231,artfolder + 'Ze-tp1.png','nao','')
-        addDir('[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]','http://direct',601,'','nao','')
-        addDir('[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]','http://direct',701,'','nao','')
+        
+        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)','http://direct',31,artfolder + 'Ze-tv1.png','nao','')
+        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)','http://direct',71,artfolder + 'Ze-tc1.png','nao','')
+        addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B] (Filmes)','http://direct',701,'','nao','')
+        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]MOV[/COLOR][COLOR yellow]I[/COLOR][COLOR red]ETUGA[/COLOR][/B] (Filmes)','http://direct',101,artfolder + 'Ze-mv1.png','nao','')
+        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B] (Filmes/Séries)','http://direct',231,artfolder + 'Ze-tp1.png','nao','')
+        addDir('[COLOR orange]FTT | [/COLOR][B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)','http://direct',601,'','nao','')
         #addDir('[B][COLOR green]FILMES[/COLOR][COLOR yellow]3D[/COLOR][COLOR red]CINEMA[/COLOR][/B] - [COLOR orange](NOVO)[/COLOR]','http://direct',401,artfolder + 'ze-MVT1.png','nao','')
-        #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
-        addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B]','url',331,artfolder + 'SdB1.png','nao','')
-        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]NI[/COLOR][COLOR red]ÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'ze-icon3.png','nao','')
+        
+        addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SdB1.png','nao','')
+        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'ze-icon3.png','nao','')
 
 
 
@@ -124,6 +129,210 @@ def passar_nome_pesquisa_series(name):
         #xbmc.executebuiltin("Container.SetViewMode(500)")
         #xbmcplugin.endOfDirectory(int(sys.argv[1]))
         
+def MPOPULARES():
+        progress = xbmcgui.DialogProgress()
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
+        html_pop_source = abrir_url(url)
+        #addDir1(name,'url',1002,artfolder + 'ze-MVT1.png',False,'')
+        #addDir1('','url',1002,artfolder,False,'')
+        #return
+        conta = 0
+	html_pop = re.findall("<h3>Popular Movies</h3>(.*?)<h3>Latest movies", html_pop_source, re.DOTALL)
+        for items_pop in html_pop:
+                filmes_pop = re.findall('<li class="w480">(.*?)<ul class="icons left_padding">', items_pop, re.DOTALL)
+                num = len(filmes_pop) + 0.0
+                for pop_filmes in filmes_pop:
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(int(num))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(int(num))
+                        if progress.iscanceled():
+                                break
+                        nome_ano = re.compile('<h4><a href=".+?">(.+?)</a> <span class="date">(.+?)</span></h4>').findall(pop_filmes)
+                        thumb_pop = re.compile('<img class="shadow" src="(.+?)" width="92" />').findall(pop_filmes)
+                        nome_pesquisa = nome_ano[0][0]
+                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                        nome_pesquisa = nome_pesquisa.replace('à','a')
+                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                        a_q = re.compile('\w+')
+                        qq_aa = a_q.findall(nome_pesquisa)
+                        nome_p = ''
+                        for q_a_q_a in qq_aa:
+                                if conta == 0:
+                                        nome_p = q_a_q_a
+                                        conta = 1
+                                else:
+                                        nome_p = nome_p + '+' + q_a_q_a
+                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                        html_imdbcode = abrir_url(url_imdb)
+                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                        #addDir(nome_ano[0][0],'IMDB'+imdbc[0]+'IMDB',7,thumb_pop[0].replace('w92','w396'),'nao','')
+                        addDir('[B][COLOR green]' + nome_ano[0][0] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][1] + '[/COLOR]','IMDB'+imdbc[0]+'IMDB',7,thumb_pop[0].replace('w92','w396'),'nao','')
+                        i = i + 1
+        npag = re.compile('<p class="left">Currently on page: (.+?)</p>').findall(html_pop[0])
+        numpag = '('+npag[0].replace(' of ','/')+')'
+        npagseg = re.compile('<p class="left">Currently on page: (\d+) of .+?</p>').findall(html_pop[0])
+        npseg = int(npagseg[0]) + 1
+        proxima = re.compile('<p class="right"><a href="(.+?)">Next').findall(html_pop[0])
+        if not proxima: proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
+	try:
+                proximap = 'http://www.themoviedb.org' + proxima[0]
+		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3000,'','','')
+	except: pass
+        progress.close()
+
+def MVOTADOS():
+        progress = xbmcgui.DialogProgress()
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
+        html_pop_source = abrir_url(url)
+        #addDir1(name,'url',1002,artfolder + 'ze-MVT1.png',False,'')
+        #addDir1('','url',1002,artfolder,False,'')
+        #return
+        conta = 0
+	html_pop = re.findall('<h3>Top Rated Movies</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
+        for items_pop in html_pop:
+                filmes_pop = re.findall('<li class="w480">(.*?)<ul class="icons left_padding">', items_pop, re.DOTALL)
+                num = len(filmes_pop) + 0.0
+                for pop_filmes in filmes_pop:
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(int(num))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(int(num))
+                        if progress.iscanceled():
+                                break
+                        nome_ano = re.compile('<h4><a href=".+?">(.+?)</a> <span class="date">(.+?)</span></h4>').findall(pop_filmes)
+                        thumb_pop = re.compile('<img class="shadow" src="(.+?)" width="92" />').findall(pop_filmes)
+                        nome_pesquisa = nome_ano[0][0]
+                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                        nome_pesquisa = nome_pesquisa.replace('à','a')
+                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                        a_q = re.compile('\w+')
+                        qq_aa = a_q.findall(nome_pesquisa)
+                        nome_p = ''
+                        for q_a_q_a in qq_aa:
+                                if conta == 0:
+                                        nome_p = q_a_q_a
+                                        conta = 1
+                                else:
+                                        nome_p = nome_p + '+' + q_a_q_a
+                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                        html_imdbcode = abrir_url(url_imdb)
+                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                        #addDir(nome_ano[0][0],'IMDB'+imdbc[0]+'IMDB',7,thumb_pop[0].replace('w92','w396'),'nao','')
+                        addDir('[B][COLOR green]' + nome_ano[0][0] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][1] + '[/COLOR]','IMDB'+imdbc[0]+'IMDB',7,thumb_pop[0].replace('w92','w396'),'nao','')
+                        i = i + 1
+        npag = re.compile('<p class="left">Currently on page: (.+?)</p>').findall(html_pop[0])
+        numpag = '('+npag[0].replace(' of ','/')+')'
+        npagseg = re.compile('<p class="left">Currently on page: (\d+) of .+?</p>').findall(html_pop[0])
+        npseg = int(npagseg[0]) + 1
+        proxima = re.compile('<p class="right"><a href="(.+?)">Next').findall(html_pop[0])
+        if not proxima: proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
+	try:
+                proximap = 'http://www.themoviedb.org' + proxima[0]
+		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3001,'','','')
+	except: pass
+        progress.close()
+
+def NCINEMAS():
+        progress = xbmcgui.DialogProgress()
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
+        html_pop_source = abrir_url(url)
+        #addDir1(name,'url',1002,artfolder + 'ze-MVT1.png',False,'')
+        #addDir1('','url',1002,artfolder,False,'')
+        #return
+        conta = 0
+	html_pop = re.findall('<h3>Now Playing Movies</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
+        for items_pop in html_pop:
+                filmes_pop = re.findall('<li class="w480">(.*?)<ul class="icons left_padding">', items_pop, re.DOTALL)
+                num = len(filmes_pop) + 0.0
+                for pop_filmes in filmes_pop:
+                        percent = int( ( i / num ) * 100)
+                        message = str(i) + " de " + str(int(num))
+                        progress.update( percent, "", message, "" )
+                        print str(i) + " de " + str(int(num))
+                        if progress.iscanceled():
+                                break
+                        nome_ano = re.compile('<h4><a href=".+?">(.+?)</a> <span class="date">(.+?)</span></h4>').findall(pop_filmes)
+                        thumb_pop = re.compile('<img class="shadow" src="(.+?)" width="92" />').findall(pop_filmes)
+                        nome_pesquisa = nome_ano[0][0]
+                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                        nome_pesquisa = nome_pesquisa.replace('à','a')
+                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                        a_q = re.compile('\w+')
+                        qq_aa = a_q.findall(nome_pesquisa)
+                        nome_p = ''
+                        for q_a_q_a in qq_aa:
+                                if conta == 0:
+                                        nome_p = q_a_q_a
+                                        conta = 1
+                                else:
+                                        nome_p = nome_p + '+' + q_a_q_a
+                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                        html_imdbcode = abrir_url(url_imdb)
+                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                        #addDir(nome_ano[0][0],'IMDB'+imdbc[0]+'IMDB',7,thumb_pop[0].replace('w92','w396'),'nao','')
+                        addDir('[B][COLOR green]' + nome_ano[0][0] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][1] + '[/COLOR]','IMDB'+imdbc[0]+'IMDB',7,thumb_pop[0].replace('w92','w396'),'nao','')
+                        i = i + 1
+        npag = re.compile('<p class="left">Currently on page: (.+?)</p>').findall(html_pop[0])
+        numpag = '('+npag[0].replace(' of ','/')+')'
+        npagseg = re.compile('<p class="left">Currently on page: (\d+) of .+?</p>').findall(html_pop[0])
+        npseg = int(npagseg[0]) + 1
+        proxima = re.compile('<p class="right"><a href="(.+?)">Next').findall(html_pop[0])
+        if not proxima: proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
+	try:
+                proximap = 'http://www.themoviedb.org' + proxima[0]
+		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3002,'','','')
+	except: pass
+        progress.close()
+
 
 
 
@@ -457,7 +666,7 @@ elif mode == 13:
         FilmesAnima.FILMES_ANIMACAO_fontes_pesquisa_MVT(url)
 
 elif mode == 14:
-        FilmesAnima.FILMES_ANIMACAO_fontes_filmes_TPT(url_pesquisa)
+        FilmesAnima.FILMES_ANIMACAO_fontes_filmes_TPT(url_pesquisa,pesquisou)
 
 elif mode == 20:
         Filmes.FILMES_pesquisar(nome_pesquisa)
@@ -858,6 +1067,23 @@ elif mode == 1004:
 elif mode == 1005:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(502)")
+
+
+elif mode == 3000:
+        MPOPULARES()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 3001:
+        MVOTADOS()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 3002:
+        NCINEMAS()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

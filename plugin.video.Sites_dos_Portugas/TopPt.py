@@ -1406,11 +1406,14 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                 if '---' in nn:
                         n = re.compile('---(.+?)---').findall(nn)
                         n1 = re.compile('--(.+?)--').findall(nn)
-                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
-                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+                        #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+                        #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
                 else:
                         n1 = re.compile('--(.+?)--').findall(nn)
-                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+                        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+                        #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
         #index = xbmcgui.Dialog().select('Inicio', _servidores_)
         #if index > -1:
                 #escolha = idx[index]

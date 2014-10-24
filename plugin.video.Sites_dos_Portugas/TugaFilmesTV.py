@@ -589,11 +589,14 @@ def TFV_encontrar_videos_filmes(name,url):
         if '---' in nn:
                 n = re.compile('---(.+?)---').findall(nn)
                 n1 = re.compile('--(.+?)--').findall(nn)
-                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
-                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
         else:
                 n1 = re.compile('--(.+?)--').findall(nn)
-                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 

@@ -41,8 +41,9 @@ def MVT_MenuPrincipal(artfolder):
         addDir('- Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'ze-MVT1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'ze-MVT1.png','nao','')
-	addDir('[COLOR yellow]- Categorias[/COLOR]','url',106,artfolder + 'ze-MVT1.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',102,artfolder + 'ze-MVT1.png','nao','')
+	addDir('[COLOR yellow]- Categorias[/COLOR]','url',106,artfolder + 'ze-MVT1.png','nao','')
+	
 
 def MVT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.movie-tuga.blogspot.pt/'
@@ -82,7 +83,7 @@ def MVT_encontrar_fontes_filmes(url):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         thumb = ''
@@ -94,6 +95,7 @@ def MVT_encontrar_fontes_filmes(url):
                         else: imdbcode = ''
                         
                         url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
+                        #url = re.compile("<a href='(.+?)'><div align=").findall(item)
                         if 'http' not in url[0]:
                                 url[0] = 'http:' + url[0] 
                         titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
@@ -123,6 +125,38 @@ def MVT_encontrar_fontes_filmes(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
+
+                        conta = 0
+                        nome_pesquisa = nome
+                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                        nome_pesquisa = nome_pesquisa.replace('à','a')
+                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                        a_q = re.compile('\w+')
+                        qq_aa = a_q.findall(nome_pesquisa)
+                        nome_p = ''
+                        for q_a_q_a in qq_aa:
+                                if conta == 0:
+                                        nome_p = q_a_q_a
+                                        conta = 1
+                                else:
+                                        nome_p = nome_p + '+' + q_a_q_a
+                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                        html_imdbcode = MVT_abrir_url(url_imdb)
+                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                        imdbcode = imdbc[0]
+                        
                         if fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -178,7 +212,7 @@ def MVT_encontrar_fontes_filmes(url):
                         if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                 if fanart == '': fanart = thumb
                         try:
-                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0]+'IMDB'+imdbcode+'IMDB',103,thumb,'',fanart,ano[0],'')
+                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0].replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumb.replace(' ','%20'),'',fanart,ano[0],'')
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -287,7 +321,8 @@ def MVT_encontrar_videos_filmes(name,url):
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
         n = re.compile('--(.+?)--').findall(nn)
         addDir1('','url',1004,artfolder,False,'')
-        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+        #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
 
 
 
