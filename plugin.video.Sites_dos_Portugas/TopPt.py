@@ -72,9 +72,9 @@ def TPT_MenuPrincipal(artfolder):
         saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
         saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
         if not saber_url_series: saber_url_series = re.compile('<a href="(.+?)">SERIES</a></li>').findall(toppt_source)
-        addDir1('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]','url',1001,artfolder + 'ze-TPT1.png',False,'')
-        addDir1('','url',1001,artfolder,False,'')
-        addDir('- Pesquisar','url',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        #addDir1('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]','url',1001,artfolder + 'ze-TPT1.png',False,'')
+        #addDir1('','url',1001,artfolder,False,'')
+        addDir('- Procurar','url',1,artfolder + 'Ze-pesquisar2.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1001,artfolder + 'ze-TPT1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]',saber_url_todos[0],232,artfolder + 'ze-TPT1.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'ze-TPT1.png','nao','')
@@ -128,6 +128,7 @@ def TPT_Menu_Top_Filmes(artfolder):
         #addDir(str(len(filmes_por_ano)),'',232,'','nao','')
 	for tp_filmes in filmes_por_ano:
                 endereco_tf = re.compile('<a href="(.+?)".+?<img.+?src="(.+?)"').findall(tp_filmes)
+                #addDir(str(len(endereco_tf)),'',232,'','nao','')
                 for tpe,tph in endereco_tf:
                         percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(int(num))
@@ -139,8 +140,11 @@ def TPT_Menu_Top_Filmes(artfolder):
                         try:
                                 html_source = TPT_abrir_url(tpe)
                         except: html_source = ''
-                        items = re.findall('<div id="content">(.*?)<div class="postmeta-primary">', html_source, re.DOTALL)
-                        if items != []: urletitulo = re.compile('class="title">(.+?)<').findall(items[0])                        
+                        items = re.findall('<div id="content">(.*?)<span id="more', html_source, re.DOTALL)
+                        #addDir(str(len(items)),'',232,'','nao','')
+                        if items != []:
+                                urletitulo = re.compile('class="title">(.+?)<').findall(items[0])
+                                #if urletitulo:addDir(urletitulo[0],'',232,tph,'nao','')
                         try:
                                 nome = urletitulo[0]
                                 nome = nome.replace('&#8217;',"'")
@@ -148,8 +152,24 @@ def TPT_Menu_Top_Filmes(artfolder):
                                 nome = nome.replace('&#038;',"&")
                                 nome = nome.replace('&#39;',"'")
                                 nome = nome.replace('&amp;','&')
-                                addDir('[B][COLOR green]' + nome + '[/COLOR][/B]',tpe,233,tph,'nao','')
-                        except: pass
+                                ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(items[0])
+                                imdbcode = ''
+                                anofilme = ''
+
+                                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
+                                if imdb: imdbcode = imdb[0]
+                                else: imdbcode = ''
+                                if ano:
+                                        ano_filme = ano[0].replace(' ','')
+                                        a_q = re.compile('\d+')
+                                        qq_aa = a_q.findall(nome)
+                                        for q_a_q_a in qq_aa:
+                                                if len(q_a_q_a) == 4:
+                                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                                        nome = nome.replace(tirar_ano,'')
+                        
+                                addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',tpe+'IMDB'+imdbcode+'IMDB',233,tph,'nao','')
+                        except: pass        
                         i = i + 1
         progress.close()
 

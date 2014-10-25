@@ -41,9 +41,9 @@ progress = xbmcgui.DialogProgress()
 
 def CMT_MenuPrincipal(artfolder):
         fanart = artfolder + 'flag.jpg'
-        addDir1('[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]','url',1004,'',False,fanart)
-        addDir1('','url',1004,artfolder,False,fanart)
-        addDir('- Pesquisar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        #addDir1('[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]','url',1004,'',False,fanart)
+        #addDir1('','url',1004,artfolder,False,fanart)
+        addDir('- Procurar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
         #addDir('[COLOR yellow]- Filmes/Séries Recentes[/COLOR]','http://www.tuga-filmes.us',32,'','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,'',False,fanart)
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.cinematuga.net/search/label/Filmes',702,'','nao','')
@@ -85,13 +85,26 @@ def CMT_Menu_Filmes_Top_5(artfolder):
                 except: html_source = ''
                 items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
                 thumbnail = re.compile('src="(.+?)"').findall(items[0])
+                ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(items[0])
+                imdbcode = ''
+
+                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
+                if imdb: imdbcode = imdb[0]
+                else: imdbcode = ''
+                nome = urletitulo[0][1]
+                a_q = re.compile('\d+')
+                qq_aa = a_q.findall(nome)
+                for q_a_q_a in qq_aa:
+                        if len(q_a_q_a) == 4:
+                                tirar_ano = '(' + str(q_a_q_a) + ')'
+                                nome = nome.replace(tirar_ano,'')
                 print urletitulo,thumbnail
                 try:
                         if "Temporada" in urletitulo[0][1]:
                                 num_mode = 712
                         else:
                                 num_mode = 703
-                        addDir('[B][COLOR green]' + urletitulo[0][1] + '[/COLOR][/B]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                        addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
                 except: pass
                 i = i + 1
 
@@ -296,7 +309,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == '':
+                        if selfAddon.getSetting('movie-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')

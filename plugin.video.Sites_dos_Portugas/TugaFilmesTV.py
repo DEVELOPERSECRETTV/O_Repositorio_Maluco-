@@ -41,9 +41,9 @@ progress = xbmcgui.DialogProgress()
 
 def TFV_MenuPrincipal(artfolder):
         fanart = artfolder + 'flag.jpg'
-        addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1004,artfolder + 'ze-TFV1.png',False,fanart)
-        addDir1('','url',1004,artfolder,False,fanart)
-        addDir('- Pesquisar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        #addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1004,artfolder + 'ze-TFV1.png',False,fanart)
+        #addDir1('','url',1004,artfolder,False,fanart)
+        addDir('- Procurar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
         addDir('[COLOR yellow]- Filmes/Séries Recentes[/COLOR]','http://www.tuga-filmes.us',32,artfolder + 'ze-TFV1.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'ze-TFV1.png',False,fanart)
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.us/search/label/Filmes',32,artfolder + 'ze-TFV1.png','nao','')
@@ -86,6 +86,13 @@ def TFV_Menu_Filmes_Top_5(artfolder):
                                 #xbmc.sleep( 50 )
                                 if progress.iscanceled():
                                         break
+
+                                imdbcode = ''
+
+                                imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+                                if imdb: imdbcode = imdb[0]
+                                else: imdbcode = ''
+                                
                                 tto=re.compile('tulo Original:</b>:(.+?)<br').findall(item)
                                 if tto: ttor = tto[0]
                                 else:
@@ -131,7 +138,7 @@ def TFV_Menu_Filmes_Top_5(artfolder):
                                                 num_mode = 42
                                         else:
                                                 num_mode = 33
-                                        addDir('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',endereco_top_5,num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                                        addDir('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade[0] + ')[/COLOR]',endereco_top_5+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
                                 except: pass
                                 i = i + 1
 
@@ -272,7 +279,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 200 )
+                        if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         thumb = ''
@@ -354,7 +361,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == '':
+                        if selfAddon.getSetting('series-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -684,7 +691,7 @@ def TFV_encontrar_fontes_series_recentes(url):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 200 )
+                        if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
 			urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
@@ -710,7 +717,7 @@ def TFV_encontrar_fontes_series_recentes(url):
                         n = re.compile('(.+?)[(].+?[)]').findall(nome)
                         if n: nome_original = n[0]
                         else: nome_original = nome
-                        if fanart == '':
+                        if selfAddon.getSetting('series-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 #addDir1(nome_pesquisa,'','',artfolder + 'ze-TFV1.png',False,'')
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -811,7 +818,7 @@ def TFV_encontrar_fontes_series_A_a_Z(url):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 200 )
+                        if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         thumb = ''
@@ -840,7 +847,7 @@ def TFV_encontrar_fontes_series_A_a_Z(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        if fanart == '':
+                        if selfAddon.getSetting('series-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -912,6 +919,9 @@ def TFV_encontrar_fontes_series_A_a_Z(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def TFV_encontrar_videos_series(name,url):
+        urlseries = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlseries: url = url.replace('IMDBIMDB','')
+        else: url = urlseries[0]
         i = 1
         percent = 0
         message = ''

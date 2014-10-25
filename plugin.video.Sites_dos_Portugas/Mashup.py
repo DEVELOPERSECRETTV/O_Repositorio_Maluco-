@@ -160,6 +160,7 @@ def ultimos_episodios(url):
                         if progress.iscanceled():
                                 break
                         audio_filme = ''
+                        
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
@@ -595,6 +596,7 @@ def Filmes_Filmes_Filmes(url):
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
+                        
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
@@ -687,7 +689,7 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        if fanart == 'dfgfgfg':
+                        if selfAddon.getSetting('movie-fanart-TPT') == "true" and fanart == '':
                                 n = re.compile('(.+?)[[].+?[]]').findall(nome)
                                 if n:
                                         nome_pesquisa = n[0]
@@ -777,6 +779,7 @@ def Filmes_Filmes_Filmes(url):
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
+                        
                         pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
                         if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
                         assist = re.findall(">ASSISTIR.+?", item, re.DOTALL)
@@ -875,7 +878,42 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        if fanart == 'dfgfdgfdgfg':
+                        
+                        if imdbcode == '':
+                                conta = 0
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('à','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_p = ''
+                                for q_a_q_a in qq_aa:
+                                        if conta == 0:
+                                                nome_p = q_a_q_a
+                                                conta = 1
+                                        else:
+                                                nome_p = nome_p + '+' + q_a_q_a
+                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                try:
+                                        html_imdbcode = MASH_abrir_url(url_imdb)
+                                except: html_imdbcode = ''
+                                if html_imdbcode != []: filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                if filmes_imdb: imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                if imdbc: imdbcode = imdbc[0]
+                                
+                        if selfAddon.getSetting('movie-fanart-TFC') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -990,7 +1028,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('&#39;',"'")
                         nome = nome.replace('&amp;','&')
-                        nome = nome.replace('(Pedido)',"")
+                        nome = nome.replace('(Pedido)',"").replace('[Pedido]','')
                         
                         a_q = re.compile('\d+')
                         qq_aa = a_q.findall(nome)
@@ -1037,9 +1075,41 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('((','(')
                         nome = nome.replace('))',')')
                         nome = nome.replace('()','(')
+
+                        if imdbcode == '':
+                                conta = 0
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('à','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_p = ''
+                                for q_a_q_a in qq_aa:
+                                        if conta == 0:
+                                                nome_p = q_a_q_a
+                                                conta = 1
+                                        else:
+                                                nome_p = nome_p + '+' + q_a_q_a
+                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                html_imdbcode = MASH_abrir_url(url_imdb)
+                                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                imdbcode = imdbc[0]
                                         
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == 'dfgfdgdfgfg':
+                        if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -1184,7 +1254,7 @@ def Filmes_Filmes_Filmes(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == 'dfgdfgdfgfgf':
+                        if selfAddon.getSetting('movie-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -1358,7 +1428,7 @@ def Filmes_Filmes_Filmes(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == 'fgfgfgfgfgf':
+                        if selfAddon.getSetting('movie-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -1488,8 +1558,41 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
+
+                        if imdbcode == '':
+                                conta = 0
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('à','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_p = ''
+                                for q_a_q_a in qq_aa:
+                                        if conta == 0:
+                                                nome_p = q_a_q_a
+                                                conta = 1
+                                        else:
+                                                nome_p = nome_p + '+' + q_a_q_a
+                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                html_imdbcode = MASH_abrir_url(url_imdb)
+                                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                imdbcode = imdbc[0]
+                                
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == 'dgfgdfgdfgfgfdgf':
+                        if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -1514,7 +1617,7 @@ def Filmes_Filmes_Filmes(url):
                                 else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
                                 if thumb == '' or 's1600' in thumb:
                                         try:
-                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
+                                                html_pesquisa = MASH_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
                                         items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
                                         if items_pesquisa != []:
@@ -1522,7 +1625,7 @@ def Filmes_Filmes_Filmes(url):
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
                                 if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                         try:
-                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
+                                                html_pesquisa = MASH_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
                                         items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
                                         if items_pesquisa != []:
@@ -1530,7 +1633,7 @@ def Filmes_Filmes_Filmes(url):
                                                 if url_filme_pesquisa:
                                                         url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
                                                         try:
-                                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
+                                                                html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
                                                         url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
                                                         if url_fan:
@@ -2017,7 +2120,7 @@ def Filmes_Animacao(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        if fanart == 'dfgfgfdggffg':
+                        if selfAddon.getSetting('movie-fanart-TPT') == "true" and fanart == '':
                                 n = re.compile('(.+?)[[].+?[]]').findall(nome)
                                 if n:
                                         nome_pesquisa = n[0]
@@ -2206,7 +2309,40 @@ def Filmes_Animacao(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        if fanart == 'dfgfgfdgfgfd':
+
+                        if imdbcode == '':
+                                conta = 0
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('à','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_p = ''
+                                for q_a_q_a in qq_aa:
+                                        if conta == 0:
+                                                nome_p = q_a_q_a
+                                                conta = 1
+                                        else:
+                                                nome_p = nome_p + '+' + q_a_q_a
+                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                html_imdbcode = MASH_abrir_url(url_imdb)
+                                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                imdbcode = imdbc[0]
+                                
+                        if selfAddon.getSetting('movie-fanart-TFC') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -2320,7 +2456,7 @@ def Filmes_Animacao(url):
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('&#39;',"'")
                         nome = nome.replace('&amp;','&')
-                        nome = nome.replace('(Pedido)',"")
+                        nome = nome.replace('(Pedido)',"").replace('[Pedido]','')
                         
                         a_q = re.compile('\d+')
                         qq_aa = a_q.findall(nome)
@@ -2367,9 +2503,41 @@ def Filmes_Animacao(url):
                         nome = nome.replace('((','(')
                         nome = nome.replace('))',')')
                         nome = nome.replace('()','(')
+
+                        if imdbcode == '':
+                                conta = 0
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('à','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_p = ''
+                                for q_a_q_a in qq_aa:
+                                        if conta == 0:
+                                                nome_p = q_a_q_a
+                                                conta = 1
+                                        else:
+                                                nome_p = nome_p + '+' + q_a_q_a
+                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                html_imdbcode = MASH_abrir_url(url_imdb)
+                                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                imdbcode = imdbc[0]
                                         
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == 'dfgfdgfdgfg':
+                        if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -2514,7 +2682,7 @@ def Filmes_Animacao(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == 'dfgdfgfdgfg':
+                        if selfAddon.getSetting('movie-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -2688,7 +2856,7 @@ def Filmes_Animacao(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == 'dfgfdgfgg':
+                        if selfAddon.getSetting('movie-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -2818,8 +2986,41 @@ def Filmes_Animacao(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
+
+                        if imdbcode == '':
+                                conta = 0
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('à','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_p = ''
+                                for q_a_q_a in qq_aa:
+                                        if conta == 0:
+                                                nome_p = q_a_q_a
+                                                conta = 1
+                                        else:
+                                                nome_p = nome_p + '+' + q_a_q_a
+                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                html_imdbcode = MASH_abrir_url(url_imdb)
+                                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                imdbcode = imdbc[0]
+                                
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == 'fsdfgdfgdfgdfg':
+                        if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -2844,7 +3045,7 @@ def Filmes_Animacao(url):
                                 else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
                                 if thumb == '' or 's1600' in thumb:
                                         try:
-                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
+                                                html_pesquisa = MASH_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
                                         items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
                                         if items_pesquisa != []:
@@ -2852,7 +3053,7 @@ def Filmes_Animacao(url):
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
                                 if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                         try:
-                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
+                                                html_pesquisa = MASH_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
                                         items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
                                         if items_pesquisa != []:
@@ -2860,7 +3061,7 @@ def Filmes_Animacao(url):
                                                 if url_filme_pesquisa:
                                                         url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
                                                         try:
-                                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
+                                                                html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
                                                         url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
                                                         if url_fan:

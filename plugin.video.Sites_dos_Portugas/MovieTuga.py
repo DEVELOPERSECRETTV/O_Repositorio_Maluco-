@@ -36,9 +36,9 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def MVT_MenuPrincipal(artfolder):
-        addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','url',1002,artfolder + 'ze-MVT1.png',False,'')
-        addDir1('','url',1002,artfolder,False,'')
-        addDir('- Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        #addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','url',1002,artfolder + 'ze-MVT1.png',False,'')
+        #addDir1('','url',1002,artfolder,False,'')
+        addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'ze-MVT1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'ze-MVT1.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',102,artfolder + 'ze-MVT1.png','nao','')
@@ -126,38 +126,39 @@ def MVT_encontrar_fontes_filmes(url):
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'flag.jpg'
 
-                        conta = 0
-                        nome_pesquisa = nome
-                        nome_pesquisa = nome_pesquisa.replace('é','e')
-                        nome_pesquisa = nome_pesquisa.replace('ê','e')
-                        nome_pesquisa = nome_pesquisa.replace('á','a')
-                        nome_pesquisa = nome_pesquisa.replace('à','a')
-                        nome_pesquisa = nome_pesquisa.replace('ã','a')
-                        nome_pesquisa = nome_pesquisa.replace('è','e')
-                        nome_pesquisa = nome_pesquisa.replace('í','i')
-                        nome_pesquisa = nome_pesquisa.replace('ó','o')
-                        nome_pesquisa = nome_pesquisa.replace('ô','o')
-                        nome_pesquisa = nome_pesquisa.replace('õ','o')
-                        nome_pesquisa = nome_pesquisa.replace('ú','u')
-                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                        a_q = re.compile('\w+')
-                        qq_aa = a_q.findall(nome_pesquisa)
-                        nome_p = ''
-                        for q_a_q_a in qq_aa:
-                                if conta == 0:
-                                        nome_p = q_a_q_a
-                                        conta = 1
-                                else:
-                                        nome_p = nome_p + '+' + q_a_q_a
-                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-                        html_imdbcode = MVT_abrir_url(url_imdb)
-                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                        imdbcode = imdbc[0]
+                        if imdbcode == '':
+                                conta = 0
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('à','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_p = ''
+                                for q_a_q_a in qq_aa:
+                                        if conta == 0:
+                                                nome_p = q_a_q_a
+                                                conta = 1
+                                        else:
+                                                nome_p = nome_p + '+' + q_a_q_a
+                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                html_imdbcode = MVT_abrir_url(url_imdb)
+                                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                imdbcode = imdbc[0]
                         
-                        if fanart == '':
+                        if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')

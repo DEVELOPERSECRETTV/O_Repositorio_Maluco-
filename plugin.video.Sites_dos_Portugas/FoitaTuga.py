@@ -36,9 +36,9 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def FTT_MenuPrincipal(artfolder):
-        addDir1('[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]','url',1002,'',False,'')
-        addDir1('','url',1002,artfolder,False,'')
-        addDir('- Pesquisar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        #addDir1('[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]','url',1002,'',False,'')
+        #addDir1('','url',1002,artfolder,False,'')
+        addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,'',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://foitatugacinemaonline.blogspot.pt/',602,'','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O',602,'','nao','')
@@ -77,14 +77,32 @@ def FTT_Menu_Filmes_Por_Categorias(artfolder):
 
 
 def FTT_Top_Vistos(artfolder):
+        progress = xbmcgui.DialogProgress()
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
         url_categorias = 'http://foitatugacinemaonline.blogspot.pt/'
         html_categorias_source = FTT_abrir_url(url_categorias)
         html_items_categorias = re.findall("<div class='widget-content popular-posts'>(.*?)<div class='clear'>", html_categorias_source, re.DOTALL)
         html_items_categorias = re.findall("<div class='item-thumbnail-only'>(.*?)<div style='clear: both;'>", html_items_categorias[0], re.DOTALL)
-        print len(html_items_categorias)
+        num = len(html_items_categorias) + 0.0
         #addDir1(str(len(html_items_categorias)),'url',1002,artfolder,False,'')
         for item_categorias in html_items_categorias:
+                percent = int( ( i / num ) * 100)
+                message = str(i) + " de " + str(int(num))
+                progress.update( percent, "", message, "" )
+                print str(i) + " de " + str(int(num))
+                #if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
+                if progress.iscanceled():
+                        break
                 anofilme = ''
+                imdbcode = ''
+
+                imdb = re.compile('imdb.com/title/(.+?)/').findall(item_categorias)
+                if imdb: imdbcode = imdb[0]
+                else: imdbcode = ''
                 url_titulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item_categorias)
                 thumb_f = re.compile("src='(.+?)'").findall(item_categorias)
                 nome_f = url_titulo[0][1]
@@ -104,7 +122,40 @@ def FTT_Top_Vistos(artfolder):
                 nome_f = nome_f.replace('&#39;',"'")
                 nome_f = nome_f.replace('&amp;','&')
                 nome_f = nome_f.replace('(Pedido)',"").replace('[Pedido]','')
-                addDir('[B][COLOR green]' + nome_f + '[/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',url_titulo[0][0],603,thumb_f[0].replace('s72-c','s320'),'nao','')
+                if imdbcode == '':
+                        conta = 0
+                        nome_pesquisa = nome_f
+                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                        nome_pesquisa = nome_pesquisa.replace('à','a')
+                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                        a_q = re.compile('\w+')
+                        qq_aa = a_q.findall(nome_pesquisa)
+                        nome_p = ''
+                        for q_a_q_a in qq_aa:
+                                if conta == 0:
+                                        nome_p = q_a_q_a
+                                        conta = 1
+                                else:
+                                        nome_p = nome_p + '+' + q_a_q_a
+                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                        html_imdbcode = FTT_abrir_url(url_imdb)
+                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                        imdbcode = imdbc[0]
+                addDir('[B][COLOR green]' + nome_f + '[/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',url_titulo[0][0]+'IMDB'+imdbcode+'IMDB',603,thumb_f[0].replace('s72-c','s320'),'nao','')
+                i = i + 1
+        progress.close()                
 
 
 
@@ -133,7 +184,7 @@ def FTT_encontrar_fontes_filmes(url):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         
@@ -143,7 +194,7 @@ def FTT_encontrar_fontes_filmes(url):
                         qualidade_filme = ''
                         imdbcode = ''
 
-                        imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
 
@@ -216,39 +267,40 @@ def FTT_encontrar_fontes_filmes(url):
                         nome = nome.replace('))',')')
                         nome = nome.replace('()','(')
 
-                        conta = 0
-                        nome_pesquisa = nome
-                        nome_pesquisa = nome_pesquisa.replace('é','e')
-                        nome_pesquisa = nome_pesquisa.replace('ê','e')
-                        nome_pesquisa = nome_pesquisa.replace('á','a')
-                        nome_pesquisa = nome_pesquisa.replace('à','a')
-                        nome_pesquisa = nome_pesquisa.replace('ã','a')
-                        nome_pesquisa = nome_pesquisa.replace('è','e')
-                        nome_pesquisa = nome_pesquisa.replace('í','i')
-                        nome_pesquisa = nome_pesquisa.replace('ó','o')
-                        nome_pesquisa = nome_pesquisa.replace('ô','o')
-                        nome_pesquisa = nome_pesquisa.replace('õ','o')
-                        nome_pesquisa = nome_pesquisa.replace('ú','u')
-                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                        a_q = re.compile('\w+')
-                        qq_aa = a_q.findall(nome_pesquisa)
-                        nome_p = ''
-                        for q_a_q_a in qq_aa:
-                                if conta == 0:
-                                        nome_p = q_a_q_a
-                                        conta = 1
-                                else:
-                                        nome_p = nome_p + '+' + q_a_q_a
-                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-                        html_imdbcode = FTT_abrir_url(url_imdb)
-                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                        imdbcode = imdbc[0]
+                        if imdbcode == '':
+                                conta = 0
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('à','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_p = ''
+                                for q_a_q_a in qq_aa:
+                                        if conta == 0:
+                                                nome_p = q_a_q_a
+                                                conta = 1
+                                        else:
+                                                nome_p = nome_p + '+' + q_a_q_a
+                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                html_imdbcode = FTT_abrir_url(url_imdb)
+                                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                imdbcode = imdbc[0]
                                         
                         #fanart = artfolder + 'flag.jpg'
-                        if fanart == '':
+                        if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -402,84 +454,6 @@ def FTT_encontrar_videos_filmes(name,url):
                 n1 = re.compile('--(.+?)--').findall(nn)
                 addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
                 #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
-
-def FTT_encontrar_videos_filmesllllllllllllllllllllllllllllll(name,url):
-        colecao = 'nao'
-        addDir1(name,'url',1002,iconimage,False,'')
-        addDir1('','url',1002,artfolder,False,'')
-        conta_id_video = 0
-        try:
-                fonte_video = FTT_abrir_url(url)
-        except: fonte_video = ''
-        fontes_video = re.findall("<body>(.+?)</body>", fonte_video, re.DOTALL)
-        numero_de_fontes = len(fontes_video)
-        for fonte_e_url in fontes_video:
-                match = re.compile('<option value=(.+?)>(.+?)<').findall(fonte_e_url)
-                if '<option' in fonte_e_url:
-                        for url_video_url_id,cd in match:
-                                if url_video_url_id == '""':
-                                        if 'CD' in cd:
-                                                conta_id_video = 0
-                                                cd = cd.replace('Filme Aqui','')
-                                                addDir1('[COLOR blue]' + cd + '[/COLOR]','','',iconimage,False,'')
-                                        if 'Cole' in cd:
-                                                conta_id_video = 0
-                                                colecao = 'sim'
-                                else:
-                                        url_video_url_id = url_video_url_id.replace('"','')
-                                if colecao == 'sim' and (('Breve' or 'breve') not in cd):
-                                        if 'Cole' not in cd:
-                                                conta_id_video = 0
-                                                addDir1('[COLOR blue]' + cd + ':[/COLOR]','','',iconimage,False,'')
-                                if 'http:' not in url_video_url_id:
-                                        url_video = 'http:' + url_video_url_id
-                                else:
-                                        url_video = url_video_url_id
-                                try:
-                                        fonte = FTT_abrir_url(url_video)
-                                except: fonte = ''
-                                fontes = re.findall("<body>(.+?)</body>", fonte, re.DOTALL)
-                                for fonte_id in fontes:
-                                        if 'videomega' in fonte_id:
-                                                try:
-                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
-                                                        conta_id_video = conta_id_video + 1
-                                                        id_video = match[0]
-                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'','')
-                                                except:pass
-                                        if 'vidto' in fonte_id:
-                                                try:
-                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
-                                                        conta_id_video = conta_id_video + 1
-                                                        if match: match = re.compile('(.+?)-').findall(match[0])
-                                                        id_video = match[0]
-                                                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
-                                                except:pass
-                else:
-                        #addDir1(url+name,'url',1002,iconimage,False,'')
- 	                if fonte_video:
- 		                for fonte_id in fontes_video:
-                                        if 'videomega' in fonte_id:
-                                                try:
-                                                        #addDir1(url+name,'url',1002,iconimage,False,'')
-                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
-                                                        conta_id_video = conta_id_video + 1
-                                                        id_video = match[0]
-                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'','')
-                                                except:pass
-                                        if 'vidto' in fonte_id:
-                                                try:
-                                                        #addDir1(url+name,'url',1002,iconimage,False,'')
-                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
-                                                        conta_id_video = conta_id_video + 1
-                                                        if match: match = re.compile('(.+?)-').findall(match[0])
-                                                        id_video = match[0]
-                                                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
-                                                except:pass
 
 
 

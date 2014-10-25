@@ -55,9 +55,9 @@ progress = xbmcgui.DialogProgress()
 #-----------------------------------------------------------------    MENUS    -----------------------------------------------------------------#
 
 def TFC_MenuPrincipal(artfolder):
-        addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','url',1003,artfolder + 'ze-TFC1.png',False,'')
-        addDir1('','url',1003,artfolder,False,'')
-        addDir('- Pesquisar','http://www.tuga-filmes.info/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        #addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','url',1003,artfolder + 'ze-TFC1.png',False,'')
+        #addDir1('','url',1003,artfolder,False,'')
+        addDir('- Procurar','http://www.tuga-filmes.info/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1003,artfolder + 'ze-TFC1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.info/',72,artfolder + 'ze-TFC1.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20',72,artfolder + 'ze-TFC1.png','nao','')
@@ -69,14 +69,65 @@ def TFC_MenuPrincipal(artfolder):
                 addDir('[B][COLOR red]M+18[/B][/COLOR]','url',86,artfolder + 'ze-TFC1.png','nao','')	
 
 def TFC_Menu_Filmes_Top_10(artfolder):
+        progress = xbmcgui.DialogProgress()
+        i = 1
+        percent = 0
+        message = ''
+        progress.create('Progresso', 'A Pesquisar:')
+        progress.update( percent, "", message, "" )
         url_top_10 = 'http://www.tuga-filmes.info/'
         top_10_source = TFC_abrir_url(url_top_10)
         if selfAddon.getSetting('movies-view') == "0":
                 addDir1('[B][COLOR blue]TOP 10[/COLOR][/B]','url',1003,artfolder + 'ze-TFC1.png',False,'')
                 addDir1('','url',1003,artfolder,False,'')
         filmes_top_10 = re.compile("<img alt=\'\' border=\'0\' height=\'72\' src=\'(.+?)\' width=\'72\'/>\n</a>\n</div>\n<div class=\'item-title\'><a href=\'(.+?)\'>(.+?)</a></div>\n</div>\n<div style=\'clear: both;\'>").findall(top_10_source)
+        num = len(filmes_top_10) + 0.0
 	for iconimage_filmes_top_10,endereco_top_10,nome_top_10 in filmes_top_10:
-		addDir('[B][COLOR green]' + nome_top_10 + '[/COLOR][/B]',endereco_top_10,73,iconimage_filmes_top_10.replace('s72-c','s320').replace('.gif','.jpg'),'nao','')
+                percent = int( ( i / num ) * 100)
+                message = str(i) + " de " + str(int(num))
+                progress.update( percent, "", message, "" )
+                print str(i) + " de " + str(int(num))
+                if progress.iscanceled():
+                        break
+                conta = 0
+                nome_pesquisa = nome_top_10
+                nome_pesquisa = nome_pesquisa.replace('&#8216;',"'")
+                nome_pesquisa = nome_pesquisa.replace('&#8217;',"'")
+                nome_pesquisa = nome_pesquisa.replace('&#8211;',"-")
+                nome_pesquisa = nome_pesquisa.replace('&#39;',"'")
+                nome_pesquisa = nome_pesquisa.replace('&amp;','&')
+                nome_top_10 = nome_pesquisa
+                nome_pesquisa = nome_pesquisa.replace('é','e')
+                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                nome_pesquisa = nome_pesquisa.replace('á','a')
+                nome_pesquisa = nome_pesquisa.replace('à','a')
+                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                nome_pesquisa = nome_pesquisa.replace('è','e')
+                nome_pesquisa = nome_pesquisa.replace('í','i')
+                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                a_q = re.compile('\w+')
+                qq_aa = a_q.findall(nome_pesquisa)
+                nome_p = ''
+                for q_a_q_a in qq_aa:
+                        if conta == 0:
+                                nome_p = q_a_q_a
+                                conta = 1
+                        else:
+                                nome_p = nome_p + '+' + q_a_q_a
+                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                html_imdbcode = TFC_abrir_url(url_imdb)
+                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                imdbcode = imdbc[0]
+		addDir('[B][COLOR green]' + nome_top_10 + '[/COLOR][/B]',endereco_top_10+'IMDB'+imdbcode+'IMDB',73,iconimage_filmes_top_10.replace('s72-c','s320').replace('.gif','.jpg'),'nao','')
+		i = i + 1
+	progress.close()
 
 def TFC_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.tuga-filmes.info/'
@@ -117,7 +168,7 @@ def TFC_encontrar_fontes_filmes(url):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('movie-fanart-TFC') == "false": xbmc.sleep( 200 )
+                        if selfAddon.getSetting('movie-fanart-TFC') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         fanart = ''
@@ -228,40 +279,40 @@ def TFC_encontrar_fontes_filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-
-                        conta = 0
-                        nome_pesquisa = nome
-                        nome_pesquisa = nome_pesquisa.replace('é','e')
-                        nome_pesquisa = nome_pesquisa.replace('ê','e')
-                        nome_pesquisa = nome_pesquisa.replace('á','a')
-                        nome_pesquisa = nome_pesquisa.replace('à','a')
-                        nome_pesquisa = nome_pesquisa.replace('ã','a')
-                        nome_pesquisa = nome_pesquisa.replace('è','e')
-                        nome_pesquisa = nome_pesquisa.replace('í','i')
-                        nome_pesquisa = nome_pesquisa.replace('ó','o')
-                        nome_pesquisa = nome_pesquisa.replace('ô','o')
-                        nome_pesquisa = nome_pesquisa.replace('õ','o')
-                        nome_pesquisa = nome_pesquisa.replace('ú','u')
-                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                        a_q = re.compile('\w+')
-                        qq_aa = a_q.findall(nome_pesquisa)
-                        nome_p = ''
-                        for q_a_q_a in qq_aa:
-                                if conta == 0:
-                                        nome_p = q_a_q_a
-                                        conta = 1
-                                else:
-                                        nome_p = nome_p + '+' + q_a_q_a
-                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-                        html_imdbcode = TFC_abrir_url(url_imdb)
-                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                        imdbcode = imdbc[0]
+                        if imdbcode == '':
+                                conta = 0
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('à','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_p = ''
+                                for q_a_q_a in qq_aa:
+                                        if conta == 0:
+                                                nome_p = q_a_q_a
+                                                conta = 1
+                                        else:
+                                                nome_p = nome_p + '+' + q_a_q_a
+                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                html_imdbcode = TFC_abrir_url(url_imdb)
+                                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                imdbcode = imdbc[0]
 
                         
-                        if fanart == '':
+                        if selfAddon.getSetting('movie-fanart-TFC') == "false" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
