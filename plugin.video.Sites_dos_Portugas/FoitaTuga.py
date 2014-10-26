@@ -22,7 +22,7 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,FilmesAnima
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -380,7 +380,7 @@ def FTT_encontrar_videos_filmes(name,url):
         nomeescolha = name
         colecao = 'nao'
         addDir1(name,'url',1002,iconimage,False,'')
-        addDir1('','url',1002,artfolder,False,'')
+        #addDir1('','url',1002,artfolder,False,'')
         conta_id_video = 0
         try:
                 fonte_video = FTT_abrir_url(url)
@@ -442,21 +442,97 @@ def FTT_encontrar_videos_filmes(name,url):
         nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[COLOR orange]','').replace('[/COLOR][/B]','--').replace('[/COLOR]','').replace('[','---').replace(']','---')
         nn = nn.replace('(','---').replace(')','---').replace('FTT | ','')
-        addDir1('','url',1004,artfolder,False,'')
+        #addDir1('','url',1004,artfolder,False,'')
         if '---' in nn:
                 n = re.compile('---(.+?)---').findall(nn)
                 n1 = re.compile('--(.+?)--').findall(nn)
-                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
-                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
-                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
-                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+                url = 'IMDB'+imdbcode+'IMDB'
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1[0],'url',1004,iconimage,False,'')
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'FTT')
+                #FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'FTT')
+                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
         else:
                 n1 = re.compile('--(.+?)--').findall(nn)
-                addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
-                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+                url = 'IMDB'+imdbcode+'IMDB'
+                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'FTT')
+                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
 
 
 
+def FTT_links(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
+        nomeescolha = name
+        colecao = 'nao'
+        #addDir1(name,'url',1002,iconimage,False,'')
+        #addDir1('','url',1002,artfolder,False,'')
+        conta_id_video = 0
+        try:
+                fonte_video = FTT_abrir_url(url)
+        except: fonte_video = ''
+        fontes_video = re.findall("<div class='post hentry'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+        numero_de_fontes = len(fontes_video)
+        if 'BREVEMENTE ONLINE' in fonte_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
+        for fonte_e_url in fontes_video:
+                if imdbcode == '':
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(fonte_e_url)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                #if 'BREVEMENTE ONLINE' in fontes_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
+                match1 = re.compile('<script src="(.+?)" type="text/javascript"></script>').findall(fonte_e_url)
+                #addDir1(str(len(match1)),'url',1002,artfolder,False,'')
+                for fonte_id in match1: 
+                        if 'videomega' in fonte_id:
+                                #addDir1(str(len(match1)),'url',1002,artfolder,False,'')
+                                try:  
+                                        if 'hashkey' in fonte_id:
+                                                conta_id_video = conta_id_video + 1
+                                                try:
+                                                        urlvideomega = FTT_abrir_url(fonte_id)
+                                                except: urlvideomega = ''
+                                                if urlvideomega != '':
+                                                        urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
+                                                        if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
+                                        if 'iframe.js' in fonte_id:
+                                                refvideo = re.compile('<script type="text/javascript">ref="(.+?)".+?</script>').findall(fonte_e_url)
+                                                if not refvideo: refvideo = re.compile(">ref='(.+?)'.+?</script>").findall(fonte_e_url)
+                                                url = 'http://videomega.tv/iframe.php?ref=' + refvideo[0] + '///' + name
+                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
+                                except:pass
+                match2 = re.compile('<iframe.+?src="(.+?)".+?></iframe>').findall(fonte_e_url)
+                for fonte_id in match2:
+                        if 'videomega' in fonte_id:
+                                try:
+                                        conta_id_video = conta_id_video + 1
+                                        url = fonte_id + '///' + name
+                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
+                                except:pass
+                        if 'dropvideo' in fonte_id:
+                                try:
+                                        conta_id_video = conta_id_video + 1
+                                        url = fonte_id + '///' + name
+                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Dropvideo)[/COLOR][/B]',url,30,iconimage,'','')
+                                except:pass
+                        if 'vidto.me' in fonte_id:
+                                try:
+                                        conta_id_video = conta_id_video + 1
+                                        fonte_id = fonte_id.replace('embed-','')
+                                        refvideo = re.compile('http://vidto.me/embed-(.+?).html').findall(fonte_id)
+                                        if refvideo: url = 'http://vidto.me/' + refvideo[0] + '.html' + '///' + name
+                                        else: url = fonte_id + '///' + name
+                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'','')
+                                except:pass
+
+
+
+#----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 

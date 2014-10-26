@@ -23,7 +23,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket
-import Play,Pesquisar,Mashup,TugaFilmesTV,TopPt,MovieTuga,Armagedom
+import Play,Pesquisar,Mashup,TugaFilmesTV,TopPt,MovieTuga,Armagedom,FilmesAnima
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -463,7 +463,7 @@ def TFC_encontrar_videos_filmes(name,url):
         progress.update( percent, "", message, "" )
         conta_id_video = 0
 	addDir1(name,'url',1003,iconimage,False,'')
-        addDir1('','url',1003,artfolder,False,'')
+        #addDir1('','url',1003,artfolder,False,'')
         #return
         try:
                 fonte = TFC_abrir_url(url)
@@ -629,14 +629,199 @@ def TFC_encontrar_videos_filmes(name,url):
         nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
         nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('TFC | ','')
-        #addDir1(nn,'url',1004,artfolder,False,'')
         n = re.compile('--(.+?)--').findall(nn)
-        addDir1('','url',1004,artfolder,False,'')
-        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+        #addDir1('','url',1004,artfolder,False,'')
+        url = 'IMDB'+imdbcode+'IMDB'
+        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'TFC')
+        #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+        
         percent = int( ( 100 / 100.0 ) * 100)
         progress.update( percent, "", message, "" )
         progress.close()
 
+#----------------------------------------------------------------------------------------------------------------------------------------------#
+
+def TFC_links(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
+        nomeescolha = name
+        for x in range(len(_servidores_)):
+                _servidores_[x]=''
+        for x in range(len(_ligacao_)):
+                _ligacao_[x]=''
+        conta_os_items = 0
+        _servidores_[conta_os_items] = name
+        _ligacao_[conta_os_items] = 'SUBMENU'
+        conta_os_items = conta_os_items + 1
+        conta_id_video = 0
+	#addDir1(name,'url',1003,iconimage,False,'')
+        #addDir1('','url',1003,artfolder,False,'')
+        #return
+        try:
+                fonte = TFC_abrir_url(url)
+        except: fonte = ''
+        items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", fonte, re.DOTALL)
+	if items != []:
+                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                if imdb: imdbcode = imdb[0]
+                else: imdbcode = ''
+        assist = re.findall(">ASSISTIR.+?", fonte, re.DOTALL)
+        fontes = re.findall("Ver Aqui.+?", fonte, re.DOTALL)
+        numero_de_fontes = len(fontes)
+	if fonte:
+                if len(assist) > 1:
+                        #addDir1('1','url',1003,artfolder,False,'')
+                        assistir_fontes = re.findall('>ASSISTIR(.*?)------------------------------', fonte, re.DOTALL)
+                        if assistir_fontes:
+                                for ass_fon in assistir_fontes:
+                                        match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
+                                        assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
+                                        conta_video = len(match)
+                                        if assis:
+                                                if 'LEGENDADO' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]LEGENDADO:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                if 'PT/PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                elif 'PT-PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                        if match:
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                        match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
+                                        if match:
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                        conta_os_items = conta_os_items + 1
+                                assistir_fontes = re.findall("------------------------------<br />(.*?)='postmeta'>", fonte, re.DOTALL)
+                                assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
+                                conta_id_video = 0
+                                for ass_fon in assistir_fontes:
+                                        match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
+                                        assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
+                                        conta_video = len(match)
+                                        if assis:
+                                                if 'LEGENDADO' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]LEGENDADO:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                if 'PT/PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                elif 'PT-PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                        if match:
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                        match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
+                                        if match:
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                        conta_os_items = conta_os_items + 1
+                        else:
+                                assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
+                                #if not assistir_fontes:
+                                        #addDir1('ya','url',1003,artfolder,False,'')
+                                        #assistir_fontes = re.findall('>ASSISTIR(.*?)</script>', fonte, re.DOTALL)
+                                #else: addDir1('sim','url',1003,artfolder,False,'')
+                                conta_id_video = 0
+                                for ass_fon in assistir_fontes:
+                                        match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
+                                        #if '<iframe' in ass_fon: match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
+                                        #elif '<script' in ass_fon: match = re.compile('src="(.+?)"').findall(ass_fon)
+                                        assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
+                                        conta_video = len(match)
+                                        if assis:
+                                                if 'LEGENDADO' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]LEGENDADO:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                if 'PT/PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                elif 'PT-PT' in assis[0]:
+                                                        _servidores_[conta_os_items] = '[COLOR blue]AUDIO PT:[/COLOR]'
+                                                        _ligacao_[conta_os_items] = 'SUBMENU'
+                                                        conta_os_items = conta_os_items + 1
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                        if match:
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                        match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
+                                        if match:
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                        conta_os_items = conta_os_items + 1
+                else:
+                        #addDir1('2','url',1003,artfolder,False,'')
+                        match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
+                        for url in match:                                
+                                id_video = ''
+                                conta_id_video = conta_id_video + 1
+                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                conta_os_items = conta_os_items + 1
+                        match = re.compile('<iframe .+? src="(.+?)"').findall(fonte)
+                        if match:
+                                conta_video = len(match)
+                                for url in match:
+                                        id_video = ''
+                                        conta_id_video = conta_id_video + 1
+                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                        conta_os_items = conta_os_items + 1
+                        else:
+                                match = re.compile("<script type='text/javascript' src='(.+?)'></script>").findall(fonte)
+                                conta_video = len(match)
+                                for url in match:
+                                        if 'hashkey' in url:
+                                                id_video = ''
+                                                conta_id_video = conta_id_video + 1
+                                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                                conta_os_items = conta_os_items + 1
+                        if numero_de_fontes > 0:
+                                conta_video = 0
+                                match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(fonte)
+                                url = match[0]
+                                if url != '':
+                                        try:
+                                                for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items)
+                                                        conta_os_items = conta_os_items + 1
+                                        except:pass
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#

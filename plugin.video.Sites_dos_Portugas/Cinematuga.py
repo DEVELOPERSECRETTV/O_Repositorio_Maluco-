@@ -21,7 +21,7 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,FilmesAnima
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -409,7 +409,7 @@ def CMT_encontrar_videos_filmes(name,url):
         conta_id_video = 0
         conta_os_items = 0
 	addDir1(name,'url',1004,iconimage,False,'')
-        addDir1('','url',1004,artfolder,False,'')     
+        #addDir1('','url',1004,artfolder,False,'')     
 	try:
 		link2=CMT_abrir_url(url)
 	except: link2 = ''
@@ -441,11 +441,59 @@ def CMT_encontrar_videos_filmes(name,url):
         nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('CMT | ','')
         n = re.compile('--(.+?)--').findall(nn)
-        addDir1('','url',1004,artfolder,False,'')
+        #addDir1('','url',1004,artfolder,False,'')
+        url = 'IMDB'+imdbcode+'IMDB'
+        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'CMT')
         addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
 
 
+#----------------------------------------------------------------------------------------------------------------------------------------------#	
 
+
+def CMT_links(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
+        nomeescolha = name
+        conta_id_video = 0
+        conta_os_items = 0
+	#addDir1(name,'url',1004,iconimage,False,'')
+        #addDir1('','url',1004,artfolder,False,'')     
+	try:
+		link2=CMT_abrir_url(url)
+	except: link2 = ''
+	if imdbcode == '':
+                items = re.findall("<div class='video-item'>(.+?)<div class='clear'>", link2, re.DOTALL)
+                if items != []:
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+	nao = 0
+        matchvid = re.findall("Assitir online(.+?)</iframe>", link2, re.DOTALL)
+        if not matchvid:
+                nao = 1
+                matchvid = re.findall("<div class='video-item'>(.+?)<div class='clear'>", link2, re.DOTALL)
+        #addDir1(str(len(matchvid)),'url',1004,artfolder,False,'')
+        for matchs in matchvid:
+                try:
+                        nome = re.compile('(.+?)\n.+?').findall(matchs)
+                        if not nome: nome = re.compile('(.+?)</b>').findall(matchs)
+                        if nao == 0: addDir1('[COLOR blue]'+nome[0]+':[/COLOR]','url',1004,artfolder,False,'')
+                        urlvideo = re.compile('<iframe.+?src="(.+?)"').findall(matchs)
+                        if not urlvideo: urlvideo = re.compile('src="(.+?)"').findall(matchs)
+                        url = urlvideo[0]
+                        conta_id_video = conta_id_video + 1
+                        conta_os_items = conta_os_items + 1
+                        CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
+                except: pass
+
+
+
+
+#----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 #def CMT_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):

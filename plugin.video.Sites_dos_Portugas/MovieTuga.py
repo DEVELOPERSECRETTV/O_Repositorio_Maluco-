@@ -22,7 +22,7 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,FilmesAnima
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -238,7 +238,7 @@ def MVT_encontrar_videos_filmes(name,url):
         nomeescolha = name
         colecao = 'nao'
         addDir1(name,'url',1002,iconimage,False,'')
-        addDir1('','url',1002,artfolder,False,'')
+        #addDir1('','url',1002,artfolder,False,'')
         conta_id_video = 0
         try:
                 fonte_video = MVT_abrir_url(url)
@@ -321,12 +321,105 @@ def MVT_encontrar_videos_filmes(name,url):
         nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
         n = re.compile('--(.+?)--').findall(nn)
-        addDir1('','url',1004,artfolder,False,'')
-        addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
-        #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0]+'[COLOR nn]IMDB'+imdbcode+'IMDB[/COLOR]','url',7,iconimage,'','')
+        #addDir1('','url',1004,artfolder,False,'')
+        url = 'IMDB'+imdbcode+'IMDB'
+        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'MVT')
+        #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+
+
+def MVT_links(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
+        nomeescolha = name
+        colecao = 'nao'
+        #addDir1(name,'url',1002,iconimage,False,'')
+        #addDir1('','url',1002,artfolder,False,'')
+        conta_id_video = 0
+        try:
+                fonte_video = MVT_abrir_url(url)
+        except: fonte_video = ''
+        
+        fontes_video = re.findall("<body>(.+?)</body>", fonte_video, re.DOTALL)
+        if imdbcode == '':
+                imdb = re.compile('imdb.com/title/(.+?)/').findall(fonte_video)
+                if imdb: imdbcode = imdb[0]
+                else: imdbcode = ''
+        numero_de_fontes = len(fontes_video)
+        for fonte_e_url in fontes_video:
+                match = re.compile('<option value=(.+?)>(.+?)<').findall(fonte_e_url)
+                if '<option' in fonte_e_url:
+                        for url_video_url_id,cd in match:
+                                if url_video_url_id == '""':
+                                        if 'CD' in cd:
+                                                conta_id_video = 0
+                                                cd = cd.replace('Filme Aqui','')
+                                                addDir1('[COLOR blue]' + cd + '[/COLOR]','','',iconimage,False,'')
+                                        if 'Cole' in cd:
+                                                conta_id_video = 0
+                                                colecao = 'sim'
+                                else:
+                                        url_video_url_id = url_video_url_id.replace('"','')
+                                if colecao == 'sim' and (('Breve' or 'breve') not in cd):
+                                        if 'Cole' not in cd:
+                                                conta_id_video = 0
+                                                addDir1('[COLOR blue]' + cd + ':[/COLOR]','','',iconimage,False,'')
+                                if 'http:' not in url_video_url_id:
+                                        url_video = 'http:' + url_video_url_id
+                                else:
+                                        url_video = url_video_url_id
+                                try:
+                                        fonte = MVT_abrir_url(url_video)
+                                except: fonte = ''
+                                fontes = re.findall("<body>(.+?)</body>", fonte, re.DOTALL)
+                                for fonte_id in fontes:
+                                        if 'videomega' in fonte_id:
+                                                try:
+                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
+                                                        conta_id_video = conta_id_video + 1
+                                                        id_video = match[0]
+                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'','')
+                                                except:pass
+                                        if 'vidto' in fonte_id:
+                                                try:
+                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
+                                                        conta_id_video = conta_id_video + 1
+                                                        if match: match = re.compile('(.+?)-').findall(match[0])
+                                                        id_video = match[0]
+                                                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
+                                                except:pass
+                else:
+                        #addDir1(url+name,'url',1002,iconimage,False,'')
+ 	                if fonte_video:
+ 		                for fonte_id in fontes_video:
+                                        if 'videomega' in fonte_id:
+                                                try:
+                                                        #addDir1(url+name,'url',1002,iconimage,False,'')
+                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
+                                                        conta_id_video = conta_id_video + 1
+                                                        id_video = match[0]
+                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'','')
+                                                except:pass
+                                        if 'vidto' in fonte_id:
+                                                try:
+                                                        #addDir1(url+name,'url',1002,iconimage,False,'')
+                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
+                                                        conta_id_video = conta_id_video + 1
+                                                        if match: match = re.compile('(.+?)-').findall(match[0])
+                                                        id_video = match[0]
+                                                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
+                                                except:pass
 
 
 
+#----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 

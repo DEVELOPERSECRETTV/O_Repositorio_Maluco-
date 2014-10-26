@@ -168,9 +168,9 @@ def SERIES_MENU():
 def passar_nome_pesquisa_animacao(name):
         nome_pesquisa = str(name)
         #addDir(nome_pesquisa,'url',7,iconimage,'','')
-        nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PESQUISAR FILME: [/COLOR]','')
+        nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PROCURAR POR: [/COLOR]','')
         #addDir(nome_pesquisa,'url',7,iconimage,'','')
-        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(nome_pesquisa))
+        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(nome_pesquisa),'')
         #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         #xbmc.executebuiltin("Container.SetViewMode(500)")
         #xbmcplugin.endOfDirectory(int(sys.argv[1]))
@@ -184,7 +184,7 @@ def passar_nome_pesquisa_filmes(name):
 
 def passar_nome_pesquisa_series(name):
         nome_pesquisa = str(name)
-        nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PESQUISAR FILME: [/COLOR]','')
+        nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PROCURAR POR: [/COLOR]','')
         Series.SERIES_pesquisar(str(nome_pesquisa))
         #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         #xbmc.executebuiltin("Container.SetViewMode(500)")
@@ -192,7 +192,7 @@ def passar_nome_pesquisa_series(name):
 
 def passar_nome_SERIES(name):
         nome_pesquisa = str(name)
-        nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PESQUISAR FILME: [/COLOR]','')
+        nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PROCURAR POR: [/COLOR]','')
         pesquisar_SERIES(str(nome_pesquisa))
         #addDir1(nome_pesquisa,'url',1002,artfolder,False,'')
         #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -263,8 +263,8 @@ def MPOPULARES():
         numpag = '('+npag[0].replace(' of ','/')+')'
         npagseg = re.compile('<p class="left">Currently on page: (\d+) of .+?</p>').findall(html_pop[0])
         npseg = int(npagseg[0]) + 1
-        proxima = re.compile('<p class="right"><a href="(.+?)">Next').findall(html_pop[0])
-        if not proxima: proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
+        proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
+        if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
 	try:
                 proximap = 'http://www.themoviedb.org' + proxima[0]
 		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3000,'','','')
@@ -335,8 +335,8 @@ def MVOTADOS():
         numpag = '('+npag[0].replace(' of ','/')+')'
         npagseg = re.compile('<p class="left">Currently on page: (\d+) of .+?</p>').findall(html_pop[0])
         npseg = int(npagseg[0]) + 1
-        proxima = re.compile('<p class="right"><a href="(.+?)">Next').findall(html_pop[0])
-        if not proxima: proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
+        proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
+        if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
 	try:
                 proximap = 'http://www.themoviedb.org' + proxima[0]
 		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3001,'','','')
@@ -407,8 +407,8 @@ def NCINEMAS():
         numpag = '('+npag[0].replace(' of ','/')+')'
         npagseg = re.compile('<p class="left">Currently on page: (\d+) of .+?</p>').findall(html_pop[0])
         npseg = int(npagseg[0]) + 1
-        proxima = re.compile('<p class="right"><a href="(.+?)">Next').findall(html_pop[0])
-        if not proxima: proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
+        proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
+        if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
 	try:
                 proximap = 'http://www.themoviedb.org' + proxima[0]
 		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3002,'','','')
@@ -516,10 +516,6 @@ def pesquisar_SERIES(nome_pesquisa):
         xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-
 def encontrar_fontes_SERIES_TFV(url,pesquisou):
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbc = imdb[0]
@@ -601,9 +597,6 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
         if num_f == 0:
                 if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
 	return
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-#----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def encontrar_fontes_SERIES_TPT(url,pesquisou):
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
