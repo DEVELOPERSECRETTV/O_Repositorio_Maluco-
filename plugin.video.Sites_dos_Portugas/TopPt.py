@@ -748,8 +748,8 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
         #_ligacao_[conta_os_items] = 'SUBMENU'
         # NAO # conta_os_items = conta_os_items + 1
         nometitulo = nomeescolha
-        #if 'Season' not in nometitulo:
-        if nometitulo != '':
+        if 'Season' in nometitulo or 'Temporada' in nometitulo:
+        #if nometitulo != '':
                 num = 0
                 percent = 0
                 message = ''
@@ -807,13 +807,14 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                 linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div><',newmatch1[0],re.DOTALL)
                                 for parte1,parte2 in linkseriesssss:
                                         #addDir1(str(int(num)),'url',1001,artfolder,False,'')
-                                        percent = int( ( i / num ) * 100)
-                                        message = str(i) + " de " + str(int(num))
-                                        progress.update( percent, "", message, "" )
-                                        print str(i) + " de " + str(int(num))
-                                        xbmc.sleep( 100 )
-                                        if progress.iscanceled():
-                                                break
+                                        if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                percent = int( ( i / num ) * 100)
+                                                message = str(i) + " de " + str(int(num))
+                                                progress.update( percent, "", message, "" )
+                                                print str(i) + " de " + str(int(num))
+                                                xbmc.sleep( 50 )
+                                                if progress.iscanceled():
+                                                        break
                                         conta_id_video = 0
                                         addDir1('[COLOR blue]'+parte1+'[/COLOR]','','',iconimage,False,'')
                                         match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
@@ -847,11 +848,14 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                 num = num + len(lin) + 0.0
                                 linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div><',newmatch1[0],re.DOTALL)
                                 for parte1,parte2 in linkseriesssss:
-                                        percent = int( ( i / num ) * 100)
-                                        message = str(i) + " de " + str(int(num))
-                                        progress.update( percent, "", message, "" )
-                                        print str(i) + " de " + str(int(num))
-                                        xbmc.sleep( 100 )
+                                        if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                percent = int( ( i / num ) * 100)
+                                                message = str(i) + " de " + str(int(num))
+                                                progress.update( percent, "", message, "" )
+                                                print str(i) + " de " + str(int(num))
+                                                xbmc.sleep( 50 )
+                                                if progress.iscanceled():
+                                                        break
                                         conta_id_video = 0
                                         addDir1('[COLOR blue]'+parte1+'[/COLOR]','','',iconimage,False,'')
                                         match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
@@ -1092,13 +1096,14 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                 #progress.update( percent, "", message, "" )
                                                                 ultima_parte = ''
                                                                 for parte1,parte2 in linksseccao:
-                                                                        percent = int( ( i / num ) * 100)
-                                                                        message = str(i) + " de " + str(int(num))
-                                                                        progress.update( percent, "", message, "" )
-                                                                        print str(i) + " de " + str(int(num))
-                                                                        xbmc.sleep( 100 )
-                                                                        if progress.iscanceled():
-                                                                                break
+                                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                                                percent = int( ( i / num ) * 100)
+                                                                                message = str(i) + " de " + str(int(num))
+                                                                                progress.update( percent, "", message, "" )
+                                                                                print str(i) + " de " + str(int(num))
+                                                                                xbmc.sleep( 50 )
+                                                                                if progress.iscanceled():
+                                                                                        break
                                                                         conta_id_video = 0
                                                                         if parte1 != ultima_parte:
                                                                                 conta_os_items = conta_os_items + 1
@@ -1138,13 +1143,14 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                 linksseccao = re.findall('ODIO (.+?)</p>\n<p><b>(.+?)EPIS',nmatch[0],re.DOTALL)
                                                                 if linksseccao:
                                                                         for parte1,parte2 in linksseccao:
-                                                                                percent = int( ( i / num ) * 100)
-                                                                                message = str(i) + " de " + str(int(num))
-                                                                                progress.update( percent, "", message, "" )
-                                                                                print str(i) + " de " + str(int(num))
-                                                                                xbmc.sleep( 100 )
-                                                                                if progress.iscanceled():
-                                                                                        break
+                                                                                if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                                                        percent = int( ( i / num ) * 100)
+                                                                                        message = str(i) + " de " + str(int(num))
+                                                                                        progress.update( percent, "", message, "" )
+                                                                                        print str(i) + " de " + str(int(num))
+                                                                                        xbmc.sleep( 50 )
+                                                                                        if progress.iscanceled():
+                                                                                                break
                                                                                 conta_os_items = conta_os_items + 1
                                                                                 _servidores_[conta_os_items] = ('[COLOR blue] Episódio '+parte1+'[/COLOR]')
                                                                                 _ligacao_[conta_os_items] = 'SUBMENU'
@@ -1208,13 +1214,14 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                 if linksseccao:
                                                                         #addDir1('sim1','url',1001,artfolder,False,'')
                                                                         for parte1,parte2 in linksseccao:
-                                                                                percent = int( ( i / num ) * 100)
-                                                                                message = str(i) + " de " + str(int(num))
-                                                                                progress.update( percent, "", message, "" )
-                                                                                print str(i) + " de " + str(int(num))
-                                                                                xbmc.sleep( 100 )
-                                                                                if progress.iscanceled():
-                                                                                        break
+                                                                                if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                                                        percent = int( ( i / num ) * 100)
+                                                                                        message = str(i) + " de " + str(int(num))
+                                                                                        progress.update( percent, "", message, "" )
+                                                                                        print str(i) + " de " + str(int(num))
+                                                                                        xbmc.sleep( 50 )
+                                                                                        if progress.iscanceled():
+                                                                                                break
                                                                                 conta_id_video = 0
                                                                                 conta_os_items = conta_os_items + 1
                                                                                 _servidores_[conta_os_items] = ('[COLOR blue] '+parte1+' Episódio[/COLOR]')
@@ -1247,13 +1254,14 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                         nmatch = re.findall(v_id[0]+'(.+?)<img',newmatch[0],re.DOTALL)
                                                                         linksseccao = re.findall('<p>(.+?)EPISODIO<br/>(.+?)</iframe>',nmatch[0],re.DOTALL)
                                                                         for parte1,parte2 in linksseccao:
-                                                                                percent = int( ( i / num ) * 100)
-                                                                                message = str(i) + " de " + str(int(num))
-                                                                                progress.update( percent, "", message, "" )
-                                                                                print str(i) + " de " + str(int(num))
-                                                                                xbmc.sleep( 100 )
-                                                                                if progress.iscanceled():
-                                                                                        break
+                                                                                if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                                                        percent = int( ( i / num ) * 100)
+                                                                                        message = str(i) + " de " + str(int(num))
+                                                                                        progress.update( percent, "", message, "" )
+                                                                                        print str(i) + " de " + str(int(num))
+                                                                                        xbmc.sleep( 50 )
+                                                                                        if progress.iscanceled():
+                                                                                                break
                                                                                 conta_id_video = 0
                                                                                 conta_os_items = conta_os_items + 1
                                                                                 _servidores_[conta_os_items] = ('[COLOR blue] '+parte1+' Episódio[/COLOR]')
@@ -1290,13 +1298,14 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                                                 #if nmatch: addDir1('sim','url',1001,artfolder,False,'')
                                                                                 linksseccao = re.findall('/>(.+?)EPISODIO<br/>(.+?)</iframe>',nmatch[0],re.DOTALL)
                                                                                 for parte1,parte2 in linksseccao:
-                                                                                        percent = int( ( i / num ) * 100)
-                                                                                        message = str(i) + " de " + str(int(num))
-                                                                                        progress.update( percent, "", message, "" )
-                                                                                        print str(i) + " de " + str(int(num))
-                                                                                        xbmc.sleep( 100 )
-                                                                                        if progress.iscanceled():
-                                                                                                break
+                                                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                                                                percent = int( ( i / num ) * 100)
+                                                                                                message = str(i) + " de " + str(int(num))
+                                                                                                progress.update( percent, "", message, "" )
+                                                                                                print str(i) + " de " + str(int(num))
+                                                                                                xbmc.sleep( 50 )
+                                                                                                if progress.iscanceled():
+                                                                                                        break
                                                                                         conta_id_video = 0
                                                                                         conta_os_items = conta_os_items + 1
                                                                                         _servidores_[conta_os_items] = ('[COLOR blue] '+parte1.replace('\n','')+' Episódio[/COLOR]')
@@ -1424,9 +1433,10 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                                                         conta_os_items = conta_os_items + 1
                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
         #nometitulo = nometitulo.replace('[B][COLOR green]','').replace('[/COLOR][/B]','')
-        if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
+        if 'Season' in nometitulo or 'Temporada' in nometitulo:
                 percent = int( ( 100 / 100.0 ) * 100)
                 progress.update( percent, "", message, "" )
+        if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
                 nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
                 nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
                 nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('[/COLOR]','').replace('[','---').replace(']','---').replace('TPT | ','')
@@ -1453,7 +1463,7 @@ def TPT_encontrar_videos_filmes(nomeescolha,url):
                 #escolha = idx[index]
         #else: progress.close()
         #if escolha == '[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]' : Mashup.MASHUP_Menu_Pricipal()
-        progress.close()
+        if 'Season' in nometitulo or 'Temporada' in nometitulo: progress.close()
         #return
 
 		
@@ -1582,7 +1592,8 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
                 
-def TPT_links(nomeescolha,urlescolha):
+def TPT_links(nomeescolha,urlescolha,iconimage):
+        iconimage = iconimage
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(urlescolha)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''

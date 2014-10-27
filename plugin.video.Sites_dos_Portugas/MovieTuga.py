@@ -327,7 +327,8 @@ def MVT_encontrar_videos_filmes(name,url):
         #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
 
 
-def MVT_links(name,url):
+def MVT_links(name,url,iconimage):
+        iconimage = iconimage
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''

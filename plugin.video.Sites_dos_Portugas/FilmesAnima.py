@@ -156,7 +156,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
         #xbmc.sleep( 100 )
-	url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
+	url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar' + 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'FTT': FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url_pesquisa)
 
 	a = 5
@@ -260,12 +260,18 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                         if 'Temporada' not in nome and 'Season' not in nome:
                                                 if imdbc != '' and imdbcode != '':
                                                         if imdbcode == imdbc:
-                                                                addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
-                                                                TugaFilmesTV.TFV_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB')
+                                                                #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                                                                name = '[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
+                                                                iconimage = thumbnail[0].replace('s72-c','s320')
+                                                                addDir1(name,'url',1001,iconimage,False,'')
+                                                                TugaFilmesTV.TFV_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage)
                                                                 num_f = num_f + 1
                                                 else:
-                                                        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
-                                                        TugaFilmesTV.TFV_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB')
+                                                        #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                                                        name = '[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
+                                                        iconimage = thumbnail[0].replace('s72-c','s320')
+                                                        addDir1(name,'url',1001,iconimage,False,'')
+                                                        TugaFilmesTV.TFV_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage)
                                                         num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -311,11 +317,12 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url,pesquisou):
                                 qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
                                 thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
                                 print urletitulo,thumbnail
-                                #urletitulo[0][1] = urletitulo[0][1].replace('&#8217;',"'")
-                                #urletitulo[0][1] = urletitulo[0][1].replace('&#8211;',"-")
-                                #urletitulo[0][1] = urletitulo[0][1].replace('&#038;',"&")
-                                #urletitulo[0][1] = urletitulo[0][1].replace('&#39;',"'")
-                                #urletitulo[0][1] = urletitulo[0][1].replace('&amp;','&')
+                                nome_pesquisa = urletitulo[0][1]
+                                nome_pesquisa = nome_pesquisa.replace('&#8217;',"'")
+                                nome_pesquisa = nome_pesquisa.replace('&#8211;',"-")
+                                nome_pesquisa = nome_pesquisa.replace('&#038;',"&")
+                                nome_pesquisa = nome_pesquisa.replace('&#39;',"'")
+                                nome_pesquisa = nome_pesquisa.replace('&amp;','&')
                                 ano = 'Ano'
                                 qualidade = ''
                                 e_qua = 'nao'
@@ -392,7 +399,6 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url,pesquisou):
 
                                 if imdbcode == '':
                                         conta = 0
-                                        nome_pesquisa = urletitulo[0][1].replace('&#39;',"'")
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
                                         nome_pesquisa = nome_pesquisa.replace('ê','e')
                                         nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -426,13 +432,19 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url,pesquisou):
                                         #addDir1(imdbc+'----'+imdbcode,'url',1020,artfolder,False,'')
                                         if imdbc != '' and imdbcode != '' and 'BREVEMENTE' not in item:
                                                 if imdbcode == imdbc:
-                                                        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
-                                                        TugaFilmesCom.TFC_links('[B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB')
+                                                        #addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
+                                                        name = '[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao
+                                                        iconimage = thumbnail[0].replace('s1600','s320').replace('.gif','.jpg')
+                                                        addDir1(name,'url',1001,iconimage,False,'')
+                                                        TugaFilmesCom.TFC_links('[B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage)
                                                         num_f = num_f + 1
                                         else:
                                                 if 'BREVEMENTE' not in item:
-                                                        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
-                                                        TugaFilmesCom.TFC_links('[B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB')
+                                                        #addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
+                                                        name = '[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao
+                                                        iconimage = thumbnail[0].replace('s1600','s320').replace('.gif','.jpg')
+                                                        addDir1(name,'url',1001,iconimage,False,'')
+                                                        TugaFilmesCom.TFC_links('[B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage)
                                                         num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -493,46 +505,53 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url):
                                 titulo[0] = titulo[0].replace('&amp;','&')
 
                                 conta = 0
-                                nome_pesquisa = titulo[0]
-                                nome_pesquisa = nome_pesquisa.replace('é','e')
-                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                nome_pesquisa = nome_pesquisa.replace('á','a')
-                                nome_pesquisa = nome_pesquisa.replace('à','a')
-                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                nome_pesquisa = nome_pesquisa.replace('è','e')
-                                nome_pesquisa = nome_pesquisa.replace('í','i')
-                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                a_q = re.compile('\w+')
-                                qq_aa = a_q.findall(nome_pesquisa)
-                                nome_p = ''
-                                for q_a_q_a in qq_aa:
-                                        if conta == 0:
-                                                nome_p = q_a_q_a
-                                                conta = 1
-                                        else:
-                                                nome_p = nome_p + '+' + q_a_q_a
-                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-                                html_imdbcode = abrir_url(url_imdb)
-                                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                                imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                                imdbcode = imdbcd[0]
+                                if imdbcode == '':
+                                        nome_pesquisa = titulo[0]
+                                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                                        nome_pesquisa = nome_pesquisa.replace('à','a')
+                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        a_q = re.compile('\w+')
+                                        qq_aa = a_q.findall(nome_pesquisa)
+                                        nome_p = ''
+                                        for q_a_q_a in qq_aa:
+                                                if conta == 0:
+                                                        nome_p = q_a_q_a
+                                                        conta = 1
+                                                else:
+                                                        nome_p = nome_p + '+' + q_a_q_a
+                                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                        html_imdbcode = abrir_url(url_imdb)
+                                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                        imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                        imdbcode = imdbcd[0]
                                 
                                 try:
                                         #addDir1(imdbc+'----'+imdbcode,'url',1020,artfolder,False,'')
                                         if imdbc != '' and imdbcode != '':
                                                 if imdbcode == imdbc:
-                                                        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumbnail.replace('s72-c','s320').replace(' ','%20'),'','')
-                                                        MovieTuga.MVT_links('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB')
+                                                        #addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumbnail.replace('s72-c','s320').replace(' ','%20'),'','')
+                                                        name = '[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
+                                                        iconimage = thumbnail.replace('s72-c','s320').replace(' ','%20')
+                                                        addDir1(name,'url',1001,iconimage,False,'')
+                                                        MovieTuga.MVT_links('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage)
                                                         num_f = num_f + 1
                                         else:
-                                                addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumbnail.replace('s72-c','s320').replace(' ','%20'),'','')
-                                                MovieTuga.MVT_links('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB')
+                                                #addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumbnail.replace('s72-c','s320').replace(' ','%20'),'','')
+                                                name = '[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
+                                                iconimage = thumbnail.replace('s72-c','s320').replace(' ','%20')
+                                                addDir1(name,'url',1001,iconimage,False,'')
+                                                MovieTuga.MVT_links('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage)
                                                 num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -558,7 +577,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
-	items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	items = re.findall("<div class='post hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
 	#addDir1(str(len(items)),'url',1002,artfolder,False,'')
 	if items != []:
 		print len(items)
@@ -596,7 +615,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                 nome = nome.replace('&#8211;',"-")
                                 nome = nome.replace('&#39;',"'")
                                 nome = nome.replace('&amp;','&')
-                                nome = nome.replace('(Pedido)',"")
+                                nome = nome.replace('(Pedido)',"").replace('[Pedido]','')
                                 
                                 a_q = re.compile('\d+')
                                 qq_aa = a_q.findall(nome)
@@ -735,12 +754,18 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                         #addDir1(imdbc+'----'+imdbcode,'url',1020,artfolder,False,'')
                                         if imdbc != '' and imdbcode != '':
                                                 if imdbcode == imdbc:
-                                                        addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
-                                                        FoitaTuga.FTT_links('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB')
+                                                        #addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
+                                                        name = '[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
+                                                        iconimage = thumb
+                                                        addDir1(name,'url',1001,iconimage,False,'')
+                                                        FoitaTuga.FTT_links('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',iconimage)
                                                         num_f = num_f + 1
                                         else:
-                                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
-                                                FoitaTuga.FTT_links('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB')
+                                                #addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
+                                                name = '[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
+                                                iconimage = thumb
+                                                addDir1(name,'url',1001,iconimage,False,'')
+                                                FoitaTuga.FTT_links('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',iconimage)
                                                 num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -898,12 +923,18 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url,pesquisou):
                                         if "Temporada" not in nome and "Season" not in nome:
                                                 if imdbc != '' and imdbcode != '':
                                                         if imdbcode == imdbc:
-                                                                addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
-                                                                Cinematuga.CMT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB')
+                                                                #addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                                                name = '[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao
+                                                                iconimage = thumb.replace('s72-c','s320')
+                                                                addDir1(name,'url',1001,iconimage,False,'')
+                                                                Cinematuga.CMT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage)
                                                                 num_f = num_f + 1
                                                 else:
-                                                        addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
-                                                        Cinematuga.CMT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB')
+                                                        #addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                                        name = '[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao
+                                                        iconimage = thumb.replace('s72-c','s320')
+                                                        addDir1(name,'url',1001,iconimage,False,'')
+                                                        Cinematuga.CMT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage)
                                                         num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -1046,16 +1077,22 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url,pesquisou):
                                                                         if 'online' in genero and not 'series' in genero:
                                                                         #if 'series' in genero:
                                                                                 #if 'OP\xc3\x87\xc3\x83O' in item:
-                                                                                addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',233,thumbnail[0].replace('s72-c','s320'),'','')
-                                                                                TopPt.TPT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB')
+                                                                                #addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',233,thumbnail[0].replace('s72-c','s320'),'','')
+                                                                                name = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
+                                                                                iconimage = thumbnail[0].replace('s72-c','s320')
+                                                                                addDir1(name,'url',1001,iconimage,False,'')
+                                                                                TopPt.TPT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',iconimage)
                                                                                 num_f = num_f + 1
                                                         else:
                                                                 if 'online' in genero and not 'series' in genero:
                                                                         #if nomecomp in pesquisou:
                                                                 #if 'series' in genero:
                                                                         #if 'OP\xc3\x87\xc3\x83O' in item:
-                                                                        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',233,thumbnail[0].replace('s72-c','s320'),'','')
-                                                                        TopPt.TPT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB')
+                                                                        #addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',233,thumbnail[0].replace('s72-c','s320'),'','')
+                                                                        name = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
+                                                                        iconimage = thumbnail[0].replace('s72-c','s320')
+                                                                        addDir1(name,'url',1001,iconimage,False,'')
+                                                                        TopPt.TPT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',iconimage)
                                                                         num_f = num_f + 1
                                                 except: pass
                         except: pass

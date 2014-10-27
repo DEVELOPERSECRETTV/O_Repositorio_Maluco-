@@ -461,7 +461,8 @@ def FTT_encontrar_videos_filmes(name,url):
 
 
 
-def FTT_links(name,url):
+def FTT_links(name,url,iconimage):
+        iconimage = iconimage
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''

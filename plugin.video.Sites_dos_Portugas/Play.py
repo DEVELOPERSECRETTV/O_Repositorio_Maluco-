@@ -102,36 +102,10 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 			if source: 
 				url = source.resolve()
     			else: url = ''
-    			#return url
 		except: pass
-	if "vidzi.tv" in url:
+	if "vidzi.tv" in url:       
 		try:
-                        #a = 1111
-                        #if a == 11:
-                        sources = []
-                        hosted_media = urlresolver.HostedMediaFile(url)
-                        sources.append(hosted_media)
-                        source = urlresolver.choose_source(sources)
-                        if source: 
-                                url = source.resolve()
-    			else:
-                                iframe_url = url#.replace('vidzi.tv/','vidzi.tv/embed-')
-                                print iframe_url
-                                link3 = PLAY_abrir_url(iframe_url)
-                                #tit=re.compile('var vtitle = "(.+?)"').findall(link3)
-                                match=re.compile('file: "(.+?)"').findall(link3)
-                                subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
-                                if subtitle == []:
-                                        checker = ''
-                                        for link in match:
-                                                if 'vidzi.tv' not in link: url = link
-                                                if 'vidzi.tv' in link and '.srt' in link: checker = link
-                                else:
-                                        checker = subtitle[0]
-                                        for link in match:
-                                                if 'vidzi.tv' not in link: url = link
-                                                if 'vidzi.tv' in link and '.srt' in link: checker = link
-		except:
+
                         #iframe_url = url#.replace('vidzi.tv/','vidzi.tv/embed-')
                         print iframe_url
                         link3 = PLAY_abrir_url(iframe_url)
@@ -148,30 +122,10 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                                 for link in match:
                                         if 'vidzi.tv' not in link: url = link
                                         if 'vidzi.tv' in link and '.srt' in link: checker = link
+                except: pass
+                
 	if "vidzen" in url:
 		try:
-                        sources = []
-			hosted_media = urlresolver.HostedMediaFile(url)
-			sources.append(hosted_media)
-			source = urlresolver.choose_source(sources)
-			if source: 
-				url = source.resolve()
-			else:
-                                #iframe_url = url
-                                print iframe_url
-                                link3 = PLAY_abrir_url(iframe_url)
-                                #tit=re.compile('var vtitle = "(.+?)"').findall(link3)
-                                match=re.compile('streamer: "(.+?)"').findall(link3)
-                                if not match: match=re.compile('file: "(.+?)"').findall(link3)
-                                subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
-                                if subtitle == []:
-                                        checker = ''
-                                        url = match[0]
-                                else:
-                                        checker = subtitle[0]
-                                        url = match[0]
-                                #addLink(match[0],match[0],'')
-		except:
                         #iframe_url = url
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
@@ -185,6 +139,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 			else:
 				if checker: checker = subtitle[0]
 				if match: url = match[0]
+		except: pass
 	if "playfreehd" in url:
 		try:
 			sources = []
@@ -234,26 +189,6 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 	if "played.to" in url:
                 #addLink('sim1','','')
 		try:
-                        #addLink('sim11','','')
-                        sources = []
-			hosted_media = urlresolver.HostedMediaFile(url)
-			sources.append(hosted_media)
-			source = urlresolver.choose_source(sources)
-			if source: 
-				url = source.resolve()
-			else:
-                                print iframe_url
-                                link3 = PLAY_abrir_url(iframe_url)
-                                tit=re.compile('var vtitle = "(.+?)"').findall(link3)
-                                match=re.compile('file: "(.+?)"').findall(link3)
-                                subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
-                                if subtitle == []:
-                                        checker = ''
-                                        url = match[0]
-                                else:
-                                        checker = subtitle[0]
-                                        url = match[0]
-                except: 
                         #addLink('sim','','')
                         #iframe_url = url
                         print iframe_url
@@ -267,27 +202,9 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                         else:
                                 if checker: checker = subtitle[0]
                                 if match: url = match[0]
+                except: pass
 	if "cloudzilla" in url:
 		try:
-                        sources = []
-			hosted_media = urlresolver.HostedMediaFile(url)
-			sources.append(hosted_media)
-			source = urlresolver.choose_source(sources)
-			if source: 
-				url = source.resolve()
-			else:
-                                print iframe_url
-                                link3 = PLAY_abrir_url(iframe_url)
-                                tit=re.compile('var vtitle = "(.+?)"').findall(link3)
-                                match=re.compile('var vurl = "(.+?)"').findall(link3)
-                                subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
-                                if subtitle == []:
-                                        checker = ''
-                                        url = match[0]
-                                else:
-                                        checker = subtitle[0]
-                                        url = match[0]
-                except:
 			#iframe_url = url
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
@@ -302,6 +219,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 				if match: url = match[0]
 			#addLink(match[0],match[0],'')
 			#return
+		except: pass
 	if "vodlocker" in url:
 		try:
                         #if '/video/' in url: url = url.replace('/video/','/embed/')
@@ -548,20 +466,25 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 			tit=re.compile('title: "(.+?)"').findall(link3)
 			match=re.compile('file: "(.+?)"').findall(link3)
 			subtitle=re.compile("addSubtitles[(]'(.+?)'").findall(link3)
-			iframe_url = url.replace('/embed/','/video-link/')
-			print iframe_url
-			if not match:
+			if match:
+                                #addLink(tit[0]+match[0],match[0],'')
+                                if subtitle == []:
+                                        checker = ''
+                                        url = match[0].replace('\/','/')
+                                else:
+                                        checker = subtitle[0]
+                                        url = match[0].replace('\/','/')
+                        else:
+                                iframe_url = url.replace('/embed/','/video-link/')
                                 link3 = PLAY_abrir_url(iframe_url)
-                                #print iframe_url
-                                #link3 = PLAY_abrir_url(iframe_url)
-                                match=re.compile('"url":"(.+?)"}').findall(link3)
-                                #subtitle = []
-			if subtitle == []:
-				checker = ''
-				url = match[0].replace('\/','/')
-			else:
-				checker = subtitle[0]
-				url = match[0].replace('\/','/')
+                                if link3 != []:
+                                        match=re.compile('"url":"(.+?)"}').findall(link3)
+                                        if subtitle == []:
+                                                checker = ''
+                                                url = match[0].replace('\/','/')
+                                        else:
+                                                checker = subtitle[0]
+                                                url = match[0].replace('\/','/')
 			#addLink(name+match[0],match[0],'')
     		except:pass
     	if "movshare" in url:

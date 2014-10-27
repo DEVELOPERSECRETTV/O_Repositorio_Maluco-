@@ -43,7 +43,7 @@ def pesquisar():
                 search = ''
                 conta = 0
                 for q_a_q_a in qq_aa:
-                        if len(q_a_q_a) > 2 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3':
+                        if len(q_a_q_a) > 0 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                         #if len(q_a_q_a) > 2:
                                 if conta == 0:
                                         search = q_a_q_a
@@ -102,7 +102,7 @@ def pesquisar():
                 progress.update(percent, 'A Procurar em '+site, message, "")
                 print str(a) + " de " + str(int(a))
                 xbmc.sleep( 100 )
-                url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/?q=' + str(encode)
+                url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar'
                 encontrar_fontes_pesquisa_FTT(url_pesquisa)
 
                 a = 5
@@ -151,6 +151,12 @@ def encontrar_fontes_pesquisa_TFV(url,pesquisou):
 		for item in items:
                         try:
                                 audio_filme = ''
+                                imdbcode = ''
+
+                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                                if imdb: imdbcode = imdb[0]
+                                else: imdbcode = ''
+                                
                                 urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
                                 if "Temporada" in urletitulo[0][1]:
                                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
@@ -187,7 +193,7 @@ def encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                 else:
                                         qualidade = ''
                                 try:
-                                        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
+                                        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
                                         num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -213,17 +219,24 @@ def encontrar_fontes_filmes_TFC(url):
 		for item in items:
                         try:
                                 versao = ''
+                                imdbcode = ''
+
+                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                                if imdb: imdbcode = imdb[0]
+                                else: imdbcode = ''
+                                
                                 pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
                                 if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
                                 urletitulo = re.compile("<a href=\'(.+?)\' title=\'(.+?)\'>").findall(item)
                                 qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
                                 thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
                                 print urletitulo,thumbnail
-                                #urletitulo[0][1] = urletitulo[0][1].replace('&#8217;',"'")
-                                #urletitulo[0][1] = urletitulo[0][1].replace('&#8211;',"-")
-                                #urletitulo[0][1] = urletitulo[0][1].replace('&#038;',"&")
-                                #urletitulo[0][1] = urletitulo[0][1].replace('&#39;',"'")
-                                #urletitulo[0][1] = urletitulo[0][1].replace('&amp;','&')
+                                nome_pesquisa = urletitulo[0][1]
+                                nome_pesquisa = nome_pesquisa.replace('&#8217;',"'")
+                                nome_pesquisa = nome_pesquisa.replace('&#8211;',"-")
+                                nome_pesquisa = nome_pesquisa.replace('&#038;',"&")
+                                nome_pesquisa = nome_pesquisa.replace('&#39;',"'")
+                                nome_pesquisa = nome_pesquisa.replace('&amp;','&')
                                 ano = 'Ano'
                                 qualidade = ''
                                 e_qua = 'nao'
@@ -297,9 +310,41 @@ def encontrar_fontes_filmes_TFC(url):
                                         qualidade = qualidade.replace('Pt Pt','PT-PT')
                                 if 'PT PT' in qualidade:
                                         qualidade = qualidade.replace('PT PT','PT-PT')
+                                if imdbcode == '':
+                                        conta = 0
+                                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                                        nome_pesquisa = nome_pesquisa.replace('à','a')
+                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        a_q = re.compile('\w+')
+                                        qq_aa = a_q.findall(nome_pesquisa)
+                                        nome_p = ''
+                                        for q_a_q_a in qq_aa:
+                                                if conta == 0:
+                                                        nome_p = q_a_q_a
+                                                        conta = 1
+                                                else:
+                                                        nome_p = nome_p + '+' + q_a_q_a
+                                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                        html_imdbcode = abrir_url(url_imdb)
+                                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                        imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                        imdbcode = imdbcd[0]
+                                        
                                 try:
-                                        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0],73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
-                                        num_f = num_f + 1
+                                        if 'BREVEMENTE' not in item:
+                                                addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
+                                                num_f = num_f + 1
                                 except: pass
                         except: pass
         else: num_f = 0
@@ -322,6 +367,12 @@ def encontrar_fontes_pesquisa_MVT(url):
 		print len(items)
 		for item in items:
                         try:
+                                imdbcode = ''
+
+                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                                if imdb: imdbcode = imdb[0]
+                                else: imdbcode = ''
+                                
                                 url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
                                 if 'http' not in url[0]:
                                         urllink = 'http:' + url[0]
@@ -340,8 +391,44 @@ def encontrar_fontes_pesquisa_MVT(url):
                                 print url,thumbnail
                                 titulo[0] = titulo[0].replace('&#8217;',"'")
                                 titulo[0] = titulo[0].replace('&#8211;',"-")
+                                titulo[0] = titulo[0].replace('&#038;',"&")
+                                titulo[0] = titulo[0].replace('&#39;',"'")
+                                titulo[0] = titulo[0].replace('&amp;','&')
+
+                                
+                                if imdbcode == '':
+                                        conta = 0
+                                        nome_pesquisa = titulo[0]
+                                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                                        nome_pesquisa = nome_pesquisa.replace('à','a')
+                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        a_q = re.compile('\w+')
+                                        qq_aa = a_q.findall(nome_pesquisa)
+                                        nome_p = ''
+                                        for q_a_q_a in qq_aa:
+                                                if conta == 0:
+                                                        nome_p = q_a_q_a
+                                                        conta = 1
+                                                else:
+                                                        nome_p = nome_p + '+' + q_a_q_a
+                                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                        html_imdbcode = abrir_url(url_imdb)
+                                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                        imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                        imdbcode = imdbcd[0]
                                 try:
-                                        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink,103,thumbnail.replace('s72-c','s320'),'','')
+                                        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumbnail.replace('s72-c','s320').replace(' ','%20'),'','')
                                         num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -382,6 +469,12 @@ def encontrar_fontes_filmes_TPT(url):
                                         print len(items)
                                         for item in items:
                                                 audio_filme = ''
+                                                imdbcode = ''
+
+                                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                                                if imdb: imdbcode = imdb[0]
+                                                else: imdbcode = ''
+                                                
                                                 titulo = re.compile('<h2 class="title">(.+?)</h2>').findall(item)
                                                 #urlpesq = re.compile('<span class="entry-date"><a href="(.+?)" rel="bookmark">').findall(item)
                                                 qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
@@ -458,7 +551,7 @@ def encontrar_fontes_filmes_TPT(url):
                                                         if 'filmes' in genero or 'series' in genero or 'animacao' in genero:
                                                                 if 'online' in genero:
                                                                         #if 'OP\xc3\x87\xc3\x83O' in item:
-                                                                        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url,233,thumbnail[0].replace('s72-c','s320'),'','')
+                                                                        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',233,thumbnail[0].replace('s72-c','s320'),'','')
                                                                         num_f = num_f + 1
                                                 except: pass
                         except: pass
@@ -476,7 +569,7 @@ def encontrar_fontes_pesquisa_FTT(url):
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
-	items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	items = re.findall("<div class='post hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
 	#addDir1(str(len(items)),'url',1002,artfolder,False,'')
 	if items != []:
 		print len(items)
@@ -487,6 +580,11 @@ def encontrar_fontes_pesquisa_FTT(url):
                                 fanart = ''
                                 anofilme= ''
                                 qualidade_filme = ''
+                                imdbcode = ''
+
+                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                                if imdb: imdbcode = imdb[0]
+                                else: imdbcode = ''
 
                                 urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                                 if urletitulo:
@@ -509,7 +607,7 @@ def encontrar_fontes_pesquisa_FTT(url):
                                 nome = nome.replace('&#8211;',"-")
                                 nome = nome.replace('&#39;',"'")
                                 nome = nome.replace('&amp;','&')
-                                nome = nome.replace('(Pedido)',"")
+                                nome = nome.replace('(Pedido)',"").replace('[Pedido]','')
                                 
                                 a_q = re.compile('\d+')
                                 qq_aa = a_q.findall(nome)
@@ -556,6 +654,38 @@ def encontrar_fontes_pesquisa_FTT(url):
                                 nome = nome.replace('((','(')
                                 nome = nome.replace('))',')')
                                 nome = nome.replace('()','(')
+
+                                if imdbcode == '':
+                                        conta = 0
+                                        nome_pesquisa = nome
+                                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                                        nome_pesquisa = nome_pesquisa.replace('à','a')
+                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        a_q = re.compile('\w+')
+                                        qq_aa = a_q.findall(nome_pesquisa)
+                                        nome_p = ''
+                                        for q_a_q_a in qq_aa:
+                                                if conta == 0:
+                                                        nome_p = q_a_q_a
+                                                        conta = 1
+                                                else:
+                                                        nome_p = nome_p + '+' + q_a_q_a
+                                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                        html_imdbcode = abrir_url(url_imdb)
+                                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                        imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                        imdbcode = imdbcd[0]
                                                 
                                 #fanart = artfolder + 'flag.jpg'
                                 if fanart == 'fgfgfgfgfgfggf':
@@ -613,7 +743,7 @@ def encontrar_fontes_pesquisa_FTT(url):
                                 if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                         if fanart == '': fanart = thumb
                                 try:
-                                        addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo,603,thumb,'',fanart,anofilme,'')
+                                        addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
                                         num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -642,6 +772,12 @@ def encontrar_fontes_pesquisa_CMT(url):
                                 fanart = ''
                                 versao = ''
                                 audio_filme = ''
+                                imdbcode = ''
+
+                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                                if imdb: imdbcode = imdb[0]
+                                else: imdbcode = ''
+                                
                                 #if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
                                 genero = re.compile("nero</b>:(.+?)<br />").findall(item)
                                 if genero: genre = genero[0]
@@ -754,7 +890,7 @@ def encontrar_fontes_pesquisa_CMT(url):
                                                 num_mode = 712
                                         else:
                                                 num_mode = 703
-                                        addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                        addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                                         num_f = num_f + 1
                                 except: pass
                         except: pass

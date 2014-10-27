@@ -674,7 +674,8 @@ def TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
 #----------------------------------------------------------------------------------------------------------------------------------------------#	
 
 
-def TFV_links(name,url):
+def TFV_links(name,url,iconimage):
+        iconimage = iconimage
         nomeescolha = name
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
