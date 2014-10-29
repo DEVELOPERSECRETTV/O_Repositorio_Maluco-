@@ -28,7 +28,7 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
-fanart = artfolder + 'flag.jpg'
+fanart = artfolder + 'FAN.jpg'
 
 _series_ = []
 
@@ -40,23 +40,20 @@ progress = xbmcgui.DialogProgress()
 
 
 def TFV_MenuPrincipal(artfolder):
-        fanart = artfolder + 'flag.jpg'
-        #addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1004,artfolder + 'ze-TFV1.png',False,fanart)
-        #addDir1('','url',1004,artfolder,False,fanart)
-        addDir('- Procurar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
-        addDir('[COLOR yellow]- Filmes/Séries Recentes[/COLOR]','http://www.tuga-filmes.us',32,artfolder + 'ze-TFV1.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'ze-TFV1.png',False,fanart)
-	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.us/search/label/Filmes',32,artfolder + 'ze-TFV1.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o',32,artfolder + 'ze-TFV1.png','nao',fanart)
-        addDir('[COLOR yellow]- Por Ano[/COLOR]','url',39,artfolder + 'ze-TFV1.png','nao','')
-	addDir('[COLOR yellow]- Categorias[/COLOR]','url',38,artfolder + 'ze-TFV1.png','nao','')
-	addDir('[COLOR yellow]- Top 5 da Semana[/COLOR]','url',48,artfolder + 'ze-TFV1.png','nao','')
-	
-	if selfAddon.getSetting('hide-porno') == "false":
-			addDir('[B][COLOR red]M+18[/B][/COLOR]','url',49,artfolder + 'ze-TFV1.png','nao','')
-	addDir1('[COLOR blue]Séries:[/COLOR]','url',1004,artfolder + 'ze-TFV1.png',False,fanart)
-	addDir('[COLOR yellow]- A a Z[/COLOR]','url',41,artfolder + 'ze-TFV1.png','nao','')
-        addDir('[COLOR yellow]- Recentes[/COLOR]','http://www.tuga-filmes.us/search/label/Séries',44,artfolder + 'ze-TFV1.png','nao','')
+        fanart = artfolder + 'FAN.jpg'
+        addDir('- Procurar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P.png','nao','')
+        addDir('[COLOR yellow]- Filmes/Séries Recentes[/COLOR]','http://www.tuga-filmes.us',32,artfolder + 'FSRECENTES.png','nao','')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'TFV.png',False,fanart)
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.us/search/label/Filmes',32,artfolder + 'TODOS.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o',32,artfolder + 'ANIMACAO.png','nao',fanart)
+        addDir('[COLOR yellow]- Por Ano[/COLOR]','url',39,artfolder + 'FPANO.png','nao','')
+	addDir('[COLOR yellow]- Categorias[/COLOR]','url',38,artfolder + 'FCATEGORIAS.png','nao','')
+	addDir('[COLOR yellow]- Top 5 da Semana[/COLOR]','url',48,artfolder + 'TOPFILMES.png','nao','')	
+	#if selfAddon.getSetting('hide-porno') == "false":
+			#addDir('[B][COLOR red]M+18[/B][/COLOR]','url',49,artfolder + 'TFV.png','nao','')
+	addDir1('[COLOR blue]Séries:[/COLOR]','url',1004,artfolder + 'TFV.png',False,fanart)
+	addDir('[COLOR yellow]- A a Z[/COLOR]','url',41,artfolder + 'SAZ.png','nao','')
+        addDir('[COLOR yellow]- Recentes[/COLOR]','http://www.tuga-filmes.us/search/label/Séries',44,artfolder + 'SRECENTES.png','nao','')
 
 def TFV_Menu_Filmes_Top_5(artfolder):
         i = 1
@@ -66,9 +63,6 @@ def TFV_Menu_Filmes_Top_5(artfolder):
         progress.update( percent, "", message, "" )
         url_top_5 = 'http://www.tuga-filmes.us'
         top_5_source = TFV_abrir_url(url_top_5)
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR blue]TOP 5 da Semana[/COLOR][/B]','url',1004,artfolder + 'ze-TFV1.png',False,'')
-                addDir1('','url',1004,artfolder,False,'')
         filmes_top_5 = re.compile("<img alt=\'.+?\' height=\'50\' src=\'.+?\' width=\'50\'/>\n<a href=\'(.+?)\'").findall(top_5_source)
 	for endereco_top_5 in filmes_top_5:
                 try:
@@ -82,8 +76,6 @@ def TFV_Menu_Filmes_Top_5(artfolder):
                                 message = str(i) + " de " + '5'
                                 progress.update( percent, "", message, "" )
                                 print str(i) + " de " + '5'
-                                #if selfAddon.getSetting('series-thumb-TFV') == "false": xbmc.sleep( 50 )
-                                #xbmc.sleep( 50 )
                                 if progress.iscanceled():
                                         break
 
@@ -147,7 +139,7 @@ def TFV_Menu_Filmes_Por_Ano(artfolder):
         ano_source = TFV_abrir_url(url_ano)
         filmes_por_ano = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>Filmes (.+?)</a>").findall(ano_source)
 	for endereco_ano,nome_ano in filmes_por_ano:
-		addDir('[COLOR yellow]' + nome_ano + '[/COLOR] ',endereco_ano,32,artfolder + 'ze-TFV1.png','nao','')
+		addDir('[COLOR yellow]' + nome_ano + '[/COLOR] ',endereco_ano,32,artfolder + 'TFV.png','nao','')
 
 def TFV_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.tuga-filmes.us'
@@ -157,7 +149,7 @@ def TFV_Menu_Filmes_Por_Categorias(artfolder):
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ',endereco_categoria,32,artfolder + 'ze-TFV1.png','nao','')
+                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ',endereco_categoria,32,artfolder + 'TFV.png','nao','')
 
 def TFV_Menu_Series_A_a_Z(artfolder):
         i = 1
@@ -176,10 +168,6 @@ def TFV_Menu_Series_A_a_Z(artfolder):
 	html_series_source = TFV_abrir_url(url_series)
 	html_items_series = re.findall("<div class=\'widget Label\' id=\'Label3\'>(.*?)<div class=\'clear\'>", html_series_source, re.DOTALL)
         num_series = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>(.+?)</a>").findall(html_items_series[0])
-        #if selfAddon.getSetting('series-thumb-TFV') == "false":
-        if selfAddon.getSetting('series-view-TFV') == "0" or selfAddon.getSetting('series-view-TFV') == "0":
-                addDir1('[B][COLOR blue]Séries[/COLOR][/B] ' + '('+str(len(num_series))+')','url',1004,artfolder + 'ze-TFV1.png',False,'')
-                addDir1('','url',1004,artfolder,False,'')
         print len(html_items_series)
         num = len(num_series) + 0.0
         for item_series in html_items_series:
@@ -189,7 +177,6 @@ def TFV_Menu_Series_A_a_Z(artfolder):
                         message = str(i) + " de " + str(len(num_series))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(num_series))
-                        #if selfAddon.getSetting('series-thumb-TFV') == "false": xbmc.sleep( 50 )
                         xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
@@ -243,10 +230,10 @@ def TFV_Menu_Series_A_a_Z(artfolder):
                                                         thumb = ''
                                                                         
                                         #else: thumb = ''
-                                        else: thumb = artfolder + 'ze-TFV1.png'
+                                        else: thumb = artfolder + 'PSEGUINTE.png'
                                         Series_File.write(nome_series+'|'+thumb+'\n')
                                 except: pass
-                        #else: thumb = artfolder + 'ze-TFV1.png'
+                        #else: thumb = artfolder + 'PSEGUINTE.png'
                         addDir('[COLOR yellow]' + nome_series + '[/COLOR] ',endereco_series+'\/series\/'+nome_series+'\/',47,thumb.replace('s72-c','s320'),'nao','')
                         #---------------------------------------------------------------
                         i = i + 1
@@ -302,13 +289,13 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                         titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
                         if titulooriginal:
                                 nome_original = titulooriginal[0]
-                                #addDir1(nome_original,'','',artfolder + 'ze-TFV1.png',False,'')
+                                #addDir1(nome_original,'','',artfolder + 'PSEGUINTE.png',False,'')
                         else:
                                 titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
                                 if titulooriginal:
                                         nome_original = titulooriginal[0]
                                 else: nome_original = ''
-                                #addDir1(nome_original,'','',artfolder + 'ze-TFV1.png',False,'')
+                                #addDir1(nome_original,'','',artfolder + 'PSEGUINTE.png',False,'')
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
 
                         tto=re.compile('tulo Original:</b>:(.+?)<br').findall(item)
@@ -360,7 +347,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        #fanart = artfolder + 'flag.jpg'
+                        #fanart = artfolder + 'FAN.jpg'
                         if selfAddon.getSetting('series-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -443,7 +430,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
 	proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
 	if proxima[0] != '':
                 try:
-                        addDir("[B]Página Seguinte >>[/B]",proxima[0].replace('&amp;','&'),32,artfolder + 'ze-TFV1.png','','')
+                        addDir("[B]Página Seguinte >>[/B]",proxima[0].replace('&amp;','&'),32,artfolder + 'PSEGUINTE.png','','')
                 except:pass
         
         
@@ -458,6 +445,21 @@ def TFV_encontrar_videos_filmes(name,url):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
+        if 'TFV' not in name: name = '[COLOR orange]TFV | [/COLOR]' + name
+        #########################################
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('[/COLOR]','').replace('[','---').replace(']','---').replace('TPT | ','')
+        if '---' in nn:
+                n = re.compile('---(.+?)---').findall(nn)
+                n1 = re.compile('--(.+?)--').findall(nn)
+                url = 'IMDB'+imdbcode+'IMDB'
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1[0],'url',1004,iconimage,False,'')
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+        else:
+                n1 = re.compile('--(.+?)--').findall(nn)
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1[0],'url',1004,iconimage,False,'')
+        ##########################################
         conta_id_video = 0
 	addDir1(name,'url',1004,iconimage,False,'')
         #addDir1('','url',1004,artfolder,False,'')     
@@ -597,17 +599,11 @@ def TFV_encontrar_videos_filmes(name,url):
                 n = re.compile('---(.+?)---').findall(nn)
                 n1 = re.compile('--(.+?)--').findall(nn)
                 url = 'IMDB'+imdbcode+'IMDB'
-                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1[0],'url',1004,iconimage,False,'')
-                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
                 FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'TFV')
-                #FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'TFV')
-                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
-                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
         else:
                 n1 = re.compile('--(.+?)--').findall(nn)
                 url = 'IMDB'+imdbcode+'IMDB'
                 FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'TFV')
-                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -683,9 +679,7 @@ def TFV_links(name,url,iconimage):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
-        conta_id_video = 0
-	#addDir1(name,'url',1004,iconimage,False,'')
-        #addDir1('','url',1004,artfolder,False,'')     
+        conta_id_video = 0    
 	try:
 		link2=TFV_abrir_url(url)
 	except: link2 = ''
@@ -728,7 +722,64 @@ def TFV_links(name,url,iconimage):
                                                         identifica_video = re.compile('=(.*)').findall(url)
                                                         id_video = identifica_video[0]
                                                         conta_id_video = conta_id_video + 1
-                                                        TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                  ##################      
+                                                        req = urllib2.Request(url)
+                                                        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+                                                        response = urllib2.urlopen(req)
+                                                        link4=response.read()
+                                                        response.close()
+                                                        matchs = re.compile('<iframe src="(.+?)".+?></iframe></center>').findall(link4)
+                                                        url=matchs[0]
+                                                        if "videomega" in url:
+                                                                try:
+                                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
+                                                                        print url
+                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
+                                                                except: pass
+                                                        if "vidto.me" in url:
+                                                                try:
+                                                                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
+                                                                        print url
+                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'','')
+                                                                except: pass
+                                                        if "dropvideo" in url:
+                                                                try:
+                                                                        url = 'http://dropvideo.com/embed/' + id_video + '///' + name
+                                                                        print url
+                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'','')
+                                                                except:pass
+                                                        if "streamin.to" in url:
+                                                                try:
+                                                                        url = 'http://streamin.to/embed-' + id_video + '.html' + '///' + name
+                                                                        print url
+                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'','')
+                                                                except:pass                        
+                                                        if "putlocker" in url:
+                                                                try:
+                                                                        url = 'http://www.putlocker.com/embed/' + id_video + '///' + name
+                                                                        print url
+                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,30,iconimage,'','')
+                                                                except:pass
+                                                        if "nowvideo" in url:
+                                                                try:
+                                                                        url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video + '///' + name
+                                                                        print url
+                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'','')
+                                                                except:pass
+                                                        if "videowood" in url:
+                                                                try:
+                                                                        if '/video/' in url: url = url.replace('/video/','/embed/')
+                                                                        url = 'http://www.videowood.tv/embed/' + id_video + '///' + name
+                                                                        print url
+                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'','')
+                                                                except:pass
+                                                        if "firedrive" in url:
+                                                                try:
+                                                                        url = 'http://www.firedrive.com/file/' + id_video + '///' + name
+                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'','')
+                                                                except:pass
+                                                        ##################        
+                                                        #TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
                                         except:pass
                 else:
                         videomeg = re.compile('<iframe frameborder="0" height="400" scrolling="no" src="(.+?)"').findall(link2)
@@ -816,6 +867,7 @@ def TFV_links(name,url,iconimage):
                                                 except:pass
 
 
+
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #-------------------------------------------------------------------  Séries  -----------------------------------------------------------------#
@@ -870,7 +922,7 @@ def TFV_encontrar_fontes_series_recentes(url):
                         else: nome_original = nome
                         if selfAddon.getSetting('series-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
-                                #addDir1(nome_pesquisa,'','',artfolder + 'ze-TFV1.png',False,'')
+                                #addDir1(nome_pesquisa,'','',artfolder + 'PSEGUINTE.png',False,'')
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -935,7 +987,7 @@ def TFV_encontrar_fontes_series_recentes(url):
 	proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
         try:
                 if selfAddon.getSetting('movies-view') == "0": addDir1('','url',1004,artfolder,False,'')
-                addDir("Página Seguinte >>",proxima[0],44,artfolder + 'ze-TFV1.png','','')
+                addDir("Página Seguinte >>",proxima[0],44,artfolder + 'PSEGUINTE.png','','')
         except: pass
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -949,9 +1001,6 @@ def TFV_encontrar_fontes_series_A_a_Z(url):
         url = url.replace('\/','|')
         nome_orig = re.compile('[|].+?[|](.+?)[|]').findall(url)
         nome_original = nome_orig[0]
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR blue]' + name + '[/COLOR][/B]','url',1004,artfolder + 'ze-TFV1.png',False,'')
-                addDir1('','url',1004,artfolder,False,'')
         if '|series|' in url:
                 series = 1
                 u = re.compile('(.+?)[|].+?[|].+?[|]').findall(url)
@@ -1243,7 +1292,7 @@ def TFV_get_params():
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -1251,13 +1300,13 @@ def addLink(name,url,iconimage):
 def addLink1(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
 
 def addDir(name,url,mode,iconimage,checker,fanart):
-        if fanart == '': fanart = artfolder + 'flag.jpg'
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         #text = checker
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
@@ -1271,7 +1320,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         return ok
 
 def addDir1(name,url,mode,iconimage,folder,fanart):
-        if fanart == '': fanart = artfolder + 'flag.jpg'
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
@@ -1290,7 +1339,7 @@ def addDir_vazio(name,url,mode,iconimage):
         return ok
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'flag.jpg'
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         #text = checker
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True

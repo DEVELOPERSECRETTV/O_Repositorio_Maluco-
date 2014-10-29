@@ -36,26 +36,22 @@ artfolder = addonfolder + '/resources/img/'
 
 
 def MVT_MenuPrincipal(artfolder):
-        #addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','url',1002,artfolder + 'ze-MVT1.png',False,'')
-        #addDir1('','url',1002,artfolder,False,'')
-        addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'ze-MVT1.png',False,'')
-	addDir('[COLOR yellow]- Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'ze-MVT1.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',102,artfolder + 'ze-MVT1.png','nao','')
-	addDir('[COLOR yellow]- Categorias[/COLOR]','url',106,artfolder + 'ze-MVT1.png','nao','')
+        addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'P.png','nao','')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'MVT.png',False,'')
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'TODOS.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',102,artfolder + 'ANIMACAO.png','nao','')
+	addDir('[COLOR yellow]- Categorias[/COLOR]','url',106,artfolder + 'FCATEGORIAS.png','nao','')
 	
 
 def MVT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.movie-tuga.blogspot.pt/'
         html_categorias_source = MVT_abrir_url(url_categorias)
-        addDir1('[B][COLOR blue]Categorias[/COLOR][/B]','url',1002,artfolder + 'ze-MVT1.png',False,'')
-        addDir1('','url',1002,artfolder,False,'')
 	html_items_categorias = re.findall("<div id=\'menu-categorias\'>(.*?)</div>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<a href=\'(.+?)\' title=\'.+?\'>(.+?)</a>").findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria + '?&max-results=15',102,artfolder + 'ze-MVT1.png','nao','')
+                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria + '?&max-results=15',102,artfolder + 'MVT.png','nao','')
 
 
 
@@ -83,7 +79,6 @@ def MVT_encontrar_fontes_filmes(url):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        #if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         thumb = ''
@@ -124,7 +119,7 @@ def MVT_encontrar_fontes_filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        #fanart = artfolder + 'flag.jpg'
+                        #fanart = artfolder + 'FAN.jpg'
 
                         if imdbcode == '':
                                 conta = 0
@@ -221,7 +216,7 @@ def MVT_encontrar_fontes_filmes(url):
 	proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
 	try:
                 proxima_p = proxima[0].replace('%3A',':')
-		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),102,artfolder + 'ze-MVT1.png','','')
+		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),102,artfolder + 'PSEGUINTE.png','','')
 	except: pass
 
 
@@ -235,10 +230,17 @@ def MVT_encontrar_videos_filmes(name,url):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
+        if 'MVT' not in name: name = '[COLOR orange]MVT | [/COLOR]' + name
         nomeescolha = name
         colecao = 'nao'
+        ########################################
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
+        n = re.compile('--(.+?)--').findall(nn)
+        addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n[0],'url',1004,iconimage,False,'')
+        ########################################
         addDir1(name,'url',1002,iconimage,False,'')
-        #addDir1('','url',1002,artfolder,False,'')
         conta_id_video = 0
         try:
                 fonte_video = MVT_abrir_url(url)
@@ -295,12 +297,10 @@ def MVT_encontrar_videos_filmes(name,url):
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
                 else:
-                        #addDir1(url+name,'url',1002,iconimage,False,'')
  	                if fonte_video:
  		                for fonte_id in fontes_video:
                                         if 'videomega' in fonte_id:
                                                 try:
-                                                        #addDir1(url+name,'url',1002,iconimage,False,'')
                                                         match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
@@ -309,7 +309,6 @@ def MVT_encontrar_videos_filmes(name,url):
                                                 except:pass
                                         if 'vidto' in fonte_id:
                                                 try:
-                                                        #addDir1(url+name,'url',1002,iconimage,False,'')
                                                         match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
                                                         conta_id_video = conta_id_video + 1
                                                         if match: match = re.compile('(.+?)-').findall(match[0])
@@ -321,10 +320,8 @@ def MVT_encontrar_videos_filmes(name,url):
         nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
         n = re.compile('--(.+?)--').findall(nn)
-        #addDir1('','url',1004,artfolder,False,'')
         url = 'IMDB'+imdbcode+'IMDB'
         FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'MVT')
-        #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
 
 
 def MVT_links(name,url,iconimage):
@@ -337,8 +334,6 @@ def MVT_links(name,url,iconimage):
         else: url = urlimdb[0]
         nomeescolha = name
         colecao = 'nao'
-        #addDir1(name,'url',1002,iconimage,False,'')
-        #addDir1('','url',1002,artfolder,False,'')
         conta_id_video = 0
         try:
                 fonte_video = MVT_abrir_url(url)
@@ -395,12 +390,10 @@ def MVT_links(name,url,iconimage):
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'','')
                                                 except:pass
                 else:
-                        #addDir1(url+name,'url',1002,iconimage,False,'')
  	                if fonte_video:
  		                for fonte_id in fontes_video:
                                         if 'videomega' in fonte_id:
                                                 try:
-                                                        #addDir1(url+name,'url',1002,iconimage,False,'')
                                                         match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
@@ -409,7 +402,6 @@ def MVT_links(name,url,iconimage):
                                                 except:pass
                                         if 'vidto' in fonte_id:
                                                 try:
-                                                        #addDir1(url+name,'url',1002,iconimage,False,'')
                                                         match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
                                                         conta_id_video = conta_id_video + 1
                                                         if match: match = re.compile('(.+?)-').findall(match[0])
@@ -459,7 +451,7 @@ def MVT_get_params():
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'Wall.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -467,7 +459,7 @@ def addLink(name,url,iconimage):
 def addLink1(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'Wall.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -476,7 +468,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
@@ -485,13 +477,13 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'flag.jpg'
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         #text = checker
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True

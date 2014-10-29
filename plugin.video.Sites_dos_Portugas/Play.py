@@ -22,7 +22,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os
-import TugaFilmesTV,TopPt,TugaFilmesCom,MovieTuga,Series,Filmes,FilmesAnima,Pesquisar,Mashup
+import TugaFilmesTV,TopPt,TugaFilmesCom,MovieTuga,Series,FilmesAnima,Pesquisar,Mashup
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -573,16 +573,8 @@ class MyPlayer(xbmc.Player):
                 else: self.setSubtitles(self.checkerSubs)
                 if not self.isPlaying() and self.Playable == 'Nao':
                         xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
-                        if self.nomeaddon == 'TugaFilmesTV': TugaFilmesTV.TFV_MenuPrincipal('')#TugaFilmesTV.TFV_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesTV.TFV_MenuPrincipal(artfolder)
-                        elif self.nomeaddon == 'TugaFilmesCom': TugaFilmesCom.TFC_MenuPrincipal('')#TugaFilmesCom.TFC_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesCom.TFC_MenuPrincipal(artfolder)
-                        elif self.nomeaddon == 'MovieTuga': MovieTuga.MVT_MenuPrincipal('')#MovieTuga.MVT_ChamarBox_Icons_depois_de_fechar_fontes()#MovieTuga.MVT_MenuPrincipal(artfolder)
-                        elif self.nomeaddon == 'TopPt': TopPt.TPT_MenuPrincipal('')#TopPt.TPT_ChamarBox_Icons_depois_de_fechar_fontes()#TopPt.TPT_MenuPrincipal(artfolder)
-                        elif self.nomeaddon == 'Series': Series.ChamarBox_Series('')#Series.SERIES_ChamarBox_Icons_depois_de_fechar_fontes()#Series.ChamarBox_Series(nome_pesquisa)
-                        elif self.nomeaddon == 'Filmes': Filmes.ChamarBox_Filmes('')#Filmes.FILMES_ChamarBox_Icons_depois_de_fechar_fontes()
-                        elif self.nomeaddon == 'FilmesAnima': FilmesAnima.FILMESANIMA_ChamarBox_Icons_depois_de_fechar_fontes()
-                        elif self.nomeaddon == 'PesquisaGeral': Pesquisar.PG_ChamarBox_Icons_depois_de_fechar_fontes()
-                while self.isPlaying():
-                        xbmc.sleep(1000)
+                #while self.isPlaying():
+                        #xbmc.sleep(1000)
 
         def onPlayBackStarted(self):
                 self.Playable = 'Sim'
@@ -590,27 +582,9 @@ class MyPlayer(xbmc.Player):
                             
         def onPlayBackEnded(self):
                 progress.close()
-                if self.nomeaddon == 'TugaFilmesTV': TugaFilmesTV.TFV_MenuPrincipal('')#TugaFilmesTV.TFV_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesTV.TFV_MenuPrincipal(artfolder)
-                elif self.nomeaddon == 'TugaFilmesCom': TugaFilmesCom.TFC_MenuPrincipal('')#TugaFilmesCom.TFC_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesCom.TFC_MenuPrincipal(artfolder)
-                elif self.nomeaddon == 'MovieTuga': MovieTuga.MVT_MenuPrincipal('')#MovieTuga.MVT_ChamarBox_Icons_depois_de_fechar_fontes()#MovieTuga.MVT_MenuPrincipal(artfolder)
-                elif self.nomeaddon == 'TopPt': TopPt.TPT_MenuPrincipal('')#TopPt.TPT_ChamarBox_Icons_depois_de_fechar_fontes()#TopPt.TPT_MenuPrincipal(artfolder)
-                elif self.nomeaddon == 'Series': Series.ChamarBox_Series('')#Series.ChamarBox_Series('')#Series.SERIES_ChamarBox_Icons_depois_de_fechar_fontes()#Series.ChamarBox_Series(nome_pesquisa)
-                elif self.nomeaddon == 'Filmes': Filmes.ChamarBox_Filmes('')#Filmes.FILMES_ChamarBox_Icons_depois_de_fechar_fontes()
-                elif self.nomeaddon == 'FilmesAnima': FilmesAnima.FILMESANIMA_ChamarBox_Icons_depois_de_fechar_fontes()
-                elif self.nomeaddon == 'PesquisaGeral': Pesquisar.PG_ChamarBox_Icons_depois_de_fechar_fontes()
 
         def onPlayBackStopped(self):
                 progress.close()
-                if self.Playable == 'Sim':
-                        if self.nomeaddon == 'TugaFilmesTV': TugaFilmesTV.TFV_MenuPrincipal('')#TugaFilmesTV.TFV_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesTV.TFV_MenuPrincipal(artfolder)
-                        elif self.nomeaddon == 'TugaFilmesCom': TugaFilmesCom.TFC_MenuPrincipal('')#TugaFilmesCom.TFC_ChamarBox_Icons_depois_de_fechar_fontes()#TugaFilmesCom.TFC_MenuPrincipal(artfolder)
-                        elif self.nomeaddon == 'MovieTuga': MovieTuga.MVT_MenuPrincipal('')#MovieTuga.MVT_ChamarBox_Icons_depois_de_fechar_fontes()#MovieTuga.MVT_MenuPrincipal(artfolder)
-                        elif self.nomeaddon == 'TopPt': TopPt.TPT_MenuPrincipal('')#TopPt.TPT_ChamarBox_Icons_depois_de_fechar_fontes()#TopPt.TPT_MenuPrincipal(artfolder)
-                        elif self.nomeaddon == 'Series': Series.ChamarBox_Series('')#Series.ChamarBox_Series('')#Series.SERIES_ChamarBox_Icons_depois_de_fechar_fontes()#Series.ChamarBox_Series(nome_pesquisa)
-                        elif self.nomeaddon == 'Filmes': Filmes.ChamarBox_Filmes('')#Filmes.FILMES_ChamarBox_Icons_depois_de_fechar_fontes()
-                        elif self.nomeaddon == 'FilmesAnima': FilmesAnima.FILMESANIMA_ChamarBox_Icons_depois_de_fechar_fontes()
-                        elif self.nomeaddon == 'PesquisaGeral': Pesquisar.PG_ChamarBox_Icons_depois_de_fechar_fontes()
-                else: pass
                 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
@@ -647,7 +621,7 @@ def PLAY_get_params():
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -655,7 +629,7 @@ def addLink(name,url,iconimage):
 def addLink1(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -665,7 +639,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": text } )
         cm = []
 	cm.append(('Sinopse', 'XBMC.Action(Info)'))
@@ -677,7 +651,7 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok

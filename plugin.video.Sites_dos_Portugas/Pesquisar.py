@@ -24,9 +24,6 @@ addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
-
- 
-#mensagemprogresso = xbmcgui.Dialog().ok
 	
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -57,14 +54,14 @@ def pesquisar():
                 site = ''
                 progress.create('Progresso', 'A Procurar')
                 progress.update( percent, 'A Procurar...'+site, message, "" )
-                xbmc.sleep( 500 )
+
 		a = 0
                 site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
                 percent = int( ( a / 6.0 ) * 100)
                 message = ''
                 progress.update(percent, 'A Procurar em '+site, message, "")
                 print str(a) + " de " + str(int(a))
-                xbmc.sleep( 100 )
+
 		url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
 		encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
 		a= 1
@@ -73,7 +70,7 @@ def pesquisar():
                 message = ''
                 progress.update(percent, 'A Procurar em '+site, message, "")
                 print str(a) + " de " + str(int(a))
-                xbmc.sleep( 100 )
+
 		url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode)
 		encontrar_fontes_filmes_TFC(url_pesquisa)
 		a = 2
@@ -82,7 +79,7 @@ def pesquisar():
                 message = ''
                 progress.update(percent, 'A Procurar em '+site, message, "")
                 print str(a) + " de " + str(int(a))
-                xbmc.sleep( 100 )
+
 		url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode)
 		encontrar_fontes_pesquisa_MVT(url_pesquisa)
 		a = 3
@@ -91,7 +88,7 @@ def pesquisar():
                 message = ''
                 progress.update(percent, 'A Procurar em '+site, message, "")
                 print str(a) + " de " + str(int(a))
-                xbmc.sleep( 100 )
+
 		url_pesquisa = 'http://toppt.net/?s=' + str(encode)
 		encontrar_fontes_filmes_TPT(url_pesquisa)
 
@@ -101,7 +98,7 @@ def pesquisar():
                 message = ''
                 progress.update(percent, 'A Procurar em '+site, message, "")
                 print str(a) + " de " + str(int(a))
-                xbmc.sleep( 100 )
+
                 url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar'
                 encontrar_fontes_pesquisa_FTT(url_pesquisa)
 
@@ -111,21 +108,17 @@ def pesquisar():
                 message = ''
                 progress.update(percent, 'A Procurar em '+site, message, "")
                 print str(a) + " de " + str(int(a))
-                xbmc.sleep( 100 )
+
                 url_pesquisa = 'http://www.cinematuga.net/search?q=' + str(encode)
                 encontrar_fontes_pesquisa_CMT(url_pesquisa)
-		
-		if selfAddon.getSetting('movies-view') == "0":
-                        addDir1('','','',artfolder + 'banner.png',False,'')		
-                        addDir('[COLOR yellow]Nova Pesquisa[/COLOR]','url',1,artfolder + 'banner.png','nao','')
-                        addDir('[COLOR yellow]Menu Principal[/COLOR]','','',artfolder + 'banner.png','nao','')
+
                 a = 6
                 site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]'
                 percent = int( ( a / 6.0 ) * 100)
                 message = ''
                 progress.update(percent, 'A Procurar em '+site, message, "")
                 print str(a) + " de " + str(int(a))
-                xbmc.sleep( 100 )
+
 
                 xbmcplugin.setContent(int(sys.argv[1]), 'movies')
                 xbmc.executebuiltin("Container.SetViewMode(500)")
@@ -137,10 +130,6 @@ def pesquisar():
 
 def encontrar_fontes_pesquisa_TFV(url,pesquisou):
         pesquisado = pesquisou.replace('%20',' ')
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR blue]Pesquisou : [/COLOR]( ' + pesquisado + ' )[/B]','url',1020,artfolder + 'banner.png',False,'')
-                addDir1('','url',1020,artfolder,False,'')
-                addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1020,artfolder,False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -197,17 +186,13 @@ def encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                         num_f = num_f + 1
                                 except: pass
                         except: pass
-        else: num_f = 0
-        if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
+        else: return
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def encontrar_fontes_filmes_TFC(url):
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','url',1020,artfolder,False,'')
         pt_en = 0
 	try:
 		html_source = abrir_url(url)
@@ -347,17 +332,13 @@ def encontrar_fontes_filmes_TFC(url):
                                                 num_f = num_f + 1
                                 except: pass
                         except: pass
-        else: num_f = 0
-	if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
+        else: return
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def encontrar_fontes_pesquisa_MVT(url):
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','url',1020,artfolder,False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -432,9 +413,7 @@ def encontrar_fontes_pesquisa_MVT(url):
                                         num_f = num_f + 1
                                 except: pass
                         except: pass
-        else: num_f = 0
-	if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
+        else: return
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -442,15 +421,11 @@ def encontrar_fontes_pesquisa_MVT(url):
 
 
 def encontrar_fontes_filmes_TPT(url):
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR]','url',1020,artfolder,False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
 	if '<div class="postmeta-primary">' in html_source: items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
-	else:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
-                return
+	else: return
 	if items != []:
                 num_f = 0
 		print len(items)
@@ -463,7 +438,6 @@ def encontrar_fontes_filmes_TPT(url):
                                 try:
                                         html_source = abrir_url(url)
                                 except: html_source = ''
-                                #addDir1(url,'','','',False,'')
                                 items = re.findall('<div class="post-(.*?)<span id="more-', html_source, re.DOTALL)
                                 if items != []:
                                         print len(items)
@@ -555,22 +529,17 @@ def encontrar_fontes_filmes_TPT(url):
                                                                         num_f = num_f + 1
                                                 except: pass
                         except: pass
-        else: num_f = 0
-        if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
+        else: return
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def encontrar_fontes_pesquisa_FTT(url):
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1020,artfolder,False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
 	items = re.findall("<div class='post hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-	#addDir1(str(len(items)),'url',1002,artfolder,False,'')
 	if items != []:
 		print len(items)
 		num_f = 0
@@ -687,7 +656,7 @@ def encontrar_fontes_pesquisa_FTT(url):
                                         imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
                                         imdbcode = imdbcd[0]
                                                 
-                                #fanart = artfolder + 'flag.jpg'
+                                #fanart = artfolder + 'FAN.jpg'
                                 if fanart == 'fgfgfgfgfgfggf':
                                         nome_pesquisa = nome
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -747,17 +716,13 @@ def encontrar_fontes_pesquisa_FTT(url):
                                         num_f = num_f + 1
                                 except: pass
                         except: pass
-        else: num_f = 0
-        if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
+        else: return
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def encontrar_fontes_pesquisa_CMT(url):
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1020,artfolder,False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -788,13 +753,11 @@ def encontrar_fontes_pesquisa_CMT(url):
                                 titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
                                 if titulooriginal:
                                         nome_original = titulooriginal[0]
-                                        #addDir1(nome_original,'','','',False,'')
                                 else:
                                         titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
                                         if titulooriginal:
                                                 nome_original = titulooriginal[0]
                                         else: nome_original = ''
-                                        #addDir1(nome_original,'','','',False,'')
                                 urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
                                 qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                                 ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
@@ -825,7 +788,7 @@ def encontrar_fontes_pesquisa_CMT(url):
                                         if len(q_a_q_a) == 4:
                                                 tirar_ano = '(' + str(q_a_q_a) + ')'
                                                 nome = nome.replace(tirar_ano,'')
-                                #fanart = artfolder + 'flag.jpg'
+                                #fanart = artfolder + 'FAN.jpg'
                                 if fanart == 'dfgdfgfdggf':
                                         nome_pesquisa = nome_original
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -894,9 +857,7 @@ def encontrar_fontes_pesquisa_CMT(url):
                                         num_f = num_f + 1
                                 except: pass
                         except: pass
-        else: num_f = 0
-        if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
+        else: return
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -937,7 +898,7 @@ def abrir_url(url):
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -946,7 +907,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
@@ -955,13 +916,13 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'flag.jpg'
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         #text = checker
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True

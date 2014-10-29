@@ -29,38 +29,19 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
-
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENUS    -----------------------------------------------------------------#
 
 
 
 def FTT_MenuPrincipal(artfolder):
-        #addDir1('[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]','url',1002,'',False,'')
-        #addDir1('','url',1002,artfolder,False,'')
-        addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,'',False,'')
-	addDir('[COLOR yellow]- Todos[/COLOR]','http://foitatugacinemaonline.blogspot.pt/',602,'','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O',602,'','nao','')
-	addDir('[COLOR yellow]- Categorias[/COLOR]','url',606,'','nao','')
-	addDir('[COLOR yellow]- Por Ano[/COLOR]','url',606,'','nao','')
-	addDir('[COLOR yellow]- Top + Vistos[/COLOR]','url',608,'','nao','')
-
-def ANTIGA_FTT_Menu_Filmes_Por_Categorias(artfolder):
-        url_categorias = 'http://foitatugacinemaonline.blogspot.pt/'
-        html_categorias_source = FTT_abrir_url(url_categorias)
-        addDir1('[B][COLOR blue]Categorias[/COLOR][/B]','url',1002,'',False,'')
-        addDir1('','url',1002,artfolder,False,'')
-	if name == '[COLOR yellow]- Categorias[/COLOR]': html_items_categorias = re.findall("CATEGORIAS(.*?)FILMES POR ANO", html_categorias_source, re.DOTALL)
-	if name == '[COLOR yellow]- Por Ano[/COLOR]': html_items_categorias = re.findall("FILMES POR ANO(.*?)<!-- end .menu -->", html_categorias_source, re.DOTALL)
-	html_items_categorias = re.findall("<li>(.*?)</li>", html_items_categorias[0], re.DOTALL)
-	#addDir1(str(len(html_items_categorias)),'url',1002,artfolder,False,'')
-        print len(html_items_categorias)
-        for item_categorias in html_items_categorias:
-                filmes_por_categoria = re.compile("<a class='trigger' href='(.+?)'>\n(.+?)\n").findall(item_categorias)
-                #addDir1(str(len(filmes_por_categoria)),'url',1002,artfolder,False,'')
-                for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        addDir('[COLOR yellow]' + nome_categoria.replace(' ','') + '[/COLOR]',endereco_categoria,602,'','nao','')
+        addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'P.png','nao','')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'FTT.png',False,'')
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://foitatugacinemaonline.blogspot.pt/',602,artfolder + 'TODOS.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O',602,artfolder + 'ANIMACAO.png','nao','')
+	addDir('[COLOR yellow]- Categorias[/COLOR]','url',606,artfolder + 'FCATEGORIAS.png','nao','')
+	addDir('[COLOR yellow]- Por Ano[/COLOR]','url',606,artfolder + 'FPANO.png','nao','')
+	addDir('[COLOR yellow]- Top + Vistos[/COLOR]','url',608,artfolder + 'TOPFILMES.png','nao','')
 
 def FTT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://foitatugacinemaonline.blogspot.pt/'
@@ -68,12 +49,10 @@ def FTT_Menu_Filmes_Por_Categorias(artfolder):
 	if name == '[COLOR yellow]- Categorias[/COLOR]': html_items_categorias = re.findall("'http://foitatugacinemaonline.blogspot.pt/search/label/2014'>2014(.*?)<div id='searchbarright'>", html_categorias_source, re.DOTALL)
 	if name == '[COLOR yellow]- Por Ano[/COLOR]': html_items_categorias = re.findall("<option>ESCOLHA A CATEGORIA</option>(.*?)='http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
-        #addDir1(str(len(html_items_categorias)),'url',1002,artfolder,False,'')
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n.+?[(](.+?)[)]\n.+?</option>").findall(item_categorias)
-                #addDir1(str(len(filmes_por_categoria)),'url',1002,artfolder,False,'')
                 for endereco_categoria,nome_categoria,total_categoria in filmes_por_categoria:
-                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ('+total_categoria+')',endereco_categoria,602,'','nao','')
+                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ('+total_categoria+')',endereco_categoria,602,artfolder + 'FTT.png','nao','')
 
 
 def FTT_Top_Vistos(artfolder):
@@ -88,13 +67,11 @@ def FTT_Top_Vistos(artfolder):
         html_items_categorias = re.findall("<div class='widget-content popular-posts'>(.*?)<div class='clear'>", html_categorias_source, re.DOTALL)
         html_items_categorias = re.findall("<div class='item-thumbnail-only'>(.*?)<div style='clear: both;'>", html_items_categorias[0], re.DOTALL)
         num = len(html_items_categorias) + 0.0
-        #addDir1(str(len(html_items_categorias)),'url',1002,artfolder,False,'')
         for item_categorias in html_items_categorias:
                 percent = int( ( i / num ) * 100)
                 message = str(i) + " de " + str(int(num))
                 progress.update( percent, "", message, "" )
                 print str(i) + " de " + str(int(num))
-                #if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                 if progress.iscanceled():
                         break
                 anofilme = ''
@@ -175,7 +152,6 @@ def FTT_encontrar_fontes_filmes(url):
 		html_source = FTT_abrir_url(url)
 	except: html_source = ''
 	items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-	#addDir1(str(len(items)),'url',1002,artfolder,False,'')
 	if items != []:
 		print len(items)
 		num = len(items) + 0.0
@@ -184,7 +160,6 @@ def FTT_encontrar_fontes_filmes(url):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        #if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         
@@ -299,7 +274,7 @@ def FTT_encontrar_fontes_filmes(url):
                                 imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
                                 imdbcode = imdbc[0]
                                         
-                        #fanart = artfolder + 'flag.jpg'
+                        #fanart = artfolder + 'FAN.jpg'
                         if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -363,7 +338,7 @@ def FTT_encontrar_fontes_filmes(url):
 	proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)	
 	try:
                 proxima_p = proxima[0]#.replace('%3A',':').replace('%2B','+')
-		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),602,'','','')
+		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),602,artfolder + 'PSEGUINTE.png','','')
 	except: pass
 
 
@@ -377,10 +352,24 @@ def FTT_encontrar_videos_filmes(name,url):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
+        if 'FTT' not in name: name = '[COLOR orange]FTT | [/COLOR]' + name
         nomeescolha = name
         colecao = 'nao'
+        ################################################
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[COLOR orange]','').replace('[/COLOR][/B]','--').replace('[/COLOR]','').replace('[','---').replace(']','---')
+        nn = nn.replace('(','---').replace(')','---').replace('FTT | ','')
+        if '---' in nn:
+                n = re.compile('---(.+?)---').findall(nn)
+                n1 = re.compile('--(.+?)--').findall(nn)
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1[0],'url',1004,iconimage,False,'')
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
+        else:
+                n1 = re.compile('--(.+?)--').findall(nn)
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1[0],'url',1004,iconimage,False,'')
+        ################################################
         addDir1(name,'url',1002,iconimage,False,'')
-        #addDir1('','url',1002,artfolder,False,'')
         conta_id_video = 0
         try:
                 fonte_video = FTT_abrir_url(url)
@@ -395,10 +384,8 @@ def FTT_encontrar_videos_filmes(name,url):
                         else: imdbcode = ''
                 #if 'BREVEMENTE ONLINE' in fontes_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
                 match1 = re.compile('<script src="(.+?)" type="text/javascript"></script>').findall(fonte_e_url)
-                #addDir1(str(len(match1)),'url',1002,artfolder,False,'')
                 for fonte_id in match1: 
                         if 'videomega' in fonte_id:
-                                #addDir1(str(len(match1)),'url',1002,artfolder,False,'')
                                 try:  
                                         if 'hashkey' in fonte_id:
                                                 conta_id_video = conta_id_video + 1
@@ -442,22 +429,15 @@ def FTT_encontrar_videos_filmes(name,url):
         nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[COLOR orange]','').replace('[/COLOR][/B]','--').replace('[/COLOR]','').replace('[','---').replace(']','---')
         nn = nn.replace('(','---').replace(')','---').replace('FTT | ','')
-        #addDir1('','url',1004,artfolder,False,'')
         if '---' in nn:
                 n = re.compile('---(.+?)---').findall(nn)
                 n1 = re.compile('--(.+?)--').findall(nn)
                 url = 'IMDB'+imdbcode+'IMDB'
-                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1[0],'url',1004,iconimage,False,'')
-                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
                 FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'FTT')
-                #FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'FTT')
-                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
-                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
         else:
                 n1 = re.compile('--(.+?)--').findall(nn)
                 url = 'IMDB'+imdbcode+'IMDB'
                 FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'FTT')
-                #addDir('[COLOR yellow]PESQUISAR FILME: [/COLOR]'+n1[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
 
 
 
@@ -471,8 +451,6 @@ def FTT_links(name,url,iconimage):
         else: url = urlimdb[0]
         nomeescolha = name
         colecao = 'nao'
-        #addDir1(name,'url',1002,iconimage,False,'')
-        #addDir1('','url',1002,artfolder,False,'')
         conta_id_video = 0
         try:
                 fonte_video = FTT_abrir_url(url)
@@ -487,10 +465,8 @@ def FTT_links(name,url,iconimage):
                         else: imdbcode = ''
                 #if 'BREVEMENTE ONLINE' in fontes_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
                 match1 = re.compile('<script src="(.+?)" type="text/javascript"></script>').findall(fonte_e_url)
-                #addDir1(str(len(match1)),'url',1002,artfolder,False,'')
                 for fonte_id in match1: 
                         if 'videomega' in fonte_id:
-                                #addDir1(str(len(match1)),'url',1002,artfolder,False,'')
                                 try:  
                                         if 'hashkey' in fonte_id:
                                                 conta_id_video = conta_id_video + 1
@@ -572,7 +548,7 @@ def FTT_get_params():
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'Wall.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -580,7 +556,7 @@ def addLink(name,url,iconimage):
 def addLink1(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'Wall.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -589,7 +565,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
@@ -598,13 +574,13 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'flag.jpg'
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         #text = checker
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True

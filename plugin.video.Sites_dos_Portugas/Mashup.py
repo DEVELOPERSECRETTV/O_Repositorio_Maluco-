@@ -32,34 +32,7 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
-_servidores_ = []
-_ligacao_ = []
-_servid_ = ['' for i in range(2000)]
-_ligacThumb_ = ['' for i in range(2000)]
-_ligac_ = ['' for i in range(2000)]
-_servidAZ_ = ['' for i in range(2000)]
-_ligacThumbAZ_ = ['' for i in range(2000)]
-_ligacAZ_ = ['' for i in range(2000)]
-_ItemsMenu_ = ['' for i in range(2000)]
-_ligacUrl_ = ['' for i in range(2000)]
-_ItemsMenu2_ = ['' for i in range(2000)]
-_ligacUrl2_ = ['' for i in range(2000)]
-_PgSeguinte_ = ['' for i in range(2)]
-_PgSeguinteSeries_ = ['' for i in range(2)]
-_PgSeguinteFilmes_ = ['' for i in range(2)]
-_PgSeguinteAnimacao_ = ['' for i in range(2)]
-_servidSeries_ = ['' for i in range(2000)]
-_ligacSeries_ = ['' for i in range(2000)]
-_ligacThumbSeries_ = ['' for i in range(2000)]
-_servidFilmes_ = ['' for i in range(2000)]
-_ligacFilmes_ = ['' for i in range(2000)]
-_ligacThumbFilmes_ = ['' for i in range(2000)]
-_servidAnimacao_ = ['' for i in range(2000)]
-_ligacAnimacao_ = ['' for i in range(2000)]
-_ligacThumbAnimacao_ = ['' for i in range(2000)]
-
 arr_series1 = [['' for i in range(87)] for j in range(1)]
-
 arr_series = ['' for i in range(200)]
 arrai_series = ['' for i in range(200)]
 _series = []
@@ -80,20 +53,7 @@ progress = xbmcgui.DialogProgress()
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def ultimos_episodios(url):
-        for x in range(len(_servidFilmes_)):
-                _servidFilmes_[x]=''
-        for x in range(len(_ligacThumbFilmes_)):
-                _ligacThumbFilmes_[x]=''
-        for x in range(len(_ligacFilmes_)):
-                _ligacFilmes_[x]=''
         conta_os_items = 0
-        #folder = addonfolder + '/resources/'
-        #Filmes_File = open(folder + 'filmes.txt', 'a')
-        #Filmes_Fi = open(folder + 'filmes.txt', 'r')
-        #read_Filmes_File = ''
-        #for line in Filmes_Fi:
-                #read_Filmes_File = read_Filmes_File + line
-                #if line!='': _filmes_.append(line)
         a = 1
         percent = 0
         message = ''
@@ -135,10 +95,6 @@ def ultimos_episodios(url):
                 series = 1
                 url = url.replace('-series-','')
         else: series = 0
-        if 'Seguinte' not in name:
-                if selfAddon.getSetting('movies-view') == "0":
-                        addDir1(name + ':','url',1001,iconimage,False,'')
-                        addDir1('','url',1001,artfolder,False,'')
         fan = 'nao'
         if selfAddon.getSetting('series-fanart-TPT') == "true": fan = 'sim'
 
@@ -256,9 +212,6 @@ def ultimos_episodios(url):
                                         else:
                                                 nome_pesquisa = nome
                                                 nn = 2
-                                #addDir1(str(nn)+'|'+nome_pesquisa,'','',iconimage,False,'')
-                                #return
-                                #addDir1(nome_pesquisa,'','',iconimage,False,'')
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -365,7 +318,6 @@ def ultimos_episodios(url):
                         i = i + 1
         else: pass
         if items != []:
-                #proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
                 proxima_TPT = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
                 try:
                         url_TPT = proxima_TPT[0].replace('#038;','').replace('&amp;','&')
@@ -387,7 +339,7 @@ def ultimos_episodios(url):
                         message = str(i) + " de " + str(int(num))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(int(num))
-                        if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
 			urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
@@ -415,7 +367,6 @@ def ultimos_episodios(url):
                         else: nome_original = nome
                         if selfAddon.getSetting('series-fanart-TFV') == "true":#if fanart == '':
                                 nome_pesquisa = nome_original
-                                #addDir1(nome_pesquisa,'','',artfolder + 'ze-TFV1.png',False,'')
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -478,39 +429,20 @@ def ultimos_episodios(url):
                 proxima_TFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
                 url_TFV = proxima_TFV[0].replace('&amp;','&')
         else: pass
-	#if proxima_MVT:
         #----------------------------------------------------------------------------------------------------
         url_MVT = 'http:'
         url_TFC = 'http:'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_ultimos_episodios = urllib.urlencode(parameters)
-        _PgSeguinteFilmes_[0] = url_ultimos_episodios
-        addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_ultimos_episodios,508,artfolder + 'filmes.png','','')
+        addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_ultimos_episodios,508,artfolder + 'PSEGUINTE.png','','')
         progress.close()
-        #Filmes_Filmes_Filmes(url_filmes_filmes)
-        #addDir('[COLOR yellow]PÃ¡gina Seguinte >>[/COLOR]',url_filmes_filmes,507,artfolder + 'filmes.png','','')
-        #Filmes_File.write(url_TFV+'\n'+url_TFC+'\n'+url_MVT+'\n'+url_TPT+'\n')
-        #Filmes_Fi.close()
-        #Filmes_File.close()
+
         
 
         
 
 def Filmes_Filmes_Filmes(url):
-        for x in range(len(_servidFilmes_)):
-                _servidFilmes_[x]=''
-        for x in range(len(_ligacThumbFilmes_)):
-                _ligacThumbFilmes_[x]=''
-        for x in range(len(_ligacFilmes_)):
-                _ligacFilmes_[x]=''
         conta_os_items = 0
-        #folder = addonfolder + '/resources/'
-        #Filmes_File = open(folder + 'filmes.txt', 'a')
-        #Filmes_Fi = open(folder + 'filmes.txt', 'r')
-        #read_Filmes_File = ''
-        #for line in Filmes_Fi:
-                #read_Filmes_File = read_Filmes_File + line
-                #if line!='': _filmes_.append(line)
         a = 1
         percent = 0
         message = ''
@@ -519,7 +451,6 @@ def Filmes_Filmes_Filmes(url):
         progress.update( percent, 'A Procurar Filmes...'+site, message, "" )
         urlss = urllib.unquote(url)
         print urlss
-        #addDir1(urlss,'url',1002,artfolder,False,'')
         urls=re.compile('url_TFC=(.+?)&url_CMT=(.+?)&url_FTT=(.+?)&url_TFV=(.+?)&url_MVT=(.+?)&xpto=xpto&url_TPT=(.+?)&fim=fim').findall(urlss)
         url_TFV = urls[0][3]
         url_TFC = urls[0][0]
@@ -527,13 +458,6 @@ def Filmes_Filmes_Filmes(url):
         url_TPT = urls[0][5]
         url_FTT = urls[0][2]
         url_CMT = urls[0][1]
-        #addDir1(url_TFV,'url',1002,artfolder,False,'')
-        #addDir1(url_TFC,'url',1002,artfolder,False,'')
-        #addDir1(url_MVT,'url',1002,artfolder,False,'')
-        #addDir1(url_TPT,'url',1002,artfolder,False,'')
-        #addDir1(url_FTT,'url',1002,artfolder,False,'')
-        #addDir1(url_CMT,'url',1002,artfolder,False,'')
-        #return
         #i = int(arr_filmes[4])
         i = 0
         #--------------------------------------------------
@@ -586,7 +510,6 @@ def Filmes_Filmes_Filmes(url):
 	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
 	if items != []:
 		print len(items)
-		#num = len(items) + 0.0
 		for item in items:
                         sinopse = ''
                         fanart = ''
@@ -601,10 +524,9 @@ def Filmes_Filmes_Filmes(url):
                         message = str(a) + " de " + str(int(num))
                         progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 100 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-TPT') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-TPT') == "false": xbmc.sleep( 50 )
                         audio_filme = ''
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
@@ -697,9 +619,6 @@ def Filmes_Filmes_Filmes(url):
                                 else:
                                         nome_pesquisa = nome
                                         nn = 2
-                                #addDir1(str(nn)+'|'+nome_pesquisa,'','',iconimage,False,'')
-                                #return
-                                #addDir1(nome_pesquisa,'','',iconimage,False,'')
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -741,7 +660,6 @@ def Filmes_Filmes_Filmes(url):
                         a = a + 1
         else: pass
         if items != []:
-                #proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
                 proxima_TPT = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
                 try:
                         url_TPT = proxima_TPT[0].replace('#038;','').replace('&amp;','&')
@@ -751,25 +669,20 @@ def Filmes_Filmes_Filmes(url):
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
         progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
         i = 1
-        #mensagemprogresso.create('Tuga-Filmes.com', 'A Pesquisar','Por favor aguarde...')
         try:
 		html_source = MASH_abrir_url(url_TFC)
 	except: html_source = ''
 	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
-	#addDir(str(len(items)),'url',8,'','nao','')
-	#if str(len(items)) > 0:
 	if items != []:
 		print len(items)
-		#num = len(items) + 0.0
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update(percent, 'A Procurar Filmes em '+site, message, "")
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 100 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-TFC') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-TFC') == "false": xbmc.sleep( 50 )
                         fanart = ''
                         thumb = ''
                         versao = ''
@@ -985,17 +898,15 @@ def Filmes_Filmes_Filmes(url):
 		html_source = MASH_abrir_url(url_FTT)
 	except: html_source = ''
 	items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-	#addDir1(str(len(items)),'url',1002,artfolder,False,'')
 	if items != []:
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update(percent, 'A Procurar Filmes em '+site, message, "")
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 100 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
 
                         thumb = ''
                         fanart = ''
@@ -1108,7 +1019,7 @@ def Filmes_Filmes_Filmes(url):
                                 imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
                                 imdbcode = imdbc[0]
                                         
-                        #fanart = artfolder + 'flag.jpg'
+                        #fanart = artfolder + 'FAN.jpg'
                         if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -1186,16 +1097,14 @@ def Filmes_Filmes_Filmes(url):
 	conta_items = 0
 	if items != []:
 		print len(items)
-		#num = len(items) + 0.0
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update(percent, 'A Procurar Filmes em '+site, message, "")
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
                         thumb = ''
                         fanart = ''
                         versao = ''
@@ -1216,13 +1125,11 @@ def Filmes_Filmes_Filmes(url):
                         titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
                         if titulooriginal:
                                 nome_original = titulooriginal[0]
-                                #addDir1(nome_original,'','','',False,'')
                         else:
                                 titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
                                 if titulooriginal:
                                         nome_original = titulooriginal[0]
                                 else: nome_original = ''
-                                #addDir1(nome_original,'','','',False,'')
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
@@ -1253,7 +1160,7 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        #fanart = artfolder + 'flag.jpg'
+                        #fanart = artfolder + 'FAN.jpg'
                         if selfAddon.getSetting('movie-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -1339,16 +1246,14 @@ def Filmes_Filmes_Filmes(url):
 	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
 	if items != []:
 		print len(items)
-		#num = len(items) + 0.0
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update(percent, 'A Procurar Filmes em '+site, message, "")
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
                         thumb = ''
                         fanart = ''
                         versao = ''
@@ -1369,13 +1274,11 @@ def Filmes_Filmes_Filmes(url):
                         titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
                         if titulooriginal:
                                 nome_original = titulooriginal[0]
-                                #addDir1(nome_original,'','',artfolder + 'ze-TFV1.png',False,'')
                         else:
                                 titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
                                 if titulooriginal:
                                         nome_original = titulooriginal[0]
                                 else: nome_original = ''
-                                #addDir1(nome_original,'','',artfolder + 'ze-TFV1.png',False,'')
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
                         
                         tto=re.compile('tulo Original:</b>:(.+?)<br').findall(item)
@@ -1427,7 +1330,7 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        #fanart = artfolder + 'flag.jpg'
+                        #fanart = artfolder + 'FAN.jpg'
                         if selfAddon.getSetting('movie-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -1511,16 +1414,14 @@ def Filmes_Filmes_Filmes(url):
 	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
 	if items != []:
 		print len(items)
-		#num = len(items) + 0.0
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update(percent, 'A Procurar Filmes em '+site, message, "")
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 100 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                         thumb = ''
                         fanart = ''
                         imdbcode = ''
@@ -1591,7 +1492,7 @@ def Filmes_Filmes_Filmes(url):
                                 imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
                                 imdbcode = imdbc[0]
                                 
-                        #fanart = artfolder + 'flag.jpg'
+                        #fanart = artfolder + 'FAN.jpg'
                         if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -1666,29 +1567,15 @@ def Filmes_Filmes_Filmes(url):
         #for x in range(12):
                 if arrai_filmes[x] != '':           #8
                         addDir(arrai_filmes[x],'url',8,thumb_filmes[x],'nao','')
-                        _servidFilmes_[conta_os_items]='[COLOR yellow]' + arrai_filmes[x] + '[/COLOR]'
-                        _ligacThumbFilmes_[conta_os_items]=thumb_filmes[x]
                         conta_os_items = conta_os_items + 1
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
-        _PgSeguinteFilmes_[0] = url_filmes_filmes
-        #Filmes_Filmes_Filmes(url_filmes_filmes)
-        #addDir('[COLOR yellow]PÃ¡gina Seguinte >>[/COLOR]',url_filmes_filmes,507,artfolder + 'filmes.png','','')
-        #Filmes_File.write(url_TFV+'\n'+url_TFC+'\n'+url_MVT+'\n'+url_TPT+'\n')
-        #Filmes_Fi.close()
-        #Filmes_File.close()
         progress.close()
-        addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_filmes,507,artfolder + 'filmes.png','','')
+        addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_filmes,507,artfolder + 'PSEGUINTE.png','','')
 
 
 
 def Series_Series(url):
-        for x in range(len(_servidSeries_)):
-                _servidSeries_[x]=''
-        for x in range(len(_ligacThumbSeries_)):
-                _ligacThumbSeries_[x]=''
-        for x in range(len(_ligacSeries_)):
-                _ligacSeries_[x]=''
         conta_os_items = 0
         folder = addonfolder + '/resources/'
         Series_File = open(folder + 'series.txt', 'a')
@@ -1909,25 +1796,14 @@ def Series_Series(url):
         arrai_series.sort()
         for x in range(len(arrai_series)):
                 if arrai_series[x] != '':
-                        #addDir1(arrai_series[x],'url',1020,artfolder,False,'')
                         _s = re.compile('(.+?)[|](.+?)[|](.+?)[|](.*)').findall(arrai_series[x])
                         if _s:
-                                _servidSeries_[conta_os_items]='[COLOR yellow]' + _s[0][0].replace('\/','|').replace('[COLOR orange] | TFV | TPT[/COLOR]','').replace('[COLOR orange] | TFV[/COLOR]','').replace('[COLOR orange] | TPT[/COLOR]','') + '[/COLOR]'
-                                _ligacThumbSeries_[conta_os_items]=_s[0][1]
-                                _ligacSeries_[conta_os_items]=_s[0][2]+'|'+_s[0][3]
                                 conta_os_items = conta_os_items + 1
                                 addDir(_s[0][0].replace('\/','|'),_s[0][2]+'|'+_s[0][3],9,_s[0][1],'nao','')
                         else:
                                 _s = re.compile('(.+?)[|](.+?)[|](.*)').findall(arrai_series[x])
-                                _servidSeries_[conta_os_items]='[COLOR yellow]' + _s[0][0].replace('\/','|').replace('[COLOR orange] | TFV | TPT[/COLOR]','').replace('[COLOR orange] | TFV[/COLOR]','').replace('[COLOR orange] | TPT[/COLOR]','') + '[/COLOR]'
-                                _ligacThumbSeries_[conta_os_items]=_s[0][1]
-                                _ligacSeries_[conta_os_items]=_s[0][2]
                                 conta_os_items = conta_os_items + 1
-                                #addDir(_servidSeries_[conta_os_items-1],_s[0][2],9,_s[0][1],'nao','')
-                                #addDir(_ligacThumbSeries_[conta_os_items-1],_s[0][2],9,_s[0][1],'nao','')
-                                #addDir(_ligacSeries_[conta_os_items-1],_s[0][2],9,_s[0][1],'nao','')
                                 addDir(_s[0][0].replace('\/','|'),_s[0][2],9,_s[0][1],'nao','')
-        #index = xbmcgui.Dialog().select('Escolha o servidor', arr_series)
         Series_Fi.close()
         Series_File.close()
         progress.close()
@@ -1935,12 +1811,6 @@ def Series_Series(url):
 
 
 def Filmes_Animacao(url):
-        for x in range(len(_servidAnimacao_)):
-                _servidAnimacao_[x]=''
-        for x in range(len(_ligacThumbAnimacao_)):
-                _ligacThumbAnimacao_[x]=''
-        for x in range(len(_ligacAnimacao_)):
-                _ligacAnimacao_[x]=''
         conta_os_items = 0
         a = 1
         percent = 0
@@ -1950,7 +1820,6 @@ def Filmes_Animacao(url):
         progress.update( percent, 'A Procurar Animação...'+site, message, "" )
         urlss = urllib.unquote(url)
         print urlss
-        #addDir1(urlss,'url',1002,artfolder,False,'')
         urls=re.compile('url_TFC=(.+?)&url_CMT=(.+?)&url_FTT=(.+?)&url_TFV=(.+?)&url_MVT=(.+?)&xpto=xpto&url_TPT=(.+?)&fim=fim').findall(urlss)
         url_TFV = urls[0][3]
         url_TFC = urls[0][0]
@@ -1958,13 +1827,6 @@ def Filmes_Animacao(url):
         url_TPT = urls[0][5]
         url_FTT = urls[0][2]
         url_CMT = urls[0][1]
-        #addDir1(url_TFV,'url',1002,artfolder,False,'')
-        #addDir1(url_TFC,'url',1002,artfolder,False,'')
-        #addDir1(url_MVT,'url',1002,artfolder,False,'')
-        #addDir1(url_TPT,'url',1002,artfolder,False,'')
-        #addDir1(url_FTT,'url',1002,artfolder,False,'')
-        #addDir1(url_CMT,'url',1002,artfolder,False,'')
-        #return
         #i = int(arr_filmes[4])
         i = 0
         #--------------------------------------------------
@@ -2017,7 +1879,6 @@ def Filmes_Animacao(url):
 	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
 	if items != []:
 		print len(items)
-		#num = len(items) + 0.0
 		for item in items:
                         sinopse = ''
                         fanart = ''
@@ -2032,10 +1893,9 @@ def Filmes_Animacao(url):
                         message = str(a) + " de " + str(int(num))
                         progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 100 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-TPT') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-TPT') == "false": xbmc.sleep( 50 )
                         audio_filme = ''
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
@@ -2128,9 +1988,6 @@ def Filmes_Animacao(url):
                                 else:
                                         nome_pesquisa = nome
                                         nn = 2
-                                #addDir1(str(nn)+'|'+nome_pesquisa,'','',iconimage,False,'')
-                                #return
-                                #addDir1(nome_pesquisa,'','',iconimage,False,'')
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -2172,7 +2029,6 @@ def Filmes_Animacao(url):
                         a = a + 1
         else: pass
         if items != []:
-                #proxima_TPT = re.compile('.*href="(.+?)">Next &rarr;</a>').findall(html_source)
                 proxima_TPT = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
                 try:
                         url_TPT = proxima_TPT[0].replace('#038;','').replace('&amp;','&')
@@ -2182,25 +2038,20 @@ def Filmes_Animacao(url):
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
         progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
         i = 1
-        #mensagemprogresso.create('Tuga-Filmes.com', 'A Pesquisar','Por favor aguarde...')
         try:
 		html_source = MASH_abrir_url(url_TFC)
 	except: html_source = ''
 	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
-	#addDir(str(len(items)),'url',8,'','nao','')
-	#if str(len(items)) > 0:
 	if items != []:
 		print len(items)
-		#num = len(items) + 0.0
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update(percent, 'A Procurar Filmes em '+site, message, "")
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 100 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-TFC') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-TFC') == "false": xbmc.sleep( 50 )
                         fanart = ''
                         thumb = ''
                         versao = ''
@@ -2413,17 +2264,15 @@ def Filmes_Animacao(url):
 		html_source = MASH_abrir_url(url_FTT)
 	except: html_source = ''
 	items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-	#addDir1(str(len(items)),'url',1002,artfolder,False,'')
 	if items != []:
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update(percent, 'A Procurar Filmes em '+site, message, "")
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 100 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
 
                         thumb = ''
                         fanart = ''
@@ -2536,7 +2385,7 @@ def Filmes_Animacao(url):
                                 imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
                                 imdbcode = imdbc[0]
                                         
-                        #fanart = artfolder + 'flag.jpg'
+                        #fanart = artfolder + 'FAN.jpg'
                         if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -2614,16 +2463,14 @@ def Filmes_Animacao(url):
 	conta_items = 0
 	if items != []:
 		print len(items)
-		#num = len(items) + 0.0
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update(percent, 'A Procurar Filmes em '+site, message, "")
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
                         thumb = ''
                         fanart = ''
                         versao = ''
@@ -2644,13 +2491,11 @@ def Filmes_Animacao(url):
                         titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
                         if titulooriginal:
                                 nome_original = titulooriginal[0]
-                                #addDir1(nome_original,'','','',False,'')
                         else:
                                 titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
                                 if titulooriginal:
                                         nome_original = titulooriginal[0]
                                 else: nome_original = ''
-                                #addDir1(nome_original,'','','',False,'')
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
@@ -2681,7 +2526,7 @@ def Filmes_Animacao(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        #fanart = artfolder + 'flag.jpg'
+                        #fanart = artfolder + 'FAN.jpg'
                         if selfAddon.getSetting('movie-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -2767,16 +2612,14 @@ def Filmes_Animacao(url):
 	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
 	if items != []:
 		print len(items)
-		#num = len(items) + 0.0
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update(percent, 'A Procurar Filmes em '+site, message, "")
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
                         thumb = ''
                         fanart = ''
                         versao = ''
@@ -2797,13 +2640,11 @@ def Filmes_Animacao(url):
                         titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
                         if titulooriginal:
                                 nome_original = titulooriginal[0]
-                                #addDir1(nome_original,'','',artfolder + 'ze-TFV1.png',False,'')
                         else:
                                 titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
                                 if titulooriginal:
                                         nome_original = titulooriginal[0]
                                 else: nome_original = ''
-                                #addDir1(nome_original,'','',artfolder + 'ze-TFV1.png',False,'')
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
 
                         tto=re.compile('tulo Original:</b>:(.+?)<br').findall(item)
@@ -2855,7 +2696,7 @@ def Filmes_Animacao(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        #fanart = artfolder + 'flag.jpg'
+                        #fanart = artfolder + 'FAN.jpg'
                         if selfAddon.getSetting('movie-fanart-TFV') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -2939,16 +2780,14 @@ def Filmes_Animacao(url):
 	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
 	if items != []:
 		print len(items)
-		#num = len(items) + 0.0
 		for item in items:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
                         progress.update(percent, 'A Procurar Filmes em '+site, message, "")
                         print str(a) + " de " + str(int(num))
-                        #xbmc.sleep( 100 )
                         if progress.iscanceled():
                                 break
-                        if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-MVT') == "false": xbmc.sleep( 50 )
                         thumb = ''
                         fanart = ''
                         imdbcode = ''
@@ -3019,7 +2858,7 @@ def Filmes_Animacao(url):
                                 imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
                                 imdbcode = imdbc[0]
                                 
-                        #fanart = artfolder + 'flag.jpg'
+                        #fanart = artfolder + 'FAN.jpg'
                         if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -3091,14 +2930,11 @@ def Filmes_Animacao(url):
         #x = int(arr_filmes[5])
         sinopse = ''
         for x in range(len(arrai_filmes_anima)):
-                _servidAnimacao_[conta_os_items]='[COLOR yellow]' + arr_filmes_anima[x] + '[/COLOR]'
-                _ligacThumbAnimacao_[conta_os_items]=arrai_filmes_anima[x][2]
                 conta_os_items = conta_os_items + 1
                 addDir(arr_filmes_anima[x],'url',7,arrai_filmes_anima[x][2],sinopse,'')
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
-        _PgSeguinteAnimacao_[0]=url_filmes_animacao
-        addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_animacao,6,artfolder + 'animacao.png','','')
+        addDir('[COLOR yellow]Página Seguinte >>[/COLOR]',url_filmes_animacao,6,artfolder + 'PSEGUINTE.png','','')
 
 
 
@@ -3141,7 +2977,7 @@ def MASH_get_params():
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -3149,7 +2985,7 @@ def addLink(name,url,iconimage):
 def addLink1(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -3158,7 +2994,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
@@ -3167,13 +3003,13 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'flag.jpg'
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         #text = plot
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True

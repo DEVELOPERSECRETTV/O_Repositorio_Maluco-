@@ -19,7 +19,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,time,os
-import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TextBoxes,TopPt,FilmesAnima,Filmes,Series,Mashup,Armagedom,Filmes3D,FoitaTuga,Cinematuga
+import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TopPt,FilmesAnima,Series,Mashup,Armagedom,FoitaTuga,Cinematuga
 from array import array
 from string import capwords
 
@@ -28,97 +28,68 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
-arr_series1 = [['' for i in range(87)] for j in range(1)]
-arr_series = ['' for i in range(100)]
-arr_filmes = ['' for i in range(100)]
-arrai_filmes = ['' for i in range(100)]
-thumb_filmes = ['' for i in range(100)]
-arr_filmes[4] = '6'
-i=arr_filmes[4]
-
-arr_filmes_animacao = ['' for i in range(100)]
-arrai_filmes_animacao  = ['' for i in range(100)]
-thumb_filmes_animacao  = ['' for i in range(100)]
-
-#mensagemok = xbmcgui.Dialog().ok
-
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
 def MAIN_MENU():
-        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://direct',3003,artfolder + 'series.png','nao','')
-        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://direct',3004,artfolder + 'filmes.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B]','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
-        addDir1('','url',1004,artfolder,False,'')
-        addDir('[COLOR orange]FTT | [/COLOR][B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)','http://direct',601,'','nao','')
-        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B] (Filmes/Séries)','http://direct',231,artfolder + 'Ze-tp1.png','nao','')
-        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]MOV[/COLOR][COLOR yellow]I[/COLOR][COLOR red]ETUGA[/COLOR][/B] (Filmes)','http://direct',101,artfolder + 'Ze-mv1.png','nao','')
-        addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B] (Filmes)','http://direct',701,'','nao','')
-        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)','http://direct',31,artfolder + 'Ze-tv1.png','nao','')
-        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)','http://direct',71,artfolder + 'Ze-tc1.png','nao','')
-        addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SdB1.png','nao','')
-        addDir1('','url',1004,artfolder,False,'')
-        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'ze-icon3.png','nao','')
-
-
-
-
-def MAIN_MENU_antiga(): #antiga
-        url_toppt = 'http://toppt.net/'
-        url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
+        #####################################
+        url_TPT = 'http://toppt.net/'
+        url_TFV = 'http://www.tuga-filmes.us/'
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
-        url_CMT = 'http://www.cinematuga.net/search/label/Filmes'
+        url_CMT = 'http://www.cinematuga.net/'
         try:
-                toppt_source = abrir_url(url_toppt)
-        except: toppt_source = ''
-        saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
-        url_TPT = saber_url_todos[0]
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
-        url_filmes_filmes = urllib.urlencode(parameters)        #31
-        #addDir1('[B][COLOR blue]Menu Principal[/COLOR][/B]','',31,artfolder + 'MPrin.png',False,'')
-        #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
-        #addDir1('','','',artfolder,False,'')
-        #return
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
-        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B] (Mashup)',url_filmes_filmes,507,artfolder + 'filmes.png','nao','')
-        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (Mashup)','http://www.tuga-filmes.us',26,artfolder + 'series.png','nao','')
-        url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
-        url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
-        url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
-        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
-        url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'
-        saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
-        #saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
-        url_TPT = saber_url_animacao[0]
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
-        url_filmes_animacao = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B] (Mashup)',url_filmes_animacao,6,artfolder + 'animacao.png','nao','')
-        
-        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','http://www.themoviedb.org/movie/now-playing',3002,'','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','http://www.themoviedb.org/movie/top-rated',3001,'','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','http://www.themoviedb.org/movie',3000,'','nao','')
-        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
-        url_TPT = 'http://toppt.net/category/series/'
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
-        url_ultimos_episodios = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B] (Séries)',url_ultimos_episodios,508,'','nao','')
-        
-        #addDir('[B][COLOR cyan]IMDB[/COLOR][/B]','url',500,'','nao','')
-        #addDir1('','','',artfolder + 'ze-icon3.png',False,'')
-        #addDir1('','','',artfolder,False,'')
-        
-        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)','http://direct',31,artfolder + 'Ze-tv1.png','nao','')
-        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)','http://direct',71,artfolder + 'Ze-tc1.png','nao','')
-        addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B] (Filmes)','http://direct',701,'','nao','')
-        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]MOV[/COLOR][COLOR yellow]I[/COLOR][COLOR red]ETUGA[/COLOR][/B] (Filmes)','http://direct',101,artfolder + 'Ze-mv1.png','nao','')
-        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B] (Filmes/Séries)','http://direct',231,artfolder + 'Ze-tp1.png','nao','')
-        addDir('[COLOR orange]FTT | [/COLOR][B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)','http://direct',601,'','nao','')
-        #addDir('[B][COLOR green]FILMES[/COLOR][COLOR yellow]3D[/COLOR][COLOR red]CINEMA[/COLOR][/B] - [COLOR orange](NOVO)[/COLOR]','http://direct',401,artfolder + 'ze-MVT1.png','nao','')
-        
-        addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SdB1.png','nao','')
-        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'ze-icon3.png','nao','')
+		html_source = abrir_url(url_TFV)
+	except: html_source = ''
+	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+	if items != []: TFV_ONOFF = '[COLOR green] | Site UP[/COLOR]'
+	else: TFV_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	try:
+		html_source = abrir_url(url_TFC)
+	except: html_source = ''
+	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
+	if items != []: TFC_ONOFF = '[COLOR green] | Site UP[/COLOR]'
+	else: TFC_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	try:
+		html_source = abrir_url(url_MVT)
+	except: html_source = ''
+	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
+	if items != []: MVT_ONOFF = '[COLOR green] | Site UP[/COLOR]'
+	else: MVT_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	try:
+		html_source = abrir_url(url_TPT)
+	except: html_source = ''
+	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+	if items != []: TPT_ONOFF = '[COLOR green] | Site UP[/COLOR]'
+	else: TPT_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	try:
+		html_source = abrir_url(url_FTT)
+	except: html_source = ''
+	items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	if items != []: FTT_ONOFF = '[COLOR green] | Site UP[/COLOR]'
+	else: FTT_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	try:
+		html_source = abrir_url(url_CMT)
+	except: html_source = ''
+	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+	if items != []: CMT_ONOFF = '[COLOR green] | Site UP[/COLOR]'
+	else: CMT_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	#########################################
+        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://direct',3003,artfolder + 'SERIES.png','nao','')
+        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://direct',3004,artfolder + 'FILMES.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'PFS.png','nao','')
+        addDir1('','url',1004,artfolder,False,'')
+        addDir('[COLOR orange]FTT | [/COLOR][B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)'+FTT_ONOFF,'http://direct',601,artfolder + 'FTT.png','nao','')
+        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B] (Filmes/Séries)'+TPT_ONOFF,'http://direct',231,artfolder + 'TPT.png','nao','')
+        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]MOV[/COLOR][COLOR yellow]I[/COLOR][COLOR red]ETUGA[/COLOR][/B] (Filmes)'+MVT_ONOFF,'http://direct',101,artfolder + 'MVT.png','nao','')
+        addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B] (Filmes)'+CMT_ONOFF,'http://direct',701,artfolder + 'CMT.png','nao','')
+        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)'+TFV_ONOFF,'http://direct',31,artfolder + 'TFV.png','nao','')
+        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)'+TFC_ONOFF,'http://direct',71,artfolder + 'TFC.png','nao','')
+        addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDOSBRAZUCAS.png','nao',artfolder + 'SDBFAN.jpg')
+        addDir1('','url',1004,artfolder,False,'')
+        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF.png','nao','')#'ze-icon3.png'
+
 
 def FILMES_MENU():
         url_toppt = 'http://toppt.net/'
@@ -134,7 +105,7 @@ def FILMES_MENU():
         url_TPT = saber_url_todos[0]
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'filmes.png','nao','')
+        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'FILMESTODOS.png','nao','')
         url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
         url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
         url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
@@ -144,60 +115,45 @@ def FILMES_MENU():
         url_TPT = saber_url_animacao[0]
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'animacao.png','nao','')
-        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B]','http://www.themoviedb.org/movie/now-playing',3002,'','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B]','http://www.themoviedb.org/movie/top-rated',3001,'','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B]','http://www.themoviedb.org/movie',3000,'','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B]','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'FILMESANIMACAO.png','nao','')
+        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B]','http://www.themoviedb.org/movie/now-playing',3002,artfolder + 'FILMESNC.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B]','http://www.themoviedb.org/movie/top-rated',3001,artfolder + 'FILMESMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B]','http://www.themoviedb.org/movie',3000,artfolder + 'FILMESMP.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'PF.png','nao','')
 
 def SERIES_MENU():
-        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]AS[/COLOR][/B] (A/Z)','http://www.tuga-filmes.us',26,artfolder + 'series.png','nao','')
-        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B]','http://www.themoviedb.org/tv/on-the-air',3002,'','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B]','http://www.themoviedb.org/tv/top-rated',3001,'','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B]','http://www.themoviedb.org/tv',3000,'','nao','')
+        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]AS[/COLOR][/B] (A/Z)','http://www.tuga-filmes.us',26,artfolder + 'SERIESAZ.png','nao','')
+        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B]','http://www.themoviedb.org/tv/on-the-air',3002,artfolder + 'SERIESEE.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B]','http://www.themoviedb.org/tv/top-rated',3001,artfolder + 'SERIESMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B]','http://www.themoviedb.org/tv',3000,artfolder + 'SERIESMP.png','nao','')
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
         url_TPT = 'http://toppt.net/category/series/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_ultimos_episodios = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,'','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B]','http://www.tuga-filmes.us/search?q=',1,artfolder + 'Ze-pesquisar2.png','nao','')
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'SERIESUE.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'PS.png','nao','')
      
 
 def passar_nome_pesquisa_animacao(name):
         nome_pesquisa = str(name)
-        #addDir(nome_pesquisa,'url',7,iconimage,'','')
         nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PROCURAR POR: [/COLOR]','')
-        #addDir(nome_pesquisa,'url',7,iconimage,'','')
         FilmesAnima.FILMES_ANIMACAO_pesquisar(str(nome_pesquisa),'')
-        #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        #xbmc.executebuiltin("Container.SetViewMode(500)")
-        #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 def passar_nome_pesquisa_filmes(name):
         nome_pesquisa = str(name)
-        Filmes.FILMES_pesquisar(str(nome_pesquisa))
-        #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        #xbmc.executebuiltin("Container.SetViewMode(500)")
-        #xbmcplugin.endOfDirectory(int(sys.argv[1]))
-
+        #Filmes.FILMES_pesquisar(str(nome_pesquisa))
+        
 def passar_nome_pesquisa_series(name):
         nome_pesquisa = str(name)
         nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PROCURAR POR: [/COLOR]','')
         Series.SERIES_pesquisar(str(nome_pesquisa))
-        #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        #xbmc.executebuiltin("Container.SetViewMode(500)")
-        #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 def passar_nome_SERIES(name):
         nome_pesquisa = str(name)
         nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PROCURAR POR: [/COLOR]','')
         pesquisar_SERIES(str(nome_pesquisa))
-        #addDir1(nome_pesquisa,'url',1002,artfolder,False,'')
-        #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        #xbmc.executebuiltin("Container.SetViewMode(500)")
-        #xbmcplugin.endOfDirectory(int(sys.argv[1]))
         
 def MPOPULARES():
         progress = xbmcgui.DialogProgress()
@@ -207,9 +163,6 @@ def MPOPULARES():
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
         html_pop_source = abrir_url(url)
-        #addDir1(name,'url',1002,artfolder + 'ze-MVT1.png',False,'')
-        #addDir1('','url',1002,artfolder,False,'')
-        #return
         conta = 0
         num_mode = 7
 	html_pop = re.findall("<h3>Popular Movies</h3>(.*?)<h3>Latest movies", html_pop_source, re.DOTALL)
@@ -256,7 +209,6 @@ def MPOPULARES():
                         html_imdbcode = abrir_url(url_imdb)
                         filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
                         imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                        #addDir(nome_ano[0][0],'IMDB'+imdbc[0]+'IMDB',7,thumb_pop[0].replace('w92','w396'),'nao','')
                         addDir('[B][COLOR green]' + nome_ano[0][0] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][1] + '[/COLOR]','IMDB'+imdbc[0]+'IMDB',num_mode,thumb_pop[0].replace('w92','w396'),'nao','')
                         i = i + 1
         npag = re.compile('<p class="left">Currently on page: (.+?)</p>').findall(html_pop[0])
@@ -267,7 +219,7 @@ def MPOPULARES():
         if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
 	try:
                 proximap = 'http://www.themoviedb.org' + proxima[0]
-		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3000,'','','')
+		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3000,artfolder + 'PSEGUINTE.png','','')
 	except: pass
         progress.close()
 
@@ -279,9 +231,6 @@ def MVOTADOS():
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
         html_pop_source = abrir_url(url)
-        #addDir1(name,'url',1002,artfolder + 'ze-MVT1.png',False,'')
-        #addDir1('','url',1002,artfolder,False,'')
-        #return
         conta = 0
         num_mode = 7
 	html_pop = re.findall('<h3>Top Rated Movies</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
@@ -328,7 +277,6 @@ def MVOTADOS():
                         html_imdbcode = abrir_url(url_imdb)
                         filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
                         imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                        #addDir(nome_ano[0][0],'IMDB'+imdbc[0]+'IMDB',7,thumb_pop[0].replace('w92','w396'),'nao','')
                         addDir('[B][COLOR green]' + nome_ano[0][0] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][1] + '[/COLOR]','IMDB'+imdbc[0]+'IMDB',num_mode,thumb_pop[0].replace('w92','w396'),'nao','')
                         i = i + 1
         npag = re.compile('<p class="left">Currently on page: (.+?)</p>').findall(html_pop[0])
@@ -339,7 +287,7 @@ def MVOTADOS():
         if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
 	try:
                 proximap = 'http://www.themoviedb.org' + proxima[0]
-		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3001,'','','')
+		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3001,artfolder + 'PSEGUINTE.png','','')
 	except: pass
         progress.close()
 
@@ -351,9 +299,6 @@ def NCINEMAS():
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
         html_pop_source = abrir_url(url)
-        #addDir1(name,'url',1002,artfolder + 'ze-MVT1.png',False,'')
-        #addDir1('','url',1002,artfolder,False,'')
-        #return
         conta = 0
         num_mode = 7
 	html_pop = re.findall('<h3>Now Playing Movies</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
@@ -400,7 +345,6 @@ def NCINEMAS():
                         html_imdbcode = abrir_url(url_imdb)
                         filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
                         imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                        #addDir(nome_ano[0][0],'IMDB'+imdbc[0]+'IMDB',7,thumb_pop[0].replace('w92','w396'),'nao','')
                         addDir('[B][COLOR green]' + nome_ano[0][0] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][1] + '[/COLOR]','IMDB'+imdbc[0]+'IMDB',num_mode,thumb_pop[0].replace('w92','w396'),'nao','')
                         i = i + 1
         npag = re.compile('<p class="left">Currently on page: (.+?)</p>').findall(html_pop[0])
@@ -411,7 +355,7 @@ def NCINEMAS():
         if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
 	try:
                 proximap = 'http://www.themoviedb.org' + proxima[0]
-		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3002,'','','')
+		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3002,artfolder + 'PSEGUINTE.png','','')
 	except: pass
         progress.close()
 
@@ -432,12 +376,6 @@ def pesquisar_SERIES(nome_pesquisa):
         site = ''
         progress.create('Progresso', 'A Procurar')
         progress.update( percent, 'A Procurar...'+site, message, "" )
-        #xbmc.sleep( 500 )
-        #n_pesquisa = re.compile('(.+?)[(].+?[)]').findall(nome_pesquisa)
-        #if n_pesquisa: nome_pesquisa = n_pesquisa[0]
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR blue]Procura: [/COLOR][/B]'+name,'url',1020,artfolder,False,'')
-                addDir1('','url',1020,artfolder,False,'')
         pesquisou = nome_pesquisa
         if '-' in nome_pesquisa:
                 nome_p = re.compile('.+?[-](.+?)').findall(nome_pesquisa)
@@ -523,9 +461,6 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
-        #addDir1(imdbc+'-','url',1020,artfolder,False,'')
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1020,artfolder,False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -582,7 +517,6 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                                 try:
                                         n = re.compile('[(](.+?)[)]').findall(nome)
                                         if n: nome = n[0]
-                                        #addDir1(imdbc+'----'+imdbcode,'url',1020,artfolder,False,'')
                                         if 'Temporada' in nome or 'Season' in nome:
                                                 if imdbc != '' and imdbcode != '':
                                                         if imdbcode == imdbc:
@@ -593,9 +527,7 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                                                         num_f = num_f + 1
                                 except: pass
                         except: pass
-        else: num_f = 0
-        if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
+        else: return
 	return
 
 def encontrar_fontes_SERIES_TPT(url,pesquisou):
@@ -605,18 +537,11 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
-        #addDir1(url,'url',1020,artfolder,False,'')
-        #addDir1(imdbc,'url',1020,artfolder,False,'')
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR]','url',1020,artfolder,False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
 	if '<div class="postmeta-primary">' in html_source: items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
-	else:
-                #addDir1('- No Match Found -','url',1020,artfolder,False,'')
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
-                return
+	else: return
         if not items: items = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', html_source, re.DOTALL)
 	if items != []:
                 num_f = 0
@@ -628,19 +553,16 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                 imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
-                                #addDir1('1[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR]','url',1020,artfolder,False,'')
                                 urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                                 if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                                 url = urletitulo[0][0]
                                 try:
                                         html_source = abrir_url(url)
                                 except: html_source = ''
-                                #addDir1(url,'','','',False,'')
                                 items = re.findall('<div class="post-(.*?)<span id="more-', html_source, re.DOTALL)
                                 if items != []:
                                         print len(items)
                                         for item in items:
-                                                #addDir1('2[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR]','url',1020,artfolder,False,'')
                                                 audio_filme = ''
                                                 titulo = re.compile('<h2 class="title">(.+?)</h2>').findall(item)
                                                 #urlpesq = re.compile('<a href="(.+?)" rel="bookmark">').findall(item)
@@ -722,8 +644,6 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                                 qualidade = ''
                                                 try:
                                                         nomecomp = nome.lower()
-                                                        #addDir(nomecomp+'--'+pesquisou,urletitulo[0][0],233,'','','')
-                                                        #addDir(imdbcode+imdbc+genero+nome,urletitulo[0][0],233,'','','')
                                                         n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(nome)
                                                         if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(nome)
                                                         if n: nome = n[0][0]+' - '+n[0][1]
@@ -753,8 +673,6 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                                         num_f = num_f + 1
                                                 except: pass
                         except: pass
-        if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
         return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -798,25 +716,27 @@ def abrir_url(url):
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
 
 def addDir(name,url,mode,iconimage,checker,fanart):
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',fanart)
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
 
 def addDir1(name,url,mode,iconimage,folder,fanart):
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',fanart)
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok
@@ -1048,9 +968,13 @@ print "Checker: "+str(checker)
 print "Iconimage: "+str(iconimage)
 
 if mode==None or url==None or len(url)<1:
-        setViewMode_menuPrincipal()
+        #setViewMode_menuPrincipal()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
         MAIN_MENU()
-        setViewMode_menuPrincipal()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        #setViewMode_menuPrincipal()
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode ==  1:
         Pesquisar.pesquisar()
@@ -1095,20 +1019,20 @@ elif mode == 13:
 elif mode == 14:
         FilmesAnima.FILMES_ANIMACAO_fontes_filmes_TPT(url_pesquisa,pesquisou)
 
-elif mode == 20:
-        Filmes.FILMES_pesquisar(nome_pesquisa)
+#elif mode == 20:
+#        Filmes.FILMES_pesquisar(nome_pesquisa)
 
-elif mode == 21:
-        Filmes.FILMES_fontes_pesquisa_TFV(url,pesquisou)
+#elif mode == 21:
+#        Filmes.FILMES_fontes_pesquisa_TFV(url,pesquisou)
 
-elif mode == 22:
-        Filmes.FILMES_fontes_filmes_TFC(url_pesquisa)
+#elif mode == 22:
+#        Filmes.FILMES_fontes_filmes_TFC(url_pesquisa)
 
-elif mode == 23:
-        Filmes.FILMES_fontes_pesquisa_MVT(url)
+#elif mode == 23:
+#        Filmes.FILMES_fontes_pesquisa_MVT(url)
 
-elif mode == 24:
-        Filmes.FILMES_fontes_filmes_TPT(url_pesquisa)
+#elif mode == 24:
+#        Filmes.FILMES_fontes_filmes_TPT(url_pesquisa)
         
 elif mode == 25:
         Filmes_Filmes()
@@ -1119,14 +1043,7 @@ elif mode == 26:
         Mashup.Series_Series(url)
         setViewMode_series()
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        #if selfAddon.getSetting('series-thumb-mashup') == "true":
-                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                #xbmc.executebuiltin("Container.SetViewMode(500)")
-                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        #if selfAddon.getSetting('series-thumb-mashup') == "false":
-                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                #xbmc.executebuiltin("Container.SetViewMode(502)")
-                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
         
 elif mode == 27:
         Series.SERIES_pesquisar(nome_pesquisa)
@@ -1137,13 +1054,6 @@ elif mode == 28:
 elif mode == 29:
         Series.SERIES_fontes_TPT(url_pesquisa)
 
-#elif mode==5: toppt.listar_texto(name,url)
-#elif mode==7: toppt.play_movie(url,name,iconimage,checker,fanart)
-#elif mode==16: toppt.top_pt_encontrar_categorias(name,url,siteurl,pornID)
-#elif mode==19: toppt.top_pt_mainmenu(siteurl,filmesID,seriesID,animacaoID,pornID)
-#elif mode==20: toppt.top_pt_encontrar_fontes(url)
-#elif mode==21: toppt.top_pt_encontrar_videos(name,url)
-#elif mode==22: toppt.top_pt_pesquisa(siteurl)
 #----------------------------------------------  Tuga-Filmes.tv  ----------------------------------------------------
 elif mode == 30: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)#,nomeAddon)
 elif mode == 31:
@@ -1175,14 +1085,6 @@ elif mode == 41:
         TugaFilmesTV.TFV_Menu_Series_A_a_Z(artfolder)
         setViewMode_series_AZ_TFV()
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        #if selfAddon.getSetting('series-thumb-TFV') == "true":
-                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                #xbmc.executebuiltin("Container.SetViewMode(500)")
-                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        #if selfAddon.getSetting('series-thumb-TFV') == "false":
-                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                #xbmc.executebuiltin("Container.SetViewMode(502)")
-                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 42: TugaFilmesTV.TFV_encontrar_videos_series(name,url)
 elif mode == 43: TugaFilmesTV.TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
 elif mode == 44:
@@ -1248,6 +1150,7 @@ elif mode == 86: M18.M18_TFC_Link_M18(artfolder)
 elif mode == 87: M18.M18_TFC_Menu_M18(url,artfolder)
 elif mode == 88: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
 elif mode == 89: TextBoxes.TBOX_TextBoxes_Sinopse(url)
+elif mode == 90: TugaFilmesCom.TFC_Menu_Filmes_Por_Ano(artfolder)
 #----------------------------------------------  MOVIETUGA  -------------------------------------------------------
 elif mode == 100: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 101:
@@ -1277,7 +1180,7 @@ elif mode == 232:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode == 233: TopPt.TPT_encontrar_videos_filmes(name,url)
+elif mode == 233: TopPt.TPT_encontrar_videos_filmes(name,url,iconimage)
 elif mode == 234: TopPt.TPT_pesquisar()
 elif mode == 235: TopPt.TPT_resolve_videomega_filmes(url,conta_id_video)
 elif mode == 236: TopPt.TPT_resolve_not_videomega_filmes(name,conta_id_video)
@@ -1297,14 +1200,6 @@ elif mode == 241:
         TopPt.TPT_Menu_Series_A_a_Z(artfolder)
         setViewMode_series_AZ_TPT()
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        #if selfAddon.getSetting('series-thumb-TPT') == "true":
-                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                #xbmc.executebuiltin("Container.SetViewMode(500)")
-                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        #if selfAddon.getSetting('series-thumb-TPT') == "false":
-                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                #xbmc.executebuiltin("Container.SetViewMode(502)")
-                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 242: TopPt.TPT_encontrar_videos_series(name,url)
 elif mode == 243: TopPt.TPT_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
 elif mode == 244: TopPt.TPT_encontrar_fontes_series_recentes(url)
@@ -1313,13 +1208,6 @@ elif mode == 246: TopPt.TPT_encontrar_fontes_pesquisa(url,pesquisou)
 elif mode == 247: TopPt.TPT_encontrar_fontes_series_A_a_Z(url)
 elif mode == 248: TopPt.TPT_Menu_Posts_Recentes(artfolder)
 elif mode == 249: TopPt.TPT_encontrar_videos_series(name,url)
-#elif mode == 249: M18.M18_TPT_Menu_M18(artfolder)
-#elif mode == 250: M18.M18_TPT_Menu_M18_Categorias(artfolder)
-#elif mode == 251: M18.M18_TPT_Menu_M18_30_Recentes(artfolder)
-#elif mode == 252: M18.M18_TPT_encontrar_fontes_M18(url)
-#elif mode == 253: M18.M18_TPT_encontrar_videos_M18(name,url)
-#elif mode == 254: M18.M18_TPT_pesquisar_M18()
-#elif mode == 255: M18.M18_TPT_encontrar_fontes_pesquisa_M18(url,pesquisou)
 elif mode == 256: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
 elif mode == 257: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 elif mode == 258:
@@ -1410,8 +1298,6 @@ elif mode == 608:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-#elif mode == 608: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
-#elif mode == 609: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 #----------------------------------------------  CINEMATUGA  -------------------------------------------------------
 elif mode == 700: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)#,nomeAddon)
 elif mode == 701:
@@ -1443,14 +1329,6 @@ elif mode == 711:
         Cinematuga.CMT_Menu_Series_A_a_Z(artfolder)
         setViewMode_series_AZ_TFV()
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        #if selfAddon.getSetting('series-thumb-TFV') == "true":
-                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                #xbmc.executebuiltin("Container.SetViewMode(500)")
-                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        #if selfAddon.getSetting('series-thumb-TFV') == "false":
-                #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                #xbmc.executebuiltin("Container.SetViewMode(502)")
-                #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 712: Cinematuga.CMT_encontrar_videos_series(name,url)
 elif mode == 713: Cinematuga.CMT_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
 elif mode == 714:
@@ -1477,10 +1355,14 @@ elif mode == 718:
 #-------------------------------------------------------------------------------------------------------------------------
 
 elif mode == 1000:
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
         selfAddon.openSettings()
-        setViewMode_menuPrincipal()
+        #setViewMode_menuPrincipal()
         MAIN_MENU()
-        setViewMode_menuPrincipal()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        #setViewMode_menuPrincipal()
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 elif mode == 1001:

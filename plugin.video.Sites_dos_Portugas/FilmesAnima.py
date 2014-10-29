@@ -24,30 +24,15 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
- 
-#mensagemok = xbmcgui.Dialog().ok
-
-
-
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
-        #addDir1(nome_pesquisa,'url',1020,artfolder,False,'')
-        
-        #imdb = re.compile('.+?IMDB(.+?)IMDB').findall(nome_pesquisa)
-        #if imdb: imdbcode = imdb[0]
-        #else: imdbcode = ''
-        #nome_pesquisa = nome_pesquisa.replace('[COLOR nn]','').replace('[/COLOR]','')
-        #nome_pp = re.compile('(.+?)IMDB').findall(nome_pesquisa)
-        #if nome_pp: nome_pesquisa = nome_pp[0]
-
         nome_pp = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]][[]COLOR yellow[]].+?[[]/COLOR[]]').findall(nome_pesquisa)
         if nome_pp: nome_pesquisa = nome_pp[0]
         imdb = re.compile('IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
-        #addDir1(imdbcode+'-'+nome_pesquisa,'url',1020,artfolder,False,'')
         pp = nome_pesquisa
         
         progress = xbmcgui.DialogProgress()
@@ -56,12 +41,8 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
         site = ''
         progress.create('Progresso', 'A Procurar')
         progress.update( percent, 'A Procurar...'+site, message, "" )
-        #xbmc.sleep( 500 )
         #n_pesquisa = re.compile('(.+?)[(].+?[)]').findall(nome_pesquisa)
         #if n_pesquisa: nome_pesquisa = n_pesquisa[0]
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR blue]Procura: [/COLOR][/B]'+name,'url',1020,artfolder,False,'')
-                addDir1('','url',1020,artfolder,False,'')
         pesquisou = nome_pesquisa
         if '-' in nome_pesquisa:
                 nome_p = re.compile('.+?[-](.+?)').findall(nome_pesquisa)
@@ -71,7 +52,6 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
                 if ':' in nome_pesquisa:
                         nome_p = re.compile('(.+?)[:].+?').findall(nome_pesquisa)
                         nome_pesquisa = nome_p[0]
-        #nome_pesquisa = pp
         nome_pesquisa = nome_pesquisa.replace('é','e')
         nome_pesquisa = nome_pesquisa.replace('ê','e')
         nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -80,17 +60,14 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
         nome_pesquisa = nome_pesquisa.replace('è','e')
         nome_pesquisa = nome_pesquisa.replace('í','i')
         nome_pesquisa = nome_pesquisa.replace('ó','o')
-        #nome_pesquisa = nome_pesquisa.replace('ó','%C3%B3')
         nome_pesquisa = nome_pesquisa.replace('ô','o')
         nome_pesquisa = nome_pesquisa.replace('õ','o')
         nome_pesquisa = nome_pesquisa.replace('ú','u')
         nome_pesquisa = nome_pesquisa.replace('Ú','U')
         nome_pesquisa = nome_pesquisa.replace('ç','c')
         nome_pesquisa = nome_pesquisa.replace('ç','c')
-        #nome_pesquisa = nome_pesquisa.replace('%','IIIII')
         nome_pesquisa = nome_pesquisa.lower()
         pesquisou = nome_pesquisa
-        #nome_pesquisa = 'avioes'
         conta = 0
         if '.' not in nome_pesquisa:
                 a_q = re.compile('\w+')
@@ -104,10 +81,6 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
                                         conta = 1
                                 else:
                                         nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-        #nome_pesquisa = nome_pesquisa.replace('iiiii','%')
-        #nome_pesquisa = nome_pesquisa.replace('%c3','%C3')
-        #nome_pesquisa = nome_pesquisa.replace('%b3','%B3')
-        #addDir1(nome_pesquisa,'url',1020,artfolder,False,'')
         nome_pesquisa = nome_pesquisa.lower()
         nome_pesquisa = nome_pesquisa.replace('  ','')
         encode=urllib.quote(nome_pesquisa)
@@ -117,7 +90,6 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-        #xbmc.sleep( 200 )
 	url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'TFV': FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
 	a= 1
@@ -126,7 +98,6 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-        #xbmc.sleep( 100 )
 	url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'TFC': FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url_pesquisa,pesquisou)
 	a = 2
@@ -135,7 +106,6 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-        #xbmc.sleep( 100 )
 	url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'MVT': FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url_pesquisa)
 	
@@ -145,7 +115,6 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-        #xbmc.sleep( 100 )
 	url_pesquisa = 'http://toppt.net/?s=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'TPT': FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou)
 
@@ -155,7 +124,6 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-        #xbmc.sleep( 100 )
 	url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar' + 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'FTT': FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url_pesquisa)
 
@@ -165,14 +133,8 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-        #xbmc.sleep( 100 )
 	url_pesquisa = 'http://www.cinematuga.net/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'CMT': FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url_pesquisa,pesquisou)
-	
-	##if selfAddon.getSetting('movies-view') == "0":
-                #addDir1('','url',1020,artfolder,False,'')		
-                #addDir('[COLOR yellow]Pesquisar[/COLOR]','url',1,artfolder + 'banner.png','nao','')
-                #addDir('[COLOR yellow]Menu Principal[/COLOR]','','',artfolder + 'banner.png','nao','')
 	
         a = 6
 	site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]'
@@ -180,10 +142,8 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-        #xbmc.sleep( 100 )
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        #xbmc.executebuiltin("Container.SetViewMode(500)")
         xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
@@ -199,9 +159,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url,pesquisou):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
-        #addDir1(imdbc+'-','url',1020,artfolder,False,'')
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1020,artfolder,False,'')
+
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -256,18 +214,15 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                 else:
                                         qualidade = ''
                                 try:
-                                        #addDir1(imdbc+'----'+imdbcode,'url',1020,artfolder,False,'')
                                         if 'Temporada' not in nome and 'Season' not in nome:
                                                 if imdbc != '' and imdbcode != '':
-                                                        if imdbcode == imdbc:
-                                                                #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                                                        if imdbcode == imdbc:                                                                
                                                                 name = '[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
                                                                 iconimage = thumbnail[0].replace('s72-c','s320')
                                                                 addDir1(name,'url',1001,iconimage,False,'')
                                                                 TugaFilmesTV.TFV_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage)
                                                                 num_f = num_f + 1
-                                                else:
-                                                        #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                                                else:                                                        
                                                         name = '[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
                                                         iconimage = thumbnail[0].replace('s72-c','s320')
                                                         addDir1(name,'url',1001,iconimage,False,'')
@@ -275,10 +230,9 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                                         num_f = num_f + 1
                                 except: pass
                         except: pass
-        else: num_f = 0
-        if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
-	return
+        else: return
+        return
+
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -291,8 +245,6 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url,pesquisou):
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
         
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com','url',1020,artfolder,False,'')
         pt_en = 0
 	try:
 		html_source = abrir_url(url)
@@ -429,10 +381,8 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url,pesquisou):
                                         imdbcode = imdbcd[0]
                                 
                                 try:
-                                        #addDir1(imdbc+'----'+imdbcode,'url',1020,artfolder,False,'')
                                         if imdbc != '' and imdbcode != '' and 'BREVEMENTE' not in item:
                                                 if imdbcode == imdbc:
-                                                        #addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
                                                         name = '[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao
                                                         iconimage = thumbnail[0].replace('s1600','s320').replace('.gif','.jpg')
                                                         addDir1(name,'url',1001,iconimage,False,'')
@@ -440,7 +390,6 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url,pesquisou):
                                                         num_f = num_f + 1
                                         else:
                                                 if 'BREVEMENTE' not in item:
-                                                        #addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
                                                         name = '[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao
                                                         iconimage = thumbnail[0].replace('s1600','s320').replace('.gif','.jpg')
                                                         addDir1(name,'url',1001,iconimage,False,'')
@@ -448,10 +397,9 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url,pesquisou):
                                                         num_f = num_f + 1
                                 except: pass
                         except: pass
-        else: num_f = 0
-	if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
-	return
+        else: return
+        return
+
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -464,8 +412,6 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url):
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
         
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]','url',1020,artfolder,False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -537,17 +483,14 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url):
                                         imdbcode = imdbcd[0]
                                 
                                 try:
-                                        #addDir1(imdbc+'----'+imdbcode,'url',1020,artfolder,False,'')
                                         if imdbc != '' and imdbcode != '':
                                                 if imdbcode == imdbc:
-                                                        #addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumbnail.replace('s72-c','s320').replace(' ','%20'),'','')
                                                         name = '[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
                                                         iconimage = thumbnail.replace('s72-c','s320').replace(' ','%20')
                                                         addDir1(name,'url',1001,iconimage,False,'')
                                                         MovieTuga.MVT_links('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage)
                                                         num_f = num_f + 1
                                         else:
-                                                #addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumbnail.replace('s72-c','s320').replace(' ','%20'),'','')
                                                 name = '[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
                                                 iconimage = thumbnail.replace('s72-c','s320').replace(' ','%20')
                                                 addDir1(name,'url',1001,iconimage,False,'')
@@ -555,10 +498,9 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url):
                                                 num_f = num_f + 1
                                 except: pass
                         except: pass
-        else: num_f = 0
-	if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
-	return
+        else: return
+        return
+
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -570,15 +512,11 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
-        #addDir1(url,'url',1020,artfolder,False,'')
-        
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1020,artfolder,False,'')
+
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
 	items = re.findall("<div class='post hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-	#addDir1(str(len(items)),'url',1002,artfolder,False,'')
 	if items != []:
 		print len(items)
 		num_f = 0
@@ -695,7 +633,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                         imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
                                         imdbcode = imdbcd[0]
                                                 
-                                #fanart = artfolder + 'flag.jpg'
+                                #fanart = artfolder + 'FAN.jpg'
                                 if fanart == 'fgfgfgfgfgfggf':
                                         nome_pesquisa = nome
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -751,17 +689,14 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                 if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                         if fanart == '': fanart = thumb
                                 try:
-                                        #addDir1(imdbc+'----'+imdbcode,'url',1020,artfolder,False,'')
                                         if imdbc != '' and imdbcode != '':
                                                 if imdbcode == imdbc:
-                                                        #addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
                                                         name = '[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
                                                         iconimage = thumb
                                                         addDir1(name,'url',1001,iconimage,False,'')
                                                         FoitaTuga.FTT_links('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',iconimage)
                                                         num_f = num_f + 1
                                         else:
-                                                #addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
                                                 name = '[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
                                                 iconimage = thumb
                                                 addDir1(name,'url',1001,iconimage,False,'')
@@ -769,10 +704,8 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                                 num_f = num_f + 1
                                 except: pass
                         except: pass
-        else: num_f = 0
-        if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
-	return
+        else: return
+        return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -784,9 +717,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url,pesquisou):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
-        #addDir1(url,'url',1020,artfolder,False,'')
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv','url',1020,artfolder,False,'')
+
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -817,13 +748,11 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url,pesquisou):
                                 titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
                                 if titulooriginal:
                                         nome_original = titulooriginal[0]
-                                        #addDir1(nome_original,'','','',False,'')
                                 else:
                                         titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
                                         if titulooriginal:
                                                 nome_original = titulooriginal[0]
                                         else: nome_original = ''
-                                        #addDir1(nome_original,'','','',False,'')
                                 urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
                                 qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                                 ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
@@ -854,7 +783,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url,pesquisou):
                                         if len(q_a_q_a) == 4:
                                                 tirar_ano = '(' + str(q_a_q_a) + ')'
                                                 nome = nome.replace(tirar_ano,'')
-                                #fanart = artfolder + 'flag.jpg'
+                                #fanart = artfolder + 'FAN.jpg'
                                 if fanart == 'dfgdfgfdggf':
                                         nome_pesquisa = nome_original
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -919,18 +848,15 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url,pesquisou):
                                                 num_mode = 712
                                         else:
                                                 num_mode = 703
-                                        #addDir1(imdbc+'----'+imdbcode,'url',1020,artfolder,False,'')
                                         if "Temporada" not in nome and "Season" not in nome:
                                                 if imdbc != '' and imdbcode != '':
                                                         if imdbcode == imdbc:
-                                                                #addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                                                                 name = '[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao
                                                                 iconimage = thumb.replace('s72-c','s320')
                                                                 addDir1(name,'url',1001,iconimage,False,'')
                                                                 Cinematuga.CMT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage)
                                                                 num_f = num_f + 1
                                                 else:
-                                                        #addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
                                                         name = '[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao
                                                         iconimage = thumb.replace('s72-c','s320')
                                                         addDir1(name,'url',1001,iconimage,False,'')
@@ -938,10 +864,9 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url,pesquisou):
                                                         num_f = num_f + 1
                                 except: pass
                         except: pass
-        else: num_f = 0
-        if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
-	return
+        else: return
+        return
+
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -953,18 +878,11 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url,pesquisou):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
-        #addDir1(url,'url',1020,artfolder,False,'')
-        #addDir1(imdbc,'url',1020,artfolder,False,'')
-        if selfAddon.getSetting('movies-view') == "0":
-                addDir1('[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR]','url',1020,artfolder,False,'')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
 	if '<div class="postmeta-primary">' in html_source: items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
-	else:
-                #addDir1('- No Match Found -','url',1020,artfolder,False,'')
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
-                return
+	else: return
         if not items: items = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', html_source, re.DOTALL)
 	if items != []:
                 num_f = 0
@@ -976,19 +894,17 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url,pesquisou):
                                 imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
-                                #addDir1('1[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR]','url',1020,artfolder,False,'')
+
                                 urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                                 if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                                 url = urletitulo[0][0]
                                 try:
                                         html_source = abrir_url(url)
                                 except: html_source = ''
-                                #addDir1(url,'','','',False,'')
                                 items = re.findall('<div class="post-(.*?)<span id="more-', html_source, re.DOTALL)
                                 if items != []:
                                         print len(items)
                                         for item in items:
-                                                #addDir1('2[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR]','url',1020,artfolder,False,'')
                                                 audio_filme = ''
                                                 titulo = re.compile('<h2 class="title">(.+?)</h2>').findall(item)
                                                 #urlpesq = re.compile('<a href="(.+?)" rel="bookmark">').findall(item)
@@ -1070,14 +986,11 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url,pesquisou):
                                                                 qualidade = ''
                                                 try:
                                                         nomecomp = nome.lower()
-                                                        #addDir(nomecomp+'--'+pesquisou,urletitulo[0][0],233,'','','')
-                                                        #addDir(imdbcode+imdbc+genero+nome,urletitulo[0][0],233,'','','')
                                                         if imdbc != '' and imdbcode != '':
                                                                 if imdbcode == imdbc:
                                                                         if 'online' in genero and not 'series' in genero:
                                                                         #if 'series' in genero:
                                                                                 #if 'OP\xc3\x87\xc3\x83O' in item:
-                                                                                #addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',233,thumbnail[0].replace('s72-c','s320'),'','')
                                                                                 name = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
                                                                                 iconimage = thumbnail[0].replace('s72-c','s320')
                                                                                 addDir1(name,'url',1001,iconimage,False,'')
@@ -1088,7 +1001,6 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url,pesquisou):
                                                                         #if nomecomp in pesquisou:
                                                                 #if 'series' in genero:
                                                                         #if 'OP\xc3\x87\xc3\x83O' in item:
-                                                                        #addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',233,thumbnail[0].replace('s72-c','s320'),'','')
                                                                         name = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
                                                                         iconimage = thumbnail[0].replace('s72-c','s320')
                                                                         addDir1(name,'url',1001,iconimage,False,'')
@@ -1096,8 +1008,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url,pesquisou):
                                                                         num_f = num_f + 1
                                                 except: pass
                         except: pass
-        if num_f == 0:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('- No Match Found -','url',1020,artfolder,False,'')
+        else: return
         return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -1140,7 +1051,7 @@ def abrir_url(url):
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -1149,7 +1060,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
@@ -1158,13 +1069,13 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'flag.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'flag.jpg'
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         #text = checker
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
