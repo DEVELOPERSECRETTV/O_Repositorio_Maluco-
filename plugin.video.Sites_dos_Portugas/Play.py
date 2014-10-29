@@ -573,8 +573,8 @@ class MyPlayer(xbmc.Player):
                 else: self.setSubtitles(self.checkerSubs)
                 if not self.isPlaying() and self.Playable == 'Nao':
                         xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
-                #while self.isPlaying():
-                        #xbmc.sleep(1000)
+                while self.isPlaying():
+                        xbmc.sleep(1000)
 
         def onPlayBackStarted(self):
                 self.Playable = 'Sim'
