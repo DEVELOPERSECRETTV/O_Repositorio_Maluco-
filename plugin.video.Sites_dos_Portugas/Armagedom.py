@@ -1474,7 +1474,7 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Sockshare)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
-    	if "video.mail.ru" in url:
+    	if "video.mail.ru" in url or 'dcd.php' in url:
                 try:
                         #url = url.replace('/embed/','/').replace('.html','.json')
                         if '/videos/' not in url:
@@ -1667,7 +1667,7 @@ def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](PlayfreeHD)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
-    	if "video.mail.ru" in url:
+    	if "video.mail.ru" in url or 'dcd.php' in url:
                 try:
                         #url = url.replace('/embed/','/').replace('.html','.json')
                         if '/videos/' not in url:

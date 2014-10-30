@@ -37,7 +37,7 @@ artfolder = addonfolder + '/resources/img/'
 
 def MVT_MenuPrincipal(artfolder):
         addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'P.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'MVT.png',False,'')
+	if selfAddon.getSetting('menu-MVT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'MVT.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'TODOS.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',102,artfolder + 'ANIMACAO.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',106,artfolder + 'FCATEGORIAS.png','nao','')
@@ -83,6 +83,8 @@ def MVT_encontrar_fontes_filmes(url):
                                 break
                         thumb = ''
                         fanart = ''
+                        sinopse = ''
+                        genero = ''
                         imdbcode = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
@@ -92,18 +94,34 @@ def MVT_encontrar_fontes_filmes(url):
                         url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
                         #url = re.compile("<a href='(.+?)'><div align=").findall(item)
                         if 'http' not in url[0]:
-                                url[0] = 'http:' + url[0] 
-                        titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
+                                url[0] = 'http:' + url[0]
+
+                        snpse = re.compile("<div id='imgsinopse'>(.+?)</div>").findall(item)
+                        if snpse: sinopse = snpse[0]
+                        sinopse = sinopse.replace('&#8216;',"'")
+                        sinopse = sinopse.replace('&#8217;',"'")
+                        sinopse = sinopse.replace('&#8211;',"-")
+                        sinopse = sinopse.replace('&#8220;',"'")
+                        sinopse = sinopse.replace('&#8221;',"'")
+                        sinopse = sinopse.replace('&#39;',"'")
+                        sinopse = sinopse.replace('&amp;','&')
+                        
+                        gen = re.compile("nero:</strong>(.+?)</div>").findall(item)
+                        if gen: genero = gen[0]
+                        
                         if 'Qualidade:' in item:
                                 qualidade = re.compile("<strong>Qualidade:</strong>(.+?)</div>").findall(item)
                                 qualidade_filme = qualidade[0].replace('&#8211;',"-")
                         else:
                                 qualidade_filme = ''
+                                
                         ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
+                        
                         thumbnail = re.compile('src="(.+?)"').findall(item)
-                        print url,thumbnail
                         if 'http' not in thumbnail[0]: thumbnail[0] = 'http:' + thumbnail[0]
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
+                        
+                        titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
                         titulo[0] = titulo[0].replace('&#8217;',"'")
                         titulo[0] = titulo[0].replace('&#8211;',"-")
                         if 'Dear John' in titulo[0] and ano[0] == '2013': titulo[0] = titulo[0].replace('Dear John','12 Anos Escravo')
@@ -208,7 +226,7 @@ def MVT_encontrar_fontes_filmes(url):
                         if selfAddon.getSetting('movie-fanart-MVT') == "true":
                                 if fanart == '': fanart = thumb
                         try:
-                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0].replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumb.replace(' ','%20'),'',fanart,ano[0],'')
+                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0].replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumb.replace(' ','%20'),sinopse,fanart,ano[0],genero)
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1

@@ -40,7 +40,7 @@ progress = xbmcgui.DialogProgress()
 def CMT_MenuPrincipal(artfolder):
         fanart = artfolder + 'FAN.jpg'
         addDir('- Procurar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'CMT.png',False,fanart)
+	if selfAddon.getSetting('menu-CMT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'CMT.png',False,fanart)
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.cinematuga.net/search/label/Filmes',702,artfolder + 'TODOS.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o',702,artfolder + 'ANIMACAO.png','nao',fanart)
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',709,artfolder + 'FPANO.png','nao','')
@@ -138,7 +138,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
+                        if selfAddon.getSetting('movie-fanart-CMT') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         thumb = ''
@@ -199,7 +199,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         #fanart = artfolder + 'FAN.jpg'
-                        if selfAddon.getSetting('movie-fanart-TFV') == "true" and fanart == '':
+                        if selfAddon.getSetting('movie-fanart-CMT') == "true" and fanart == '':
                                 nome_pesquisa = nome_original
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -231,7 +231,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         if items_pesquisa != []:
                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if selfAddon.getSetting('movie-fanart-TFV') == "true":
+                                if selfAddon.getSetting('movie-fanart-CMT') == "true":
                                         try:
                                                 html_pesquisa = CMT_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
@@ -252,7 +252,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                                                         else:
                                                                                 fanart = thumb
                                         else: fanart = thumb
-                        if selfAddon.getSetting('movie-fanart-TFV') == "true":
+                        if selfAddon.getSetting('movie-fanart-CMT') == "true":
                                 if fanart == '': fanart = thumb
                         if qualidade:
                                 qualidade = qualidade[0]

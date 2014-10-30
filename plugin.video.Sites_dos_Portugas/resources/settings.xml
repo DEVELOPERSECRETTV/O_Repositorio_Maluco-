@@ -8,10 +8,12 @@
    <category label="Filmes">
       <setting label="[COLOR yellow]Definições para Filmes:[/COLOR]" type="lsep" />
       <setting label="[COLOR green]Fanart:[/COLOR]" type="lsep" />
-      <setting id="movie-fanart-TFV" type="bool" label="Procurar Fanart em TUGA-FILMES.tv" default="true"/>
-      <setting id="movie-fanart-TFC" type="bool" label="Procurar Fanart em TUGA-FILMES.com" default="true"/>
-      <setting id="movie-fanart-MVT" type="bool" label="Procurar Fanart em MOVIE-TUGA" default="true"/>
-      <setting id="movie-fanart-TPT" type="bool" label="Procurar Fanart em TOP-PT.net" default="true"/>
+      <setting id="movie-fanart-TFV" type="bool" label="Procurar Fanart em TUGA-FILMES.tv" default="false"/>
+      <setting id="movie-fanart-TFC" type="bool" label="Procurar Fanart em TUGA-FILMES.com" default="false"/>
+      <setting id="movie-fanart-MVT" type="bool" label="Procurar Fanart em MOVIE-TUGA" default="false"/>
+      <setting id="movie-fanart-TPT" type="bool" label="Procurar Fanart em TOP-PT.net" default="false"/>
+      <setting id="movie-fanart-CMT" type="bool" label="Procurar Fanart em CINEMATUGA" default="false"/>
+      <setting id="movie-fanart-FTT" type="bool" label="Procurar Fanart em FOITATUGA" default="false"/>
   <!--<setting id="movie-trailer" type="bool" label="Procurar Trailers" default="false"/>  -->
     </category>
    <category label="Séries">
@@ -21,10 +23,10 @@
       <setting id="series-thumb-TFV" type="bool" label="Procurar thumbnail de séries A a Z (Tuga-Filmes.tv)" default="false"/>
       <setting id="series-thumb-TPT" type="bool" label="Procurar thumbnail de séries A a Z (Top-pt.net)" default="false"/>    -->
       <setting label="[COLOR green]Fanart:[/COLOR]" type="lsep" />
-      <setting id="series-fanart-TFV" type="bool" label="Procurar Fanart em TUGA-FILMES.tv" default="true"/>
+      <setting id="series-fanart-TFV" type="bool" label="Procurar Fanart em TUGA-FILMES.tv" default="false"/>
   <!--    <setting id="series-fanart-TFC" type="bool" label="Procurar Fanart em TUGA-FILMES.com" default="true"/>
       <setting id="series-fanart-MVT" type="bool" label="Procurar Fanart em MOVIE-TUGA" default="true"/>    -->
-      <setting id="series-fanart-TPT" type="bool" label="Procurar Fanart em TOP-PT.net" default="true"/>
+      <setting id="series-fanart-TPT" type="bool" label="Procurar Fanart em TOP-PT.net" default="false"/>
   <!--    <setting id="series-fanart" type="bool" label="Procurar Fanart" default="true"/>
       <setting id="series-season-poster" type="bool" label="Procurar poster da temporda" default="true"/>
       <setting id="series-episode-thumbnails" type="bool" label="Procurar thumbnail do episodio" default="true"/>     -->
@@ -41,5 +43,7 @@
       <setting id="menu-TFC-view" type="enum" label="Vista - Menu TUGA-FILMES.com" values="Lista|Lista Grande|Miniatura" default="0"/>
       <setting id="menu-MVT-view" type="enum" label="Vista - Menu MOVIE-TUGA" values="Lista|Lista Grande|Miniatura" default="0"/>
       <setting id="menu-TPT-view" type="enum" label="Vista - Menu TOP-PT.net" values="Lista|Lista Grande|Miniatura" default="0"/>
+      <setting id="menu-CMT-view" type="enum" label="Vista - Menu CINEMATUGA" values="Lista|Lista Grande|Miniatura" default="0"/>
+      <setting id="menu-FTT-view" type="enum" label="Vista - Menu FOITATUGA" values="Lista|Lista Grande|Miniatura" default="0"/>
    </category>
 </settings>

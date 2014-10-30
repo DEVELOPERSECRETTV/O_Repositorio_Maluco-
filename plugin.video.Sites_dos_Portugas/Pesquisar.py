@@ -443,6 +443,7 @@ def encontrar_fontes_filmes_TPT(url):
                                         print len(items)
                                         for item in items:
                                                 audio_filme = ''
+                                                qualidade = ''
                                                 imdbcode = ''
 
                                                 imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
@@ -451,14 +452,28 @@ def encontrar_fontes_filmes_TPT(url):
                                                 
                                                 titulo = re.compile('<h2 class="title">(.+?)</h2>').findall(item)
                                                 #urlpesq = re.compile('<span class="entry-date"><a href="(.+?)" rel="bookmark">').findall(item)
-                                                qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
-                                                if not qualidade: qualidade = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                                                qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
+                                                if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                                                if qualid:
+                                                        qualidade = qualid[0]
+                                                        qualidade = qualidade.replace('[',' - ')
+                                                        qualidade = qualidade.replace(']','')
+                                                else:
+                                                        qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                                        if qualid:
+                                                                qualidade = qualid[0]
+                                                                qualidade = qualidade.replace('[',' - ')
+                                                                qualidade = qualidade.replace(']','')
+                                                        else:
+                                                                qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(item)
+                                                                if qualid:
+                                                                        qualidade = qualid[0]
+                                                                        qualidade = qualidade.replace('[',' - ')
+                                                                        qualidade = qualidade.replace(']','')
+                                                                else:
+                                                                        qualidade = ''
                                                 ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
-                                                audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)
-                                                if qualidade == [] or ano == [] or audio == []:
-                                                        qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<b").findall(item)
-                                                        ano = re.compile("<b>ANO:.+?/b>(.+?)<b").findall(item)
-                                                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<b").findall(item)    
+                                                audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)    
                                                 thumbnail = re.compile('src="(.+?)"').findall(item)
                                                 print urletitulo,thumbnail
                                                 nome = titulo[0]
@@ -486,6 +501,12 @@ def encontrar_fontes_filmes_TPT(url):
                                                                                 audio_filme = audio[0][0] + audio[0][1]
                                                                                 if 'Portug' or 'PORTUG' in audio_filme:
                                                                                         audio_filme = ': PT-PT'
+                                                                        else:
+                                                                                audio = re.compile('<b>AUDIO:.+?<strong>(.+?)</strong>').findall(item)
+                                                                                if audio:
+                                                                                        audio_filme = audio[0][0] + audio[0][1]
+                                                                                        if 'Portug' or 'PORTUG' in audio_filme:
+                                                                                                audio_filme = ': PT-PT'
                                                         else:
                                                                 audio_filme = ': ' + audio[0]
                                                 if not audio:
@@ -508,18 +529,7 @@ def encontrar_fontes_filmes_TPT(url):
                                                                 if len(q_a_q_a) == 4:
                                                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                                                         nome = nome.replace(tirar_ano,'')
-                                                if qualidade:
-                                                        qualidade = qualidade[0]
-                                                        qualidade = qualidade.replace('[',' - ')
-                                                        qualidade = qualidade.replace(']','')
-                                                else:
-                                                        qualidade = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
-                                                        if qualidade:
-                                                                qualidade = qualidade[0]
-                                                                qualidade = qualidade.replace('[',' - ')
-                                                                qualidade = qualidade.replace(']','')
-                                                        else:
-                                                                qualidade = ''
+
                                                 try:
                                                         #addDir(nome,urletitulo[0][0],233,'','','')
                                                         if 'filmes' in genero or 'series' in genero or 'animacao' in genero:

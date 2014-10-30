@@ -105,40 +105,48 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 		except: pass
 	if "vidzi.tv" in url:       
 		try:
-
-                        #iframe_url = url#.replace('vidzi.tv/','vidzi.tv/embed-')
+                        if 'embed-' in iframe_url:
+                                iframe_url = url.replace('vidzi.tv/embed-','vidzi.tv/')
+                                tiraurl = re.compile('(.+?)-').findall(iframe_url)
+                                if tiraurl: iframe_url = tiraurl[0]+'.html'
                         print iframe_url
                         link3 = PLAY_abrir_url(iframe_url)
-                        #tit=re.compile('var vtitle = "(.+?)"').findall(link3)
                         match=re.compile('file: "(.+?)"').findall(link3)
                         subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
-                        if subtitle == []:
-                                checker = ''
-                                for link in match:
-                                        if 'vidzi.tv' not in link: url = link
-                                        if 'vidzi.tv' in link and '.srt' in link: checker = link
-                        else:
-                                if checker: checker = subtitle[0]
-                                for link in match:
-                                        if 'vidzi.tv' not in link: url = link
-                                        if 'vidzi.tv' in link and '.srt' in link: checker = link
-                except: pass
-                
+                        imagem = re.compile('image: "(.+?)"').findall(link3)
+                        if imagem: iconimage = imagem[0]
+                        addDir1('[COLOR orange]Escolha o stream:[/COLOR]','url',1004,artfolder,False,'')
+                        for link in match:
+                                if '.m3u8' in link:
+                                        url = link
+                                        addLink('m3u8 | '+name,url,iconimage)
+                                if '.mp4' in link:
+                                        url = link
+                                        addLink('mp4 | '+name,url,iconimage)
+                                if '.srt' in link: checker = link
+                except: pass                
 	if "vidzen" in url:
 		try:
                         #iframe_url = url
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
 			#tit=re.compile('var vtitle = "(.+?)"').findall(link3)
-			match=re.compile('streamer: "(.+?)"').findall(link3)
-			if not match: match=re.compile('file: "(.+?)"').findall(link3)
 			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
 			if subtitle == []:
                                 checker = ''
-				if match: url = match[0]
 			else:
-				if checker: checker = subtitle[0]
-				if match: url = match[0]
+				checker = subtitle[0]
+			match=re.compile('streamer: "(.+?)"').findall(link3)
+			if not match:
+                                match=re.compile('file: "(.+?)"').findall(link3)
+                                if match: url = match[0]
+                        else: url = match[0]
+			if not match:
+                                match=re.compile('var[|]type[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|][|](.+?)[|].+?provider[|](.+?)[|](.+?)[|]file').findall(link3)
+                                if match: url = 'http://'+match[0][4]+'.'+match[0][3]+'.'+match[0][2]+'.'+match[0][1]+':'+match[0][0]+'/'+match[0][6]+'/v.'+match[0][5]#+'?start=0'
+			imagem=re.compile('[[]IMG[]](.+?)[[]/IMG[]]').findall(link3)
+			if imagem: iconimage = imagem[0]
+			#addLink(url,url,iconimage)
 		except: pass
 	if "playfreehd" in url:
 		try:
@@ -193,6 +201,8 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                         #iframe_url = url
                         print iframe_url
                         link3 = PLAY_abrir_url(iframe_url)
+                        imagem = re.compile('image: "(.+?)"').findall(link3)
+			if imagem: iconimage = imagem[0]
                         tit=re.compile('var vtitle = "(.+?)"').findall(link3)
                         match=re.compile('file: "(.+?)"').findall(link3)
                         subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
@@ -208,6 +218,8 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 			#iframe_url = url
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
+			imagem = re.compile('var vthumbnail = "(.+?)"').findall(link3)
+			if imagem: iconimage = imagem[0]
 			tit=re.compile('var vtitle = "(.+?)"').findall(link3)
 			match=re.compile('var vurl = "(.+?)"').findall(link3)
 			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
@@ -243,17 +255,18 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 			iframe_url = url
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
+			addDir1('[COLOR orange]Escolha o stream:[/COLOR]','url',1004,artfolder,False,'')
 			#tit=re.compile('var vtitle = "(.+?)"').findall(link3)
                         match=re.compile('var vars = {.+?"url240":"(.+?)"').findall(link3)
-			if match: addLink('240p',match[0].replace('\/','/'),'')
+			if match: addLink('240p | '+name,match[0].replace('\/','/'),iconimage)
 			match=re.compile('var vars = {.+?"url360":"(.+?)"').findall(link3)
-			if match: addLink('360p',match[0].replace('\/','/'),'')
+			if match: addLink('360p | '+name,match[0].replace('\/','/'),iconimage)
 			match=re.compile('var vars = {.+?"url480":"(.+?)"').findall(link3)
-			if match: addLink('480p',match[0].replace('\/','/'),'')
+			if match: addLink('480p | '+name,match[0].replace('\/','/'),iconimage)
 			match=re.compile('var vars = {.+?"url720":"(.+?)"').findall(link3)
-			if match: addLink('720p',match[0].replace('\/','/'),'')
+			if match: addLink('720p | '+name,match[0].replace('\/','/'),iconimage)
 			match=re.compile('var vars = {.+?"url1080":"(.+?)"').findall(link3)
-			if match: addLink('1080p',match[0].replace('\/','/'),'')
+			if match: addLink('1080p | '+name,match[0].replace('\/','/'),iconimage)
 		except: pass
         if "streamcloud" in url:
 		try:
@@ -273,25 +286,26 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 			#tit=re.compile('"videoTitle":"(.+?)"').findall(link3)
 			tit=re.compile('<title>(.+?)</title>').findall(link3)
 			#v_key = re.compile('video_key=(.+?)&expire_at=(.+?)"').findall(link3)
+			addDir1('[COLOR orange]Escolha o stream:[/COLOR]','url',1004,artfolder,False,'')
 			if 'sd' in link3 and 'md' in link3:
                                 match=re.compile('videoPresets = {"sd":"(.+?)","md":"(.+?)"}').findall(link3)
                                 #match=re.compile('"videos":{"sd":"(.+?)&expire_at=.+?","hd":"(.+?)&expire_at=.+?"}').findall(link3)
                                 #matchHD=re.compile('"videos":{"sd":"(.+?)&expire_at=.+?","hd":"(.+?)&expire_at=.+?"}').findall(link3)
                                 #vl=match[0][0]+'&video_key='+v_key[0][0]+'&expire_at='+v_key[0][1]
                                 if match:
-                                        addLink('SD',match[0][0],'')
-                                        addLink('HD',match[0][1],'')
+                                        addLink('SD | '+name,match[0][0],iconimage)
+                                        addLink('HD | '+name,match[0][1],iconimage)
 			if 'sd' in link3 and 'md' not in link3:
                                 match=re.compile('videoPresets = {"sd":"(.+?)"').findall(link3)
                                 #match=re.compile('"videos":{"sd":"(.+?)"}').findall(link3)
                                 if match:
                                         #url=match[0]
-                                        addLink('SD',match[0],'')
+                                        addLink('SD | '+name,match[0],iconimage)
                         if 'hd' in link3 and 'md' not in link3:
                                 match=re.compile('"md":"(.+?)"}').findall(link3)
                                 #match=re.compile('"videos":{"hd":"(.+?)"}').findall(link3)
                                 if match:
-                                        addLink('HD',match[0],'')
+                                        addLink('HD | '+name,match[0],iconimage)
 			#subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
 			#if subtitle == []:
 				#checker = ''
@@ -364,6 +378,8 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 			iframe_url = url
 			print iframe_url
 			link3 = PLAY_abrir_url(iframe_url)
+			imagem = re.compile('var vscreenshot = "(.+?)"').findall(link3)
+			if imagem: iconimage = imagem[0]
 			tit=re.compile('var vtitle = "(.+?)"').findall(link3)
 			match=re.compile('var vurl2 = "(.+?)"').findall(link3)
 			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
@@ -551,7 +567,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 	#addLink(url+'  ','','')
 	#return
         #if 'vk.com' not in url and 'video.mail.ru' not in url and 'video.tt' not in url:
-        if 'vk.com' not in url and 'video.mail.ru' not in url:# and 'iiiiiiiiii' in url:
+        if 'vk.com' not in iframe_url and 'video.mail.ru' not in iframe_url and 'vidzi.tv' not in iframe_url:# and 'iiiiiiiiii' in url:
                 try:
                         playlist = xbmc.PlayList(1)
                         playlist.clear()             

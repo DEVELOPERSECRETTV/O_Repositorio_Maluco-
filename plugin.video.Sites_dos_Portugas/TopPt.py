@@ -54,7 +54,7 @@ def TPT_MenuPrincipal(artfolder):
         saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
         if not saber_url_series: saber_url_series = re.compile('<a href="(.+?)">SERIES</a></li>').findall(toppt_source)
         addDir('- Procurar','url',1,artfolder + 'P.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1001,artfolder + 'TPT.png',False,'')
+	if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1001,artfolder + 'TPT.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]',saber_url_todos[0],232,artfolder + 'TODOS.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'ANIMACAO.png','nao','')
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',239,artfolder + 'FPANO.png','nao','')
@@ -62,7 +62,7 @@ def TPT_MenuPrincipal(artfolder):
 	addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://toppt.net/',258,artfolder + 'TOPFILMES.png','nao','')
 	if selfAddon.getSetting('hide-porno') == "false":
 			addDir('[B][COLOR red]M+18[/B][/COLOR]',saber_url_M18[0],232,artfolder + 'TPT.png','nao','')		
-	addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'TPT.png',False,'')
+	if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'TPT.png',False,'')
 	addDir('[COLOR yellow]- A a Z[/COLOR]','url',241,artfolder + 'SAZ.png','nao','')
         addDir('[COLOR yellow]- Recentes[/COLOR]',saber_url_series[0],232,artfolder + 'SRECENTES.png','nao','')
         addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',259,artfolder + 'TOPSERIES.png','nao','')
@@ -266,7 +266,7 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(int(num))
                         #if selfAddon.getSetting('series-thumb-TPT') == "false": xbmc.sleep( 50 )
-                        xbmc.sleep( 50 )
+                        #xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         nome_series = nome_series.replace('&amp;','&')
@@ -335,7 +335,7 @@ def TPT_Menu_Series_A_a_Z(artfolder):
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(int(num))
                         #if selfAddon.getSetting('series-thumb-TPT') == "false": xbmc.sleep( 50 )
-                        xbmc.sleep( 50 )
+                        #xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         nome_series = nome_series.replace('&amp;','&')
@@ -443,11 +443,13 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                         sinopse = ''
                         fanart = ''
                         thumb = ''
+                        genero = ''
+                        qualidade = ''
                         percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if fan == 'nao': xbmc.sleep( 200 )
+                        #if fan == 'nao': xbmc.sleep( 200 )
                         if progress.iscanceled():
                                 break
                         audio_filme = ''
@@ -460,12 +462,51 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                         
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
-                        qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
-                        if not qualidade: qualidade = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        
+                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
+                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        if qualid:
+                                qualidade = qualid[0]
+                                qualidade = qualidade.replace('[',' - ')
+                                qualidade = qualidade.replace(']','')
+                        else:
+                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                if qualid:
+                                        qualidade = qualid[0]
+                                        qualidade = qualidade.replace('[',' - ')
+                                        qualidade = qualidade.replace(']','')
+                                else:
+                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(item)
+                                        if qualid:
+                                                qualidade = qualid[0]
+                                                qualidade = qualidade.replace('[',' - ')
+                                                qualidade = qualidade.replace(']','')
+                                        else:
+                                                qualidade = ''
+                        
                         snpse = re.compile("<b>SINOPSE:.+?/b>(.+?)<br/>").findall(item)
-                        if not snpse: qualidade = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
+                        if not snpse: snpse = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
                         if snpse: sinopse = snpse[0]
-                        else: sinopse = ''
+                        else:
+                                try:
+                                        fonte_video = TPT_abrir_url(urletitulo[0][0])
+                                except: fonte_video = ''
+                                fontes_video = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', fonte_video, re.DOTALL)
+                                if fontes_video != []:
+                                        snpse = re.compile('Sinopse.png".+?/><br/>\n(.+?)</p>').findall(fontes_video[0])
+                                        if snpse: sinopse = snpse[0]
+                                        else: sinopse = ''
+                        sinopse = sinopse.replace('&#8216;',"'")
+                        sinopse = sinopse.replace('&#8217;',"'")
+                        sinopse = sinopse.replace('&#8211;',"-")
+                        sinopse = sinopse.replace('&#8220;',"'")
+                        sinopse = sinopse.replace('&#8221;',"'")
+                        sinopse = sinopse.replace('&#39;',"'")
+                        sinopse = sinopse.replace('&amp;','&')
+                                        
+                        genr = re.compile("NERO:.+?/b>(.+?)<br/>").findall(item)
+                        if genr: genero = genr[0]
+                        
                         ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
                         audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)
                         thumbnail = re.compile('src="(.+?)"').findall(item)
@@ -501,6 +542,12 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                                         audio_filme = audio[0][0] + audio[0][1]
                                                         if 'Portug' or 'PORTUG' in audio_filme:
                                                                 audio_filme = ': PT-PT'
+                                                else:
+                                                        audio = re.compile('<b>AUDIO:.+?<strong>(.+?)</strong>').findall(item)
+                                                        if audio:
+                                                                audio_filme = audio[0][0] + audio[0][1]
+                                                                if 'Portug' or 'PORTUG' in audio_filme:
+                                                                        audio_filme = ': PT-PT'
                                 else:
                                         audio_filme = ': ' + audio[0]
                         if not audio:
@@ -523,18 +570,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                         if len(q_a_q_a) == 4:
                                                 tirar_ano = '(' + str(q_a_q_a) + ')'
                                                 nome = nome.replace(tirar_ano,'')
-                        if qualidade:
-                                qualidade = qualidade[0]
-                                qualidade = qualidade.replace('[',' - ')
-                                qualidade = qualidade.replace(']','')
-                        else:
-                                qualidade = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
-                                if qualidade:
-                                        qualidade = qualidade[0]
-                                        qualidade = qualidade.replace('[',' - ')
-                                        qualidade = qualidade.replace(']','')
-                                else:
-                                        qualidade = ''
+                        
                         a_q = re.compile('\d+')
                         qq_aa = a_q.findall(nome)
                         for q_a_q_a in qq_aa:
@@ -658,11 +694,43 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                                 else:
                                                         n = re.compile('[(](.+?)[)]').findall(nome)
                                                         if n: nome = n[0]
+                                #n1 = nome
+                                #n2 = ''
                                 qualidade = ''
                                 ano_filme = ''
                                 audio_filme = ''
+                        #elif 'Season' not in nome and 'Temporada' not in nome:
+                                #n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(nome)
+                                #if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(nome)
+                                #if n:
+                                        #n1 = n[0][0]
+                                        #n2 = n[0][1]
+                                #else:
+                                        #n = re.compile('[(](.+?)[)][(](.+?)[)]').findall(nome)
+                                        #if not n: n = re.compile('[(](.+?)[)] [(](.+?)[)]').findall(nome)
+                                        #if n:
+                                                #n1 = n[0][0]
+                                                #n2 = n[0][1]
+                                        #else:
+                                                #n = re.compile('[[](.+?)[]]').findall(nome)
+                                                #if n:
+                                                        #n1 = n[0]
+                                                        #n2 = ''
+                                                #else:
+                                                        #n = re.compile('[(](.+?)[)]').findall(nome)
+                                                        #if n:
+                                                                #n1 = n[0]
+                                                                #n2 = ''
+                                                        #else:
+                                                                #n1 = nome
+                                                                #n2 = ''
+                        #else:
+                                #n1 = nome
+                                #n2 = ''
+                                
                         try:
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme,'')
+                                addDir_teste('[COLOR nnn]dfdfdf[/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
+                                #addDir_teste('[B][COLOR green]' + n1 + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]'+'[COLOR nnn]'+n2+'[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
                         except: pass
                         i = i + 1
                         

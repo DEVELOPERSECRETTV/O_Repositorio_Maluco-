@@ -42,7 +42,7 @@ progress = xbmcgui.DialogProgress()
 def TFV_MenuPrincipal(artfolder):
         fanart = artfolder + 'FAN.jpg'
         addDir('- Procurar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P.png','nao','')
-        addDir('[COLOR yellow]- Filmes/Séries Recentes[/COLOR]','http://www.tuga-filmes.us',32,artfolder + 'FSRECENTES.png','nao','')
+        if selfAddon.getSetting('menu-TFV-view') == "0": addDir('[COLOR yellow]- Filmes/Séries Recentes[/COLOR]','http://www.tuga-filmes.us',32,artfolder + 'FSRECENTES.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'TFV.png',False,fanart)
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.us/search/label/Filmes',32,artfolder + 'TODOS.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o',32,artfolder + 'ANIMACAO.png','nao',fanart)
@@ -51,7 +51,7 @@ def TFV_MenuPrincipal(artfolder):
 	addDir('[COLOR yellow]- Top 5 da Semana[/COLOR]','url',48,artfolder + 'TOPFILMES.png','nao','')	
 	#if selfAddon.getSetting('hide-porno') == "false":
 			#addDir('[B][COLOR red]M+18[/B][/COLOR]','url',49,artfolder + 'TFV.png','nao','')
-	addDir1('[COLOR blue]Séries:[/COLOR]','url',1004,artfolder + 'TFV.png',False,fanart)
+	if selfAddon.getSetting('menu-TFV-view') == "0": addDir1('[COLOR blue]Séries:[/COLOR]','url',1004,artfolder + 'TFV.png',False,fanart)
 	addDir('[COLOR yellow]- A a Z[/COLOR]','url',41,artfolder + 'SAZ.png','nao','')
         addDir('[COLOR yellow]- Recentes[/COLOR]','http://www.tuga-filmes.us/search/label/Séries',44,artfolder + 'SRECENTES.png','nao','')
 
@@ -266,7 +266,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('movie-fanart-TFV') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         thumb = ''

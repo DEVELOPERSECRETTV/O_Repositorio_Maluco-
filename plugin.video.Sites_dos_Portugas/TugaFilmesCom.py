@@ -37,7 +37,7 @@ progress = xbmcgui.DialogProgress()
 
 def TFC_MenuPrincipal(artfolder):
         addDir('- Procurar','http://www.tuga-filmes.info/search?q=',1,artfolder + 'P.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1003,artfolder + 'TFC.png',False,'')
+	if selfAddon.getSetting('menu-TFC-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1003,artfolder + 'TFC.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.info/',72,artfolder + 'TODOS.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20',72,artfolder + 'ANIMACAO.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',78,artfolder + 'FCATEGORIAS.png','nao','')

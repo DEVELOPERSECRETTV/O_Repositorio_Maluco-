@@ -36,7 +36,7 @@ artfolder = addonfolder + '/resources/img/'
 
 def FTT_MenuPrincipal(artfolder):
         addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'P.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'FTT.png',False,'')
+	if selfAddon.getSetting('menu-FTT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'FTT.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://foitatugacinemaonline.blogspot.pt/',602,artfolder + 'TODOS.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O',602,artfolder + 'ANIMACAO.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',606,artfolder + 'FCATEGORIAS.png','nao','')
@@ -164,6 +164,8 @@ def FTT_encontrar_fontes_filmes(url):
                                 break
                         
                         thumb = ''
+                        genero = ''
+                        sinopse = ''
                         fanart = ''
                         anofilme= ''
                         qualidade_filme = ''
@@ -180,10 +182,45 @@ def FTT_encontrar_fontes_filmes(url):
                         else:
                                 urlvideo = ''
                                 nome = ''
+
+                        try:
+                                fonte_video = FTT_abrir_url(urlvideo)
+                        except: fonte_video = ''
+                        fontes_video = re.findall("<div class='post hentry'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+                        if fontes_video != []:
+                                qualid = re.compile('ASSISTIR ONLINE LEGENDADO(.+?)\n').findall(fontes_video[0])
+                                if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')
+
+                                
+                        snpse = re.compile('Sinopse.png"></a></div>\n(.+?)\n').findall(item)
+                        if snpse: sinopse = snpse[0]
+                        sinopse = sinopse.replace('&#8216;',"'")
+                        sinopse = sinopse.replace('&#8217;',"'")
+                        sinopse = sinopse.replace('&#8220;',"'")
+                        sinopse = sinopse.replace('&#8221;',"'")
+                        sinopse = sinopse.replace('&#8211;',"-")
+                        sinopse = sinopse.replace('&#39;',"'")
+                        sinopse = sinopse.replace('&amp;','&')
                                 
                         ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
                         if ano: anofilme = ano[0]
                         else: anofilme = ''
+
+                        generos = re.compile("rel='tag'>(.+?)</a>").findall(item)
+                        conta = 0
+                        for gener in generos:
+                                if conta == 0:
+                                        if gener.replace(' ','') != anofilme.replace(' ',''):
+                                                genero = gener
+                                                conta = conta + 1
+                                else:
+                                        if gener.replace(' ','') != anofilme.replace(' ',''):
+                                                genero = genero +'  '+ gener
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(genero)
+                        conta = 0
+                        for q_a_q_a in qq_aa:
+                                genero = genero.replace(str(q_a_q_a)+'  ','')
                         
                         #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
                         thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
@@ -202,41 +239,11 @@ def FTT_encontrar_fontes_filmes(url):
                                 if len(q_a_q_a) == 4:
                                         anofilme = str(q_a_q_a)
                                         tirar_ano = '- ' + str(q_a_q_a)
-                                        nome = nome.replace(tirar_ano,'--')
+                                        nome = nome.replace(tirar_ano,'')
                                         tirar_ano = '-' + str(q_a_q_a)
-                                        nome = nome.replace(tirar_ano,'--')
+                                        nome = nome.replace(tirar_ano,'')
                                         tirar_ano = str(q_a_q_a)
-                                        nome = nome.replace(tirar_ano,'--')
-
-                        qualidade = re.compile("--(.*)").findall(nome)
-                        if qualidade:
-                                qualidade_filme = qualidade[0]
-                                nome = nome.replace('--','')
-                                nome = nome.replace(qualidade_filme,'')
-                        else:
-                                qualidade_filme = ''
-                                nome = nome.replace('--','')
-
-                        if 'PT/PT' in nome:
-                                qualidade_filme = 'PT/PT'
-                                nome = nome.replace('-'+qualidade_filme,'')
-                                nome = nome.replace('- '+qualidade_filme,'')
-                                nome = nome.replace(qualidade_filme,'')
-                        if 'PT-PT' in nome:
-                                qualidade_filme = 'PT-PT'
-                                nome = nome.replace('-'+qualidade_filme,'')
-                                nome = nome.replace('- '+qualidade_filme,'')
-                                nome = nome.replace(qualidade_filme,'')
-                        if 'PT/BR' in nome:
-                                qualidade_filme = 'PT/BR'
-                                nome = nome.replace('-'+qualidade_filme,'')
-                                nome = nome.replace('- '+qualidade_filme,'')
-                                nome = nome.replace(qualidade_filme,'')
-                        if 'PT-BR' in nome:
-                                qualidade_filme = 'PT-BR'
-                                nome = nome.replace('-'+qualidade_filme,'')
-                                nome = nome.replace('- '+qualidade_filme,'')
-                                nome = nome.replace(qualidade_filme,'')
+                                        nome = nome.replace(tirar_ano,'')
 
                         nome = nome.replace('((','(')
                         nome = nome.replace('))',')')
@@ -275,7 +282,7 @@ def FTT_encontrar_fontes_filmes(url):
                                 imdbcode = imdbc[0]
                                         
                         #fanart = artfolder + 'FAN.jpg'
-                        if selfAddon.getSetting('movie-fanart-MVT') == "true" and fanart == '':
+                        if selfAddon.getSetting('movie-fanart-FTT') == "true" and fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -306,7 +313,7 @@ def FTT_encontrar_fontes_filmes(url):
                                         if items_pesquisa != []:
                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if selfAddon.getSetting('movie-fanart-MVT') == "true":
+                                if selfAddon.getSetting('movie-fanart-FTT') == "true":
                                         try:
                                                 html_pesquisa = FTT_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
@@ -327,10 +334,10 @@ def FTT_encontrar_fontes_filmes(url):
                                                                         else:
                                                                                 fanart = thumb
                                         else: fanart = thumb
-                        if selfAddon.getSetting('movie-fanart-MVT') == "true":
+                        if selfAddon.getSetting('movie-fanart-FTT') == "true":
                                 if fanart == '': fanart = thumb
                         try:
-                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
+                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,sinopse,fanart,anofilme,genero)
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1

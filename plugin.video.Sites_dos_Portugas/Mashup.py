@@ -108,6 +108,7 @@ def ultimos_episodios(url):
                         sinopse = ''
                         fanart = ''
                         thumb = ''
+                        qualidade = ''
                         percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(int(num))
                         progress.update( percent, "", message, "" )
@@ -119,10 +120,29 @@ def ultimos_episodios(url):
                         
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
-                        qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
-                        if not qualidade: qualidade = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
+                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        if qualid:
+                                qualidade = qualid[0]
+                                qualidade = qualidade.replace('[',' - ')
+                                qualidade = qualidade.replace(']','')
+                        else:
+                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                if qualid:
+                                        qualidade = qualid[0]
+                                        qualidade = qualidade.replace('[',' - ')
+                                        qualidade = qualidade.replace(']','')
+                                else:
+                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(item)
+                                        if qualid:
+                                                qualidade = qualid[0]
+                                                qualidade = qualidade.replace('[',' - ')
+                                                qualidade = qualidade.replace(']','')
+                                        else:
+                                                qualidade = ''
+                                                
                         snpse = re.compile("<b>SINOPSE:.+?/b>(.+?)<br/>").findall(item)
-                        if not snpse: qualidade = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
+                        if not snpse: snpse = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
                         if snpse: sinopse = snpse[0]
                         else: sinopse = ''
                         ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
@@ -160,6 +180,12 @@ def ultimos_episodios(url):
                                                         audio_filme = audio[0][0] + audio[0][1]
                                                         if 'Portug' or 'PORTUG' in audio_filme:
                                                                 audio_filme = ': PT-PT'
+                                                else:
+                                                        audio = re.compile('<b>AUDIO:.+?<strong>(.+?)</strong>').findall(item)
+                                                        if audio:
+                                                                audio_filme = audio[0][0] + audio[0][1]
+                                                                if 'Portug' or 'PORTUG' in audio_filme:
+                                                                        audio_filme = ': PT-PT'
                                 else:
                                         audio_filme = ': ' + audio[0]
                         if not audio:
@@ -182,18 +208,7 @@ def ultimos_episodios(url):
                                         if len(q_a_q_a) == 4:
                                                 tirar_ano = '(' + str(q_a_q_a) + ')'
                                                 nome = nome.replace(tirar_ano,'')
-                        if qualidade:
-                                qualidade = qualidade[0]
-                                qualidade = qualidade.replace('[',' - ')
-                                qualidade = qualidade.replace(']','')
-                        else:
-                                qualidade = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
-                                if qualidade:
-                                        qualidade = qualidade[0]
-                                        qualidade = qualidade.replace('[',' - ')
-                                        qualidade = qualidade.replace(']','')
-                                else:
-                                        qualidade = ''
+
                         a_q = re.compile('\d+')
                         qq_aa = a_q.findall(nome)
                         for q_a_q_a in qq_aa:
@@ -514,6 +529,7 @@ def Filmes_Filmes_Filmes(url):
                         sinopse = ''
                         fanart = ''
                         thumb = ''
+                        qualidade = ''
                         imdbcode = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
@@ -530,10 +546,30 @@ def Filmes_Filmes_Filmes(url):
                         audio_filme = ''
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
-                        qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
-                        if not qualidade: qualidade = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        
+                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
+                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        if qualid:
+                                qualidade = qualid[0]
+                                qualidade = qualidade.replace('[',' - ')
+                                qualidade = qualidade.replace(']','')
+                        else:
+                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                if qualid:
+                                        qualidade = qualid[0]
+                                        qualidade = qualidade.replace('[',' - ')
+                                        qualidade = qualidade.replace(']','')
+                                else:
+                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(item)
+                                        if qualid:
+                                                qualidade = qualid[0]
+                                                qualidade = qualidade.replace('[',' - ')
+                                                qualidade = qualidade.replace(']','')
+                                        else:
+                                                qualidade = ''
+                                                
                         snpse = re.compile("<b>SINOPSE:.+?/b>(.+?)<br/>").findall(item)
-                        if not snpse: qualidade = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
+                        if not snpse: snpse = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
                         if snpse: sinopse = snpse[0]
                         else: sinopse = ''
                         ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
@@ -571,6 +607,12 @@ def Filmes_Filmes_Filmes(url):
                                                         audio_filme = audio[0][0] + audio[0][1]
                                                         if 'Portug' or 'PORTUG' in audio_filme:
                                                                 audio_filme = ': PT-PT'
+                                                else:
+                                                        audio = re.compile('<b>AUDIO:.+?<strong>(.+?)</strong>').findall(item)
+                                                        if audio:
+                                                                audio_filme = audio[0][0] + audio[0][1]
+                                                                if 'Portug' or 'PORTUG' in audio_filme:
+                                                                        audio_filme = ': PT-PT'
                                 else:
                                         audio_filme = ': ' + audio[0]
                         if not audio:
@@ -593,18 +635,7 @@ def Filmes_Filmes_Filmes(url):
                                         if len(q_a_q_a) == 4:
                                                 tirar_ano = '(' + str(q_a_q_a) + ')'
                                                 nome = nome.replace(tirar_ano,'')
-                        if qualidade:
-                                qualidade = qualidade[0]
-                                qualidade = qualidade.replace('[',' - ')
-                                qualidade = qualidade.replace(']','')
-                        else:
-                                qualidade = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
-                                if qualidade:
-                                        qualidade = qualidade[0]
-                                        qualidade = qualidade.replace('[',' - ')
-                                        qualidade = qualidade.replace(']','')
-                                else:
-                                        qualidade = ''
+                        
                         a_q = re.compile('\d+')
                         qq_aa = a_q.findall(nome)
                         for q_a_q_a in qq_aa:
@@ -1883,6 +1914,7 @@ def Filmes_Animacao(url):
                         sinopse = ''
                         fanart = ''
                         thumb = ''
+                        qualidade = ''
                         imdbcode = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
@@ -1899,10 +1931,30 @@ def Filmes_Animacao(url):
                         audio_filme = ''
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
-                        qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
-                        if not qualidade: qualidade = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        
+                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
+                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        if qualid:
+                                qualidade = qualid[0]
+                                qualidade = qualidade.replace('[',' - ')
+                                qualidade = qualidade.replace(']','')
+                        else:
+                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                if qualid:
+                                        qualidade = qualid[0]
+                                        qualidade = qualidade.replace('[',' - ')
+                                        qualidade = qualidade.replace(']','')
+                                else:
+                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(item)
+                                        if qualid:
+                                                qualidade = qualid[0]
+                                                qualidade = qualidade.replace('[',' - ')
+                                                qualidade = qualidade.replace(']','')
+                                        else:
+                                                qualidade = ''
+                        
                         snpse = re.compile("<b>SINOPSE:.+?/b>(.+?)<br/>").findall(item)
-                        if not snpse: qualidade = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
+                        if not snpse: snpse = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
                         if snpse: sinopse = snpse[0]
                         else: sinopse = ''
                         ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
@@ -1940,6 +1992,12 @@ def Filmes_Animacao(url):
                                                         audio_filme = audio[0][0] + audio[0][1]
                                                         if 'Portug' or 'PORTUG' in audio_filme:
                                                                 audio_filme = ': PT-PT'
+                                                else:
+                                                        audio = re.compile('<b>AUDIO:.+?<strong>(.+?)</strong>').findall(item)
+                                                        if audio:
+                                                                audio_filme = audio[0][0] + audio[0][1]
+                                                                if 'Portug' or 'PORTUG' in audio_filme:
+                                                                        audio_filme = ': PT-PT'
                                 else:
                                         audio_filme = ': ' + audio[0]
                         if not audio:
@@ -1962,18 +2020,7 @@ def Filmes_Animacao(url):
                                         if len(q_a_q_a) == 4:
                                                 tirar_ano = '(' + str(q_a_q_a) + ')'
                                                 nome = nome.replace(tirar_ano,'')
-                        if qualidade:
-                                qualidade = qualidade[0]
-                                qualidade = qualidade.replace('[',' - ')
-                                qualidade = qualidade.replace(']','')
-                        else:
-                                qualidade = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
-                                if qualidade:
-                                        qualidade = qualidade[0]
-                                        qualidade = qualidade.replace('[',' - ')
-                                        qualidade = qualidade.replace(']','')
-                                else:
-                                        qualidade = ''
+                        
                         a_q = re.compile('\d+')
                         qq_aa = a_q.findall(nome)
                         for q_a_q_a in qq_aa:
