@@ -31,6 +31,7 @@ artfolder = addonfolder + '/resources/img/'
 fanart = artfolder + 'FAN.jpg'
 
 _series_ = []
+Anos = ['' for i in range(100)]
 
 progress = xbmcgui.DialogProgress()
 
@@ -135,11 +136,21 @@ def TFV_Menu_Filmes_Top_5(artfolder):
                                 i = i + 1
 
 def TFV_Menu_Filmes_Por_Ano(artfolder):
+        i = 0
         url_ano = 'http://www.tuga-filmes.us'
         ano_source = TFV_abrir_url(url_ano)
         filmes_por_ano = re.compile("<a dir=\'ltr\' href=\'(.+?)\'>Filmes (.+?)</a>").findall(ano_source)
 	for endereco_ano,nome_ano in filmes_por_ano:
-		addDir('[COLOR yellow]' + nome_ano + '[/COLOR] ',endereco_ano,32,artfolder + 'TFV.png','nao','')
+		#addDir('[COLOR yellow]' + nome_ano + '[/COLOR] ',endereco_ano,32,artfolder + 'TFV.png','nao','')
+		Anos[i] = nome_ano+'|'+endereco_ano
+                i = i + 1
+        Anos.sort()
+        Anos.reverse()
+        for x in range(len(Anos)):
+                if Anos[x] != '':
+                        A = re.compile('(.+?)[|](.*)').findall(Anos[x])
+                        if A:
+                                addDir('[COLOR yellow]' + A[0][0].replace('  ','').replace(' ','') + '[/COLOR]',A[0][1],32,artfolder + 'TFV.png','nao','')
 
 def TFV_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.tuga-filmes.us'
@@ -453,7 +464,6 @@ def TFV_encontrar_videos_filmes(name,url):
         if '---' in nn:
                 n = re.compile('---(.+?)---').findall(nn)
                 n1 = re.compile('--(.+?)--').findall(nn)
-                url = 'IMDB'+imdbcode+'IMDB'
                 addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1[0],'url',1004,iconimage,False,'')
                 addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'','')
         else:
@@ -599,11 +609,11 @@ def TFV_encontrar_videos_filmes(name,url):
                 n = re.compile('---(.+?)---').findall(nn)
                 n1 = re.compile('--(.+?)--').findall(nn)
                 url = 'IMDB'+imdbcode+'IMDB'
-                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'TFV')
+                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'TFV',url)
         else:
                 n1 = re.compile('--(.+?)--').findall(nn)
                 url = 'IMDB'+imdbcode+'IMDB'
-                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'TFV')
+                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'TFV',url)
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -890,13 +900,21 @@ def TFV_encontrar_fontes_series_recentes(url):
 		for item in items:
                         thumb = ''
                         fanart = ''
+                        genero = ''
+                        sinopse = ''
                         percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 50 )
+                        #if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
+                        gene = re.compile("nero</b>:(.+?)<br />").findall(item)
+                        if gene: genero = gene[0]
+                        else: genero = ''
+                        resumo = re.compile("<b>Resumo</b>:(.+?)<br />").findall(item)
+                        if resumo: sinopse = resumo[0]
+                        else: sinopse = ''
 			urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
 			ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
 			if ano: ano = '('+ano[0]+')'
@@ -977,7 +995,7 @@ def TFV_encontrar_fontes_series_recentes(url):
                         if selfAddon.getSetting('series-fanart-TFV') == "true":
                                 if fanart == '': fanart = thumb
 			try:
-				addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0],42,thumb.replace('s72-c','s320'),'',fanart,ano,'')
+				addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0],42,thumb.replace('s72-c','s320'),sinopse,fanart,ano,genero)
 			except: pass
 			i = i + 1
 	else:

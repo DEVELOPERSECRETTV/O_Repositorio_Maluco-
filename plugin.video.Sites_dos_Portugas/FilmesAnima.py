@@ -27,14 +27,13 @@ artfolder = addonfolder + '/resources/img/'
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite):
+def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         nome_pp = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]][[]COLOR yellow[]].+?[[]/COLOR[]]').findall(nome_pesquisa)
         if nome_pp: nome_pesquisa = nome_pp[0]
         imdb = re.compile('IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
         pp = nome_pesquisa
-        
         progress = xbmcgui.DialogProgress()
         percent = 0
         message = ''

@@ -729,7 +729,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 #n2 = ''
                                 
                         try:
-                                addDir_teste('[COLOR nnn]dfdfdf[/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
+                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
                                 #addDir_teste('[B][COLOR green]' + n1 + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]'+'[COLOR nnn]'+n2+'[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
                         except: pass
                         i = i + 1
@@ -1403,11 +1403,11 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                         n = re.compile('---(.+?)---').findall(nn)
                         n1 = re.compile('--(.+?)--').findall(nn)
                         url = 'IMDB'+imdbcode+'IMDB'
-                        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'TPT')
+                        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'TPT',url)
                 else:
                         n1 = re.compile('--(.+?)--').findall(nn)
                         url = 'IMDB'+imdbcode+'IMDB'
-                        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'TPT')
+                        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'TPT',url)
         if 'Season' in nometitulo or 'Temporada' in nometitulo: progress.close()
 
 
@@ -2140,12 +2140,13 @@ def addLink1(name,url,iconimage):
 	return ok
 
 def addDir(name,url,mode,iconimage,checker,fanart):
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         #text = 'nnnnnn'
         text = ''
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
+	liz.setProperty('fanart_image',fanart)
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": text } )
         #cm = []
 	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
@@ -2168,10 +2169,11 @@ def addDir2(nome,url,mode,iconimage,checker,fanart):
         return ok
 
 def addDir1(name,url,mode,iconimage,folder,fanart):
+        if fanart == '': fanart = artfolder + 'FAN.jpg'
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
+	liz.setProperty('fanart_image',fanart)
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok

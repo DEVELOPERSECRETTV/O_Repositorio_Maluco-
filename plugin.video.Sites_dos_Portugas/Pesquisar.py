@@ -109,7 +109,7 @@ def pesquisar():
                 progress.update(percent, 'A Procurar em '+site, message, "")
                 print str(a) + " de " + str(int(a))
 
-                url_pesquisa = 'http://www.cinematuga.net/search?q=' + str(encode)
+                url_pesquisa = 'http://www.tugafilmes.org/search?q=' + str(encode)
                 encontrar_fontes_pesquisa_CMT(url_pesquisa)
 
                 a = 6
@@ -130,6 +130,7 @@ def pesquisar():
 
 def encontrar_fontes_pesquisa_TFV(url,pesquisou):
         pesquisado = pesquisou.replace('%20',' ')
+        addLink(url,'','')
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''

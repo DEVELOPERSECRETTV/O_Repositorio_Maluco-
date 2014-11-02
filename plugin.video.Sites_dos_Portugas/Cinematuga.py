@@ -30,6 +30,8 @@ artfolder = addonfolder + '/resources/img/'
 
 fanart = artfolder + 'FAN.jpg'
 
+Anos = ['' for i in range(100)]
+
 progress = xbmcgui.DialogProgress()
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -41,8 +43,8 @@ def CMT_MenuPrincipal(artfolder):
         fanart = artfolder + 'FAN.jpg'
         addDir('- Procurar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P.png','nao','')
 	if selfAddon.getSetting('menu-CMT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'CMT.png',False,fanart)
-	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.cinematuga.net/search/label/Filmes',702,artfolder + 'TODOS.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o',702,artfolder + 'ANIMACAO.png','nao',fanart)
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tugafilmes.org/search/label/Filmes',702,artfolder + 'TODOS.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tugafilmes.org/search/label/Anima%C3%A7%C3%A3o',702,artfolder + 'ANIMACAO.png','nao',fanart)
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',709,artfolder + 'FPANO.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',708,artfolder + 'FCATEGORIAS.png','nao','')
 	addDir('[COLOR yellow]- Top 5 da Semana[/COLOR]','url',718,artfolder + 'TOPFILMES.png','nao','')
@@ -53,7 +55,7 @@ def CMT_Menu_Filmes_Top_5(artfolder):
         message = ''
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
-        url_top_5 = 'http://www.cinematuga.net'
+        url_top_5 = 'http://www.tugafilmes.org'
         top_5_source = CMT_abrir_url(url_top_5)
                 
         html_top5 = re.findall("<div class='item-thumbnail'>(.*?)<div style='clear: both;'>", top_5_source, re.DOTALL)
@@ -94,24 +96,33 @@ def CMT_Menu_Filmes_Top_5(artfolder):
                 i = i + 1
 
 def CMT_Menu_Filmes_Por_Ano(artfolder):
-        url_ano = 'http://www.cinematuga.net'
+        i = 0
+        url_ano = 'http://www.tugafilmes.org'
         html_categorias_source = CMT_abrir_url(url_ano)
 	html_items_categorias = re.findall("<h2>FILMES POR ANO</h2>(.*?)<div class=\'clear\'>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
-                filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n[(](.+?)[)]\n</option>").findall(item_categorias)
-                for endereco_categoria,nome_categoria,total_categoria in filmes_por_categoria:
-                        addDir('[COLOR yellow]' + nome_categoria.replace('Filmes  ','').replace('Filmes ','') + '[/COLOR] ('+total_categoria+')',endereco_categoria,702,artfolder + 'CMT.png','nao','')
+                filmes_por_categoria = re.compile("<option value='(.+?)'>Filmes (\d+)\n</option>").findall(item_categorias)
+                for endereco_categoria,nome_categoria in filmes_por_categoria:
+                        Anos[i] = nome_categoria+'|'+endereco_categoria
+                        i = i + 1
+        Anos.sort()
+        Anos.reverse()
+        for x in range(len(Anos)):
+                if Anos[x] != '':
+                        A = re.compile('(.+?)[|](.*)').findall(Anos[x])
+                        if A:
+                                addDir('[COLOR yellow]' + A[0][0].replace('  ','').replace(' ','') + '[/COLOR]',A[0][1],702,artfolder + 'CMT.png','nao','')
 
 def CMT_Menu_Filmes_Por_Categorias(artfolder):
-        url_categorias = 'http://www.cinematuga.net'
+        url_categorias = 'http://www.tugafilmes.org'
         html_categorias_source = CMT_abrir_url(url_categorias)
 	html_items_categorias = re.findall("<h2>CATEGORIAS</h2>(.*?)<div class=\'clear\'>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
-                filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n[(](.+?)[)]\n</option>").findall(item_categorias)
-                for endereco_categoria,nome_categoria,total_categoria in filmes_por_categoria:
-                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ('+total_categoria+')',endereco_categoria,702,artfolder + 'CMT.png','nao','')
+                filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n</option>").findall(item_categorias)
+                for endereco_categoria,nome_categoria in filmes_por_categoria:
+                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria,702,artfolder + 'CMT.png','nao','')
 
       
 
@@ -170,6 +181,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                 #addDir1(nome_original,'','','',False,'')
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
+                        if not qualidade: qualidade = re.compile("Ass.+?tir online .+?[(](.+?)[)]").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                         audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
                         imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
@@ -338,7 +350,7 @@ def CMT_encontrar_videos_filmes(name,url):
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('CMT | ','')
         n = re.compile('--(.+?)--').findall(nn)
         url = 'IMDB'+imdbcode+'IMDB'
-        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'CMT')
+        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'CMT',url)
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#	
