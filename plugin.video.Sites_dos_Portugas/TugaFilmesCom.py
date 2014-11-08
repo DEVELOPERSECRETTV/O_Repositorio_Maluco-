@@ -66,42 +66,6 @@ def TFC_Menu_Filmes_Top_10(artfolder):
                 if progress.iscanceled():
                         break
                 imdbcode = ''
-##                conta = 0
-##                nome_pesquisa = nome_top_10
-##                nome_pesquisa = nome_pesquisa.replace('&#8216;',"'")
-##                nome_pesquisa = nome_pesquisa.replace('&#8217;',"'")
-##                nome_pesquisa = nome_pesquisa.replace('&#8211;',"-")
-##                nome_pesquisa = nome_pesquisa.replace('&#39;',"'")
-##                nome_pesquisa = nome_pesquisa.replace('&amp;','&')
-##                nome_top_10 = nome_pesquisa
-##                nome_pesquisa = nome_pesquisa.replace('é','e')
-##                nome_pesquisa = nome_pesquisa.replace('ê','e')
-##                nome_pesquisa = nome_pesquisa.replace('á','a')
-##                nome_pesquisa = nome_pesquisa.replace('à','a')
-##                nome_pesquisa = nome_pesquisa.replace('ã','a')
-##                nome_pesquisa = nome_pesquisa.replace('è','e')
-##                nome_pesquisa = nome_pesquisa.replace('í','i')
-##                nome_pesquisa = nome_pesquisa.replace('ó','o')
-##                nome_pesquisa = nome_pesquisa.replace('ô','o')
-##                nome_pesquisa = nome_pesquisa.replace('õ','o')
-##                nome_pesquisa = nome_pesquisa.replace('ú','u')
-##                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-##                nome_pesquisa = nome_pesquisa.replace('ç','c')
-##                nome_pesquisa = nome_pesquisa.replace('ç','c')
-##                a_q = re.compile('\w+')
-##                qq_aa = a_q.findall(nome_pesquisa)
-##                nome_p = ''
-##                for q_a_q_a in qq_aa:
-##                        if conta == 0:
-##                                nome_p = q_a_q_a
-##                                conta = 1
-##                        else:
-##                                nome_p = nome_p + '+' + q_a_q_a
-##                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-##                html_imdbcode = TFC_abrir_url(url_imdb)
-##                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-##                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-##                imdbcode = imdbc[0]
 		addDir('[B][COLOR green]' + nome_top_10 + '[/COLOR][/B]',endereco_top_10+'IMDB'+imdbcode+'IMDB',73,iconimage_filmes_top_10.replace('s72-c','s320').replace('.gif','.jpg'),'nao','')
 		i = i + 1
 	progress.close()
@@ -365,7 +329,7 @@ def TFC_encontrar_fontes_filmes(url):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
-def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage):
+def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart):
         if 'videomega' in url: vidv = url
         url = url + '///' + name
         if "videomega" in url:
@@ -378,44 +342,44 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_i
                                         urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
                                         if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
                         fonte_id = '(Videomega)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'','')
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
         if "vidto.me" in url:
 		try:
                         print url
                         fonte_id = '(Vidto.me)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,70,iconimage,'','')
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,70,iconimage,'',fanart)
 		except: pass
         if "dropvideo" in url:
 		try:
                         if '/video/' in url: url = url.replace('/video/','/embed/')
                         fonte_id = '(DropVideo)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,70,iconimage,'','')
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,70,iconimage,'',fanart)
 		except:pass
 	if "streamin.to" in url:
                 try:
 			print url
 			fonte_id = '(Streamin)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,70,iconimage,'','')
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,70,iconimage,'',fanart)
                 except:pass                        
         if "putlocker" in url:
                 try:
                         print url
                         fonte_id = '(Putlocker)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,70,iconimage,'','')
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,70,iconimage,'',fanart)
     		except:pass
     	if "nowvideo" in url:
                 try:
                         print url
                         fonte_id = '(Nowvideo)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,70,iconimage,'','')
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,70,iconimage,'',fanart)
     		except:pass
     	if "videowood" in url:
                 try:
                         if '/video/' in url: url = url.replace('/video/','/embed/')
                         print url
                         fonte_id = '(VideoWood)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'','')
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'',fanart)
     		except:pass
     	return
 
@@ -437,12 +401,16 @@ def TFC_encontrar_videos_filmes(name,url):
         nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('TFC | ','')
         n = re.compile('--(.+?)--').findall(nn)
-        addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n[0],'url',1004,iconimage,False,'')
+        addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n[0],'url',1004,iconimage,False,fanart)
         ############################################
 
-        if imdbcode == '':
+        if imdbcode == '' or '---' in imdbcode:
                 conta = 0
-                nome_pesquisa = n[0]
+                ano_pp = re.compile('[[]COLOR yellow[]](.+?)[[]/COLOR[]]').findall(name)
+                if ano_pp: ano_pesquisa = ano_pp[0].replace('(','').replace(')','')
+                else: ano_pesquisa = ''
+                conta = 0
+                nome_pesquisa = n[0] + ' ' + ano_pesquisa
                 nome_pesquisa = nome_pesquisa.replace('é','e')
                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -473,7 +441,7 @@ def TFC_encontrar_videos_filmes(name,url):
                 imdbcode = imdbc[0]
         
         conta_id_video = 0
-	addDir1(name,'url',1003,iconimage,False,'')
+	addDir1(name,'url',1003,iconimage,False,fanart)
         try:
                 fonte = TFC_abrir_url(url)
         except: fonte = ''
@@ -497,24 +465,24 @@ def TFC_encontrar_videos_filmes(name,url):
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,fanart)
                                                 if 'PT/PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                                 elif 'PT-PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                                 assistir_fontes = re.findall("------------------------------<br />(.*?)='postmeta'>", fonte, re.DOTALL)
                                 assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
@@ -526,24 +494,24 @@ def TFC_encontrar_videos_filmes(name,url):
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,fanart)
                                                 if 'PT/PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                                 elif 'PT-PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                         else:
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
@@ -555,31 +523,31 @@ def TFC_encontrar_videos_filmes(name,url):
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,fanart)
                                                 if 'PT/PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                                 elif 'PT-PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                 else:
                         match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
                         for url in match:                                
                                 id_video = ''
                                 conta_id_video = conta_id_video + 1
-                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                 conta_os_items = conta_os_items + 1
                         match = re.compile('<iframe .+? src="(.+?)"').findall(fonte)
                         if match:
@@ -587,7 +555,7 @@ def TFC_encontrar_videos_filmes(name,url):
                                 for url in match:
                                         id_video = ''
                                         conta_id_video = conta_id_video + 1
-                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                         else:
                                 match = re.compile("<script type='text/javascript' src='(.+?)'></script>").findall(fonte)
@@ -596,7 +564,7 @@ def TFC_encontrar_videos_filmes(name,url):
                                         if 'hashkey' in url:
                                                 id_video = ''
                                                 conta_id_video = conta_id_video + 1
-                                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                                 conta_os_items = conta_os_items + 1
                         if numero_de_fontes > 0:
                                 conta_video = 0
@@ -607,7 +575,7 @@ def TFC_encontrar_videos_filmes(name,url):
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                                         conta_os_items = conta_os_items + 1
                                         except:pass
         nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
@@ -615,12 +583,13 @@ def TFC_encontrar_videos_filmes(name,url):
         nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('TFC | ','')
         n = re.compile('--(.+?)--').findall(nn)
         url = 'IMDB'+imdbcode+'IMDB'
+        #addLink(url+'-'+str(n[0]),'','')
         FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'TFC',url)
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def TFC_links(name,url,iconimage):
+def TFC_links(name,url,iconimage,fanart):
         iconimage = iconimage
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
@@ -655,24 +624,24 @@ def TFC_links(name,url,iconimage):
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,fanart)
                                                 if 'PT/PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                                 elif 'PT-PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                                 assistir_fontes = re.findall("------------------------------<br />(.*?)='postmeta'>", fonte, re.DOTALL)
                                 assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
@@ -684,24 +653,24 @@ def TFC_links(name,url,iconimage):
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,fanart)
                                                 if 'PT/PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                                 elif 'PT-PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                         else:
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
@@ -713,31 +682,31 @@ def TFC_links(name,url,iconimage):
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,fanart)
                                                 if 'PT/PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                                 elif 'PT-PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
-                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
+                                                        addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                 else:
                         match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
                         for url in match:                                
                                 id_video = ''
                                 conta_id_video = conta_id_video + 1
-                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                 conta_os_items = conta_os_items + 1
                         match = re.compile('<iframe .+? src="(.+?)"').findall(fonte)
                         if match:
@@ -745,7 +714,7 @@ def TFC_links(name,url,iconimage):
                                 for url in match:
                                         id_video = ''
                                         conta_id_video = conta_id_video + 1
-                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                         else:
                                 match = re.compile("<script type='text/javascript' src='(.+?)'></script>").findall(fonte)
@@ -754,7 +723,7 @@ def TFC_links(name,url,iconimage):
                                         if 'hashkey' in url:
                                                 id_video = ''
                                                 conta_id_video = conta_id_video + 1
-                                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                                 conta_os_items = conta_os_items + 1
                         if numero_de_fontes > 0:
                                 conta_video = 0
@@ -765,7 +734,7 @@ def TFC_links(name,url,iconimage):
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                                         conta_os_items = conta_os_items + 1
                                         except:pass
 
@@ -832,7 +801,7 @@ def addLink2(name,url,iconimage,checker):
 
 def addDir(name,url,mode,iconimage,checker,fanart):
         if fanart == '': fanart = artfolder + 'FAN.jpg'#iconimage
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',fanart)#artfolder + 'FAN.jpg')
@@ -842,7 +811,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
 
 def addDir1(name,url,mode,iconimage,folder,fanart):
         if fanart == '': fanart = artfolder + 'FAN.jpg'#iconimage
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',fanart)#artfolder + 'FAN.jpg')
@@ -853,7 +822,7 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
         if fanart == '': fanart = artfolder + 'FAN.jpg'
         #text = checker
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&fanart="+urllib.quote_plus(fanart)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',fanart)
@@ -925,4 +894,4 @@ print "Iconimage: "+str(iconimage)
 print "Plot: "+str(plot)
 print "Year: "+str(year)
 print "Genre: "+str(genre)
-
+print "Fanart: "+str(fanart)
