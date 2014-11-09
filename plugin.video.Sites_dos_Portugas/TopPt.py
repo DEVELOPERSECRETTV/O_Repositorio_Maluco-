@@ -45,26 +45,28 @@ progress = xbmcgui.DialogProgress()
 
 
 def TPT_MenuPrincipal(artfolder):
-        url_toppt = 'http://toppt.net/'
-        toppt_source = TPT_abrir_url(url_toppt)
-        saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
-        saber_url_M18 = re.compile('<a href="(.+?)">m18</a></li>').findall(toppt_source)
-        saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
-        saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
-        if not saber_url_series: saber_url_series = re.compile('<a href="(.+?)">SERIES</a></li>').findall(toppt_source)
-        addDir('- Procurar','url',1,artfolder + 'P.png','nao','')
-	if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1001,artfolder + 'TPT.png',False,'')
-	addDir('[COLOR yellow]- Todos[/COLOR]',saber_url_todos[0],232,artfolder + 'TODOS.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'ANIMACAO.png','nao','')
-        addDir('[COLOR yellow]- Por Ano[/COLOR]','url',239,artfolder + 'FPANO.png','nao','')
-	addDir('[COLOR yellow]- Categorias[/COLOR]','url',238,artfolder + 'FCATEGORIAS.png','nao','')
-	addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://toppt.net/',258,artfolder + 'TOPFILMES.png','nao','')
-	if selfAddon.getSetting('hide-porno') == "false":
-			addDir('[B][COLOR red]M+18[/B][/COLOR]',saber_url_M18[0],232,artfolder + 'TPT.png','nao','')		
-	if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'TPT.png',False,'')
-	addDir('[COLOR yellow]- A a Z[/COLOR]','urlTPT',241,artfolder + 'SAZ.png','nao','')#241
-        addDir('[COLOR yellow]- Recentes[/COLOR]',saber_url_series[0],232,artfolder + 'SRECENTES.png','nao','')
-        addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',259,artfolder + 'TOPSERIES.png','nao','')
+        try:
+                url_toppt = 'http://toppt.net/'
+                toppt_source = TPT_abrir_url(url_toppt)
+                saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
+                saber_url_M18 = re.compile('<a href="(.+?)">m18</a></li>').findall(toppt_source)
+                saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
+                saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
+                if not saber_url_series: saber_url_series = re.compile('<a href="(.+?)">SERIES</a></li>').findall(toppt_source)
+                addDir('- Procurar','url',1,artfolder + 'P.png','nao','')
+                if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1001,artfolder + 'TPT.png',False,'')
+                addDir('[COLOR yellow]- Todos[/COLOR]',saber_url_todos[0],232,artfolder + 'TODOS.png','nao','')
+                addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'ANIMACAO.png','nao','')
+                addDir('[COLOR yellow]- Por Ano[/COLOR]','url',239,artfolder + 'FPANO.png','nao','')
+                addDir('[COLOR yellow]- Categorias[/COLOR]','url',238,artfolder + 'FCATEGORIAS.png','nao','')
+                addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://toppt.net/',258,artfolder + 'TOPFILMES.png','nao','')
+                if selfAddon.getSetting('hide-porno') == "false":
+                                addDir('[B][COLOR red]M+18[/B][/COLOR]',saber_url_M18[0],232,artfolder + 'TPT.png','nao','')		
+                if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'TPT.png',False,'')
+                addDir('[COLOR yellow]- A a Z[/COLOR]','urlTPT',241,artfolder + 'SAZ.png','nao','')#241
+                addDir('[COLOR yellow]- Recentes[/COLOR]',saber_url_series[0],232,artfolder + 'SRECENTES.png','nao','')
+                addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',259,artfolder + 'TOPSERIES.png','nao','')
+        except:pass
 
 def TPT_Menu_Posts_Recentes(artfolder):
         url_recentes = 'http://toppt.net/'
@@ -882,26 +884,27 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
         i = 1
         n_name = name.replace('[COLOR yellow]','')
         n_name = n_name.replace('[/COLOR]','')
-        if '-series-' in url:
-                series = 1
-                url = url.replace('-series-','')
-        else: series = 0
-        if 'Seguinte' not in name:
-                if selfAddon.getSetting('movies-view') == "0":
-                        addDir1(name + ':','url',1001,iconimage,False,'')
-                        addDir1('','url',1001,artfolder,False,'')
-        fan = 'nao'
-        if selfAddon.getSetting('movie-fanart-TPT') == "false" and selfAddon.getSetting('series-fanart-TPT') == "false": fan = 'nao'
-        if selfAddon.getSetting('movie-fanart-TPT') == "true" and selfAddon.getSetting('series-fanart-TPT') == "true": fan = 'sim'
-        if selfAddon.getSetting('series-fanart-TPT') == "true" and series == 1: fan = 'sim'
-        if selfAddon.getSetting('movie-fanart-TPT') == "true":
-                if n_name != '- Recentes' and name != 'Seguinte >>':
-                        fan = 'sim'
-        if selfAddon.getSetting('series-fanart-TPT') == "true":
-                if n_name == '- Recentes' or name == 'Seguinte >>':
-                        fan = 'sim'
-        #addDir1(str(series)+'|'+name+'|'+n_name+'|'+fan,'','',iconimage,False,'')
-        #return
+        series = 0
+##        if '-series-' in url:
+##                series = 1
+##                url = url.replace('-series-','')
+##        else: series = 0
+##        if 'Seguinte' not in name:
+##                if selfAddon.getSetting('movies-view') == "0":
+##                        addDir1(name + ':','url',1001,iconimage,False,'')
+##                        addDir1('','url',1001,artfolder,False,'')
+##        fan = 'nao'
+##        if selfAddon.getSetting('movie-fanart-TPT') == "false" and selfAddon.getSetting('series-fanart-TPT') == "false": fan = 'nao'
+##        if selfAddon.getSetting('movie-fanart-TPT') == "true" and selfAddon.getSetting('series-fanart-TPT') == "true": fan = 'sim'
+##        if selfAddon.getSetting('series-fanart-TPT') == "true" and series == 1: fan = 'sim'
+##        if selfAddon.getSetting('movie-fanart-TPT') == "true":
+##                if n_name != '- Recentes' and name != 'Seguinte >>':
+##                        fan = 'sim'
+##        if selfAddon.getSetting('series-fanart-TPT') == "true":
+##                if n_name == '- Recentes' or name == 'Seguinte >>':
+##                        fan = 'sim'
+##        #addDir1(str(series)+'|'+name+'|'+n_name+'|'+fan,'','',iconimage,False,'')
+##        #return
 	try:
 		html_source = TPT_abrir_url(url)
 	except: html_source = ''
@@ -1048,17 +1051,18 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         if fanart == '':
-                                if series == 1:
-                                        nn = 0
-                                        nome_pesquisa = n_name
+##                                if series == 1:
+##                                        nn = 0
+##                                        nome_pesquisa = n_name
+##                                else:
+                                n = re.compile('(.+?)[[].+?[]]').findall(nome)
+                                if n:
+                                        nome_pesquisa = n[0]
+                                        nn = 1
                                 else:
-                                        n = re.compile('(.+?)[[].+?[]]').findall(nome)
-                                        if n:
-                                                nome_pesquisa = n[0]
-                                                nn = 1
-                                        else:
-                                                nome_pesquisa = nome
-                                                nn = 2
+                                        nome_pesquisa = nome
+                                        nn = 2
+                                nome_pesquisa = nome_pesquisa.replace('NCIS','NCIS:')
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -1078,7 +1082,8 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                if 'Temporada' not in nome and 'Season' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                if 'Temporada' in nome or 'Season' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
                                 if thumb == '':
                                         try:
                                                 html_pesquisa = TPT_abrir_url(url_pesquisa)
@@ -1087,7 +1092,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                         if items_pesquisa != []:
                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if fan == 'sim':
+                                if fanart == '':
                                         try:
                                                 html_pesquisa = TPT_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
@@ -1099,8 +1104,8 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                         url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
                                         if url_fan: fanart = url_fan[0].replace('w780','w1280')
                                         else: fanart = thumb
-                        if fan == "sim":
-                                if fanart == '': fanart = thumb
+##                        if fan == "sim":
+##                                if fanart == '': fanart = thumb
                         ano_filme = '('+ano_filme+')'
                         qualidade = '('+qualidade
                         audio_filme = audio_filme+')'

@@ -138,7 +138,66 @@ def FTT_Top_Vistos(artfolder):
                 nome_f = nome_f.replace('PT/BR','')
                 nome_f = nome_f.replace('PT-BR','')
                 nome_f = nome_f.replace(' - ','')
-                addDir('[B][COLOR green]' + nome_f + '[/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',url_titulo[0][0]+'IMDB'+imdbcode+'IMDB',603,thumb_f[0].replace('s72-c','s320'),'nao','')
+                sinopse = ''
+                fanart = ''
+                if fanart == '':
+                        try:
+                                nnnn = re.compile('.+?[(](.+?)[)]').findall(nome_f)
+                                if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome_f)
+                                if not nnnn: nnnn = re.compile('(.+?) - ').findall(nome_f)
+##                                        nomes = '|'+nome.replace(' - ','|')
+##                                        nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
+                                if nnnn : nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome_f
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                nome_pesquisa = nome_pesquisa.replace('.',"")
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                if fanart == '':
+                                        try:
+                                                html_pesquisa = FTT_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0] + '?language=pt'
+                                        try:
+                                                html_pesquisa = FTT_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        else: fanart = thumb_f[0].replace('s72-c','s320')
+                                        snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
+                                        if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
+                                        if snpse: sinopse = snpse[0]
+                                        else:
+                                                if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0] + '?language=en'
+                                                try:
+                                                        html_pesquisa = FTT_abrir_url(url_pesquisa)
+                                                except: html_pesquisa = ''
+                                                snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
+                                                if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
+                                                if snpse: sinopse = snpse[0]
+                        except: pass
+                if sinopse == '': sinopse = '---'
+                if fanart == '': fanart = ''
+                if imdbcode == '': imdbcode = '---'
+                addDir('[B][COLOR green]' + nome_f + '[/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',url_titulo[0][0]+'IMDB'+imdbcode+'IMDB',603,thumb_f[0].replace('s72-c','s320'),sinopse,fanart)
                 i = i + 1
         progress.close()                
 
@@ -318,13 +377,20 @@ def FTT_encontrar_fontes_filmes(url):
                         nome = nome.replace('()','(')
                         nome = nome.replace('  ','')
                         nome = nome.replace(' - []','')
-                        nnn = re.compile('[(](.+?)[)]').findall(nome)
-                        if nnn: nome = nnn[0]
-                        nnn = re.compile('[[](.+?)[]]').findall(nome)
-                        if nnn: nome = nnn[0]
+##                        nnn = re.compile('[(](.+?)[)]').findall(nome)
+##                        if nnn: nome = nnn[0]
+##                        nnn = re.compile('[[](.+?)[]]').findall(nome)
+##                        if nnn: nome = nnn[0]
 
-                        if selfAddon.getSetting('movie-fanart-FTT') == "true" and fanart == '':
-                                nome_pesquisa = nome
+                        #if selfAddon.getSetting('movie-fanart-FTT') == "true" and fanart == '':
+                        if fanart == '':
+                                nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
+                                if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+##                                        nomes = '|'+nome.replace(' - ','|')
+##                                        nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
+                                if nnnn : nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -353,7 +419,8 @@ def FTT_encontrar_fontes_filmes(url):
                                         if items_pesquisa != []:
                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if selfAddon.getSetting('series-fanart-FTT') == "true":
+                                #if selfAddon.getSetting('series-fanart-FTT') == "true":
+                                if fanart == '':
                                         try:
                                                 html_pesquisa = FTT_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
@@ -365,11 +432,11 @@ def FTT_encontrar_fontes_filmes(url):
                                         url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
                                         if url_fan: fanart = url_fan[0].replace('w780','w1280')
                                         else: fanart = thumb
-                        if selfAddon.getSetting('movie-fanart-FTT') == "true":
-                                if fanart == '': fanart = thumb
+                        #if selfAddon.getSetting('movie-fanart-FTT') == "true":
+                                #if fanart == '': fanart = thumb
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
-                        if fanart == '': fanart = '---'
+                        if fanart == '': fanart = ''
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         try:

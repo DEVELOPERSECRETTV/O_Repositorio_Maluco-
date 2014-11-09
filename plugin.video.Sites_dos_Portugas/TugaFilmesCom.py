@@ -66,7 +66,57 @@ def TFC_Menu_Filmes_Top_10(artfolder):
                 if progress.iscanceled():
                         break
                 imdbcode = ''
-		addDir('[B][COLOR green]' + nome_top_10 + '[/COLOR][/B]',endereco_top_10+'IMDB'+imdbcode+'IMDB',73,iconimage_filmes_top_10.replace('s72-c','s320').replace('.gif','.jpg'),'nao','')
+                sinopse = ''
+                fanart = ''
+                if fanart == '':
+                        try:
+                                nome_pesquisa = nome_top_10
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                nome_pesquisa = nome_pesquisa.replace('.',"")
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                if fanart == '':
+                                        try:
+                                                html_pesquisa = TFC_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0] + '?language=pt'
+                                        try:
+                                                html_pesquisa = TFC_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        else: fanart = iconimage_filmes_top_10.replace('s72-c','s320').replace('.gif','.jpg')
+                                        snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
+                                        if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
+                                        if snpse: sinopse = snpse[0]
+                                        else:
+                                                if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0] + '?language=en'
+                                                try:
+                                                        html_pesquisa = TFC_abrir_url(url_pesquisa)
+                                                except: html_pesquisa = ''
+                                                snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
+                                                if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
+                                                if snpse: sinopse = snpse[0]
+                        except: pass
+		addDir('[B][COLOR green]' + nome_top_10 + '[/COLOR][/B]',endereco_top_10+'IMDB'+imdbcode+'IMDB',73,iconimage_filmes_top_10.replace('s72-c','s320').replace('.gif','.jpg'),sinopse,fanart)
 		i = i + 1
 	progress.close()
 
@@ -122,6 +172,8 @@ def TFC_encontrar_fontes_filmes(url):
                         versao = ''
                         sinopse = ''
                         imdbcode = ''
+                        genero = ''
+                        qualidade = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
@@ -225,40 +277,7 @@ def TFC_encontrar_fontes_filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-##                        if imdbcode == '':
-##                                conta = 0
-##                                nome_pesquisa = nome
-##                                nome_pesquisa = nome_pesquisa.replace('é','e')
-##                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-##                                nome_pesquisa = nome_pesquisa.replace('á','a')
-##                                nome_pesquisa = nome_pesquisa.replace('à','a')
-##                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-##                                nome_pesquisa = nome_pesquisa.replace('è','e')
-##                                nome_pesquisa = nome_pesquisa.replace('í','i')
-##                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-##                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-##                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-##                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-##                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-##                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-##                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-##                                a_q = re.compile('\w+')
-##                                qq_aa = a_q.findall(nome_pesquisa)
-##                                nome_p = ''
-##                                for q_a_q_a in qq_aa:
-##                                        if conta == 0:
-##                                                nome_p = q_a_q_a
-##                                                conta = 1
-##                                        else:
-##                                                nome_p = nome_p + '+' + q_a_q_a
-##                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-##                                html_imdbcode = TFC_abrir_url(url_imdb)
-##                                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-##                                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-##                                imdbcode = imdbc[0]
-
-                        
-                        if selfAddon.getSetting('movie-fanart-TFC') == "false" and fanart == '':
+                        if fanart == '':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -273,14 +292,14 @@ def TFC_encontrar_fontes_filmes(url):
                                 nome_pesquisa = nome_pesquisa.replace('Ú','U')
                                 nome_pesquisa = nome_pesquisa.replace('ç','c')
                                 nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                nome_pesquisa = nome_pesquisa.replace('.',"")
                                 a_q = re.compile('\w+')
                                 qq_aa = a_q.findall(nome_pesquisa)
                                 nome_pesquisa = ''
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                if 'Temporada' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
-                                else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
                                 if thumb == '':
                                         try:
                                                 html_pesquisa = TFC_abrir_url(url_pesquisa)
@@ -289,29 +308,25 @@ def TFC_encontrar_fontes_filmes(url):
                                         if items_pesquisa != []:
                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if selfAddon.getSetting('movie-fanart-TFC') == "true":
+                                if fanart == '':
                                         try:
                                                 html_pesquisa = TFC_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                        if items_pesquisa != []:
-                                                url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
-                                                if url_filme_pesquisa:
-                                                        url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
-                                                        try:
-                                                                html_pesquisa = TFC_abrir_url(url_pesquisa)
-                                                        except: html_pesquisa = ''
-                                                        url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                        if url_fan:
-                                                                for urls_fanart in url_fan:
-                                                                        url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
-                                                                        if url_fanart:
-                                                                                fanart = url_fanart[0].replace('w300','w1280')
-                                                                        else:
-                                                                                fanart = thumb
+                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
+                                        try:
+                                                html_pesquisa = TFC_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
                                         else: fanart = thumb
-                        if selfAddon.getSetting('movie-fanart-TFC') == "true":
-                                if fanart == '': fanart = thumb
+
+                        if genero == '': genero = '---'
+                        if sinopse == '': sinopse = '---'
+                        if fanart == '': fanart = ''
+                        if imdbcode == '': imdbcode = '---'
+                        if thumb == '': thumb = '---'
+                        if qualidade == '': qualidade = '---'
 			try:
 				if 'ASSISTIR O FILME' in item: addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,qualidade)
 			except: pass
@@ -799,13 +814,13 @@ def addLink2(name,url,iconimage,checker):
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
 
-def addDir(name,url,mode,iconimage,checker,fanart):
+def addDir(name,url,mode,iconimage,plot,fanart):
         if fanart == '': fanart = artfolder + 'FAN.jpg'#iconimage
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',fanart)#artfolder + 'FAN.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
+        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
 

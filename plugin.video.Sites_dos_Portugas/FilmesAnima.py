@@ -308,6 +308,8 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url,pesquisou):
                                 imdbcode = ''
                                 fanart = ''
                                 thumb = ''
+                                genero = ''
+                                qualidade = ''
 
                                 imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                                 if imdb: imdbcode = imdb[0]
@@ -580,9 +582,11 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url):
                                         imdbcode = imdbcd[0]
 
                                 if fanart == '':
+                                        nome = titulo[0]
                                         nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                         if not nnnn: nnnn = re.compile('.+?[[](.+?)[)]]').findall(nome)
-                                        if not nnnn: nnnn = re.compile('(.+?)[:]').findall(nome)
+                                        if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
+                                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
                                         if nnnn : nome_pesquisa = nnnn[0]
                                         else: nome_pesquisa = titulo[0]
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -845,7 +849,8 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                 if fanart == '':
                                         nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                         if not nnnn: nnnn = re.compile('.+?[[](.+?)[)]]').findall(nome)
-                                        if not nnnn: nnnn = re.compile('(.+?)[-]').findall(nome)
+                                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+                                        if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
                                         if nnnn : nome_pesquisa = nnnn[0]
                                         else: nome_pesquisa = nome
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -986,7 +991,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url,pesquisou):
                                         nome = nome.replace(tirar_ano,'')
 
                         if fanart == '':
-                                nnnn = re.compile('(.+?):').findall(nome)
+                                nnnn = re.compile('(.+?): ').findall(nome)
                                 if not nnnn:
                                         nomes = '|'+nome.replace(' - ','|')
                                         nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
@@ -1196,8 +1201,10 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url,pesquisou):
                                                         else:
                                                                 qualidade = ''
                                                 if fanart == '':
-                                                        n = re.compile('(.+?)[[].+?[]]').findall(nome)
-                                                        if n: nome_pesquisa = n[0]
+                                                        nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
+                                                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+                                                        if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
+                                                        if nnnn: nome_pesquisa = n[0]
                                                         else: nome_pesquisa = nome
                                                         nome_pesquisa = nome_pesquisa.replace('é','e')
                                                         nome_pesquisa = nome_pesquisa.replace('ê','e')

@@ -317,7 +317,7 @@ def ultimos_episodios(url):
                 try:
                         url_TPT = proxima_TPT[0].replace('#038;','').replace('&amp;','&')
                 except: pass
-        else: pass
+        else: url_TPT = 'http:'
         #----------------------------------------------------------------------------------------------------
 	site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
 	progress.update(percent, 'A Procurar Filmes em '+site, message, "")
@@ -422,7 +422,7 @@ def ultimos_episodios(url):
         if items != []:
                 proxima_TFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
                 url_TFV = proxima_TFV[0].replace('&amp;','&')
-        else: pass
+        else: url_TFV = 'http:'
         #----------------------------------------------------------------------------------------------------
         url_MVT = 'http:'
         url_TFC = 'http:'
@@ -743,7 +743,7 @@ def Filmes_Filmes_Filmes(url):
                 try:
                         url_TPT = proxima_TPT[0].replace('#038;','').replace('&amp;','&')
                 except: pass
-        else: pass
+        else: url_TPT = 'http:'
         
         #----------------------------------------------------------------------------------------------------
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
@@ -768,6 +768,8 @@ def Filmes_Filmes_Filmes(url):
                         versao = ''
                         sinopse = ''
                         imdbcode = ''
+                        genero = ''
+                        qualidade = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
@@ -873,7 +875,7 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-
+                        #return
                         nome = nome.lower()
                         nome = nome.title()
                         if nome in read_Filmes_File:
@@ -890,6 +892,7 @@ def Filmes_Filmes_Filmes(url):
                                                         if _f: fanart = _f[0]
                                                         else: fanart = '---'
                                                 else: fanart = '---'
+                        #return
                         if nome not in read_Filmes_File or fanart == '---':
                                 nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -935,21 +938,25 @@ def Filmes_Filmes_Filmes(url):
                                         else: fanart = thumb
                                         Filmes_File.write('|SITE|TFC|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                 except:pass
+                        
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
                         if fanart == '': fanart = thumb
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
+                        if qualidade == '': qualidade = '---'
 			try:
-				if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart.replace('w500','w1280'),ano,qualidade)
+
+                                if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart.replace('w500','w1280'),ano,qualidade)
 			except: pass
+			
 			a = a + 1
                         i = i + 1
         else: pass
         if items != []:
                 proxima_TFC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
                 url_TFC = proxima_TFC[0].replace('&amp;','&')
-        else: pass
+        else: url_TFC = 'http:'
         #----------------------------------------------------------------------------------------------------
 
         site = '[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]'
@@ -1139,9 +1146,9 @@ def Filmes_Filmes_Filmes(url):
                         if nome not in read_Filmes_File or fanart == '---':
                                 nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                 if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
-                                if not nnnn:
-                                        nomes = '|'+nome.replace(' - ','|')
-                                        nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
+                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+##                                        nomes = '|'+nome.replace(' - ','|')
+##                                        nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
                                 if nnnn : nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')#+' ('+ano_filme.replace(' ','')+')'
@@ -1203,7 +1210,7 @@ def Filmes_Filmes_Filmes(url):
                 proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)
                 proxima_p = proxima[0]
 		url_FTT = proxima_p.replace('&amp;','&')
-	else: pass
+	else: url_FTT = 'http:'
 #------------------------------------------------------------------------------------------------------------------------
 	site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]'
 	progress.update(percent, 'A Procurar Filmes em '+site, message, "")
@@ -1372,7 +1379,7 @@ def Filmes_Filmes_Filmes(url):
 	if items != []:
                         proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
                         url_CMT = proxima[0].replace('&amp;','&')
-        else: pass
+        else: url_CMT = 'http:'
 #------------------------------------------------------------------------------------------------------------------------------------
 	site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
 	progress.update(percent, 'A Procurar Filmes em '+site, message, "")
@@ -1553,7 +1560,7 @@ def Filmes_Filmes_Filmes(url):
         if items != []:
                 proxima_TFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
                 url_TFV = proxima_TFV[0].replace('&amp;','&')
-        else: pass
+        else: url_TFV = 'http:'
         #----------------------------------------------------------------------------------------------------
         progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
         site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
@@ -1649,6 +1656,7 @@ def Filmes_Filmes_Filmes(url):
                                 nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                 if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
                                 if not nnnn: nnnn = re.compile('(.+?)[:]').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
                                 if nnnn : nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -1711,7 +1719,7 @@ def Filmes_Filmes_Filmes(url):
                         url_MVT = proxima_MVT[0].replace('%3A',':')
                         url_MVT = proxima_MVT[0].replace('&amp;','&')
                 except: pass
-        else: pass
+        else: url_MVT = 'http:'
 
         #----------------------------------------------------------------------------------------------------
        
@@ -2930,7 +2938,7 @@ def Filmes_Animacao(url):
                 try:
                         url_TPT = proxima_TPT[0].replace('#038;','').replace('&amp;','&')
                 except: pass
-        else: pass
+        else: url_TPT = 'http:'
         #----------------------------------------------------------------------------------------------------
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
         progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
@@ -2955,6 +2963,7 @@ def Filmes_Animacao(url):
                         sinopse = ''
                         imdbcode = ''
                         genero = ''
+                        qualidade = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
@@ -3125,6 +3134,7 @@ def Filmes_Animacao(url):
                         if fanart == '': fanart = thumb
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
+                        if qualidade == '': qualidade = '---'
 			try:
 				if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart.replace('w500','w1280'),ano,qualidade)
 			except: pass
@@ -3134,7 +3144,7 @@ def Filmes_Animacao(url):
         if items != []:
                 proxima_TFC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
                 url_TFC = proxima_TFC[0].replace('&amp;','&')
-        else: pass
+        else: url_TFC = 'http:'
         #----------------------------------------------------------------------------------------------------
         site = '[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]'
 	progress.update(percent, 'A Procurar Filmes em '+site, message, "")
@@ -3323,9 +3333,9 @@ def Filmes_Animacao(url):
                         if nome not in read_Filmes_File or fanart == '---':
                                 nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                 if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
-                                if not nnnn:
-                                        nomes = '|'+nome.replace(' - ','|')
-                                        nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
+                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+##                                        nomes = '|'+nome.replace(' - ','|')
+##                                        nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
                                 if nnnn : nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -3387,7 +3397,7 @@ def Filmes_Animacao(url):
                 proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)
                 proxima_p = proxima[0]
 		url_FTT = proxima_p.replace('&amp;','&')
-	else: pass
+	else: url_FTT = 'http:'
 	#------------------------------------------------------------------------------------------------------------------------
 	site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]'
 	progress.update(percent, 'A Procurar Filmes em '+site, message, "")
@@ -3554,7 +3564,7 @@ def Filmes_Animacao(url):
 	if items != []:
                         proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
                         url_CMT = proxima[0].replace('&amp;','&')
-        else: pass
+        else: url_CMT = 'http:'
 #------------------------------------------------------------------------------------------------------------------------        
 	site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
 	progress.update(percent, 'A Procurar Filmes em '+site, message, "")
@@ -3734,7 +3744,7 @@ def Filmes_Animacao(url):
         if items != []:
                 proxima_TFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
                 url_TFV = proxima_TFV[0].replace('&amp;','&')
-        else: pass
+        else: url_TFV = 'http:'
         #----------------------------------------------------------------------------------------------------
         progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
         site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
@@ -3831,6 +3841,7 @@ def Filmes_Animacao(url):
                                 nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                 if not nnnn: nnnn = re.compile('.+?[[](.+?)[)]').findall(nome)
                                 if not nnnn: nnnn = re.compile('(.+?)[:]').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
                                 if nnnn : nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
@@ -3893,7 +3904,7 @@ def Filmes_Animacao(url):
                         url_MVT = proxima_MVT[0].replace('%3A',':')
                         url_MVT = proxima_MVT[0].replace('&amp;','&')
                 except: pass
-        else: pass
+        else: url_MVT = 'http:'
         #----------------------------------------------------------------------------------------------------
         #x = int(arr_filmes[5])
         sinopse = ''

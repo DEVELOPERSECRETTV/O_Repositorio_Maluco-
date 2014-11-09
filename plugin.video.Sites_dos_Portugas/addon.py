@@ -102,7 +102,8 @@ def FILMES_MENU():
                 toppt_source = abrir_url(url_toppt)
         except: toppt_source = ''
         saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
-        url_TPT = saber_url_todos[0]
+        if saber_url_todos: url_TPT = saber_url_todos[0]
+        else: url_TPT = 'http://toppt.net/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
         addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'FILMESTODOS.png','nao','')
@@ -112,7 +113,8 @@ def FILMES_MENU():
         url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
         url_CMT = 'http://www.tugafilmes.org/search/label/Anima%C3%A7%C3%A3o'
         saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
-        url_TPT = saber_url_animacao[0]
+        if saber_url_animacao: url_TPT = saber_url_animacao[0]
+        else: url_TPT = 'http://toppt.net/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
         addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'FILMESANIMACAO.png','nao','')
@@ -221,6 +223,46 @@ def passar_nome_SERIES(name):
         if imdbc: imdbcode = imdbc[0]
         url = 'IMDB'+imdbcode+'IMDB'
         pesquisar_SERIES(str(nome_pesquisa),url)
+
+def passar_nome_SERIES_IMDB(name):         
+        nome_pesquisa = str(name)
+        nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PROCURAR POR: [/COLOR]','')
+        nome_pp = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]][[]COLOR yellow[]].+?[[]/COLOR[]]').findall(nome_pesquisa)
+        if nome_pp: nome_pesquisa = nome_pp[0]
+        numpontos=re.compile('[.](.+?)').findall(nome_pesquisa)
+        pontos = len(numpontos)
+        if pontos > 1: nome_pesquisa = nome_pesquisa.replace('.','')
+        conta = 0
+        nome_pesquisa = nome_pesquisa.replace('é','e')
+        nome_pesquisa = nome_pesquisa.replace('ê','e')
+        nome_pesquisa = nome_pesquisa.replace('á','a')
+        nome_pesquisa = nome_pesquisa.replace('à','a')
+        nome_pesquisa = nome_pesquisa.replace('ã','a')
+        nome_pesquisa = nome_pesquisa.replace('è','e')
+        nome_pesquisa = nome_pesquisa.replace('í','i')
+        nome_pesquisa = nome_pesquisa.replace('ó','o')
+        nome_pesquisa = nome_pesquisa.replace('ô','o')
+        nome_pesquisa = nome_pesquisa.replace('õ','o')
+        nome_pesquisa = nome_pesquisa.replace('ú','u')
+        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+        nome_pesquisa = nome_pesquisa.replace('ç','c')
+        nome_pesquisa = nome_pesquisa.replace('ç','c')
+        a_q = re.compile('\w+')
+        qq_aa = a_q.findall(nome_pesquisa)
+        nome_p = ''
+        for q_a_q_a in qq_aa:
+                if conta == 0:
+                        nome_p = q_a_q_a
+                        conta = 1
+                else:
+                        nome_p = nome_p + '+' + q_a_q_a
+        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+        html_imdbcode = abrir_url(url_imdb)
+        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+        if imdbc: imdbcode = imdbc[0]
+        url = 'IMDB'+imdbcode+'IMDB'
+        pesquisar_SERIES_IMDB(str(nome_pesquisa),url)
         
 def MPOPULARES():
         progress = xbmcgui.DialogProgress()
@@ -235,7 +277,7 @@ def MPOPULARES():
 	html_pop = re.findall("<h3>Popular Movies</h3>(.*?)<h3>Latest movies", html_pop_source, re.DOTALL)
 	if not html_pop:
                 html_pop = re.findall("<h3>Popular TV Shows</h3>(.*?)<h3>Latest TV shows", html_pop_source, re.DOTALL)
-                num_mode = 3005
+                num_mode = 3007
         for items_pop in html_pop:
                 filmes_pop = re.findall('<li class="w480">(.*?)<ul class="icons left_padding">', items_pop, re.DOTALL)
                 num = len(filmes_pop) + 0.0
@@ -254,13 +296,13 @@ def MPOPULARES():
                         thumb_pop = re.compile('<img class="shadow" src="(.+?)" width="92" />').findall(pop_filmes)
                         #############
                         if num_mode == 7: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=pt'
-                        if num_mode == 3005: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=pt'
+                        if num_mode == 3007: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=pt'
                         try:
                                 html_source = abrir_url(url_pesquisa)
                         except: html_source = ''
                         if html_source == '':
                                 if num_mode == 7: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=en'
-                                if num_mode == 3005: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=en'
+                                if num_mode == 3007: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=en'
                                 try:
                                         html_source = abrir_url(url_pesquisa)
                                 except: html_source = ''
@@ -306,7 +348,7 @@ def MVOTADOS():
 	html_pop = re.findall('<h3>Top Rated Movies</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
 	if not html_pop:
                 html_pop = re.findall('<h3>Top Rated TV Shows</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
-                num_mode = 3005
+                num_mode = 3007
         for items_pop in html_pop:
                 filmes_pop = re.findall('<li class="w480">(.*?)<ul class="icons left_padding">', items_pop, re.DOTALL)
                 num = len(filmes_pop) + 0.0
@@ -325,13 +367,13 @@ def MVOTADOS():
                         thumb_pop = re.compile('<img class="shadow" src="(.+?)" width="92" />').findall(pop_filmes)
                         #############
                         if num_mode == 7: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=pt'
-                        if num_mode == 3005: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=pt'
+                        if num_mode == 3007: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=pt'
                         try:
                                 html_source = abrir_url(url_pesquisa)
                         except: html_source = ''
                         if html_source == '':
                                 if num_mode == 7: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=en'
-                                if num_mode == 3005: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=en'
+                                if num_mode == 3007: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=en'
                                 try:
                                         html_source = abrir_url(url_pesquisa)
                                 except: html_source = ''
@@ -377,7 +419,7 @@ def NCINEMAS():
 	html_pop = re.findall('<h3>Now Playing Movies</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
 	if not html_pop:
                 html_pop = re.findall('<h3>Currently Airing TV Shows</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
-                num_mode = 3005
+                num_mode = 3007
         for items_pop in html_pop:
                 filmes_pop = re.findall('<li class="w480">(.*?)<ul class="icons left_padding">', items_pop, re.DOTALL)
                 num = len(filmes_pop) + 0.0
@@ -396,7 +438,7 @@ def NCINEMAS():
                         thumb_pop = re.compile('<img class="shadow" src="(.+?)" width="92" />').findall(pop_filmes)
                         #############
                         if num_mode == 7: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] #+ '?language=pt'
-                        if num_mode == 3005: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] #+ '?language=pt'
+                        if num_mode == 3007: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] #+ '?language=pt'
                         try:
                                 html_source = abrir_url(url_pesquisa)
                         except: html_source = ''
@@ -441,7 +483,7 @@ def NCINEMAS():
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def pesquisar_SERIES_antes(nome_pesquisa,url):
+def pesquisar_SERIES_IMDB(nome_pesquisa,url):
         nome_pp = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]][[]COLOR yellow[]].+?[[]/COLOR[]]').findall(nome_pesquisa)
         if nome_pp: nome_pesquisa = nome_pp[0]
         imdb = re.compile('IMDB(.+?)IMDB').findall(url)
@@ -543,6 +585,7 @@ def pesquisar_SERIES(nome_pesquisa,url):
         imdb = re.compile('IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
+        
 
         progress = xbmcgui.DialogProgress()
         percent = 0
@@ -1462,11 +1505,13 @@ elif mode == 30: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)#,n
 elif mode == 31:
         TugaFilmesTV.TFV_MenuPrincipal(artfolder)
         setViewMode_menuTFV()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 32:
         TugaFilmesTV.TFV_encontrar_fontes_filmes(url,artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 33: TugaFilmesTV.TFV_encontrar_videos_filmes(name,url)
 elif mode == 34: TugaFilmesTV.TFV_pesquisar()
@@ -1492,8 +1537,8 @@ elif mode == 42: TugaFilmesTV.TFV_encontrar_videos_series(name,url)
 elif mode == 43: TugaFilmesTV.TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
 elif mode == 44:
         TugaFilmesTV.TFV_encontrar_fontes_series_recentes(url)
-        xbmcplugin.setContent(int(sys.argv[1]), 'tvshows')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 45: TugaFilmesTV.TFV_pesquisar_series()
 elif mode == 46:
@@ -1503,13 +1548,13 @@ elif mode == 46:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 47:
         TugaFilmesTV.TFV_encontrar_fontes_series_A_a_Z(url)
-        xbmcplugin.setContent(int(sys.argv[1]), 'tvshows')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        #xbmcplugin.setContent(int(sys.argv[1]), 'tvshows')
+        #xbmc.executebuiltin("Container.SetViewMode(500)")
+        #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 48:
         TugaFilmesTV.TFV_Menu_Filmes_Top_5(artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 49: M18.M18_TFV_Menu_M18(artfolder)
 elif mode == 50: M18.M18_TFV_Menu_M18_Categorias(artfolder)
@@ -1525,12 +1570,14 @@ elif mode == 57: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 elif mode == 70: print "", Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 71:
         TugaFilmesCom.TFC_MenuPrincipal(artfolder)
-        setViewMode_menuTFC()
+        #setViewMode_menuTFC()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 72:
         TugaFilmesCom.TFC_encontrar_fontes_filmes(url)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 73: TugaFilmesCom.TFC_encontrar_videos_filmes(name,url)
 elif mode == 74: TugaFilmesCom.TFC_pesquisar_filmes()
@@ -1541,7 +1588,7 @@ elif mode == 78: TugaFilmesCom.TFC_Menu_Filmes_Por_Categorias(artfolder)
 elif mode == 79:
         TugaFilmesCom.TFC_Menu_Filmes_Top_10(artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 80: TugaFilmesCom.TFC_Menu_Series(artfolder)
 elif mode == 81: TugaFilmesCom.TFC_Menu_Filmes_Brevemente(artfolder)
@@ -1558,12 +1605,14 @@ elif mode == 90: TugaFilmesCom.TFC_Menu_Filmes_Por_Ano(artfolder)
 elif mode == 100: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 101:
         MovieTuga.MVT_MenuPrincipal(artfolder)
-        setViewMode_menuMVT()
+        #setViewMode_menuMVT()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 102:
         MovieTuga.MVT_encontrar_fontes_filmes(url)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 103: MovieTuga.MVT_encontrar_videos_filmes(name,url)
 elif mode == 104: MovieTuga.MVT_pesquisar_filmes()
@@ -1576,12 +1625,14 @@ elif mode == 109: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 #elif mode == 230: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 231:
         TopPt.TPT_MenuPrincipal(artfolder)
-        setViewMode_menuTPT()
+        #setViewMode_menuTPT()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 232:
         TopPt.TPT_encontrar_fontes_filmes(url,artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 233: TopPt.TPT_encontrar_videos_filmes(name,url,iconimage)
 elif mode == 234: TopPt.TPT_pesquisar()
@@ -1616,12 +1667,12 @@ elif mode == 257: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 elif mode == 258:
         TopPt.TPT_Menu_Top_Filmes(artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 259:
         TopPt.TPT_Menu_Top_Series(artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 #----------------------------------------------------------------ARMAGEDOM--------------------------------------------------------------------#
 elif mode == 331: Armagedom.ARM_MenuPrincipal()
@@ -1688,12 +1739,14 @@ elif mode == 508:
 elif mode == 600: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
 elif mode == 601:
         FoitaTuga.FTT_MenuPrincipal(artfolder)
-        setViewMode_menuFTT()
+        #setViewMode_menuFTT()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 602:
         FoitaTuga.FTT_encontrar_fontes_filmes(url)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 603: FoitaTuga.FTT_encontrar_videos_filmes(name,url)
 elif mode == 604: FoitaTuga.FTT_pesquisar_filmes()
@@ -1703,18 +1756,20 @@ elif mode == 607: FoitaTuga.FTT_Menu_Filmes_Brevemente(artfolder)
 elif mode == 608:
         FoitaTuga.FTT_Top_Vistos(artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 #----------------------------------------------  CINEMATUGA  -------------------------------------------------------
 elif mode == 700: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)#,nomeAddon)
 elif mode == 701:
         Cinematuga.CMT_MenuPrincipal(artfolder)
-        setViewMode_menuCMT()
+        #setViewMode_menuCMT()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 702:
         Cinematuga.CMT_encontrar_fontes_filmes(url,artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 703: Cinematuga.CMT_encontrar_videos_filmes(name,url)
 elif mode == 704: Cinematuga.CMT_pesquisar()
@@ -1757,7 +1812,7 @@ elif mode == 717:
 elif mode == 718:
         Cinematuga.CMT_Menu_Filmes_Top_5(artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 #-------------------------------------------------------------------------------------------------------------------------
 
@@ -1820,8 +1875,8 @@ elif mode == 3006:
         #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         #xbmc.executebuiltin("Container.SetViewMode(500)")
         #xbmcplugin.endOfDirectory(int(sys.argv[1]))
-
-
+elif mode == 3007:
+        passar_nome_SERIES_IMDB(name)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 

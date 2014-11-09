@@ -47,7 +47,7 @@ def CMT_MenuPrincipal(artfolder):
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tugafilmes.org/search/label/Anima%C3%A7%C3%A3o',702,artfolder + 'ANIMACAO.png','nao',fanart)
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',709,artfolder + 'FPANO.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',708,artfolder + 'FCATEGORIAS.png','nao','')
-	addDir('[COLOR yellow]- Top 5 da Semana[/COLOR]','url',718,artfolder + 'TOPFILMES.png','nao','')
+	#addDir('[COLOR yellow]- Top 5 da Semana[/COLOR]','url',718,artfolder + 'TOPFILMES.png','nao','')
 
 def CMT_Menu_Filmes_Top_5(artfolder):
         i = 1
@@ -210,9 +210,14 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        #fanart = artfolder + 'FAN.jpg'
-                        if selfAddon.getSetting('movie-fanart-CMT') == "true" and fanart == '':
-                                nome_pesquisa = nome
+                                        
+                        if fanart == '':
+                                nnnn = re.compile('(.+?): ').findall(nome)
+                                if not nnnn:
+                                        nomes = '|'+nome.replace(' - ','|')
+                                        nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
+                                if nnnn : nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome
                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -233,9 +238,8 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                if 'Temporada' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
-                                else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                if thumb == '' or 'legendas.tv' in thumb:# or 's1600' in thumb:
+                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                if thumb == '':
                                         try:
                                                 html_pesquisa = CMT_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
@@ -243,29 +247,19 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         if items_pesquisa != []:
                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if selfAddon.getSetting('movie-fanart-CMT') == "true":
+                                if fanart == '':
                                         try:
                                                 html_pesquisa = CMT_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                        if items_pesquisa != []:
-                                                url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
-                                                if url_filme_pesquisa:
-                                                        url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
-                                                        try:
-                                                                html_pesquisa = CMT_abrir_url(url_pesquisa)
-                                                        except: html_pesquisa = ''
-                                                        url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                        if url_fan:
-                                                                for urls_fanart in url_fan:
-                                                                        url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
-                                                                        if url_fanart:
-                                                                                fanart = url_fanart[0].replace('w300','w1280')
-                                                                        else:
-                                                                                fanart = thumb
+                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
+                                        try:
+                                                html_pesquisa = CMT_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
                                         else: fanart = thumb
-                        if selfAddon.getSetting('movie-fanart-CMT') == "true":
-                                if fanart == '': fanart = thumb
+
                         if qualidade:
                                 qualidade = qualidade[0]
                         else:
