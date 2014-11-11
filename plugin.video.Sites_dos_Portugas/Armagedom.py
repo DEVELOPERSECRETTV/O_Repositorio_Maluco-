@@ -44,80 +44,80 @@ artfolder = addonfolder + '/resources/img/'
 
 def ARM_MenuPrincipal():
         #addLink('link','http://89.238.150.212:8777/r4pynj3mnoie2cbd4p4l7dvaaawthhksjizymiwjsvzsn6cc2ur345a7cy/v.mp4.flv','')
-        addDir1('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B][COLOR blue] - Menu Principal[/COLOR]','url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
+        addDir1('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B][COLOR blue] - Menu Principal[/COLOR]','url',1005,artfolder + 'SDB.png',False,'')
         #----------------------------------------------------------------------
         addDir1('','url',1005,artfolder,False,'')
-        #addDir('[B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','url',337,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv',356,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','url',337,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','url',358,artfolder + 'SDOSBRAZUCAS.png','nao','')
-	addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','url',337,artfolder + 'SDOSBRAZUCAS.png','nao','')
-	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=21',332,artfolder + 'SDOSBRAZUCAS.png','nao','')	
-	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=3228',332,artfolder + 'SDOSBRAZUCAS.png','nao','')
-	addDir('[COLOR blue]Animes/Desenhos - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=36',332,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/',338,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        addDir('Pesquisar - [B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?s=',334,artfolder + 'PSDB.png','nao','')
+        #addDir('[B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','url',337,artfolder + 'SDB.png','nao','')
+        #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv',356,artfolder + 'SDB.png','nao','')
+        #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','url',337,artfolder + 'SDB.png','nao','')
+        #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','url',358,artfolder + 'SDB.png','nao','')
+	addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','url',337,artfolder + 'SDB.png','nao','')
+	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=21',332,artfolder + 'SDB.png','nao','')	
+	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=3228',332,artfolder + 'SDB.png','nao','')
+	addDir('[COLOR blue]Animes/Desenhos - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=36',332,artfolder + 'SDB.png','nao','')
+        addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/',338,artfolder + 'SDB.png','nao','')
+        addDir('Pesquisar - [B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?s=',334,artfolder + 'PAGS2.png','nao','')
         #if selfAddon.getSetting('hide-porno') == "false":
-			#addDir('[B][COLOR red]M+18 - [/COLOR][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.megavideoporno.org/porno/filmes',350,artfolder + 'SDOSBRAZUCAS.png','nao','')
+			#addDir('[B][COLOR red]M+18 - [/COLOR][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.megavideoporno.org/porno/filmes',350,artfolder + 'SDB.png','nao','')
         #----------------------------------------------------------------------
         addDir1('','url',1005,artfolder,False,'')
-        addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/',356,artfolder + 'SDOSBRAZUCAS.png','nao','')	
-	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/category/animacao',349,artfolder + 'SDOSBRAZUCAS.png','nao','')
-	#addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/',349,artfolder + 'SDOSBRAZUCAS.png','nao','')
-	addDir('Pesquisar - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/?s-btn=Enviar&s=',334,artfolder + 'PSDB.png','nao','')
+        addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/',356,artfolder + 'SDB.png','nao','')	
+	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/category/animacao',349,artfolder + 'SDB.png','nao','')
+	#addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/',349,artfolder + 'SDB.png','nao','')
+	addDir('Pesquisar - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv/?s-btn=Enviar&s=',334,artfolder + 'PAGS2.png','nao','')
 	addDir1('','url',1005,artfolder,False,'')
         #----------------------------------------------------------------------
-	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','url',358,artfolder + 'SDOSBRAZUCAS.png','nao','')
-	addDir('Pesquisar - [B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','http://megaseriesonlinehd.com/?s=',334,artfolder + 'PSDB.png','nao','')
+	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','url',358,artfolder + 'SDB.png','nao','')
+	addDir('Pesquisar - [B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','http://megaseriesonlinehd.com/?s=',334,artfolder + 'PAGS2.png','nao','')
 	#----------------------------------------------------------------------
         addDir1('','url',1005,artfolder,False,'')
-        addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','url',337,artfolder + 'SDOSBRAZUCAS.png','nao','')
-	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/series/',360,artfolder + 'SDOSBRAZUCAS.png','nao','')	
-	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/category/animacao/',351,artfolder + 'SDOSBRAZUCAS.png','nao','')
-	addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/category/lancamentos/',352,artfolder + 'SDOSBRAZUCAS.png','nao','')
-	addDir('Pesquisar Filmes - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/?s=',334,artfolder + 'PSDB.png','nao','')
-	addDir('Pesquisar Séries - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/series/?pesquisaRapida=',334,artfolder + 'PSDB.png','nao','')
+        addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','url',337,artfolder + 'SDB.png','nao','')
+	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/series/',360,artfolder + 'SDB.png','nao','')	
+	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/category/animacao/',351,artfolder + 'SDB.png','nao','')
+	addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/category/lancamentos/',352,artfolder + 'SDB.png','nao','')
+	addDir('Pesquisar Filmes - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/?s=',334,artfolder + 'PAGS2.png','nao','')
+	addDir('Pesquisar Séries - [B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','http://megafilmeshd.net/series/?pesquisaRapida=',334,artfolder + 'PAGS2.png','nao','')
         #----------------------------------------------------------------------
         addDir1('','url',1005,artfolder,False,'')
-	#addDir('Pesquisar','url',1,artfolder + 'SDOSBRAZUCAS.png','nao','')
-	#addDir('[COLOR brown]ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_TugaFilmesTV.txt',56,artfolder + 'SDOSBRAZUCAS.png','nao','')
+	#addDir('Pesquisar','url',1,artfolder + 'SDB.png','nao','')
+	#addDir('[COLOR brown]ChangeLog[/COLOR]','http://o-repositorio-maluco.googlecode.com/svn/trunk/changelogs/changelog_TugaFilmesTV.txt',56,artfolder + 'SDB.png','nao','')
         #xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         #xbmc.executebuiltin('Container.SetViewMode(502)')
  
 def ARM_Menu_Filmes():
-        addDir1(name,'url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
+        addDir1(name,'url',1005,artfolder + 'SDB.png',False,'')
         addDir1('','url',1005,artfolder,False,'')
         if name == '[COLOR blue]Filmes - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]':
-                addDir('[COLOR orange]Lançamentos[/COLOR]','http://www.armagedomfilmes.biz/?cat=3236',332,artfolder + 'SDOSBRAZUCAS.png','nao','')
-                addDir('[COLOR orange]Blu-Ray[/COLOR]','http://www.armagedomfilmes.biz/?cat=5529',332,artfolder + 'SDOSBRAZUCAS.png','nao','')
-                addDir('[COLOR orange]Legendados[/COLOR]','http://www.armagedomfilmes.biz/?s=legendado',332,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                addDir('[COLOR orange]Lançamentos[/COLOR]','http://www.armagedomfilmes.biz/?cat=3236',332,artfolder + 'SDB.png','nao','')
+                addDir('[COLOR orange]Blu-Ray[/COLOR]','http://www.armagedomfilmes.biz/?cat=5529',332,artfolder + 'SDB.png','nao','')
+                addDir('[COLOR orange]Legendados[/COLOR]','http://www.armagedomfilmes.biz/?s=legendado',332,artfolder + 'SDB.png','nao','')
         if name == '[COLOR blue]Filmes - [/COLOR][B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net':
-                addDir('[COLOR orange]Lançamentos[/COLOR]','http://megafilmeshd.net/category/lancamentos/',351,artfolder + 'SDOSBRAZUCAS.png','nao','')
-                addDir('[COLOR orange]Últimos[/COLOR]','http://megafilmeshd.net/ultimos',351,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                addDir('[COLOR orange]Lançamentos[/COLOR]','http://megafilmeshd.net/category/lancamentos/',351,artfolder + 'SDB.png','nao','')
+                addDir('[COLOR orange]Últimos[/COLOR]','http://megafilmeshd.net/ultimos',351,artfolder + 'SDB.png','nao','')
 
 def ARM_Menu_Series():
-        addDir1('[B][COLOR yellow]Menu Séries[/COLOR][/B]','url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
+        addDir1('[B][COLOR yellow]Menu Séries[/COLOR][/B]','url',1005,artfolder + 'SDB.png',False,'')
         addDir1('','url',1005,artfolder,False,'')
-	addDir('[COLOR blue]A a Z[/COLOR]','url',341,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        addDir('[COLOR blue]Recentes[/COLOR]','http://www.armagedomfilmes.biz/?cat=21',332,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        addDir1('','url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
-	#addDir('Pesquisar','http://www.tuga-filmes.tv/search?q=',1,artfolder + 'SDOSBRAZUCAS.png','nao','')
+	addDir('[COLOR blue]A a Z[/COLOR]','url',341,artfolder + 'SDB.png','nao','')
+        addDir('[COLOR blue]Recentes[/COLOR]','http://www.armagedomfilmes.biz/?cat=21',332,artfolder + 'SDB.png','nao','')
+        addDir1('','url',1005,artfolder + 'SDB.png',False,'')
+	#addDir('Pesquisar','http://www.tuga-filmes.tv/search?q=',1,artfolder + 'SDB.png','nao','')
 
 def ARM_Menu_Series_MEGASERIESONLINEHD():
-        addDir1('[B][COLOR yellow]Menu Séries[/COLOR][/B]','url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
+        addDir1('[B][COLOR yellow]Menu Séries[/COLOR][/B]','url',1005,artfolder + 'SDB.png',False,'')
         addDir1('','url',1005,artfolder,False,'')
-	addDir('[COLOR blue]Lançamentos[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-lancamentos/',357,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        addDir('[COLOR blue]Animes/Desenhos[/COLOR]','http://megaseriesonlinehd.com/index.php/category/desenhos/',357,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        addDir('[COLOR blue]Atualizados[/COLOR]','http://megaseriesonlinehd.com',357,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        addDir('[COLOR blue]Completos[/COLOR]','http://megaseriesonlinehd.com/index.php/page/2/',357,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        addDir('[COLOR blue]Dublados[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-dublados/',357,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        addDir('[COLOR blue]Legendados[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-legendados/',357,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        addDir1('','url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
+	addDir('[COLOR blue]Lançamentos[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-lancamentos/',357,artfolder + 'SDB.png','nao','')
+        addDir('[COLOR blue]Animes/Desenhos[/COLOR]','http://megaseriesonlinehd.com/index.php/category/desenhos/',357,artfolder + 'SDB.png','nao','')
+        addDir('[COLOR blue]Atualizados[/COLOR]','http://megaseriesonlinehd.com',357,artfolder + 'SDB.png','nao','')
+        addDir('[COLOR blue]Completos[/COLOR]','http://megaseriesonlinehd.com/index.php/page/2/',357,artfolder + 'SDB.png','nao','')
+        addDir('[COLOR blue]Dublados[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-dublados/',357,artfolder + 'SDB.png','nao','')
+        addDir('[COLOR blue]Legendados[/COLOR]','http://megaseriesonlinehd.com/index.php/category/series/seriados-legendados/',357,artfolder + 'SDB.png','nao','')
+        addDir1('','url',1005,artfolder + 'SDB.png',False,'')
 
 
 
 def ARM_Menu_Filmes_Por_Categorias():
-        addDir1(name,'url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
+        addDir1(name,'url',1005,artfolder + 'SDB.png',False,'')
         addDir1('','url',1005,artfolder,False,'')
         html_categorias_source = ARM_abrir_url(url)
 	html_items_categorias = re.findall('<h2 class="widgettitle">Categorias</h2>(.*?)<div class="clear"></div>', html_categorias_source, re.DOTALL)
@@ -126,29 +126,29 @@ def ARM_Menu_Filmes_Por_Categorias():
                 #filmes_por_categoria = re.compile('href="(.+?)"><b><span style="color: .+?">(.+?)</span>').findall(item_categorias)
                 #for endereco_categoria,nome_categoria in filmes_por_categoria:
                         #if 'Assistir' not in nome_categoria and 'Adulto' not in nome_categoria and 'Programas' not in nome_categoria:
-                                #addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,332,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                                #addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,332,artfolder + 'SDB.png','nao','')
                 filmes_por_categoria = re.compile('<a href="(.+?)" title=".+?">(.+?)</a>').findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,332,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                        addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,332,artfolder + 'SDB.png','nao','')
 
 def ARM_Menu_Filmes_Por_Categorias_MEGA_tv():
-        addDir1(name,'url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
+        addDir1(name,'url',1005,artfolder + 'SDB.png',False,'')
         addDir1('','url',1005,artfolder,False,'')
         try:
                 html_categorias_source = ARM_abrir_url(url)
         except: html_categorias_source = ''
         html_items_categorias = re.findall("<div id='bluray-cat'>(.*?)</header><!-- Geral HEADER -->", html_categorias_source, re.DOTALL)
         if html_items_categorias:
-                #addDir('[B][COLOR orange]Lançamentos[/COLOR][/B] ','http://megafilmeshd.tv',349,artfolder + 'SDOSBRAZUCAS.png','nao','')
-                addDir('[B][COLOR orange]Últimos Adicionados[/COLOR][/B] ','http://megafilmeshd.tv/',349,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                #addDir('[B][COLOR orange]Lançamentos[/COLOR][/B] ','http://megafilmeshd.tv',349,artfolder + 'SDB.png','nao','')
+                addDir('[B][COLOR orange]Últimos Adicionados[/COLOR][/B] ','http://megafilmeshd.tv/',349,artfolder + 'SDB.png','nao','')
                 for item_categorias in html_items_categorias:
                         filmes_por_categoria = re.compile("<h3><a href='(.+?)' title='.+?'>(.+?)</a></h3>").findall(item_categorias)
                         for endereco_categoria,nome_categoria in filmes_por_categoria:
-                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ','http://megafilmeshd.tv'+endereco_categoria,349,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ','http://megafilmeshd.tv'+endereco_categoria,349,artfolder + 'SDB.png','nao','')
                         for item_categorias in html_items_categorias:
                                 filmes_por_categoria = re.compile('<li><a href="(.+?)" title=".+?">(.+?)</a></li>').findall(item_categorias)
                                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                                        addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ','http://megafilmeshd.tv'+endereco_categoria,349,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                                        addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ','http://megafilmeshd.tv'+endereco_categoria,349,artfolder + 'SDB.png','nao','')
         else:
                 html_items_categorias = re.findall('<div class="menu">(.*?)</div><!--menu-->', html_categorias_source, re.DOTALL)
                 if html_items_categorias:
@@ -160,7 +160,7 @@ def ARM_Menu_Filmes_Por_Categorias_MEGA_tv():
                                         if 'Seriados' not in nome_categoria and 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria and 'blank' not in endereco_categoria:
                                                 if 'ultimos' in nome_categoria:
                                                         nome_categoria = 'Últimos'
-                                                        addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                                                        addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder + 'SDB.png','nao','')
         #else:
         url_ = 'http://megafilmeshd.tv/category/animacao'
         try:
@@ -173,24 +173,24 @@ def ARM_Menu_Filmes_Por_Categorias_MEGA_tv():
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
                         if 'Home' in nome_categoria and len(endereco_categoria)>2: nome_categoria = 'Recentes'
                         if 'Seriados' not in nome_categoria and 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria and 'blank' not in endereco_categoria:
-                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder + 'SDB.png','nao','')
                 filmes_por_categoria = re.compile('href="(.+?)" title="(.+?)"').findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
                         if 'Home' in nome_categoria and len(endereco_categoria)>2: nome_categoria = 'Recentes'
                         if 'Seriados' not in nome_categoria and 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria and 'blank' not in endereco_categoria:
-                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder + 'SDB.png','nao','')
         if not html_items_categorias:
                 html_items_categorias = re.findall('<div class="styled-select">(.*?)</select>', html_categorias_source, re.DOTALL)
                 for item_categorias in html_items_categorias:
                         filmes_por_categoria = re.compile('<option value="(.+?)" style=".+?">(.+?)</option>').findall(item_categorias)
                         for endereco_categoria,nome_categoria in filmes_por_categoria:
                                 if 'Seriados' not in nome_categoria and 'animacao' not in nome_categoria and 'series' not in nome_categoria and 'Infantil' not in nome_categoria and 'Home' not in nome_categoria and 'blank' not in endereco_categoria:
-                                        addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                                        addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,349,artfolder + 'SDB.png','nao','')
         
                 
 
 def ARM_Menu_Filmes_Por_Categorias_MEGA_net():
-        addDir1(name,'url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
+        addDir1(name,'url',1005,artfolder + 'SDB.png',False,'')
         addDir1('','url',1005,artfolder,False,'')
         html_categorias_source = ARM_abrir_url(url)
 	html_items_categorias = re.findall('<li id="menu_genero">(.*?)<ul id="category-thumbs">', html_categorias_source, re.DOTALL)
@@ -199,13 +199,13 @@ def ARM_Menu_Filmes_Por_Categorias_MEGA_net():
                 filmes_por_categoria = re.compile('<li><a href="(.+?)">(.+?)</a></li>').findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
                         if 'Lan\xc3\xa7amentos' not in nome_categoria and 'S\xc3\xa9ries' not in nome_categoria:
-                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,351,artfolder + 'SDOSBRAZUCAS.png','nao','')
+                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,351,artfolder + 'SDB.png','nao','')
 
 def ARM_Menu_Series_MEGA_net():
-        addDir1(name,'url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
+        addDir1(name,'url',1005,artfolder + 'SDB.png',False,'')
         addDir1('','url',1005,artfolder,False,'')
-        addDir('[B][COLOR orange]Séries[/COLOR][/B]','http://megafilmeshd.net/series/',353,artfolder + 'SDOSBRAZUCAS.png','nao','')
-        addDir('[B][COLOR orange]Animes/Desenhos[/COLOR][/B]','http://megafilmeshd.net/series/',353,artfolder + 'SDOSBRAZUCAS.png','nao','')
+        addDir('[B][COLOR orange]Séries[/COLOR][/B]','http://megafilmeshd.net/series/',353,artfolder + 'SDB.png','nao','')
+        addDir('[B][COLOR orange]Animes/Desenhos[/COLOR][/B]','http://megafilmeshd.net/series/',353,artfolder + 'SDB.png','nao','')
 
 
 def ARM_pesquisar():
@@ -217,7 +217,7 @@ def ARM_pesquisar():
 		parametro_pesquisa=urllib.quote(search) #parametro_pesquisa faz o quote da expressao search, isto é, escapa os parametros necessarios para ser incorporado num endereço url
 		url_pesquisa = url + str(parametro_pesquisa)#+ '&x=0&y=0' #nova definicao de url. str força o parametro de pesquisa a ser uma string
                 nome_pesquisa = str(parametro_pesquisa)
-		#addDir1(url_pesquisa,'','',artfolder + 'SDOSBRAZUCAS.png',False,'')
+		#addDir1(url_pesquisa,'','',artfolder + 'SDB.png',False,'')
                 if 'megaseriesonlinehd' in url_pesquisa: ARM_encontrar_fontes_filmes_MEGASERIESONLINEHD(url_pesquisa)
                 if 'megafilmeshd.tv' in url_pesquisa: ARM_encontrar_fontes_filmes_MEGA_tv(url_pesquisa)
 		if 'armagedom' in url_pesquisa: ARM_encontrar_fontes_filmes(url_pesquisa) #chama a função listar_videos com o url definido em cima
@@ -278,8 +278,8 @@ def ARM_encontrar_fontes_filmes(url):
                         except: pass
 	proxima = re.compile('<link rel="next" href="(.+?)"/>').findall(html_source)		
 	try:
-                #addDir1('','url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
-		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),332,artfolder + 'PSDOSBRAZUCAS.png','nao','')
+                #addDir1('','url',1005,artfolder + 'SDB.png',False,'')
+		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),332,artfolder + 'PAGS2.png','nao','')
         except:pass
 
 def ARM_encontrar_fontes_filmes_MEGASERIESONLINEHD(url):        
@@ -325,7 +325,7 @@ def ARM_encontrar_fontes_filmes_MEGASERIESONLINEHD(url):
 	proxima = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a>').findall(html_source)		
 	try:
                 #addDir1('','','',iconimage,False,'')
-		addDir("Página Seguinte >>",proxima[0].replace('amp;',''),357,artfolder + 'PSDOSBRAZUCAS.png','nao','')
+		addDir("Página Seguinte >>",proxima[0].replace('amp;',''),357,artfolder + 'PAGS2.png','nao','')
         except:pass
 
 
@@ -393,8 +393,8 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
                         except: pass
 	proxima = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">»</a>').findall(html_source)		
 	try:
-                #addDir1('','url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
-		addDir("Página Seguinte >>",proxima[0].replace('amp;',''),349,artfolder + 'PSDOSBRAZUCAS.png','nao','')
+                #addDir1('','url',1005,artfolder + 'SDB.png',False,'')
+		addDir("Página Seguinte >>",proxima[0].replace('amp;',''),349,artfolder + 'PAGS2.png','nao','')
         except:pass
 
 
@@ -429,8 +429,8 @@ def ARM_encontrar_fontes_filmes_MEGA_net(url):
                         except: pass
 	proxima = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">></a>').findall(html_source)		
 	try:
-                #addDir1('','url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
-		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),351,artfolder + 'PSDOSBRAZUCAS.png','nao','')
+                #addDir1('','url',1005,artfolder + 'SDB.png',False,'')
+		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),351,artfolder + 'PAGS2.png','nao','')
         except:pass
 
 def ARM_encontrar_fontes_filmes_pesquisa_MEGA_net(url,nome_pesquisa):
@@ -528,8 +528,8 @@ def ARM_encontrar_fontes_series_MEGA_net(url):
                         except: pass
 	proxima = re.compile('<a class="nextpostslink"  rel="next" href="(.+?)">></a>').findall(html_source)		
 	try:
-                #addDir1('','url',1005,artfolder + 'SDOSBRAZUCAS.png',False,'')
-		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),351,artfolder + 'PSDOSBRAZUCAS.png','nao','')
+                #addDir1('','url',1005,artfolder + 'SDB.png',False,'')
+		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),351,artfolder + 'PAGS2.png','nao','')
         except:pass
 
 def ARM_encontrar_fontes_series_pesquisa_MEGA_net(url,nome_pesquisa):
@@ -1741,7 +1741,7 @@ def ARM_encontrar_fontes_filmes_M18():
 	proxima = re.compile('<a class="next page-numbers" href="(.+?)">').findall(html_source)		
 	try:
                 #addDir1('','','',iconimage,False,'')
-		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),332,artfolder + 'PSDOSBRAZUCAS.png','nao','')
+		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),332,artfolder + 'PAGS2.png','nao','')
         except:pass
 	
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -1781,7 +1781,7 @@ def ARM_get_params():
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'SDBFAN.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -1789,7 +1789,7 @@ def addLink(name,url,iconimage):
 def addLink1(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'SDBFAN.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -1799,7 +1799,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'SDBFAN.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": text } )
         #cm = []
 	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
@@ -1811,7 +1811,7 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'SDBFAN.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok

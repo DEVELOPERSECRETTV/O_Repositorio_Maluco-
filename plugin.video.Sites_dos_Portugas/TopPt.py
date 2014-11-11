@@ -53,19 +53,19 @@ def TPT_MenuPrincipal(artfolder):
                 saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
                 saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
                 if not saber_url_series: saber_url_series = re.compile('<a href="(.+?)">SERIES</a></li>').findall(toppt_source)
-                addDir('- Procurar','url',1,artfolder + 'P.png','nao','')
-                if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1001,artfolder + 'TPT.png',False,'')
-                addDir('[COLOR yellow]- Todos[/COLOR]',saber_url_todos[0],232,artfolder + 'TODOS.png','nao','')
-                addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'ANIMACAO.png','nao','')
-                addDir('[COLOR yellow]- Por Ano[/COLOR]','url',239,artfolder + 'FPANO.png','nao','')
-                addDir('[COLOR yellow]- Categorias[/COLOR]','url',238,artfolder + 'FCATEGORIAS.png','nao','')
-                addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://toppt.net/',258,artfolder + 'TOPFILMES.png','nao','')
+                addDir('- Procurar','url',1,artfolder + 'P1.png','nao','')
+                if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1001,artfolder + 'TPT1.png',False,'')
+                addDir('[COLOR yellow]- Todos[/COLOR]',saber_url_todos[0],232,artfolder + 'FT.png','nao','')
+                addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'FA.png','nao','')
+                addDir('[COLOR yellow]- Por Ano[/COLOR]','url',239,artfolder + 'ANO.png','nao','')
+                addDir('[COLOR yellow]- Categorias[/COLOR]','url',238,artfolder + 'CT.png','nao','')
+                addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://toppt.net/',258,artfolder + 'TPF.png','nao','')
                 if selfAddon.getSetting('hide-porno') == "false":
-                                addDir('[B][COLOR red]M+18[/B][/COLOR]',saber_url_M18[0],232,artfolder + 'TPT.png','nao','')		
-                if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'TPT.png',False,'')
-                addDir('[COLOR yellow]- A a Z[/COLOR]','urlTPT',241,artfolder + 'SAZ.png','nao','')#241
-                addDir('[COLOR yellow]- Recentes[/COLOR]',saber_url_series[0],232,artfolder + 'SRECENTES.png','nao','')
-                addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',259,artfolder + 'TOPSERIES.png','nao','')
+                                addDir('[B][COLOR red]M+18[/B][/COLOR]',saber_url_M18[0],232,artfolder + 'TPT1.png','nao','')		
+                if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'TPT1.png',False,'')
+                addDir('[COLOR yellow]- A a Z[/COLOR]','urlTPT',241,artfolder + 'SAZ1.png','nao','')#241
+                addDir('[COLOR yellow]- Últimos Episódios[/COLOR]',saber_url_series[0],232,artfolder + 'UE.png','nao','')
+                addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',259,artfolder + 'TPS.png','nao','')
         except:pass
 
 def TPT_Menu_Posts_Recentes(artfolder):
@@ -89,14 +89,14 @@ def antiga_TPT_Menu_Filmes_Por_Ano(artfolder): #antiga
         filmes_por_ano = re.compile('<option class="level-0" value="(.+?)">(.+?)</option>').findall(ano_source)
 	for num_cat,nome_ano in filmes_por_ano:
                 endereco_ano = 'http://toppt.net/?cat=' + str(num_cat)
-		addDir('[COLOR yellow]' + nome_ano + '[/COLOR] ',endereco_ano,232,artfolder + 'TPT.png','nao','')
+		addDir('[COLOR yellow]' + nome_ano + '[/COLOR] ',endereco_ano,232,artfolder + 'TPT1.png','nao','')
 		if str(nome_ano) == '2014': break
 
 def TPT_Menu_Filmes_Por_Ano(artfolder):
         ano = 2014
         for x in range(46):
                 categoria_endereco = 'http://toppt.net/category/' + str(ano) + '/'
-                addDir('[COLOR yellow]' + str(ano) + '[/COLOR]',categoria_endereco,232,artfolder + 'TPT.png','nao','')
+                addDir('[COLOR yellow]' + str(ano) + '[/COLOR]',categoria_endereco,232,artfolder + 'TPT1.png','nao','')
                 ano = ano - 1
 
 def TPT_Menu_Top_Filmes(artfolder):
@@ -153,13 +153,76 @@ def TPT_Menu_Top_Filmes(artfolder):
                                                 if len(q_a_q_a) == 4:
                                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                                         nome = nome.replace(tirar_ano,'')
+                        
+                                if fanart == '':
+                                        n = re.compile('(.+?)[[].+?[]]').findall(nome)
+                                        if not n: n = re.compile('(.+?) [-] ').findall(nome)
+                                        if n:
+                                                nome_pesquisa = n[0]
+                                                nn = 1
+                                        else:
+                                                nome_pesquisa = nome
+                                                nn = 2
+                                        nome_pesquisa = nome_pesquisa.replace('NCIS','NCIS:')
+                                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                        a_q = re.compile('\w+')
+                                        qq_aa = a_q.findall(nome_pesquisa)
+                                        nome_pesquisa = ''
+                                        for q_a_q_a in qq_aa:
+                                                if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                        nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                        if 'Temporada' not in nome and 'Season' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                        if 'Temporada' in nome or 'Season' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                        if thumb == '':
+                                                try:
+                                                        html_pesquisa = TPT_abrir_url(url_pesquisa)
+                                                except: html_pesquisa = ''
+                                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                if items_pesquisa != []:
+                                                        thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                        if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                        if fanart == '':
+                                                try:
+                                                        html_pesquisa = TPT_abrir_url(url_pesquisa)
+                                                except: html_pesquisa = ''
+                                                items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                                if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0] + '?language=pt'
+                                                try:
+                                                        html_pesquisa = TPT_abrir_url(url_pesquisa)
+                                                except: html_pesquisa = ''
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
+                                                snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
+                                                if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
+                                                if snpse: sinopse = snpse[0]
+                                                else:
+                                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0] + '?language=en'
+                                                        try:
+                                                                html_pesquisa = TPT_abrir_url(url_pesquisa)
+                                                        except: html_pesquisa = ''
+                                                        snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
+                                                        if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
+                                                        if snpse: sinopse = snpse[0]
                                 if genero == '':
                                         genre = '---'
                                         genero = '---'
                                 if sinopse == '':
                                         plot = '---'
                                         sinopse = '---'
-                                if fanart == '': fanart = ''
+                                if fanart == '---': fanart = ''
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
                                 if tph == '': tph = '---'
@@ -208,16 +271,78 @@ def TPT_Menu_Top_Series(artfolder):
                                 nome = nome.replace('&#038;',"&")
                                 nome = nome.replace('&#39;',"'")
                                 nome = nome.replace('&amp;','&')
+                                if fanart == '':
+                                        n = re.compile('(.+?)[[].+?[]]').findall(nome)
+                                        if not n: n = re.compile('(.+?) [-] ').findall(nome)
+                                        if n:
+                                                nome_pesquisa = n[0]
+                                                nn = 1
+                                        else:
+                                                nome_pesquisa = nome
+                                                nn = 2
+                                        nome_pesquisa = nome_pesquisa.replace('NCIS','NCIS:')
+                                        nome_pesquisa = nome_pesquisa.replace('é','e')
+                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                        nome_pesquisa = nome_pesquisa.replace('á','a')
+                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                        nome_pesquisa = nome_pesquisa.replace('è','e')
+                                        nome_pesquisa = nome_pesquisa.replace('í','i')
+                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                        nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                        a_q = re.compile('\w+')
+                                        qq_aa = a_q.findall(nome_pesquisa)
+                                        nome_pesquisa = ''
+                                        for q_a_q_a in qq_aa:
+                                                if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                        nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                        if 'Temporada' not in nome and 'Season' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                        if 'Temporada' in nome or 'Season' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                        if thumb == '':
+                                                try:
+                                                        html_pesquisa = TPT_abrir_url(url_pesquisa)
+                                                except: html_pesquisa = ''
+                                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                                if items_pesquisa != []:
+                                                        thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                        if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                        if fanart == '':
+                                                try:
+                                                        html_pesquisa = TPT_abrir_url(url_pesquisa)
+                                                except: html_pesquisa = ''
+                                                items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                                if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0] + '?language=pt'
+                                                try:
+                                                        html_pesquisa = TPT_abrir_url(url_pesquisa)
+                                                except: html_pesquisa = ''
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
+                                                snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
+                                                if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
+                                                if snpse: sinopse = snpse[0]
+                                                else:
+                                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0] + '?language=en'
+                                                        try:
+                                                                html_pesquisa = TPT_abrir_url(url_pesquisa)
+                                                        except: html_pesquisa = ''
+                                                        snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
+                                                        if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
+                                                        if snpse: sinopse = snpse[0]
                                 if genero == '':
                                         genre = '---'
                                         genero = '---'
                                 if sinopse == '':
                                         plot = '---'
                                         sinopse = '---'
-                                if fanart == '': fanart = '---'
+                                if fanart == '---': fanart = ''
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
-                                addDir('[B][COLOR green]' + nome + '[/COLOR][/B]',tpe,233,tph,'nao','')
+                                addDir('[B][COLOR green]' + nome + '[/COLOR][/B]',tpe,233,tph,sinopse,fanart)
                         except: pass
                         i = i + 1
         progress.close()
@@ -236,7 +361,7 @@ def TPT_Menu_Filmes_Por_Categorias(artfolder):
                                 nome_categoria = nome_categoria.lower()
                                 nome_categoria = nome_categoria.title()
                                 conta_os_items = conta_os_items + 1
-                                addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ',endereco_categoria,232,artfolder + 'TPT.png','nao','')
+                                addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ',endereco_categoria,232,artfolder + 'TPT1.png','nao','')
 
 def TPT_Menu_Series_A_a_Z(artfolder,url):
         conta_os_items = 0
@@ -535,7 +660,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                         except: html_pesquisa = ''
                                                         url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
                                                         if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                        else: fanart = thumb
+                                                        else: fanart = '---'
                                         ano_filme = '('+ano_filme+')'
                                         qualidade = '('+qualidade
                                         audio_filme = audio_filme+')'
@@ -798,7 +923,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                         except: html_pesquisa = ''
                                                         url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
                                                         if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                        else: fanart = thumb
+                                                        else: fanart = '---'
                                         ano_filme = '('+ano_filme+')'
                                         qualidade = '('+qualidade
                                         audio_filme = audio_filme+')'
@@ -860,6 +985,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                 si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(arrai_series[x])
                                 if si: sinopse = si[0][0] + ' ' + si[0][1]
                                 else: sinopse = '---'
+                        if fanart == '---': fanart = ''
                         addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',imdbcode,3006,thumb,sinopse,fanart,ano,genero)
         Series_File = open(folder + 'series.txt', 'w')
         for x in range(len(_series_)):
@@ -1103,7 +1229,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                         except: html_pesquisa = ''
                                         url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
                                         if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                        else: fanart = thumb
+                                        else: fanart = '---'
 ##                        if fan == "sim":
 ##                                if fanart == '': fanart = thumb
                         ano_filme = '('+ano_filme+')'
@@ -1164,7 +1290,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 if sinopse == '':
                                         plot = '---'
                                         sinopse = '---'
-                                if fanart == '': fanart = ''
+                                if fanart == '---': fanart = ''
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
                                 addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
@@ -1181,9 +1307,9 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
 	proxima = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
 	try:
                 if n_name == '- Recentes' or name == 'Seguinte >>':
-                        addDir("Seguinte >>",proxima[0].replace('#038;','').replace('&amp;','&'),232,artfolder + 'PSEGUINTE.png','','')
+                        addDir("Seguinte >>",proxima[0].replace('#038;','').replace('&amp;','&'),232,artfolder + 'PAGS1.png','','')
                 else:
-                        addDir("Página Seguinte >>",proxima[0].replace('#038;','').replace('&amp;','&'),232,artfolder + 'PSEGUINTE.png','','')
+                        addDir("Página Seguinte >>",proxima[0].replace('#038;','').replace('&amp;','&'),232,artfolder + 'PAGS1.png','','')
         except:pass
         progress.close()
 
@@ -2566,7 +2692,7 @@ def TPT_get_params():
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -2574,13 +2700,13 @@ def addLink(name,url,iconimage):
 def addLink1(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
 
 def addDir(name,url,mode,iconimage,checker,fanart):
-        if fanart == '': fanart = artfolder + 'FAN.jpg'
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
         #text = 'nnnnnn'
         text = ''
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&fanart="+urllib.quote_plus(fanart)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
@@ -2600,7 +2726,7 @@ def addDir2(nome,url,mode,iconimage,checker,fanart):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&nome="+urllib.quote_plus(nome)+"&checker="+urllib.quote_plus(checker)+"&fanart="+urllib.quote_plus(fanart)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(nome, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": nome, "Plot": text } )
         #cm = []
 	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
@@ -2609,7 +2735,7 @@ def addDir2(nome,url,mode,iconimage,checker,fanart):
         return ok
 
 def addDir1(name,url,mode,iconimage,folder,fanart):
-        if fanart == '': fanart = artfolder + 'FAN.jpg'
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
@@ -2619,7 +2745,7 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         return ok
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'FAN.jpg'
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
         #text = plot
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
         ok=True

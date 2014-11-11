@@ -29,6 +29,13 @@ artfolder = addonfolder + '/resources/img/'
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def pesquisar():
+        
+        if name == '[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)' or name == 'Procurar':
+                FS = 'FS'
+        if name == '[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)':
+                FS = 'F'
+        if name == '[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)':
+                FS = 'S'
 	keyb = xbmc.Keyboard('', 'Escreva o parâmetro de pesquisa')
 	keyb.doModal()
 	if (keyb.isConfirmed()):
@@ -55,82 +62,95 @@ def pesquisar():
                 progress.create('Progresso', 'A Procurar')
                 progress.update( percent, 'A Procurar...'+site, message, "" )
 
-		a = 0
-                site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
-                percent = int( ( a / 6.0 ) * 100)
-                message = ''
-                progress.update(percent, 'A Procurar em '+site, message, "")
-                print str(a) + " de " + str(int(a))
+                addDir1('[COLOR yellow]PROCUROU POR:[/COLOR] '+str(encode),'url',1004,artfolder + 'SDPI.png',False,'')
 
-		url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
-		encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
-		a= 1
-                site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
-                percent = int( ( a / 6.0 ) * 100)
-                message = ''
-                progress.update(percent, 'A Procurar em '+site, message, "")
-                print str(a) + " de " + str(int(a))
+                if FS == 'FS' or FS == 'F':
+                        addDir1('[B][COLOR blue]Filmes:[/COLOR][/B]','url',1004,artfolder + 'FILMES1.png',False,'')
+                        FSS = 'F'
+                        a = 0
+                        site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
+                        percent = int( ( a / 6.0 ) * 100)
+                        message = ''
+                        progress.update(percent, 'A Procurar em '+site, message, "")
+                        print str(a) + " de " + str(int(a))
 
-		url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode)
-		encontrar_fontes_filmes_TFC(url_pesquisa)
-		a = 2
-                site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
-                percent = int( ( a / 6.0 ) * 100)
-                message = ''
-                progress.update(percent, 'A Procurar em '+site, message, "")
-                print str(a) + " de " + str(int(a))
+                        url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
+                        encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou,FSS)
+                        a= 1
+                        site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
+                        percent = int( ( a / 6.0 ) * 100)
+                        message = ''
+                        progress.update(percent, 'A Procurar em '+site, message, "")
+                        print str(a) + " de " + str(int(a))
 
-		url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode)
-		encontrar_fontes_pesquisa_MVT(url_pesquisa)
-		a = 3
-                site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
-                percent = int( ( a / 6.0 ) * 100)
-                message = ''
-                progress.update(percent, 'A Procurar em '+site, message, "")
-                print str(a) + " de " + str(int(a))
+                        url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode)
+                        encontrar_fontes_filmes_TFC(url_pesquisa,pesquisou,FSS)
+                        a = 2
+                        site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
+                        percent = int( ( a / 6.0 ) * 100)
+                        message = ''
+                        progress.update(percent, 'A Procurar em '+site, message, "")
+                        print str(a) + " de " + str(int(a))
 
-		url_pesquisa = 'http://toppt.net/?s=' + str(encode)
-		encontrar_fontes_filmes_TPT(url_pesquisa)
+                        url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode)
+                        encontrar_fontes_pesquisa_MVT(url_pesquisa,pesquisou,FSS)
+                        a = 3
+                        site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
+                        percent = int( ( a / 6.0 ) * 100)
+                        message = ''
+                        progress.update(percent, 'A Procurar em '+site, message, "")
+                        print str(a) + " de " + str(int(a))
 
-                a = 4
-                site = '[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]'
-                percent = int( ( a / 6.0 ) * 100)
-                message = ''
-                progress.update(percent, 'A Procurar em '+site, message, "")
-                print str(a) + " de " + str(int(a))
+                        url_pesquisa = 'http://toppt.net/?s=' + str(encode)
+                        encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou,FSS)
 
-                url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar'
-                encontrar_fontes_pesquisa_FTT(url_pesquisa)
+                        a = 4
+                        site = '[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]'
+                        percent = int( ( a / 6.0 ) * 100)
+                        message = ''
+                        progress.update(percent, 'A Procurar em '+site, message, "")
+                        print str(a) + " de " + str(int(a))
 
-                a = 5
-                site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]'
-                percent = int( ( a / 6.0 ) * 100)
-                message = ''
-                progress.update(percent, 'A Procurar em '+site, message, "")
-                print str(a) + " de " + str(int(a))
+                        url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar'
+                        encontrar_fontes_pesquisa_FTT(url_pesquisa,pesquisou,FSS)
 
-                url_pesquisa = 'http://www.tugafilmes.org/search?q=' + str(encode)
-                encontrar_fontes_pesquisa_CMT(url_pesquisa)
+                        a = 5
+                        site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]'
+                        percent = int( ( a / 6.0 ) * 100)
+                        message = ''
+                        progress.update(percent, 'A Procurar em '+site, message, "")
+                        print str(a) + " de " + str(int(a))
 
-                a = 6
-                site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]'
-                percent = int( ( a / 6.0 ) * 100)
-                message = ''
-                progress.update(percent, 'A Procurar em '+site, message, "")
-                print str(a) + " de " + str(int(a))
+                        url_pesquisa = 'http://www.tugafilmes.org/search?q=' + str(encode)
+                        encontrar_fontes_pesquisa_CMT(url_pesquisa,pesquisou,FSS)
+                        
+                if FS == 'FS' or FS == 'S':
+                        addDir1('[B][COLOR blue]Séries:[/COLOR][/B]','url',1004,artfolder + 'SERIES1.png',False,'')
+                        FSS = 'S'
+
+                        url_pesquisa = 'http://toppt.net/?s=' + str(encode)
+                        encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou,FSS)
+
+                        url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
+                        encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou,FSS)
+
+                        a = 6
+                        site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]'
+                        percent = int( ( a / 6.0 ) * 100)
+                        message = ''
+                        progress.update(percent, 'A Procurar em '+site, message, "")
+                        print str(a) + " de " + str(int(a))
 
 
                 xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                xbmc.executebuiltin("Container.SetViewMode(500)")
+                xbmc.executebuiltin("Container.SetViewMode(502)")
                 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_pesquisa_TFV(url,pesquisou):
-        pesquisado = pesquisou.replace('%20',' ')
-        addLink(url,'','')
+def encontrar_fontes_pesquisa_TFV(url,pesquisou,FS):
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -139,61 +159,166 @@ def encontrar_fontes_pesquisa_TFV(url,pesquisou):
                 num_f = 0
 		print len(items)
 		for item in items:
-                        try:
-                                audio_filme = ''
-                                imdbcode = ''
+                        thumb = ''
+                        fanart = ''
+                        versao = ''
+                        audio_filme = ''
+                        imdbcode = ''
+                        tirar_ano = ''
 
-                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
-                                if imdb: imdbcode = imdb[0]
-                                else: imdbcode = ''
-                                
-                                urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
-                                if "Temporada" in urletitulo[0][1]:
-                                        urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+                        imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
+                        if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
+                        genero = re.compile("nero</b>:(.+?)<br />").findall(item)
+                        if genero: genre = genero[0]
+                        else: genre = ''
+                        resumo = re.compile("<b>Resumo</b>:(.+?)<br />").findall(item)
+                        if resumo: sinopse = resumo[0]
+                        else: sinopse = ''
+                        titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
+                        if titulooriginal:
+                                nome_original = titulooriginal[0]
+                                #addDir1(nome_original,'','',artfolder + 'PAGS1.png',False,'')
+                        else:
+                                titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
+                                if titulooriginal:
+                                        nome_original = titulooriginal[0]
+                                else: nome_original = ''
+                                #addDir1(nome_original,'','',artfolder + 'PAGS1.png',False,'')
+                        urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+
+                        tto=re.compile('tulo Original:</b>:(.+?)<br').findall(item)
+                        if tto: ttor = tto[0]
+                        else:
+                                tto=re.compile('tulo Original:</b>(.+?)<br').findall(item)
+                                if tto: ttor = tto[0]
+                        ttp=re.compile('<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>:(.+?)<br').findall(item)
+                        if ttp: ttpo = ttp[0]
+                        else:
+                                ttp=re.compile('<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br').findall(item)
+                                if ttp: ttpo = ttp[0]
+                        #urletitulo = re.compile("<h1>(.+?)\n</h1>").findall(item)
+                        if ttp and not tto: nome = ttp[0]
+                        elif not ttp and tto: nome = tto[0]
+                        elif ttp and tto:
+                                ttocomp = '['+ tto[0]
+                                ttpcomp = '['+ ttp[0]
+                                if ttpcomp.replace('[ ','') != ttocomp.replace('[ ',''): nome = ttp[0] +' ['+ tto[0] +']'
+                                else: nome = ttp[0]
+                        elif not ttp and not tto: nome = urletitulo[0][1]
+                        nome = nome.replace('[ ',"[")
+                        
+                        qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
+                        ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
+                        audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
+                        imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
+                        if audio != []:
+                                if 'Portug' in audio[0]:
+                                        audio_filme = ': PT-PT'
+                                else:
+                                        audio_filme = audio[0]
+                        thumbnail = re.compile('src="(.+?)"').findall(item)
+                        if thumbnail: thumb = thumbnail[0]
+                        else: thumb = ''
+                        print urletitulo,thumb
+                        #nome = urletitulo[0][1]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        nome = nome.replace('(PT-PT)',"")
+                        nome = nome.replace('(PT/PT)',"")
+                        nome = nome.replace('[PT-PT]',"")
+                        nome = nome.replace('[PT/PT]',"")
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+
+                        if fanart == '':
+                                nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
+                                if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
+                                if nnnn : nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                nome_pesquisa = nome_pesquisa.replace('.',"")
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                if "Temporada" in urletitulo[0][1] or 'Season' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+
+                                if thumb == '':
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                if fanart == '':
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        else: fanart = '---'
+
+                        if qualidade:
+                                qualidade = qualidade[0]
+                        else:
+                                qualidade = ''
+                        if genre == '': genre = '---'
+                        if sinopse == '': sinopse = '---'
+                        if fanart == '---': fanart = ''
+                        if imdbcode == '': imdbcode = '---'
+                        if thumb == '': thumb = '---'
+                        try:
+                                if "Temporada" in urletitulo[0][1] or 'Season' in urletitulo[0][1]:
                                         num_mode = 42
                                 else:
-                                        urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
                                         num_mode = 33
-                                qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
-                                ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
-                                audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
-                                if audio != []:
-                                        if 'Portug' in audio[0]:
-                                                audio_filme = ': PT-PT'
-                                        else:
-                                                audio_filme = audio[0]
-                                thumbnail = re.compile('src="(.+?)"').findall(item)
-                                print urletitulo,thumbnail
-                                nome = urletitulo[0][1]
-                                nome = nome.replace('&#8217;',"'")
-                                nome = nome.replace('&#8211;',"-")
-                                nome = nome.replace('(PT-PT)',"")
-                                nome = nome.replace('(PT/PT)',"")
-                                nome = nome.replace('[PT-PT]',"")
-                                nome = nome.replace('[PT/PT]',"")
-                                if ano:
-                                        a_q = re.compile('\d+')
-                                        qq_aa = a_q.findall(nome)
-                                        for q_a_q_a in qq_aa:
-                                                if len(q_a_q_a) == 4:
-                                                        tirar_ano = '(' + str(q_a_q_a) + ')'
-                                                        nome = nome.replace(tirar_ano,'')
-                                if qualidade:
-                                        qualidade = qualidade[0]
-                                else:
-                                        qualidade = ''
-                                try:
-                                        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
-                                        num_f = num_f + 1
-                                except: pass
+                                if ("Temporada" in urletitulo[0][1] and FS == 'FS') or ("Temporada" in urletitulo[0][1] and FS == 'S'):
+                                        addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace(tirar_ano,'') + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                        #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                                if ("Temporada" not in urletitulo[0][1] and FS == 'FS') or ("Temporada" not in urletitulo[0][1] and FS == 'F'):
+                                        addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                        #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
+
+                                num_f = num_f + 1
                         except: pass
+
         else: return
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_filmes_TFC(url):
+def encontrar_fontes_filmes_TFC(url,pesquisou,FS):
         pt_en = 0
 	try:
 		html_source = abrir_url(url)
@@ -203,143 +328,182 @@ def encontrar_fontes_filmes_TFC(url):
                 num_f = 0
 		print len(items)
 		for item in items:
-                        try:
-                                versao = ''
-                                imdbcode = ''
+                        fanart = ''
+                        thumb = ''
+                        versao = ''
+                        sinopse = ''
+                        imdbcode = ''
+                        genero = ''
+                        qualidade = ''
 
-                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
-                                if imdb: imdbcode = imdb[0]
-                                else: imdbcode = ''
-                                
-                                pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
-                                if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
-                                urletitulo = re.compile("<a href=\'(.+?)\' title=\'(.+?)\'>").findall(item)
-                                qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
-                                thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
-                                print urletitulo,thumbnail
-                                nome_pesquisa = urletitulo[0][1]
-                                nome_pesquisa = nome_pesquisa.replace('&#8217;',"'")
-                                nome_pesquisa = nome_pesquisa.replace('&#8211;',"-")
-                                nome_pesquisa = nome_pesquisa.replace('&#038;',"&")
-                                nome_pesquisa = nome_pesquisa.replace('&#39;',"'")
-                                nome_pesquisa = nome_pesquisa.replace('&amp;','&')
-                                ano = 'Ano'
-                                qualidade = ''
-                                e_qua = 'nao'
-                                calid = ''
-                                if qualidade_ano != []:
-                                        for q_a in qualidade_ano:
-                                                #addDir1(q_a,'','','',False,'')
-                                                a_q = re.compile('\d+')
-                                                qq_aa = a_q.findall(q_a)
-                                                for q_a_q_a in qq_aa:
-                                                        if len(q_a_q_a) == 4:
-                                                                ano = q_a_q_a
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
+                        pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(item)
+                        if '---------------------------------------' in item and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
+                        assist = re.findall(">ASSISTIR.+?", item, re.DOTALL)
+                        if len(assist) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
+			urletitulo = re.compile("<a href=\'(.+?)\' title=\'(.+?)\'>").findall(item)
+			qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
+			snpse = re.compile('<b>SINOPSE:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
+			if snpse: sinopse = snpse[0]
+			else: sinopse = ''
+			thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
+			if thumbnail: thumb = thumbnail[0]
+			print urletitulo,thumbnail
+			ano = 'Ano'
+			qualidade = ''
+			e_qua = 'nao'
+			calid = ''
+			if qualidade_ano != []:
+                                for q_a in qualidade_ano:
+                                        a_q = re.compile('\d+')
+                                        qq_aa = a_q.findall(q_a)
+                                        for q_a_q_a in qq_aa:
+                                                if len(q_a_q_a) == 4:
+                                                        ano = q_a_q_a
+                                quali = re.compile('\w+')
+                                qualid = quali.findall(q_a)
+                                for qua_qua in qualid:
+                                        if len(qua_qua) == 4 and qua_qua == ano:
+                                                e_qua = 'sim'
+                                                qua_qua = ''
+                                                espaco = ''
+                                                espa = 0
+                                        if e_qua == 'sim' and espa < 2:
+                                                espa = espa + 1
+                                        if e_qua == 'sim' and espa == 2:
+                                                qualidade = qualidade + espaco + qua_qua
+                                                espaco = ' '
+                                if len(ano) < 4:
+                                        ano = 'Ano'
+                                if qualidade == 'PT PT':
+                                        qualidade = 'PT-PT'
+                                if qualidade == '':
+                                        quali_titi = urletitulo[0][1].replace('á','a')
+                                        quali_titi = urletitulo[0][1].replace('é','e')
+                                        quali_titi = urletitulo[0][1].replace('í','i')
+                                        quali_titi = urletitulo[0][1].replace('ó','o')
+                                        quali_titi = urletitulo[0][1].replace('ú','u')
                                         quali = re.compile('\w+')
                                         qualid = quali.findall(q_a)
                                         for qua_qua in qualid:
-                                                if len(qua_qua) == 4 and qua_qua == ano:
-                                                        e_qua = 'sim'
-                                                        qua_qua = ''
-                                                        espaco = ''
-                                                        espa = 0
-                                                if e_qua == 'sim' and espa < 2:
-                                                        espa = espa + 1
-                                                if e_qua == 'sim' and espa == 2:
-                                                        qualidade = qualidade + espaco + qua_qua
-                                                        espaco = ' '
-                                        if len(ano) < 4:
-                                                ano = 'Ano'
-                                                #qualidade = q_a
-                                        if qualidade == 'PT PT':
+                                                qua_qua = str.capitalize(qua_qua)
+                                                calid = calid + ' ' + qua_qua
+                                        tita = re.compile('\w+')
+                                        titalo = tita.findall(quali_titi)
+                                        for tt in titalo:
+                                                tt = str.capitalize(tt)
+                                                if tt in calid:
+                                                        qualidade = re.sub(tt,'',calid)
+                                                        calid = re.sub(tt,'',calid)
+                                        qqqq = re.compile('\w+')
+                                        qqqqq = qqqq.findall(qualidade)
+                                        for qqq in qqqqq:
+                                                if qqq in quali_titi:
+                                                        qualidade = qualidade.replace(qqq,'')
+                                        nnnn = re.compile('\d+')
+                                        nnnnn = nnnn.findall(qualidade)
+                                        for nnn in nnnnn:
+                                                if nnn in ano:
+                                                        qualidade = qualidade.replace(nnn,'')
+                                        quatit = re.compile('\s+')
+                                        qualititulo = quatit.findall(qualidade)
+                                        for q_t in qualititulo:
+                                                if len(q_t)>1:
+                                                        qualidade = qualidade.replace(q_t,'')
+                                        if qualidade == 'Pt Pt':
                                                 qualidade = 'PT-PT'
-                                        if qualidade == '':
-                                                quali_titi = urletitulo[0][1].replace('á','a')
-                                                quali_titi = urletitulo[0][1].replace('é','e')
-                                                quali_titi = urletitulo[0][1].replace('í','i')
-                                                quali_titi = urletitulo[0][1].replace('ó','o')
-                                                quali_titi = urletitulo[0][1].replace('ú','u')
-                                                #addDir1(quali_titi,'','','',False,'')
-                                                quali = re.compile('\w+')
-                                                qualid = quali.findall(q_a)
-                                                for qua_qua in qualid:
-                                                        qua_qua = str.capitalize(qua_qua)
-                                                        calid = calid + ' ' + qua_qua
-                                                tita = re.compile('\w+')
-                                                titalo = tita.findall(quali_titi)
-                                                for tt in titalo:
-                                                        tt = str.capitalize(tt)
-                                                        if tt in calid:
-                                                                qualidade = re.sub(tt,'',calid)
-                                                                calid = re.sub(tt,'',calid)
-                                                qqqq = re.compile('\w+')
-                                                qqqqq = qqqq.findall(qualidade)
-                                                for qqq in qqqqq:
-                                                        if qqq in quali_titi:
-                                                                qualidade = qualidade.replace(qqq,'')
-                                                nnnn = re.compile('\d+')
-                                                nnnnn = nnnn.findall(qualidade)
-                                                for nnn in nnnnn:
-                                                        if nnn in ano:
-                                                                qualidade = qualidade.replace(nnn,'')
-                                                quatit = re.compile('\s+')
-                                                qualititulo = quatit.findall(qualidade)
-                                                for q_t in qualititulo:
-                                                        if len(q_t)>1:
-                                                                qualidade = qualidade.replace(q_t,'')
-                                                if qualidade == 'Pt Pt':
-                                                        qualidade = 'PT-PT'
-                                else:
-                                        qualidade = ''
-                                #addDir1(url,'','','',False,'')
-                                if 'Pt Pt' in qualidade:
-                                        qualidade = qualidade.replace('Pt Pt','PT-PT')
-                                if 'PT PT' in qualidade:
-                                        qualidade = qualidade.replace('PT PT','PT-PT')
-                                if imdbcode == '':
-                                        conta = 0
-                                        nome_pesquisa = nome_pesquisa.replace('é','e')
-                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                        nome_pesquisa = nome_pesquisa.replace('á','a')
-                                        nome_pesquisa = nome_pesquisa.replace('à','a')
-                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                        nome_pesquisa = nome_pesquisa.replace('è','e')
-                                        nome_pesquisa = nome_pesquisa.replace('í','i')
-                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                        a_q = re.compile('\w+')
-                                        qq_aa = a_q.findall(nome_pesquisa)
-                                        nome_p = ''
-                                        for q_a_q_a in qq_aa:
-                                                if conta == 0:
-                                                        nome_p = q_a_q_a
-                                                        conta = 1
-                                                else:
-                                                        nome_p = nome_p + '+' + q_a_q_a
-                                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-                                        html_imdbcode = abrir_url(url_imdb)
-                                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                                        imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                                        imdbcode = imdbcd[0]
+                        else:
+                                qualidade = ''
+                        if 'Pt Pt' in qualidade:
+                                qualidade = qualidade.replace('Pt Pt','PT-PT')
+                        if 'PT PT' in qualidade:
+                                qualidade = qualidade.replace('PT PT','PT-PT')
+                        nome = urletitulo[0][1]
+                        nome = nome.replace('&#8216;',"'")
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        sinopse = sinopse.replace('&#8216;',"'")
+                        sinopse = sinopse.replace('&#8217;',"'")
+                        sinopse = sinopse.replace('&#8211;',"-")
+                        sinopse = sinopse.replace('&#39;',"'")
+                        sinopse = sinopse.replace('&amp;','&')
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+                        if fanart == '':
+                                nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                nome_pesquisa = nome_pesquisa.replace('.',"")
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                if thumb == '':
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                if fanart == '':
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        else: fanart = '---'
+
+                        if genero == '': genero = '---'
+                        if sinopse == '': sinopse = '---'
+                        if fanart == '---': fanart = ''
+                        if imdbcode == '': imdbcode = '---'
+                        if thumb == '': thumb = '---'
+                        if qualidade == '': qualidade = '---'
                                         
-                                try:
-                                        if 'BREVEMENTE' not in item:
-                                                addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
-                                                num_f = num_f + 1
-                                except: pass
+                        try:
+
+                                if 'BREVEMENTE' not in item:
+                                        if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,qualidade)
+                                        #addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
+                                        num_f = num_f + 1
                         except: pass
+
         else: return
 	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_pesquisa_MVT(url):
+def encontrar_fontes_pesquisa_MVT(url,pesquisou,FS):
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -348,71 +512,119 @@ def encontrar_fontes_pesquisa_MVT(url):
                 num_f = 0
 		print len(items)
 		for item in items:
+                        thumb = ''
+                        fanart = ''
+                        sinopse = ''
+                        genero = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
+                        url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
+                        #url = re.compile("<a href='(.+?)'><div align=").findall(item)
+                        if 'http' not in url[0]:
+                                url[0] = 'http:' + url[0]
+
+                        snpse = re.compile("<div id='imgsinopse'>(.+?)</div>").findall(item)
+                        if snpse: sinopse = snpse[0]
+                        sinopse = sinopse.replace('&#8216;',"'")
+                        sinopse = sinopse.replace('&#8217;',"'")
+                        sinopse = sinopse.replace('&#8211;',"-")
+                        sinopse = sinopse.replace('&#8220;',"'")
+                        sinopse = sinopse.replace('&#8221;',"'")
+                        sinopse = sinopse.replace('&#39;',"'")
+                        sinopse = sinopse.replace('&amp;','&')
+                        
+                        gen = re.compile("nero:</strong>(.+?)</div>").findall(item)
+                        if gen: genero = gen[0]
+                        
+                        if 'Qualidade:' in item:
+                                qualidade = re.compile("<strong>Qualidade:</strong>(.+?)</div>").findall(item)
+                                qualidade_filme = qualidade[0].replace('&#8211;',"-")
+                        else:
+                                qualidade_filme = ''
+                                
+                        ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
+                        
+                        thumbnail = re.compile('src="(.+?)"').findall(item)
+                        if 'http' not in thumbnail[0]: thumbnail[0] = 'http:' + thumbnail[0]
+                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
+                        
+                        titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
+                        titulo[0] = titulo[0].replace('&#8217;',"'")
+                        titulo[0] = titulo[0].replace('&#8211;',"-")
+                        if 'Dear John' in titulo[0] and ano[0] == '2013': titulo[0] = titulo[0].replace('Dear John','12 Anos Escravo')
+                        nome = titulo[0]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        nome = nome.replace('PT',"")
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+                        
+                        if fanart == '':
+                                nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
+                                if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?)[:]').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+                                if nnnn : nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                nome_pesquisa = nome_pesquisa.replace('.',"")
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                if thumb == '':
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                if fanart == '':
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        else: fanart = '---'
+                        if genero == '': genero = '---'
+                        if sinopse == '': sinopse = '---'
+                        if fanart == '---': fanart = ''
+                        if imdbcode == '': imdbcode = '---'
+                        if thumb == '': thumb = '---'
+
                         try:
-                                imdbcode = ''
-
-                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
-                                if imdb: imdbcode = imdb[0]
-                                else: imdbcode = ''
-                                
-                                url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
-                                if 'http' not in url[0]:
-                                        urllink = 'http:' + url[0]
-                                else: urllink = url[0] 
-                                titulo = re.compile("<strong>T\xc3\xadtulo original:</strong>(.+?)</div>").findall(item)
-                                if 'Qualidade:' in item:
-                                        qualidade = re.compile("<strong>Qualidade:</strong>(.+?)</div>").findall(item)
-                                        qualidade_filme = qualidade[0].replace('&#8211;',"-")
-                                else:
-                                        qualidade_filme = ''
-                                ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
-                                thumb = re.compile('src="(.+?)"').findall(item)
-                                if 'http' not in thumb[0]:
-                                        thumbnail = 'http:' + thumb[0]
-                                else: thumbnail = thumb[0]
-                                print url,thumbnail
-                                titulo[0] = titulo[0].replace('&#8217;',"'")
-                                titulo[0] = titulo[0].replace('&#8211;',"-")
-                                titulo[0] = titulo[0].replace('&#038;',"&")
-                                titulo[0] = titulo[0].replace('&#39;',"'")
-                                titulo[0] = titulo[0].replace('&amp;','&')
-
-                                
-                                if imdbcode == '':
-                                        conta = 0
-                                        nome_pesquisa = titulo[0]
-                                        nome_pesquisa = nome_pesquisa.replace('é','e')
-                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                        nome_pesquisa = nome_pesquisa.replace('á','a')
-                                        nome_pesquisa = nome_pesquisa.replace('à','a')
-                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                        nome_pesquisa = nome_pesquisa.replace('è','e')
-                                        nome_pesquisa = nome_pesquisa.replace('í','i')
-                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                        a_q = re.compile('\w+')
-                                        qq_aa = a_q.findall(nome_pesquisa)
-                                        nome_p = ''
-                                        for q_a_q_a in qq_aa:
-                                                if conta == 0:
-                                                        nome_p = q_a_q_a
-                                                        conta = 1
-                                                else:
-                                                        nome_p = nome_p + '+' + q_a_q_a
-                                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-                                        html_imdbcode = abrir_url(url_imdb)
-                                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                                        imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                                        imdbcode = imdbcd[0]
-                                try:
-                                        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumbnail.replace('s72-c','s320').replace(' ','%20'),'','')
-                                        num_f = num_f + 1
-                                except: pass
+                                addDir_teste('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0].replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumb.replace(' ','%20'),sinopse,fanart,ano[0],genero)
                         except: pass
         else: return
 	return
@@ -421,7 +633,8 @@ def encontrar_fontes_pesquisa_MVT(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-def encontrar_fontes_filmes_TPT(url):
+def encontrar_fontes_filmes_TPT(url,pesquisou,FS):
+        series = 0
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -431,301 +644,227 @@ def encontrar_fontes_filmes_TPT(url):
                 num_f = 0
 		print len(items)
 		for item in items:
-                        try:
-                                audio_filme = ''
-                                urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
-                                if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
-                                url = urletitulo[0][0]
-                                try:
-                                        html_source = abrir_url(url)
-                                except: html_source = ''
-                                items = re.findall('<div class="post-(.*?)<span id="more-', html_source, re.DOTALL)
-                                if items != []:
-                                        print len(items)
-                                        for item in items:
-                                                audio_filme = ''
-                                                qualidade = ''
-                                                imdbcode = ''
+                        sinopse = ''
+                        fanart = ''
+                        thumb = ''
+                        genero = ''
+                        qualidade = ''
+                        audio_filme = ''
+                        imdbcode = ''
 
-                                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
-                                                if imdb: imdbcode = imdb[0]
-                                                else: imdbcode = ''
-                                                
-                                                titulo = re.compile('<h2 class="title">(.+?)</h2>').findall(item)
-                                                #urlpesq = re.compile('<span class="entry-date"><a href="(.+?)" rel="bookmark">').findall(item)
-                                                qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
-                                                if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
-                                                if qualid:
-                                                        qualidade = qualid[0]
-                                                        qualidade = qualidade.replace('[',' - ')
-                                                        qualidade = qualidade.replace(']','')
-                                                else:
-                                                        qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
-                                                        if qualid:
-                                                                qualidade = qualid[0]
-                                                                qualidade = qualidade.replace('[',' - ')
-                                                                qualidade = qualidade.replace(']','')
-                                                        else:
-                                                                qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(item)
-                                                                if qualid:
-                                                                        qualidade = qualid[0]
-                                                                        qualidade = qualidade.replace('[',' - ')
-                                                                        qualidade = qualidade.replace(']','')
-                                                                else:
-                                                                        qualidade = ''
-                                                ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
-                                                audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)    
-                                                thumbnail = re.compile('src="(.+?)"').findall(item)
-                                                print urletitulo,thumbnail
-                                                nome = titulo[0]
-                                                nome = nome.replace('&#8217;',"'")
-                                                nome = nome.replace('&#8211;',"-")
-                                                nome = nome.replace('&#038;',"&")
-                                                nome = nome.replace('(PT-PT)',"")
-                                                nome = nome.replace('(PT/PT)',"")
-                                                nome = nome.replace('[PT-PT]',"")
-                                                nome = nome.replace('[PT/PT]',"")
-                                                generos = re.compile('id="post-.+?" class="post-.+? post type-post status-publish format-standard hentry (.+?)">').findall(item)
-                                                if not generos: generos = re.compile('post type-post status-publish format-standard hentry (.+?)id="post-.+?">').findall(item)
-                                                if generos:
-                                                        genero = generos[0]
-                                                else:
-                                                        genero = ''
-                                                if audio:
-                                                        if len(audio[0]) > 15:
-                                                                audio = re.compile('<b>AUDIO: </b>(.+?)<span style="color: red;"><b>(.+?)</b></span><br/>').findall(item)
-                                                                if audio:
-                                                                        audio_filme = ': ' + audio[0][0] + audio[0][1]
-                                                                else:
-                                                                        audio = re.compile('<b>AUDIO: </b> <b><span style="color: red;">(.+?)</span> <span style="color: #38761d;">(.+?)</span></b><br/>').findall(item)
-                                                                        if audio:
-                                                                                audio_filme = audio[0][0] + audio[0][1]
-                                                                                if 'Portug' or 'PORTUG' in audio_filme:
-                                                                                        audio_filme = ': PT-PT'
-                                                                        else:
-                                                                                audio = re.compile('<b>AUDIO:.+?<strong>(.+?)</strong>').findall(item)
-                                                                                if audio:
-                                                                                        audio_filme = audio[0][0] + audio[0][1]
-                                                                                        if 'Portug' or 'PORTUG' in audio_filme:
-                                                                                                audio_filme = ': PT-PT'
-                                                        else:
-                                                                audio_filme = ': ' + audio[0]
-                                                if not audio:
-                                                        audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br/>").findall(item)
-                                                        if audio:
-                                                                audio_filme = ': ' + audio[0]
-                                                        else:
-                                                                audio_filme = ''
-                                                if not ano:
-                                                        ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
-                                                        if ano:
-                                                                ano_filme = ': ' + ano[0]
-                                                        else:
-                                                                ano_filme = ''     
-                                                if ano:
-                                                        ano_filme = ano[0]
-                                                        a_q = re.compile('\d+')
-                                                        qq_aa = a_q.findall(nome)
-                                                        for q_a_q_a in qq_aa:
-                                                                if len(q_a_q_a) == 4:
-                                                                        tirar_ano = '(' + str(q_a_q_a) + ')'
-                                                                        nome = nome.replace(tirar_ano,'')
-
-                                                try:
-                                                        #addDir(nome,urletitulo[0][0],233,'','','')
-                                                        if 'filmes' in genero or 'series' in genero or 'animacao' in genero:
-                                                                if 'online' in genero:
-                                                                        #if 'OP\xc3\x87\xc3\x83O' in item:
-                                                                        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',233,thumbnail[0].replace('s72-c','s320'),'','')
-                                                                        num_f = num_f + 1
-                                                except: pass
-                        except: pass
-        else: return
-	return
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-
-def encontrar_fontes_pesquisa_FTT(url):
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	items = re.findall("<div class='post hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-	if items != []:
-		print len(items)
-		num_f = 0
-		for item in items:
-                        try:
-                                thumb = ''
-                                fanart = ''
-                                anofilme= ''
-                                qualidade_filme = ''
-                                imdbcode = ''
-
-                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
-                                if imdb: imdbcode = imdb[0]
-                                else: imdbcode = ''
-
-                                urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
-                                if urletitulo:
-                                        urlvideo = urletitulo[0][0]
-                                        nome = urletitulo[0][1]
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
+                        urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
+                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
+                        
+                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
+                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        if qualid:
+                                qualidade = qualid[0]
+                                qualidade = qualidade.replace('[',' - ')
+                                qualidade = qualidade.replace(']','')
+                        else:
+                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                if qualid:
+                                        qualidade = qualid[0]
+                                        qualidade = qualidade.replace('[',' - ')
+                                        qualidade = qualidade.replace(']','')
                                 else:
-                                        urlvideo = ''
-                                        nome = ''
+                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(item)
+                                        if qualid:
+                                                qualidade = qualid[0]
+                                                qualidade = qualidade.replace('[',' - ')
+                                                qualidade = qualidade.replace(']','')
+                                        else:
+                                                qualidade = ''
+                        
+                        snpse = re.compile("<b>SINOPSE:.+?/b>(.+?)<br/>").findall(item)
+                        if not snpse: snpse = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
+                        if snpse: sinopse = snpse[0]
+                        else:
+                                try:
+                                        fonte_video = abrir_url(urletitulo[0][0])
+                                except: fonte_video = ''
+                                fontes_video = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', fonte_video, re.DOTALL)
+                                if fontes_video != []:
+                                        snpse = re.compile('Sinopse.png".+?/><br/>\n(.+?)</p>').findall(fontes_video[0])
+                                        if snpse: sinopse = snpse[0]
+                                        else: sinopse = ''
+                        sinopse = sinopse.replace('&#8216;',"'")
+                        sinopse = sinopse.replace('&#8217;',"'")
+                        sinopse = sinopse.replace('&#8211;',"-")
+                        sinopse = sinopse.replace('&#8220;',"'")
+                        sinopse = sinopse.replace('&#8221;',"'")
+                        sinopse = sinopse.replace('&#39;',"'")
+                        sinopse = sinopse.replace('&amp;','&')
                                         
-                                ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
-                                if ano: anofilme = ano[0]
-                                else: anofilme = ''
-                                
-                                #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
-                                thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
-                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
-                                else: thumb = ''
-                                
-                                nome = nome.replace('&#8217;',"'")
-                                nome = nome.replace('&#8211;',"-")
-                                nome = nome.replace('&#39;',"'")
-                                nome = nome.replace('&amp;','&')
-                                nome = nome.replace('(Pedido)',"").replace('[Pedido]','')
-                                
+                        genr = re.compile("NERO:.+?/b>(.+?)<br/>").findall(item)
+                        if genr: genero = genr[0]
+                        
+                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
+                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)
+                        thumbnail = re.compile('src="(.+?)"').findall(item)
+                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
+                        print urletitulo,thumbnail
+                        nome = urletitulo[0][1]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#038;',"&")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        nome = nome.replace('(PT-PT)',"")
+                        nome = nome.replace('(PT/PT)',"")
+                        nome = nome.replace('[PT-PT]',"")
+                        nome = nome.replace('[PT/PT]',"")
+                        nome = nome.replace('[PT-BR]',"")
+                        nome = nome.replace('[PT/BR]',"")
+                        nome = nome.replace(' (PT-PT)',"")
+                        nome = nome.replace(' (PT/PT)',"")
+                        nome = nome.replace(' [PT-PT]',"")
+                        nome = nome.replace(' [PT/PT]',"")
+                        nome = nome.replace(' [PT-BR]',"")
+                        nome = nome.replace(' [PT/BR]',"")
+                        nome = nome.replace('  '," ")
+                        if audio:
+                                if len(audio[0]) > 15:
+                                        audio = re.compile('<b>AUDIO: </b>(.+?)<span style="color: red;"><b>(.+?)</b></span><br/>').findall(item)
+                                        if audio:
+                                                audio_filme = ': ' + audio[0][0] + audio[0][1]
+                                        else:
+                                                audio = re.compile('<b>AUDIO: </b> <b><span style="color: red;">(.+?)</span> <span style="color: #38761d;">(.+?)</span></b><br/>').findall(item)
+                                                if audio:
+                                                        audio_filme = audio[0][0] + audio[0][1]
+                                                        if 'Portug' or 'PORTUG' in audio_filme:
+                                                                audio_filme = ': PT-PT'
+                                                else:
+                                                        audio = re.compile('<b>AUDIO:.+?<strong>(.+?)</strong>').findall(item)
+                                                        if audio:
+                                                                audio_filme = audio[0][0] + audio[0][1]
+                                                                if 'Portug' or 'PORTUG' in audio_filme:
+                                                                        audio_filme = ': PT-PT'
+                                else:
+                                        audio_filme = ': ' + audio[0]
+                        if not audio:
+                                audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br/>").findall(item)
+                                if audio:
+                                        audio_filme = ': ' + audio[0]
+                                else:
+                                        audio_filme = ''
+                        if not ano:
+                                ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
+                                if ano:
+                                        ano_filme = ': ' + ano[0].replace(' ','')
+                                else:
+                                        ano_filme = ''     
+                        if ano:
+                                ano_filme = ano[0].replace(' ','')
                                 a_q = re.compile('\d+')
                                 qq_aa = a_q.findall(nome)
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) == 4:
-                                                anofilme = str(q_a_q_a)
-                                                tirar_ano = '- ' + str(q_a_q_a)
-                                                nome = nome.replace(tirar_ano,'--')
-                                                tirar_ano = '-' + str(q_a_q_a)
-                                                nome = nome.replace(tirar_ano,'--')
-                                                tirar_ano = str(q_a_q_a)
-                                                nome = nome.replace(tirar_ano,'--')
-
-                                qualidade = re.compile("--(.*)").findall(nome)
-                                if qualidade:
-                                        qualidade_filme = qualidade[0]
-                                        nome = nome.replace('--','')
-                                        nome = nome.replace(qualidade_filme,'')
+                                                tirar_ano = '(' + str(q_a_q_a) + ')'
+                                                nome = nome.replace(tirar_ano,'')
+                        
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+                        if fanart == '':
+##                                if series == 1:
+##                                        nn = 0
+##                                        nome_pesquisa = n_name
+##                                else:
+                                n = re.compile('(.+?)[[].+?[]]').findall(nome)
+                                if n:
+                                        nome_pesquisa = n[0]
+                                        nn = 1
                                 else:
-                                        qualidade_filme = ''
-                                        nome = nome.replace('--','')
-
-                                if 'PT/PT' in nome:
-                                        qualidade_filme = 'PT/PT'
-                                        nome = nome.replace('-'+qualidade_filme,'')
-                                        nome = nome.replace('- '+qualidade_filme,'')
-                                        nome = nome.replace(qualidade_filme,'')
-                                if 'PT-PT' in nome:
-                                        qualidade_filme = 'PT-PT'
-                                        nome = nome.replace('-'+qualidade_filme,'')
-                                        nome = nome.replace('- '+qualidade_filme,'')
-                                        nome = nome.replace(qualidade_filme,'')
-                                if 'PT/BR' in nome:
-                                        qualidade_filme = 'PT/BR'
-                                        nome = nome.replace('-'+qualidade_filme,'')
-                                        nome = nome.replace('- '+qualidade_filme,'')
-                                        nome = nome.replace(qualidade_filme,'')
-                                if 'PT-BR' in nome:
-                                        qualidade_filme = 'PT-BR'
-                                        nome = nome.replace('-'+qualidade_filme,'')
-                                        nome = nome.replace('- '+qualidade_filme,'')
-                                        nome = nome.replace(qualidade_filme,'')
-
-                                nome = nome.replace('((','(')
-                                nome = nome.replace('))',')')
-                                nome = nome.replace('()','(')
-
-                                if imdbcode == '':
-                                        conta = 0
                                         nome_pesquisa = nome
-                                        nome_pesquisa = nome_pesquisa.replace('é','e')
-                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                        nome_pesquisa = nome_pesquisa.replace('á','a')
-                                        nome_pesquisa = nome_pesquisa.replace('à','a')
-                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                        nome_pesquisa = nome_pesquisa.replace('è','e')
-                                        nome_pesquisa = nome_pesquisa.replace('í','i')
-                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                        a_q = re.compile('\w+')
-                                        qq_aa = a_q.findall(nome_pesquisa)
-                                        nome_p = ''
-                                        for q_a_q_a in qq_aa:
-                                                if conta == 0:
-                                                        nome_p = q_a_q_a
-                                                        conta = 1
+                                        nn = 2
+                                nome_pesquisa = nome_pesquisa.replace('NCIS','NCIS:')
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                if 'Temporada' not in nome and 'Season' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                if 'Temporada' in nome or 'Season' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                if thumb == '':
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                if fanart == '':
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        else: fanart = '---'
+
+                        ano_filme = '('+ano_filme+')'
+                        qualidade = '('+qualidade
+                        audio_filme = audio_filme+')'
+                        if series == 1:
+                                n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(nome)
+                                if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(nome)
+                                if n: nome = n[0][0]+' - '+n[0][1]
+                                else:
+                                        n = re.compile('[(](.+?)[)][(](.+?)[)]').findall(nome)
+                                        if not n: n = re.compile('[(](.+?)[)] [(](.+?)[)]').findall(nome)
+                                        if n: nome = n[0][0]+' - '+n[0][1]
+                                        else:
+                                                n = re.compile('[[](.+?)[]]').findall(nome)
+                                                if n: nome = n[0]
                                                 else:
-                                                        nome_p = nome_p + '+' + q_a_q_a
-                                        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-                                        html_imdbcode = abrir_url(url_imdb)
-                                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                                        imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                                        imdbcode = imdbcd[0]
-                                                
-                                #fanart = artfolder + 'FAN.jpg'
-                                if fanart == 'fgfgfgfgfgfggf':
-                                        nome_pesquisa = nome
-                                        nome_pesquisa = nome_pesquisa.replace('é','e')
-                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                        nome_pesquisa = nome_pesquisa.replace('á','a')
-                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                        nome_pesquisa = nome_pesquisa.replace('è','e')
-                                        nome_pesquisa = nome_pesquisa.replace('í','i')
-                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                        nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                        a_q = re.compile('\w+')
-                                        qq_aa = a_q.findall(nome_pesquisa)
-                                        nome_pesquisa = ''
-                                        for q_a_q_a in qq_aa:
-                                                if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                        nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                        if 'Temporada' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
-                                        else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                        if thumb == '':# or 's1600' in thumb:
-                                                try:
-                                                        html_pesquisa = abrir_url(url_pesquisa)
-                                                except: html_pesquisa = ''
-                                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                if items_pesquisa != []:
-                                                        thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                                        if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                        if selfAddon.getSetting('movie-fanart-MVT') == "true":
-                                                try:
-                                                        html_pesquisa = abrir_url(url_pesquisa)
-                                                except: html_pesquisa = ''
-                                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                if items_pesquisa != []:
-                                                        url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
-                                                        if url_filme_pesquisa:
-                                                                url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
-                                                                try:
-                                                                        html_pesquisa = abrir_url(url_pesquisa)
-                                                                except: html_pesquisa = ''
-                                                                url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                                if url_fan:
-                                                                        for urls_fanart in url_fan:
-                                                                                url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
-                                                                                if url_fanart:
-                                                                                        fanart = url_fanart[0].replace('w300','w1280')
-                                                                                else:
-                                                                                        fanart = thumb
-                                                else: fanart = thumb
-                                if selfAddon.getSetting('movie-fanart-MVT') == "true":
-                                        if fanart == '': fanart = thumb
-                                try:
-                                        addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,'',fanart,anofilme,'')
-                                        num_f = num_f + 1
-                                except: pass
+                                                        n = re.compile('[(](.+?)[)]').findall(nome)
+                                                        if n: nome = n[0]
+
+                                qualidade = ''
+                                ano_filme = ''
+                                audio_filme = ''                  
+
+                        if genero == '':
+                                genre = '---'
+                                genero = '---'
+                        if sinopse == '':
+                                plot = '---'
+                                sinopse = '---'
+                        if fanart == '---': fanart = ''
+                        if imdbcode == '': imdbcode = '---'
+                        if thumb == '': thumb = '---'
+
+                        try:
+                                if ("Season" in nome and FS == 'FS') or ("Season" in nome and FS == 'S'):
+                                        addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
+                                if ("Season" not in nome and FS == 'FS') or ("Season" not in nome and FS == 'F'):
+                                        addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
                         except: pass
         else: return
 	return
@@ -733,7 +872,234 @@ def encontrar_fontes_pesquisa_FTT(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_pesquisa_CMT(url):
+def encontrar_fontes_pesquisa_FTT(url,pesquisou,FS):
+	try:
+		html_source = abrir_url(url)
+	except: html_source = ''
+	items = re.findall("<a class='comment-link'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+	if items != []:
+		print len(items)
+		num_f = 0
+		for item in items:
+                        thumb = ''
+                        genero = ''
+                        sinopse = ''
+                        fanart = ''
+                        anofilme= ''
+                        qualidade_filme = ''
+                        imdbcode = ''
+                        audio_filme = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+
+                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        if urletitulo:
+                                urlvideo = urletitulo[0][0]
+                                nome = urletitulo[0][1]
+                        else:
+                                urlvideo = ''
+                                nome = ''
+
+                        try:
+                                fonte_video = abrir_url(urlvideo)
+                        except: fonte_video = ''
+                        fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+                        if fontes_video != []:
+                                qualid = re.compile('ASSISTIR ONLINE LEGENDADO(.+?)\n').findall(fontes_video[0])
+                                if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')
+                                else:
+                                        qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
+                                        if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')
+
+                                
+                        snpse = re.compile('Sinopse.png"></a></div>\n(.+?)\n').findall(item)
+                        if snpse: sinopse = snpse[0]
+                        sinopse = sinopse.replace('&#8216;',"'")
+                        sinopse = sinopse.replace('&#8217;',"'")
+                        sinopse = sinopse.replace('&#8220;',"'")
+                        sinopse = sinopse.replace('&#8221;',"'")
+                        sinopse = sinopse.replace('&#8211;',"-")
+                        sinopse = sinopse.replace('&#39;',"'")
+                        sinopse = sinopse.replace('&amp;','&')
+                                
+                        ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
+                        if ano: anofilme = ano[0]
+                        else: anofilme = ''
+
+                        generos = re.compile("rel='tag'>(.+?)</a>").findall(item)
+                        conta = 0
+                        for gener in generos:
+                                if conta == 0:
+                                        if gener.replace(' ','') != anofilme.replace(' ',''):
+                                                genero = gener
+                                                conta = conta + 1
+                                else:
+                                        if gener.replace(' ','') != anofilme.replace(' ',''):
+                                                genero = genero +'  '+ gener
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(genero)
+                        conta = 0
+                        for q_a_q_a in qq_aa:
+                                genero = genero.replace(str(q_a_q_a)+'  ','')
+                        
+                        #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                        thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
+                        #if not thumbnail: thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+                        if not thumbnail: thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                        if not thumbnail: thumbnail = re.compile('<img alt="image" height=".+?" src="(.+?)" width=".+?" />').findall(item)
+                        if not thumbnail: thumbnail = re.compile('<img src="(.+?)" height=".+?" width=".+?" />').findall(item)
+                        if not thumbnail: thumbnail = re.compile('<img height=".+?" src="(.+?)" width=".+?" />').findall(item)
+                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                        else: thumb = ''
+                        if 'container' in thumb:
+                                thumbnail = re.compile('url=(.+?)blogspot(.+?)&amp;container').findall(thumb)
+                                if thumbnail: thumb = thumbnail[0][0].replace('%3A',':').replace('%2F','/')+'blogspot'+thumbnail[0][1].replace('%3A',':').replace('%2F','/')
+
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        nome = nome.replace('(Pedido)',"").replace('[Pedido]','')
+                        
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        anofilme = str(q_a_q_a)
+                                        tirar_ano = '- ' + str(q_a_q_a)
+                                        nome = nome.replace(tirar_ano,'')
+                                        tirar_ano = '-' + str(q_a_q_a)
+                                        nome = nome.replace(tirar_ano,'')
+                                        tirar_ano = str(q_a_q_a)
+                                        nome = nome.replace(tirar_ano,'')
+
+                        if '[PT/PT]' in nome:
+                                audio_filme = 'PT/PT'
+                                nome = nome.replace('-'+audio_filme,'')
+                                nome = nome.replace('- '+audio_filme,'')
+                                nome = nome.replace(audio_filme,'')
+                        if '[PT-PT]' in nome:
+                                audio_filme = 'PT-PT'
+                                nome = nome.replace('-'+audio_filme,'')
+                                nome = nome.replace('- '+audio_filme,'')
+                                nome = nome.replace(audio_filme,'')
+                        if '[PT/BR]' in nome:
+                                audio_filme = 'PT/BR'
+                                nome = nome.replace('-'+audio_filme,'')
+                                nome = nome.replace('- '+audio_filme,'')
+                                nome = nome.replace(audio_filme,'')
+                        if '[PT-BR]' in nome:
+                                audio_filme = 'PT-BR'
+                                nome = nome.replace('-'+audio_filme,'')
+                                nome = nome.replace('- '+audio_filme,'')
+                                nome = nome.replace(audio_filme,'')
+                        if 'PT/PT' in nome:
+                                audio_filme = 'PT/PT'
+                                nome = nome.replace('-'+audio_filme,'')
+                                nome = nome.replace('- '+audio_filme,'')
+                                nome = nome.replace(audio_filme,'')
+                        if 'PT-PT' in nome:
+                                audio_filme = 'PT-PT'
+                                nome = nome.replace('-'+audio_filme,'')
+                                nome = nome.replace('- '+audio_filme,'')
+                                nome = nome.replace(audio_filme,'')
+                        if 'PT/BR' in nome:
+                                audio_filme = 'PT/BR'
+                                nome = nome.replace('-'+audio_filme,'')
+                                nome = nome.replace('- '+audio_filme,'')
+                                nome = nome.replace(audio_filme,'')
+                        if 'PT-BR' in nome:
+                                audio_filme = 'PT-BR'
+                                nome = nome.replace('-'+audio_filme,'')
+                                nome = nome.replace('- '+audio_filme,'')
+                                nome = nome.replace(audio_filme,'')
+
+                        nome = nome.replace('-- ',"")
+                        nome = nome.replace(' --',"")
+                        nome = nome.replace('--',"")
+
+                        if audio_filme != '': qualidade_filme = qualidade_filme + ' - ' + audio_filme
+
+                        nome = nome.replace('((','(')
+                        nome = nome.replace('))',')')
+                        nome = nome.replace('()','(')
+                        nome = nome.replace('  ','')
+                        nome = nome.replace(' - []','')
+##                        nnn = re.compile('[(](.+?)[)]').findall(nome)
+##                        if nnn: nome = nnn[0]
+##                        nnn = re.compile('[[](.+?)[]]').findall(nome)
+##                        if nnn: nome = nnn[0]
+
+                        #if selfAddon.getSetting('movie-fanart-FTT') == "true" and fanart == '':
+                        if fanart == '':
+                                nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
+                                if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+##                                        nomes = '|'+nome.replace(' - ','|')
+##                                        nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
+                                if nnnn : nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                if thumb == '':
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                #if selfAddon.getSetting('series-fanart-FTT') == "true":
+                                if fanart == '':
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
+                                        try:
+                                                html_pesquisa = abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        else: fanart = '---'
+                        #if selfAddon.getSetting('movie-fanart-FTT') == "true":
+                                #if fanart == '': fanart = thumb
+                        if genero == '': genero = '---'
+                        if sinopse == '': sinopse = '---'
+                        if fanart == '---': fanart = ''
+                        if imdbcode == '': imdbcode = '---'
+                        if thumb == '': thumb = '---'
+                        try:
+                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,sinopse,fanart,anofilme,genero)
+                        except: pass
+        else: return
+	return
+
+#----------------------------------------------------------------------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------------------------------#
+
+def encontrar_fontes_pesquisa_CMT(url,pesquisou,FS):
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -743,131 +1109,132 @@ def encontrar_fontes_pesquisa_CMT(url):
 		print len(items)
 		num_f = 0
 		for item in items:
-                        try:
-                                thumb = ''
-                                fanart = ''
-                                versao = ''
-                                audio_filme = ''
-                                imdbcode = ''
+                        thumb = ''
+                        fanart = ''
+                        versao = ''
+                        audio_filme = ''
+                        imdbcode = ''
 
-                                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
-                                if imdb: imdbcode = imdb[0]
-                                else: imdbcode = ''
-                                
-                                #if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
-                                genero = re.compile("nero</b>:(.+?)<br />").findall(item)
-                                if genero: genre = genero[0]
-                                else: genre = ''
-                                resumo = re.compile("<b>Resumo</b>:(.+?)<br />").findall(item)
-                                if resumo: sinopse = resumo[0]
-                                else: sinopse = ''
-                                titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
+                        #if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
+                        genero = re.compile("nero</b>:(.+?)<br />").findall(item)
+                        if genero: genre = genero[0]
+                        else: genre = ''
+                        resumo = re.compile("<b>Resumo</b>:(.+?)<br />").findall(item)
+                        if resumo: sinopse = resumo[0]
+                        else: sinopse = ''
+                        titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
+                        if titulooriginal:
+                                nome_original = titulooriginal[0]
+                                #addDir1(nome_original,'','','',False,'')
+                        else:
+                                titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
                                 if titulooriginal:
                                         nome_original = titulooriginal[0]
+                                else: nome_original = ''
+                                #addDir1(nome_original,'','','',False,'')
+                        urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+                        qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
+                        if not qualidade: qualidade = re.compile("Ass.+?tir online .+?[(](.+?)[)]").findall(item)
+                        ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
+                        audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
+                        imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
+                        if audio != []:
+                                if 'Portug' in audio[0]:
+                                        audio_filme = ': PT-PT'
                                 else:
-                                        titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
-                                        if titulooriginal:
-                                                nome_original = titulooriginal[0]
-                                        else: nome_original = ''
-                                urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
-                                qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
-                                ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
-                                audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
-                                imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
-                                if audio != []:
-                                        if 'Portug' in audio[0]:
-                                                audio_filme = ': PT-PT'
-                                        else:
-                                                audio_filme = audio[0]
-                                thumbnail = re.compile('src="(.+?)"').findall(item)
-                                if thumbnail: thumb = thumbnail[0]
-                                else: thumb = ''
-                                print urletitulo,thumb
-                                nome = urletitulo[0][1]
-                                nome = nome.replace('&#8217;',"'")
-                                nome = nome.replace('&#8211;',"-")
-                                nome = nome.replace('&#39;',"'")
-                                nome = nome.replace('&#183;',"-")
-                                nome = nome.replace('&amp;','&')
-                                nome = nome.replace('(PT-PT)',"")
-                                nome = nome.replace('(PT/PT)',"")
-                                nome = nome.replace('[PT-PT]',"")
-                                nome = nome.replace('[PT/PT]',"")
-                                a_q = re.compile('\d+')
-                                qq_aa = a_q.findall(nome)
+                                        audio_filme = audio[0]
+                        thumbnail = re.compile('src="(.+?)"').findall(item)
+                        if thumbnail: thumb = thumbnail[0]
+                        else: thumb = ''
+                        print urletitulo,thumb
+                        nome = urletitulo[0][1]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&#183;',"-")
+                        nome = nome.replace('&amp;','&')
+                        nome = nome.replace('(PT-PT)',"")
+                        nome = nome.replace('(PT/PT)',"")
+                        nome = nome.replace('[PT-PT]',"")
+                        nome = nome.replace('[PT/PT]',"")
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+                                        
+                        if fanart == '':
+                                nnnn = re.compile('(.+?): ').findall(nome)
+                                if not nnnn:
+                                        nomes = '|'+nome.replace(' - ','|')
+                                        nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
+                                if nnnn : nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
+                                nome_pesquisa = nome_pesquisa.replace('.',"")
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_pesquisa = ''
                                 for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) == 4:
-                                                tirar_ano = '(' + str(q_a_q_a) + ')'
-                                                nome = nome.replace(tirar_ano,'')
-                                #fanart = artfolder + 'FAN.jpg'
-                                if fanart == 'dfgdfgfdggf':
-                                        nome_pesquisa = nome_original
-                                        nome_pesquisa = nome_pesquisa.replace('é','e')
-                                        nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                        nome_pesquisa = nome_pesquisa.replace('á','a')
-                                        nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                        nome_pesquisa = nome_pesquisa.replace('è','e')
-                                        nome_pesquisa = nome_pesquisa.replace('í','i')
-                                        nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                        nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                        nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                        nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                        nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                        nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                        nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                        nome_pesquisa = nome_pesquisa.replace('.',"")
-                                        a_q = re.compile('\w+')
-                                        qq_aa = a_q.findall(nome_pesquisa)
-                                        nome_pesquisa = ''
-                                        for q_a_q_a in qq_aa:
-                                                if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                        nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                        if 'Temporada' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
-                                        else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                        if thumb == '' or 'legendas.tv' in thumb:# or 's1600' in thumb:
-                                                try:
-                                                        html_pesquisa = abrir_url(url_pesquisa)
-                                                except: html_pesquisa = ''
-                                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                if items_pesquisa != []:
-                                                        thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                                        if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                        if selfAddon.getSetting('movie-fanart-TFV') == "true":
-                                                try:
-                                                        html_pesquisa = abrir_url(url_pesquisa)
-                                                except: html_pesquisa = ''
-                                                items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                if items_pesquisa != []:
-                                                        url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
-                                                        if url_filme_pesquisa:
-                                                                url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
-                                                                try:
-                                                                        html_pesquisa = abrir_url(url_pesquisa)
-                                                                except: html_pesquisa = ''
-                                                                url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                                if url_fan:
-                                                                        for urls_fanart in url_fan:
-                                                                                url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
-                                                                                if url_fanart:
-                                                                                        fanart = url_fanart[0].replace('w300','w1280')
-                                                                                else:
-                                                                                        fanart = thumb
-                                                else: fanart = thumb
-                                if selfAddon.getSetting('movie-fanart-TFV') == "true":
-                                        if fanart == '': fanart = thumb
-                                if qualidade:
-                                        qualidade = qualidade[0]
-                                else:
-                                        qualidade = ''
-                                try:
-                                        if "Temporada" in urletitulo[0][1]:
-                                                num_mode = 712
-                                        else:
-                                                num_mode = 703
+                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                if thumb == '':
+                                        try:
+                                                html_pesquisa = CMT_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
+                                        if items_pesquisa != []:
+                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
+                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
+                                if fanart == '':
+                                        try:
+                                                html_pesquisa = CMT_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
+                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
+                                        try:
+                                                html_pesquisa = CMT_abrir_url(url_pesquisa)
+                                        except: html_pesquisa = ''
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        else: fanart = '---'
+
+                        if qualidade:
+                                qualidade = qualidade[0]
+                        else:
+                                qualidade = ''
+                        if genre == '': genre = '---'
+                        if sinopse == '': sinopse = '---'
+                        if fanart == '---': fanart = ''
+                        if imdbcode == '': imdbcode = '---'
+                        if thumb == '': thumb = '---'
+                        try:
+##                                if ("Temporada" in urletitulo[0][1] and FS == 'FS') or ("Temporada" in urletitulo[0][1] and FS == 'S'):
+##                                        num_mode = 712
+##                                        addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                if ("Temporada" not in urletitulo[0][1] and FS == 'FS') or ("Temporada" not in urletitulo[0][1] and FS == 'F'):
+                                        num_mode = 703
                                         addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
-                                        num_f = num_f + 1
-                                except: pass
                         except: pass
+
         else: return
 	return
 
@@ -909,33 +1276,35 @@ def abrir_url(url):
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
 
 def addDir(name,url,mode,iconimage,checker,fanart):
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
+	liz.setProperty('fanart_image',fanart)
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
 
 def addDir1(name,url,mode,iconimage,folder,fanart):
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
+	liz.setProperty('fanart_image',fanart)
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
         return ok
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'FAN.jpg'
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
         #text = checker
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&fanart="+urllib.quote_plus(fanart)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',fanart)
@@ -956,30 +1325,56 @@ mode=None
 checker=None
 iconimage=None
 fanart=None
+year=None
+plot=None
+genre=None
 
-try: url=urllib.unquote_plus(params["url"])
-except: pass
-
-try: name=urllib.unquote_plus(params["name"])
-except: pass
-
-try: mode=int(params["mode"])
-except: pass
-
-try: checker=urllib.unquote_plus(params["checker"])
-except: pass
-
-try: iconimage=urllib.unquote_plus(params["iconimage"])
-except: pass
-
-try: fanart=urllib.unquote_plus(params["fanart"])
-except: pass
+try:
+        url=urllib.unquote_plus(params["url"])
+except:
+        pass
+try:
+        name=urllib.unquote_plus(params["name"])
+except:
+        pass
+try:
+        mode=int(params["mode"])
+except:
+        pass
+try:        
+        checker=urllib.unquote_plus(params["checker"])
+except:
+        pass
+try:        
+        iconimage=urllib.unquote_plus(params["iconimage"])
+except:
+        pass
+try:        
+        fanart=urllib.unquote_plus(params["fanart"])
+except:
+        pass
+try:        
+        plot=urllib.unquote_plus(params["plot"])
+except:
+        pass
+try:        
+        year=urllib.unquote_plus(params["year"])
+except:
+        pass
+try:        
+        genre=urllib.unquote_plus(params["genre"])
+except:
+        pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
 print "Name: "+str(name)
 print "Checker: "+str(checker)
 print "Iconimage: "+str(iconimage)
+print "Plot: "+str(plot)
+print "Year: "+str(year)
+print "Genre: "+str(genre)
+print "Fanart: "+str(fanart)
 
 
 

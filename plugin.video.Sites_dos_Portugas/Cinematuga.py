@@ -28,7 +28,7 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
-fanart = artfolder + 'FAN.jpg'
+fanart = artfolder + 'FAN3.jpg'
 
 Anos = ['' for i in range(100)]
 
@@ -40,13 +40,13 @@ progress = xbmcgui.DialogProgress()
 
 
 def CMT_MenuPrincipal(artfolder):
-        fanart = artfolder + 'FAN.jpg'
-        addDir('- Procurar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P.png','nao','')
-	if selfAddon.getSetting('menu-CMT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'CMT.png',False,fanart)
-	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tugafilmes.org/search/label/Filmes',702,artfolder + 'TODOS.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tugafilmes.org/search/label/Anima%C3%A7%C3%A3o',702,artfolder + 'ANIMACAO.png','nao',fanart)
-        addDir('[COLOR yellow]- Por Ano[/COLOR]','url',709,artfolder + 'FPANO.png','nao','')
-	addDir('[COLOR yellow]- Categorias[/COLOR]','url',708,artfolder + 'FCATEGORIAS.png','nao','')
+        fanart = artfolder + 'FAN3.jpg'
+        addDir('- Procurar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+	if selfAddon.getSetting('menu-CMT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'CMT1.png',False,fanart)
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tugafilmes.org/search/label/Filmes',702,artfolder + 'FT.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tugafilmes.org/search/label/Anima%C3%A7%C3%A3o',702,artfolder + 'FA.png','nao',fanart)
+        addDir('[COLOR yellow]- Por Ano[/COLOR]','url',709,artfolder + 'ANO.png','nao','')
+	addDir('[COLOR yellow]- Categorias[/COLOR]','url',708,artfolder + 'CT.png','nao','')
 	#addDir('[COLOR yellow]- Top 5 da Semana[/COLOR]','url',718,artfolder + 'TOPFILMES.png','nao','')
 
 def CMT_Menu_Filmes_Top_5(artfolder):
@@ -112,7 +112,7 @@ def CMT_Menu_Filmes_Por_Ano(artfolder):
                 if Anos[x] != '':
                         A = re.compile('(.+?)[|](.*)').findall(Anos[x])
                         if A:
-                                addDir('[COLOR yellow]' + A[0][0].replace('  ','').replace(' ','') + '[/COLOR]',A[0][1],702,artfolder + 'CMT.png','nao','')
+                                addDir('[COLOR yellow]' + A[0][0].replace('  ','').replace(' ','') + '[/COLOR]',A[0][1],702,artfolder + 'CMT1.png','nao','')
 
 def CMT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.tugafilmes.org'
@@ -122,7 +122,7 @@ def CMT_Menu_Filmes_Por_Categorias(artfolder):
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n</option>").findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria,702,artfolder + 'CMT.png','nao','')
+                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria,702,artfolder + 'CMT1.png','nao','')
 
       
 
@@ -258,7 +258,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         except: html_pesquisa = ''
                                         url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
                                         if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                        else: fanart = thumb
+                                        else: fanart = '---'
 
                         if qualidade:
                                 qualidade = qualidade[0]
@@ -266,7 +266,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                 qualidade = ''
                         if genre == '': genre = '---'
                         if sinopse == '': sinopse = '---'
-                        if fanart == '': fanart = thumb
+                        if fanart == '---': fanart = ''
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         try:
@@ -292,7 +292,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
 	proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
 	if proxima[0] != '':
                 try:
-                        addDir("[B]Página Seguinte >>[/B]",proxima[0].replace('&amp;','&'),702,artfolder + 'PSEGUINTE.png','','')
+                        addDir("[B]Página Seguinte >>[/B]",proxima[0].replace('&amp;','&'),702,artfolder + 'PAGS1.png','','')
                 except:pass
         
         
@@ -665,7 +665,7 @@ def CMT_get_params():
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
@@ -673,13 +673,13 @@ def addLink(name,url,iconimage):
 def addLink1(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
 
 def addDir(name,url,mode,iconimage,checker,fanart):
-        if fanart == '': fanart = artfolder + 'FAN.jpg'
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
         #text = checker
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&fanart="+urllib.quote_plus(fanart)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
@@ -693,7 +693,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         return ok
 
 def addDir1(name,url,mode,iconimage,folder,fanart):
-        if fanart == '': fanart = artfolder + 'FAN.jpg'
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
@@ -712,7 +712,7 @@ def addDir_vazio(name,url,mode,iconimage):
         return ok
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'FAN.jpg'
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
         #text = checker
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True

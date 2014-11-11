@@ -43,52 +43,52 @@ def MAIN_MENU():
 		html_source = abrir_url(url_TFV)
 	except: html_source = ''
 	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
-	if items != []: TFV_ONOFF = '[COLOR green] | Site UP[/COLOR]'
-	else: TFV_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	if items != []: TFV_ONOFF = '[COLOR green] | UP[/COLOR]'
+	else: TFV_ONOFF = '[COLOR red] | DOWN[/COLOR]'
 	try:
 		html_source = abrir_url(url_TFC)
 	except: html_source = ''
 	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
-	if items != []: TFC_ONOFF = '[COLOR green] | Site UP[/COLOR]'
-	else: TFC_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	if items != []: TFC_ONOFF = '[COLOR green] | UP[/COLOR]'
+	else: TFC_ONOFF = '[COLOR red] | DOWN[/COLOR]'
 	try:
 		html_source = abrir_url(url_MVT)
 	except: html_source = ''
 	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
-	if items != []: MVT_ONOFF = '[COLOR green] | Site UP[/COLOR]'
-	else: MVT_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	if items != []: MVT_ONOFF = '[COLOR green] | UP[/COLOR]'
+	else: MVT_ONOFF = '[COLOR red] | DOWN[/COLOR]'
 	try:
 		html_source = abrir_url(url_TPT)
 	except: html_source = ''
 	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
-	if items != []: TPT_ONOFF = '[COLOR green] | Site UP[/COLOR]'
-	else: TPT_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	if items != []: TPT_ONOFF = '[COLOR green] | UP[/COLOR]'
+	else: TPT_ONOFF = '[COLOR red] | DOWN[/COLOR]'
 	try:
 		html_source = abrir_url(url_FTT)
 	except: html_source = ''
 	items = re.findall("<div class='post-body entry-content'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-	if items != []: FTT_ONOFF = '[COLOR green] | Site UP[/COLOR]'
-	else: FTT_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	if items != []: FTT_ONOFF = '[COLOR green] | UP[/COLOR]'
+	else: FTT_ONOFF = '[COLOR red] | DOWN[/COLOR]'
 	try:
 		html_source = abrir_url(url_CMT)
 	except: html_source = ''
 	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
-	if items != []: CMT_ONOFF = '[COLOR green] | Site UP[/COLOR]'
-	else: CMT_ONOFF = '[COLOR red] | Site DOWN[/COLOR]'
+	if items != []: CMT_ONOFF = '[COLOR green] | UP[/COLOR]'
+	else: CMT_ONOFF = '[COLOR red] | DOWN[/COLOR]'
 	#########################################
-        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://direct',3003,artfolder + 'SERIES.png','nao','')
-        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://direct',3004,artfolder + 'FILMES.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'PFS.png','nao','')
+        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://direct',3003,artfolder + 'SERIES1.png','nao','')
+        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://direct',3004,artfolder + 'FILMES1.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
-        addDir('[COLOR orange]FTT | [/COLOR][B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)'+FTT_ONOFF,'http://direct',601,artfolder + 'FTT.png','nao','')
-        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B] (Filmes/Séries)'+TPT_ONOFF,'http://direct',231,artfolder + 'TPT.png','nao','')
-        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]MOV[/COLOR][COLOR yellow]I[/COLOR][COLOR red]ETUGA[/COLOR][/B] (Filmes)'+MVT_ONOFF,'http://direct',101,artfolder + 'MVT.png','nao','')
-        addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B] (Filmes)'+CMT_ONOFF,'http://direct',701,artfolder + 'CMT.png','nao','')
-        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)'+TFV_ONOFF,'http://direct',31,artfolder + 'TFV.png','nao','')
-        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)'+TFC_ONOFF,'http://direct',71,artfolder + 'TFC.png','nao','')
-        addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDOSBRAZUCAS.png','nao',artfolder + 'SDBFAN.jpg')
+        addDir('[COLOR orange]FTT | [/COLOR][B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)'+FTT_ONOFF,'http://direct',601,artfolder + 'FTT1.png','nao','')
+        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B] (Filmes/Séries)'+TPT_ONOFF,'http://direct',231,artfolder + 'TPT1.png','nao','')
+        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]MOV[/COLOR][COLOR yellow]I[/COLOR][COLOR red]ETUGA[/COLOR][/B] (Filmes)'+MVT_ONOFF,'http://direct',101,artfolder + 'MVT1.png','nao','')
+        addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B] (Filmes)'+CMT_ONOFF,'http://direct',701,artfolder + 'CMT1.png','nao','')
+        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)'+TFV_ONOFF,'http://direct',31,artfolder + 'TFV1.png','nao','')
+        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)'+TFC_ONOFF,'http://direct',71,artfolder + 'TFC1.png','nao','')
+        addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDB.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
-        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF.png','nao','')#'ze-icon3.png'
+        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF1.png','nao','')#'ze-icon3.png'
 
 
 def FILMES_MENU():
@@ -106,7 +106,7 @@ def FILMES_MENU():
         else: url_TPT = 'http://toppt.net/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'FILMESTODOS.png','nao','')
+        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'FT.png','nao','')
         url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
         url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
         url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
@@ -117,25 +117,25 @@ def FILMES_MENU():
         else: url_TPT = 'http://toppt.net/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'FILMESANIMACAO.png','nao','')
-        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B]','http://www.themoviedb.org/movie/now-playing',3002,artfolder + 'FILMESNC.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B]','http://www.themoviedb.org/movie/top-rated',3001,artfolder + 'FILMESMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B]','http://www.themoviedb.org/movie',3000,artfolder + 'FILMESMP.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'PF.png','nao','')
+        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'FA.png','nao','')
+        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B]','http://www.themoviedb.org/movie/now-playing',3002,artfolder + 'NC.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B]','http://www.themoviedb.org/movie/top-rated',3001,artfolder + 'FMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B]','http://www.themoviedb.org/movie',3000,artfolder + 'MP.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
 
 def SERIES_MENU():
-        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]AS[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'SERIESAZ.png','nao','')
-        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B]','http://www.themoviedb.org/tv/on-the-air',3002,artfolder + 'SERIESEE.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B]','http://www.themoviedb.org/tv/top-rated',3001,artfolder + 'SERIESMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B]','http://www.themoviedb.org/tv',3000,artfolder + 'SERIESMP.png','nao','')
+        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]AS[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')
+        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B]','http://www.themoviedb.org/tv/on-the-air',3002,artfolder + 'EE.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B]','http://www.themoviedb.org/tv/top-rated',3001,artfolder + 'SMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B]','http://www.themoviedb.org/tv',3000,artfolder + 'MP.png','nao','')
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
         url_TPT = 'http://toppt.net/category/series/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_ultimos_episodios = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'SERIESUE.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'PS.png','nao','')
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
      
 
 def passar_nome_pesquisa_animacao(name):
@@ -331,7 +331,7 @@ def MPOPULARES():
         if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
 	try:
                 proximap = 'http://www.themoviedb.org' + proxima[0]
-		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3000,artfolder + 'PSEGUINTE.png','','')
+		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3000,artfolder + 'PAGS1.png','','')
 	except: pass
         progress.close()
 
@@ -402,7 +402,7 @@ def MVOTADOS():
         if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
 	try:
                 proximap = 'http://www.themoviedb.org' + proxima[0]
-		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3001,artfolder + 'PSEGUINTE.png','','')
+		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3001,artfolder + 'PAGS1.png','','')
 	except: pass
         progress.close()
 
@@ -476,7 +476,7 @@ def NCINEMAS():
         if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
 	try:
                 proximap = 'http://www.themoviedb.org' + proxima[0]
-		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3002,artfolder + 'PSEGUINTE.png','','')
+		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3002,artfolder + 'PAGS1.png','','')
 	except: pass
         progress.close()
 
@@ -680,13 +680,13 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                         titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
                         if titulooriginal:
                                 nome_original = titulooriginal[0]
-                                #addDir1(nome_original,'','',artfolder + 'PSEGUINTE.png',False,'')
+                                #addDir1(nome_original,'','',artfolder + 'PAGS1.png',False,'')
                         else:
                                 titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
                                 if titulooriginal:
                                         nome_original = titulooriginal[0]
                                 else: nome_original = ''
-                                #addDir1(nome_original,'','',artfolder + 'PSEGUINTE.png',False,'')
+                                #addDir1(nome_original,'','',artfolder + 'PAGS1.png',False,'')
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
 
                         tto=re.compile('tulo Original:</b>:(.+?)<br').findall(item)
@@ -1095,13 +1095,13 @@ def abrir_url(url):
 def addLink(name,url,iconimage):
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN.jpg')
+	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
         liz.setInfo( type="Video", infoLabels={ "Title": name } )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 	return ok
 
 def addDir(name,url,mode,iconimage,checker,fanart):
-        if fanart == '': fanart = artfolder + 'FAN.jpg'
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
@@ -1111,7 +1111,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         return ok
 
 def addDir1(name,url,mode,iconimage,folder,fanart):
-        if fanart == '': fanart = artfolder + 'FAN.jpg'
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
@@ -1121,7 +1121,7 @@ def addDir1(name,url,mode,iconimage,folder,fanart):
         return ok
 
 def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'FAN.jpg'
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
         #text = plot
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
         ok=True
@@ -1136,224 +1136,6 @@ def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
         return ok
 
 
-def setViewMode_filmes():
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        if not selfAddon.getSetting('movies-view-movies') == "8":
-            try:
-                if selfAddon.getSetting('movies-view-movies') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('movies-view-movies') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('movies-view-movies') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-                elif selfAddon.getSetting('movies-view-movies') == "3": # Poster Wrap
-                    xbmc.executebuiltin('Container.SetViewMode(501)')
-                elif selfAddon.getSetting('movies-view-movies') == "4": # Fanart
-                    xbmc.executebuiltin('Container.SetViewMode(508)')
-                elif selfAddon.getSetting('movies-view-movies') == "5":  # Media info
-                    xbmc.executebuiltin('Container.SetViewMode(504)')
-                elif selfAddon.getSetting('movies-view-movies') == "6": # Media info 2
-                    xbmc.executebuiltin('Container.SetViewMode(503)')
-                elif selfAddon.getSetting('movies-view-movies') == "7": # Media info 3
-                    xbmc.executebuiltin('Container.SetViewMode(515)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('movies-view-movies'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-
-def setViewMode_filmesAnima():
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        if not selfAddon.getSetting('movies-view-anima') == "8":
-            try:
-                if selfAddon.getSetting('movies-view-anima') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('movies-view-anima') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('movies-view-anima') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-                elif selfAddon.getSetting('movies-view-anima') == "3": # Poster Wrap
-                    xbmc.executebuiltin('Container.SetViewMode(501)')
-                elif selfAddon.getSetting('movies-view-anima') == "4": # Fanart
-                    xbmc.executebuiltin('Container.SetViewMode(508)')
-                elif selfAddon.getSetting('movies-view-anima') == "5":  # Media info
-                    xbmc.executebuiltin('Container.SetViewMode(504)')
-                elif selfAddon.getSetting('movies-view-anima') == "6": # Media info 2
-                    xbmc.executebuiltin('Container.SetViewMode(503)')
-                elif selfAddon.getSetting('movies-view-anima') == "7": # Media info 3
-                    xbmc.executebuiltin('Container.SetViewMode(515)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('movies-view-anima'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-
-def setViewMode_series():
-        xbmcplugin.setContent(int(sys.argv[1]), 'tvshows')
-        if not selfAddon.getSetting('series-view') == "8":
-            try:
-                if selfAddon.getSetting('series-view') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('series-view') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('series-view') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-                elif selfAddon.getSetting('series-view') == "3": # Poster Wrap
-                    xbmc.executebuiltin('Container.SetViewMode(501)')
-                elif selfAddon.getSetting('series-view') == "4": # Fanart
-                    xbmc.executebuiltin('Container.SetViewMode(508)')
-                elif selfAddon.getSetting('series-view') == "5":  # Media info
-                    xbmc.executebuiltin('Container.SetViewMode(504)')
-                elif selfAddon.getSetting('series-view') == "6": # Media info 2
-                    xbmc.executebuiltin('Container.SetViewMode(503)')
-                elif selfAddon.getSetting('series-view') == "7": # Media info 3
-                    xbmc.executebuiltin('Container.SetViewMode(515)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('series-view'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-
-def setViewMode_series_AZ_TFV():
-        xbmcplugin.setContent(int(sys.argv[1]), 'tvshows')
-        if not selfAddon.getSetting('series-view-TFV') == "8":
-            try:
-                if selfAddon.getSetting('series-view-TFV') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('series-view-TFV') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('series-view-TFV') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-                elif selfAddon.getSetting('series-view-TFV') == "3": # Poster Wrap
-                    xbmc.executebuiltin('Container.SetViewMode(501)')
-                elif selfAddon.getSetting('series-view-TFV') == "4": # Fanart
-                    xbmc.executebuiltin('Container.SetViewMode(508)')
-                elif selfAddon.getSetting('series-view-TFV') == "5":  # Media info
-                    xbmc.executebuiltin('Container.SetViewMode(504)')
-                elif selfAddon.getSetting('series-view-TFV') == "6": # Media info 2
-                    xbmc.executebuiltin('Container.SetViewMode(503)')
-                elif selfAddon.getSetting('series-view-TFV') == "7": # Media info 3
-                    xbmc.executebuiltin('Container.SetViewMode(515)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('series-view-TFV'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-
-def setViewMode_series_AZ_TPT():
-        xbmcplugin.setContent(int(sys.argv[1]), 'tvshows')
-        if not selfAddon.getSetting('series-view-TPT') == "8":
-            try:
-                if selfAddon.getSetting('series-view-TPT') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('series-view-TPT') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('series-view-TPT') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-                elif selfAddon.getSetting('series-view-TPT') == "3": # Poster Wrap
-                    xbmc.executebuiltin('Container.SetViewMode(501)')
-                elif selfAddon.getSetting('series-view-TPT') == "4": # Fanart
-                    xbmc.executebuiltin('Container.SetViewMode(508)')
-                elif selfAddon.getSetting('series-view-TPT') == "5":  # Media info
-                    xbmc.executebuiltin('Container.SetViewMode(504)')
-                elif selfAddon.getSetting('series-view-TPT') == "6": # Media info 2
-                    xbmc.executebuiltin('Container.SetViewMode(503)')
-                elif selfAddon.getSetting('series-view-TPT') == "7": # Media info 3
-                    xbmc.executebuiltin('Container.SetViewMode(515)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('series-view-TPT'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-
-def setViewMode_menuPrincipal():
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        if not selfAddon.getSetting('menu-principal-view') == "3":
-            try:
-                if selfAddon.getSetting('menu-principal-view') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('menu-principal-view') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('menu-principal-view') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-principal-view'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-
-def setViewMode_menuTFV():
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        if not selfAddon.getSetting('menu-TFV-view') == "3":
-            try:
-                if selfAddon.getSetting('menu-TFV-view') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('menu-TFV-view') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('menu-TFV-view') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-TFV-view'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-
-def setViewMode_menuTFC():
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        if not selfAddon.getSetting('menu-TFC-view') == "3":
-            try:
-                if selfAddon.getSetting('menu-TFC-view') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('menu-TFC-view') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('menu-TFC-view') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-TFC-view'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-
-def setViewMode_menuMVT():
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        if not selfAddon.getSetting('menu-MVT-view') == "3":
-            try:
-                if selfAddon.getSetting('menu-MVT-view') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('menu-MVT-view') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('menu-MVT-view') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-MVT-view'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-
-def setViewMode_menuTPT():
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        if not selfAddon.getSetting('menu-TPT-view') == "3":
-            try:
-                if selfAddon.getSetting('menu-TPT-view') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('menu-TPT-view') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('menu-TPT-view') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-TPT-view'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-
-def setViewMode_menuCMT():
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        if not selfAddon.getSetting('menu-CMT-view') == "3":
-            try:
-                if selfAddon.getSetting('menu-CMT-view') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('menu-CMT-view') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('menu-CMT-view') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-CMT-view'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-
-def setViewMode_menuFTT():
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        if not selfAddon.getSetting('menu-FTT-view') == "3":
-            try:
-                if selfAddon.getSetting('menu-FTT-view') == "0": # List
-                    xbmc.executebuiltin('Container.SetViewMode(502)')
-                elif selfAddon.getSetting('menu-FTT-view') == "1": # Big List
-                    xbmc.executebuiltin('Container.SetViewMode(51)')
-                elif selfAddon.getSetting('menu-FTT-view') == "2": # Thumbnails
-                    xbmc.executebuiltin('Container.SetViewMode(500)')
-            except:
-                addon_log("SetViewMode Failed: "+selfAddon.getSetting('menu-FTT-view'))
-                addon_log("Skin: "+xbmc.getSkinDir())
-        
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
           
@@ -1504,7 +1286,7 @@ elif mode == 29:
 elif mode == 30: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)#,nomeAddon)
 elif mode == 31:
         TugaFilmesTV.TFV_MenuPrincipal(artfolder)
-        setViewMode_menuTFV()
+        #setViewMode_menuTFV()
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
@@ -1819,6 +1601,7 @@ elif mode == 718:
 elif mode == 1000:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(502)")
+        #xbmcplugin.endOfDirectory(int(sys.argv[1]))
         selfAddon.openSettings()
         #setViewMode_menuPrincipal()
         MAIN_MENU()
@@ -1828,13 +1611,21 @@ elif mode == 1000:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 elif mode == 1001:
-        setViewMode_menuTPT()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 1002:
-        setViewMode_menuMVT()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 1003:
-        setViewMode_menuTFC()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 1004:
-        setViewMode_menuTFV()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 1005:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(502)")
