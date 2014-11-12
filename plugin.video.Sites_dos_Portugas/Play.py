@@ -22,7 +22,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os
-import TugaFilmesTV,TopPt,TugaFilmesCom,MovieTuga,Series,FilmesAnima,Pesquisar,Mashup
+import TugaFilmesTV,TopPt,TugaFilmesCom,MovieTuga,FilmesAnima,Pesquisar,Mashup
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -103,6 +103,16 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 				url = source.resolve()
     			else: url = ''
 		except: pass
+	if "thevideo.me" in url:
+		try:
+			sources = []
+			hosted_media = urlresolver.HostedMediaFile(url)
+			sources.append(hosted_media)
+			source = urlresolver.choose_source(sources)
+			if source: 
+				url = source.resolve()
+    			else: url = ''
+		except: pass
 	if "vidzi.tv" in url:       
 		try:
                         if 'embed-' in iframe_url:
@@ -150,15 +160,37 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 		except: pass
 	if "playfreehd" in url:
 		try:
-			sources = []
-			hosted_media = urlresolver.HostedMediaFile(url)
-			sources.append(hosted_media)
-			source = urlresolver.choose_source(sources)
-			if source: 
-				url = source.resolve()
-    			else: url = ''
-    			#addLink(match[0],match[0],'')
-    			#return url
+			if 'embed' in iframe_url:
+                                print iframe_url
+                                link3 = PLAY_abrir_url(iframe_url)
+                                imagem = re.compile("var preview_img = '(.+?)';").findall(link3)
+                                if imagem: iconimage = imagem[0]
+                                match=re.compile("var hq_video_file = '(.+?)';").findall(link3)
+                                if match:
+                                        url = match[0]+'?start=0'
+                                        if '.flv' in url: flv = '.flv | '
+                                        else: flv = ''
+                                        addLink('HQ | '+flv+name,url,iconimage)
+                                match=re.compile("var normal_video_file = '(.+?)';").findall(link3)
+                                if match:
+                                        url = match[0]+'?start=0'
+                                        if '.flv' in url: flv = '.flv | '
+                                        else: flv = ''
+                                        addLink('SD | '+flv+name,url,iconimage)
+                        if 'embed' not in iframe_url:
+                                print iframe_url
+                                link3 = PLAY_abrir_url(iframe_url)
+                                link = re.compile('<param name="FlashVars" value="plugins=plugins/proxy.swf&proxy.link=http://filehoot.com/(.+?).html;captions.file').findall(link3)
+                                if link:
+                                        link = 'http://filehoot.com/embed-'+link[0]+'-640x360.html'
+                                        link3 = PLAY_abrir_url(link)
+                                imagem = re.compile('image: "(.+?)"').findall(link3)
+                                if imagem: iconimage = imagem[0]
+                                match=re.compile('file: "(.+?)"').findall(link3)
+                                if match:
+                                        
+                                        url = match[0]
+                                        iframe_url = url
 		except: pass
 	if "divxstage" in url:
 		try:
@@ -280,39 +312,41 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 		except: pass
 	if "video.mail.ru" in url:
 		try:
-			iframe_url = url
+			iframe_url = url###http://api.video.mail.ru/videos/mail/megafilmeshdtv/_myvideo/874.json
 			print iframe_url
-			link3 = PLAY_abrir_url(iframe_url)
-			#tit=re.compile('"videoTitle":"(.+?)"').findall(link3)
-			tit=re.compile('<title>(.+?)</title>').findall(link3)
-			#v_key = re.compile('video_key=(.+?)&expire_at=(.+?)"').findall(link3)
 			addDir1('[COLOR orange]Escolha o stream:[/COLOR]','url',1004,artfolder,False,'')
-			if 'sd' in link3 and 'md' in link3:
-                                match=re.compile('videoPresets = {"sd":"(.+?)","md":"(.+?)"}').findall(link3)
-                                #match=re.compile('"videos":{"sd":"(.+?)&expire_at=.+?","hd":"(.+?)&expire_at=.+?"}').findall(link3)
-                                #matchHD=re.compile('"videos":{"sd":"(.+?)&expire_at=.+?","hd":"(.+?)&expire_at=.+?"}').findall(link3)
-                                #vl=match[0][0]+'&video_key='+v_key[0][0]+'&expire_at='+v_key[0][1]
-                                if match:
-                                        addLink('SD | '+name,match[0][0],iconimage)
-                                        addLink('HD | '+name,match[0][1],iconimage)
-			if 'sd' in link3 and 'md' not in link3:
-                                match=re.compile('videoPresets = {"sd":"(.+?)"').findall(link3)
-                                #match=re.compile('"videos":{"sd":"(.+?)"}').findall(link3)
-                                if match:
-                                        #url=match[0]
-                                        addLink('SD | '+name,match[0],iconimage)
-                        if 'hd' in link3 and 'md' not in link3:
-                                match=re.compile('"md":"(.+?)"}').findall(link3)
-                                #match=re.compile('"videos":{"hd":"(.+?)"}').findall(link3)
-                                if match:
-                                        addLink('HD | '+name,match[0],iconimage)
-			#subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
-			#if subtitle == []:
-				#checker = ''
-				#url=match[0]
-			#else:
-				#checker = subtitle[0]
-				#url = match[0]
+			iframe_url = iframe_url.replace('/embed','').replace('.html','.json')
+                        try:
+                                link3 = PLAY_abrir_url(iframe_url)
+                        except: link3 = ''
+                        if link3 != '':
+                                imagem = re.compile('"poster":"(.+?)"').findall(link3)
+                                if imagem: iconimage = imagem[0]
+                                match = re.compile('"key":"(.+?)","url":"(.+?)"').findall(link3)
+                                for res,link in match:
+                                        addLink(res+' | '+name,link,iconimage)
+                        else:
+                                try:
+                                        link3 = PLAY_abrir_url(iframe_url)
+                                except: link3 = ''
+                                tit=re.compile('<title>(.+?)</title>').findall(link3)
+                                if link3 != '':
+                                        if 'sd' in link3 and 'md' in link3:
+                                                match=re.compile('videoPresets = {"sd":"(.+?)","md":"(.+?)"}').findall(link3)
+                                                if not match:
+                                                        match=re.compile('"videos":{"sd":"(.+?)&expire_at=.+?","hd":"(.+?)&expire_at=.+?"}').findall(link3)
+                                                        if not match: match=re.compile('"url":"(.+?)"').findall(link3)
+                                                if match:
+                                                        addLink('SD | '+name,match[0][0],iconimage)
+                                                        addLink('HD | '+name,match[0][1],iconimage)
+                                        elif 'sd' in link3 and 'md' not in link3:
+                                                match=re.compile('videoPresets = {"sd":"(.+?)"').findall(link3)
+                                                if match:
+                                                        addLink('SD | '+name,match[0],iconimage)
+                                        elif 'hd' in link3 and 'md' not in link3:
+                                                match=re.compile('"md":"(.+?)"}').findall(link3)
+                                                if match:
+                                                        addLink('HD | '+name,match[0],iconimage)                            
 		except: pass
 	if "flashx" in url:
 		try:
@@ -567,7 +601,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 	#addLink(url+'  ','','')
 	#return
         #if 'vk.com' not in url and 'video.mail.ru' not in url and 'video.tt' not in url:
-        if 'vk.com' not in iframe_url and 'video.mail.ru' not in iframe_url and 'vidzi.tv' not in iframe_url:# and 'iiiiiiiiii' in url:
+        if 'vk.com' not in iframe_url and 'video.mail.ru' not in iframe_url and 'vidzi.tv' not in iframe_url and 'playfreehd' not in iframe_url:# and 'iiiiiiiiii' in url:
                 try:
                         playlist = xbmc.PlayList(1)
                         playlist.clear()             

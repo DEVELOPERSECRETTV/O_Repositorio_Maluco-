@@ -27,6 +27,7 @@ addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
+perfil = xbmc.translatePath(selfAddon.getAddonInfo('profile'))
 
 fanart = artfolder + 'FAN3.jpg'
 
@@ -55,7 +56,7 @@ def TFV_MenuPrincipal(artfolder):
 		
 	#if selfAddon.getSetting('hide-porno') == "false":
 			#addDir('[B][COLOR red]M+18[/B][/COLOR]','url',49,artfolder + 'TFV1.png','nao','')
-	if selfAddon.getSetting('menu-TFV-view') == "0": addDir1('[COLOR blue]Séries:[/COLOR]','url',1004,artfolder + 'TFV1.png',False,fanart)
+	addDir1('[COLOR blue]Séries:[/COLOR]','url',1004,artfolder + 'TFV1.png',False,fanart)
 	addDir('[COLOR yellow]- A a Z[/COLOR]','urlTFV',41,artfolder + 'SAZ1.png','nao','')
         addDir('[COLOR yellow]- Últimos Episódios[/COLOR]','http://www.tuga-filmes.us/search/label/Séries',44,artfolder + 'UE.png','nao','')
 
@@ -172,8 +173,10 @@ def TFV_Menu_Filmes_Top_5(artfolder):
                                                 try:
                                                         html_pesquisa = TFV_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = ''
                                                 else: fanart = ''
                                 try:
                                         if "Temporada" in urletitulo[0] or 'Season' in urletitulo[0]:
@@ -219,9 +222,9 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
 
-        Mashup.Series_Series(url)
+##        Mashup.Series_Series(url)
 
-        folder = addonfolder + '/resources/'
+        folder = perfil
         Series_File = open(folder + 'series.txt', 'a')
         Series_Fi = open(folder + 'series.txt', 'r')
         read_Series_File = ''
@@ -379,7 +382,7 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
                                                         nome = nome.replace(tirar_ano,'')
                                         #fanart = artfolder + 'FAN3.jpg'
                                         #return
-                                        if fanart == '':
+                                        if selfAddon.getSetting('Fanart') == "true":
                                                 nome_pesquisa = nome_series
                                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -410,7 +413,7 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
                                                         if items_pesquisa != []:
                                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                                if fanart == '':
+                                                if selfAddon.getSetting('Fanart') == "true":
                                                         try:
                                                                 html_pesquisa = TFV_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
@@ -419,11 +422,15 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
                                                         try:
                                                                 html_pesquisa = TFV_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
-                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                                else: fanart = '---'
                                                         else: fanart = '---'
-                                        if selfAddon.getSetting('movie-fanart-TFV') == "true":
-                                                if fanart == '': fanart = thumb
+                                                        if sinopse == '':
+                                                                snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_source)
+                                                                if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_source)
+                                                                if snpse: sinopse = snpse[0]
                                         if qualidade:
                                                 qualidade = qualidade[0]
                                         else:
@@ -642,8 +649,10 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                                         try:
                                                 html_pesquisa = TFV_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
 
                         if qualidade:
@@ -1217,8 +1226,10 @@ def TFV_encontrar_fontes_series_recentes(url):
                                         try:
                                                 html_pesquisa = TFV_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = ''
                                         else: fanart = ''
 			try:
 				addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0],42,thumb.replace('s72-c','s320'),sinopse,fanart,ano,genero)
@@ -1230,135 +1241,8 @@ def TFV_encontrar_fontes_series_recentes(url):
 			addDir(nome,endereco,42,'','','')
 	proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
         try:
-                if selfAddon.getSetting('movies-view') == "0": addDir1('','url',1004,artfolder,False,'')
                 addDir("Página Seguinte >>",proxima[0],44,artfolder + 'PAGS1.png','','')
         except: pass
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-
-def TFV_encontrar_fontes_series_A_a_Z(url):
-        i = 1
-        percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
-        url = url.replace('\/','|')
-        nome_orig = re.compile('[|].+?[|](.+?)[|]').findall(url)
-        nome_original = nome_orig[0]
-        if '|series|' in url:
-                series = 1
-                u = re.compile('(.+?)[|].+?[|].+?[|]').findall(url)
-                url = u[0]
-        else: series = 0
-	try:
-		html_source = TFV_abrir_url(url)
-	except: html_source = ''
-	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
-	if items != []:
-		print len(items)
-		num = len(items) + 0.0
-		for item in items:
-                        percent = int( ( i / num ) * 100)
-                        message = str(i) + " de " + str(len(items))
-                        progress.update( percent, "", message, "" )
-                        print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 50 )
-                        if progress.iscanceled():
-                                break
-                        thumb = ''
-                        fanart = ''
-			urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
-			ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
-			if ano: ano = '('+ano[0]+')'
-			qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
-			if qualidade: qualidade = '('+qualidade[0]+')'
-			thumbnail = re.compile('src="(.+?)"').findall(item)
-			if thumbnail: thumb = thumbnail[0]
-                        else: thumb = ''
-			print urletitulo,thumbnail
-			nome = urletitulo[0][1]
-                        nome = nome.replace('&#8217;',"'")
-                        nome = nome.replace('&#8211;',"-")
-                        nome = nome.replace('&#39;',"'")
-                        nome = nome.replace('&amp;','&')
-                        nome = nome.replace('(PT-PT)',"")
-                        nome = nome.replace('(PT/PT)',"")
-                        nome = nome.replace('[PT-PT]',"")
-                        nome = nome.replace('[PT/PT]',"")
-                        a_q = re.compile('\d+')
-                        qq_aa = a_q.findall(nome)
-                        for q_a_q_a in qq_aa:
-                                if len(q_a_q_a) == 4:
-                                        tirar_ano = '(' + str(q_a_q_a) + ')'
-                                        nome = nome.replace(tirar_ano,'')
-                        if fanart == '':
-                                nome_pesquisa = nome_original
-                                nome_pesquisa = nome_pesquisa.replace('é','e')
-                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                nome_pesquisa = nome_pesquisa.replace('á','a')
-                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                nome_pesquisa = nome_pesquisa.replace('è','e')
-                                nome_pesquisa = nome_pesquisa.replace('í','i')
-                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                nome_pesquisa = nome_pesquisa.replace('Agents Of S.H.I.E.L.D',"Agents Of S.H.I.E.L.D.")
-                                nome_pesquisa = nome_pesquisa.replace('.',"")
-                                a_q = re.compile('\w+')
-                                qq_aa = a_q.findall(nome_pesquisa)
-                                nome_pesquisa = ''
-                                for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
-                                if thumb == '' or 's1600' in thumb:
-                                        try:
-                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                        if items_pesquisa != []:
-                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if selfAddon.getSetting('series-fanart-TFV') == "true":
-                                        try:
-                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                        if items_pesquisa != []:
-                                                url_filme_pesquisa = re.compile('href="(.+?)" title=".+?"><img').findall(items_pesquisa[0])
-                                                if url_filme_pesquisa:
-                                                        url_pesquisa = 'http://www.themoviedb.org' + url_filme_pesquisa[0]
-                                                        try:
-                                                                html_pesquisa = TFV_abrir_url(url_pesquisa)
-                                                        except: html_pesquisa = ''
-                                                        url_fan = re.findall('<div id="backdrops" class="image_carousel">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                                        if url_fan:
-                                                                for urls_fanart in url_fan:
-                                                                        url_fanart = re.compile('src="(.+?)"').findall(urls_fanart)
-                                                                        if url_fanart:
-                                                                                fanart = url_fanart[0].replace('w300','w1280')
-                                                                        else:
-                                                                                fanart = thumb
-                                        else: fanart = thumb
-                        if selfAddon.getSetting('series-fanart-TFV') == "true":
-                                if fanart == '': fanart = thumb
-                        if series == 1:
-                                n = re.compile('[(](.+?)[)]').findall(nome)
-                                qualidade = ''
-                                ano = ''
-                                if n: nome = n[0]
-			try:
-				addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0],42,thumb.replace('s72-c','s320'),'',fanart,ano,'')
-			except: pass
-			i = i + 1
-	else:
-		items = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(html_source)
-		for endereco,nome in items:
-			addDir(nome,endereco,42,'','','')
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 

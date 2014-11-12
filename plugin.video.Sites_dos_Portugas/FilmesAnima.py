@@ -254,9 +254,11 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url,pesquisou):
                                                 try:
                                                         html_pesquisa = abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
-                                                else: fanart = thumb.replace('s72-c','s320')
+                                                if 'There are no backdrops added to this' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
+                                                        else: fanart = ''
+                                                else: fanart = ''
 
                                 if qualidade:
                                         qualidade = qualidade[0]
@@ -442,9 +444,11 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url,pesquisou):
                                                 try:
                                                         html_pesquisa = abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
-                                                else: fanart = thumb.replace('s1600','s320').replace('.gif','.jpg')
+                                                if 'There are no backdrops added to this' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
+                                                        else: fanart = ''
+                                                else: fanart = ''
 
                                 if imdbcode == '':
                                         conta = 0
@@ -627,10 +631,11 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url):
                                                 try:
                                                         html_pesquisa = abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
-                                                else: fanart = thumb.replace('s72-c','s320').replace(' ','%20')
-                                
+                                                if 'There are no backdrops added to this' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
+                                                        else: fanart = ''
+                                                else: fanart = ''
                                 try:
                                         if imdbc != '' and imdbcode != '':
                                                 if imdbcode == imdbc:
@@ -734,12 +739,25 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                 for q_a_q_a in qq_aa:
                                         genero = genero.replace(str(q_a_q_a)+'  ','')
           
-                                
-                                #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
-                                thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
-                                if not thumbnail: thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                                thumbnail = re.compile('<img height=".+?" src="(.+?)" width=".+?"').findall(item)
                                 if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
-                                else: thumb = ''
+                                else:         
+                                        #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)        
+                                        thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
+                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                        else:
+                                                #if not thumbnail: thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+                                                thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                                else:
+                                                        thumbnail = re.compile('<img alt="image" height=".+?" src="(.+?)" width=".+?"').findall(item)
+                                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                                        else:
+                                                                thumbnail = re.compile('<img src="(.+?)" height=".+?" width=".+?"').findall(item)
+                                                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                if 'container' in thumb:
+                                        thumbnail = re.compile('url=(.+?)blogspot(.+?)&amp;container').findall(thumb)
+                                        if thumbnail: thumb = thumbnail[0][0].replace('%3A',':').replace('%2F','/')+'blogspot'+thumbnail[0][1].replace('%3A',':').replace('%2F','/')
                                 
                                 nome = nome.replace('&#8217;',"'")
                                 nome = nome.replace('&#8211;',"-")
@@ -890,9 +908,11 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                                 try:
                                                         html_pesquisa = abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
-                                                else: fanart = thumb
+                                                if 'There are no backdrops added to this' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
+                                                        else: fanart = ''
+                                                else: fanart = ''
                                 try:
                                         if imdbc != '' and imdbcode != '':
                                                 if imdbcode == imdbc:
@@ -1036,9 +1056,11 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url,pesquisou):
                                         try:
                                                 html_pesquisa = abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
-                                        else: fanart = thumb.replace('s72-c','s320')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
+                                                else: fanart = ''
+                                        else: fanart = ''
 
                         if qualidade:
                                 qualidade = qualidade[0]
@@ -1047,7 +1069,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url,pesquisou):
                                 
                         if genre == '': genre = '---'
                         if sinopse == '': sinopse = '---'
-                        if fanart == '': fanart = thumb
+                        if fanart == '': fanart = ''
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
 
@@ -1243,13 +1265,15 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url,pesquisou):
                                                                 try:
                                                                         html_pesquisa = abrir_url(url_pesquisa)
                                                                 except: html_pesquisa = ''
-                                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                                if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
-                                                                else: fanart = thumb.replace('s72-c','s320')
+                                                                if 'There are no backdrops added to this' not in html_pesquisa:
+                                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
+                                                                        else: fanart = ''
+                                                                else: fanart = ''
                                                 #addLink(fanart,'','')       
                                                 if genero == '': genero = '---'
                                                 if sinopse == '': sinopse = '---'
-                                                if fanart == '': fanart = thumb.replace('s72-c','s320')
+                                                if fanart == '': fanart = ''
                                                 if imdbcode == '': imdbcode = '---'
                                                 if thumb == '': thumb = '---'
                                                 try:

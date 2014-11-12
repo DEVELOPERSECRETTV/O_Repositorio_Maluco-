@@ -37,7 +37,7 @@ artfolder = addonfolder + '/resources/img/'
 
 def MVT_MenuPrincipal(artfolder):
         addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'P1.png','nao','')
-	if selfAddon.getSetting('menu-MVT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'MVT1.png',False,'')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'MVT1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'FT.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://movie-tuga.blogspot.pt/search/label/animacao',102,artfolder + 'FA.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',106,artfolder + 'CT.png','nao','')
@@ -183,8 +183,10 @@ def MVT_encontrar_fontes_filmes(url):
                                         try:
                                                 html_pesquisa = MVT_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'

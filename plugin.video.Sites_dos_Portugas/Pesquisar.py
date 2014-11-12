@@ -30,7 +30,7 @@ artfolder = addonfolder + '/resources/img/'
 
 def pesquisar():
         
-        if name == '[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)' or name == 'Procurar':
+        if name == '[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)' or name == '- Procurar':
                 FS = 'FS'
         if name == '[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)':
                 FS = 'F'
@@ -284,8 +284,10 @@ def encontrar_fontes_pesquisa_TFV(url,pesquisou,FS):
                                         try:
                                                 html_pesquisa = abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
 
                         if qualidade:
@@ -478,8 +480,10 @@ def encontrar_fontes_filmes_TFC(url,pesquisou,FS):
                                         try:
                                                 html_pesquisa = abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
 
                         if genero == '': genero = '---'
@@ -614,8 +618,10 @@ def encontrar_fontes_pesquisa_MVT(url,pesquisou,FS):
                                         try:
                                                 html_pesquisa = abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
@@ -805,8 +811,8 @@ def encontrar_fontes_filmes_TPT(url,pesquisou,FS):
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                if 'Temporada' not in nome and 'Season' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                if 'Temporada' in nome or 'Season' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                if 'Temporada' not in nome and 'Season' not in nome and 'Mini-Série' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                if 'Temporada' in nome or 'Season' in nome or 'Mini-Série' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
                                 if thumb == '':
                                         try:
                                                 html_pesquisa = abrir_url(url_pesquisa)
@@ -824,8 +830,10 @@ def encontrar_fontes_filmes_TPT(url,pesquisou,FS):
                                         try:
                                                 html_pesquisa = abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
 
                         ano_filme = '('+ano_filme+')'
@@ -861,9 +869,9 @@ def encontrar_fontes_filmes_TPT(url,pesquisou,FS):
                         if thumb == '': thumb = '---'
 
                         try:
-                                if ("Season" in nome and FS == 'FS') or ("Season" in nome and FS == 'S'):
+                                if (("Season" in nome or 'Mini-Série' in nome) and FS == 'FS') or (("Season" in nome or 'Mini-Série' in nome) and FS == 'S'):
                                         addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
-                                if ("Season" not in nome and FS == 'FS') or ("Season" not in nome and FS == 'F'):
+                                if ("Season" not in nome and 'Mini-Série' not in nome and FS == 'FS') or ("Season" not in nome and 'Mini-Série' not in nome and FS == 'F'):
                                         addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
                         except: pass
         else: return
@@ -945,15 +953,22 @@ def encontrar_fontes_pesquisa_FTT(url,pesquisou,FS):
                         for q_a_q_a in qq_aa:
                                 genero = genero.replace(str(q_a_q_a)+'  ','')
                         
-                        #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
-                        thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
-                        #if not thumbnail: thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
-                        if not thumbnail: thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img alt="image" height=".+?" src="(.+?)" width=".+?" />').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img src="(.+?)" height=".+?" width=".+?" />').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img height=".+?" src="(.+?)" width=".+?" />').findall(item)
+                        thumbnail = re.compile('<img height=".+?" src="(.+?)" width=".+?"').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
-                        else: thumb = ''
+                        else:         
+                                #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)        
+                                thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
+                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                else:
+                                        #if not thumbnail: thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+                                        thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                        else:
+                                                thumbnail = re.compile('<img alt="image" height=".+?" src="(.+?)" width=".+?"').findall(item)
+                                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                                else:
+                                                        thumbnail = re.compile('<img src="(.+?)" height=".+?" width=".+?"').findall(item)
+                                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
                         if 'container' in thumb:
                                 thumbnail = re.compile('url=(.+?)blogspot(.+?)&amp;container').findall(thumb)
                                 if thumbnail: thumb = thumbnail[0][0].replace('%3A',':').replace('%2F','/')+'blogspot'+thumbnail[0][1].replace('%3A',':').replace('%2F','/')
@@ -1080,8 +1095,10 @@ def encontrar_fontes_pesquisa_FTT(url,pesquisou,FS):
                                         try:
                                                 html_pesquisa = abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
                         #if selfAddon.getSetting('movie-fanart-FTT') == "true":
                                 #if fanart == '': fanart = thumb
@@ -1198,7 +1215,7 @@ def encontrar_fontes_pesquisa_CMT(url,pesquisou,FS):
                                 url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
                                 if thumb == '':
                                         try:
-                                                html_pesquisa = CMT_abrir_url(url_pesquisa)
+                                                html_pesquisa = abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
                                         items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
                                         if items_pesquisa != []:
@@ -1206,15 +1223,17 @@ def encontrar_fontes_pesquisa_CMT(url,pesquisou,FS):
                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
                                 if fanart == '':
                                         try:
-                                                html_pesquisa = CMT_abrir_url(url_pesquisa)
+                                                html_pesquisa = Cabrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
                                         items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
                                         if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
                                         try:
-                                                html_pesquisa = CMT_abrir_url(url_pesquisa)
+                                                html_pesquisa = abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
 
                         if qualidade:

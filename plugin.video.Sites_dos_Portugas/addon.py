@@ -19,7 +19,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,time,os
-import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TopPt,FilmesAnima,Series,Mashup,Armagedom,FoitaTuga,Cinematuga
+import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TopPt,FilmesAnima,Mashup,Armagedom,FoitaTuga,Cinematuga
 from array import array
 from string import capwords
 
@@ -32,6 +32,13 @@ artfolder = addonfolder + '/resources/img/'
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
 def MAIN_MENU():
+        if selfAddon.getSetting("AvisoFanart") == "true":
+                SdPpath = selfAddon.getAddonInfo('path')
+                d = AvisoFanart("AvisoFanart.xml" , SdPpath, "Default")
+                d.doModal()
+                del d
+                selfAddon.setSetting('AvisoFanart',value='false')
+        #return
         #####################################
         url_TPT = 'http://toppt.net/'
         url_TFV = 'http://www.tuga-filmes.us/'
@@ -83,13 +90,23 @@ def MAIN_MENU():
         addDir('[COLOR orange]FTT | [/COLOR][B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)'+FTT_ONOFF,'http://direct',601,artfolder + 'FTT1.png','nao','')
         addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B] (Filmes/Séries)'+TPT_ONOFF,'http://direct',231,artfolder + 'TPT1.png','nao','')
         addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]MOV[/COLOR][COLOR yellow]I[/COLOR][COLOR red]ETUGA[/COLOR][/B] (Filmes)'+MVT_ONOFF,'http://direct',101,artfolder + 'MVT1.png','nao','')
-        addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B] (Filmes)'+CMT_ONOFF,'http://direct',701,artfolder + 'CMT1.png','nao','')
+        addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B] (Filmes)'+CMT_ONOFF,'http://direct',701,artfolder + 'CMT1.png','nao','')
         addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)'+TFV_ONOFF,'http://direct',31,artfolder + 'TFV1.png','nao','')
         addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)'+TFC_ONOFF,'http://direct',71,artfolder + 'TFC1.png','nao','')
         addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDB.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
         addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF1.png','nao','')#'ze-icon3.png'
 
+class AvisoFanart(xbmcgui.WindowXMLDialog):
+
+    def __init__( self, *args, **kwargs ):
+          xbmcgui.WindowXML.__init__(self)
+
+    def onInit(self):
+        pass
+          
+    def onClick(self,controlId):
+        if controlId == 2001: self.close()
 
 def FILMES_MENU():
         url_toppt = 'http://toppt.net/'
@@ -118,16 +135,13 @@ def FILMES_MENU():
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)
         addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,6,artfolder + 'FA.png','nao','')
-        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B]','http://www.themoviedb.org/movie/now-playing',3002,artfolder + 'NC.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B]','http://www.themoviedb.org/movie/top-rated',3001,artfolder + 'FMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B]','http://www.themoviedb.org/movie',3000,artfolder + 'MP.png','nao','')
+        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (TMDB)','http://www.themoviedb.org/movie/now-playing',3002,artfolder + 'NC.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (TMDB)','http://www.themoviedb.org/movie/top-rated',3001,artfolder + 'FMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (TMDB)','http://www.themoviedb.org/movie',3000,artfolder + 'MP.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
 
 def SERIES_MENU():
         addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]AS[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')
-        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B]','http://www.themoviedb.org/tv/on-the-air',3002,artfolder + 'EE.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B]','http://www.themoviedb.org/tv/top-rated',3001,artfolder + 'SMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B]','http://www.themoviedb.org/tv',3000,artfolder + 'MP.png','nao','')
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
@@ -135,6 +149,9 @@ def SERIES_MENU():
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_ultimos_episodios = urllib.urlencode(parameters)
         addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
+        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (TMDB)','http://www.themoviedb.org/tv/on-the-air',3002,artfolder + 'EE.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (TMDB)','http://www.themoviedb.org/tv/top-rated',3001,artfolder + 'SMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (TMDB)','http://www.themoviedb.org/tv',3000,artfolder + 'MP.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
      
 
@@ -309,8 +326,10 @@ def MPOPULARES():
                         snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_source)
                         if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_source)
                         if snpse: sinopse = snpse[0]
-                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_source)
-                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                        if 'There are no backdrops added to this' not in html_source:
+                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_source)
+                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                        else: fanart = ''
                         genre = re.compile('<span itemprop="genre">(.+?)</span></a>').findall(html_source)
                         conta = 0
                         for gen in genre:
@@ -380,8 +399,10 @@ def MVOTADOS():
                         snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_source)
                         if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_source)
                         if snpse: sinopse = snpse[0]
-                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_source)
-                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                        if 'There are no backdrops added to this' not in html_source:
+                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_source)
+                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                        else: fanart = ''
                         genre = re.compile('<span itemprop="genre">(.+?)</span></a>').findall(html_source)
                         conta = 0
                         for gen in genre:
@@ -454,8 +475,10 @@ def NCINEMAS():
 ##                                snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_source)
 ##                                if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_source)
 ##                                if snpse: sinopse = snpse[0]
-                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_source)
-                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                        if 'There are no backdrops added to this' not in html_source:
+                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_source)
+                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                        else: fanart = ''
                         genre = re.compile('<span itemprop="genre">(.+?)</span></a>').findall(html_source)
                         conta = 0
                         for gen in genre:
@@ -786,9 +809,11 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
 				try:
 					html_pesquisa = abrir_url(url_pesquisa)
 				except: html_pesquisa = ''
-				url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-				if url_fan: fanart = url_fan[0].replace('w780','w1280')
-				else: fanart = thumb
+				if 'There are no backdrops added to this' not in html_pesquisa:
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        else: fanart = ''
+                                else: fanart = ''
 
                         if qualidade:
                                 qualidade = qualidade[0]
@@ -1009,9 +1034,11 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                 try:
                                         html_pesquisa = abrir_url(url_pesquisa)
                                 except: html_pesquisa = ''
-                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                else: fanart = thumb
+                                if 'There are no backdrops added to this' not in html_pesquisa:
+                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        else: fanart = ''
+                                else: fanart = ''
                         
                         try:
                                 nomecomp = nome.lower()

@@ -31,6 +31,7 @@ addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
+perfil = xbmc.translatePath(selfAddon.getAddonInfo('profile'))
 
 arr_series1 = [['' for i in range(87)] for j in range(1)]
 arr_series = ['' for i in range(500)]
@@ -289,8 +290,10 @@ def ultimos_episodios(url):
                                         try:
                                                 html_pesquisa = MASH_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w780','w1280')
+                                        if 'There are no backdrops added to this tv.' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w780','w1280')
+                                                else: fanart = ''
                                         else: fanart = ''
                                 
                         ano_filme = '('+ano_filme+')'
@@ -407,8 +410,10 @@ def ultimos_episodios(url):
                                         try:
                                                 html_pesquisa = MASH_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this tv.' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = ''
                                         else: fanart = ''
 
 			try:
@@ -434,7 +439,8 @@ def ultimos_episodios(url):
 
 def Filmes_Filmes_Filmes(url):
         
-        folder = addonfolder + '/resources/'
+        #folder = perfil
+        folder = perfil
         Filmes_File = open(folder + 'filmes.txt', 'a')
         Filmes_Fi = open(folder + 'filmes.txt', 'r')
         read_Filmes_File = ''
@@ -649,7 +655,7 @@ def Filmes_Filmes_Filmes(url):
                                         if len(q_a_q_a) == 4:
                                                 tirar_ano = '(' + str(q_a_q_a) + ')'
                                                 nome = nome.replace(tirar_ano,'')
-
+                                O_Nome = nome
                                 nome = nome.lower()
                                 nome = nome.title()
                                 if nome in read_Filmes_File:
@@ -667,7 +673,7 @@ def Filmes_Filmes_Filmes(url):
                                                                 else: fanart = '---'
                                                         else: fanart = '---'
                                 if selfAddon.getSetting('Fanart') == "true":
-                                        if nome not in read_Filmes_File or fanart == '---':
+                                        if nome not in read_Filmes_File:# or fanart == '---':
                                                 n = re.compile('(.+?)[[].+?[]]').findall(nome)
                                                 if n:
                                                         nome_pesquisa = n[0]
@@ -713,13 +719,15 @@ def Filmes_Filmes_Filmes(url):
                                                         try:
                                                                 html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
-                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
+                                                        if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                                if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
+                                                                else: fanart = '---'
                                                         else: fanart = '---'
                                                         Filmes_File.write('|SITE|TPT|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                                 except: pass
                                 
-                                if fanart == '': fanart = ''
+                                if fanart == '---': fanart = ''
                                 ano_filme = '('+ano_filme+')'
                                 qualidade = '('+qualidade
                                 audio_filme = audio_filme+')'
@@ -730,7 +738,7 @@ def Filmes_Filmes_Filmes(url):
                                 if thumb == '': thumb = '---'
                                 try:
                                         #addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,'[COLOR yellow]INFO:[/COLOR][COLOR red]'+qualidade.replace('(','')+audio_filme.replace(')','')+'[/COLOR]'+'\n'+sinopse,fanart.replace('w500','w1280'),ano_filme.replace('(','').replace(')',''),genero)
-                                        addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,'[COLOR yellow]INFO:[/COLOR][COLOR red]'+qualidade.replace('(','')+audio_filme.replace(')','')+'[/COLOR]'+'\n'+sinopse,fanart.replace('w500','w1280'),ano_filme.replace('(','').replace(')',''),genero)
+                                        addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,'[COLOR yellow]INFO:[/COLOR][COLOR red]'+qualidade.replace('(','')+audio_filme.replace(')','')+'[/COLOR]'+'\n'+sinopse,fanart.replace('w500','w1280'),ano_filme.replace('(','').replace(')',''),genero)
                                 except: pass
                         except: pass
                         i = i + 1
@@ -874,7 +882,7 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        #return
+                        O_Nome = nome
                         nome = nome.lower()
                         nome = nome.title()
                         if nome in read_Filmes_File:
@@ -893,7 +901,7 @@ def Filmes_Filmes_Filmes(url):
                                                 else: fanart = '---'
                         #return
                         if selfAddon.getSetting('Fanart') == "true":
-                                if nome not in read_Filmes_File or fanart == '---':
+                                if nome not in read_Filmes_File:# or fanart == '---':
                                         nome_pesquisa = nome
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
                                         nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -933,8 +941,10 @@ def Filmes_Filmes_Filmes(url):
                                                 try:
                                                         html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 Filmes_File.write('|SITE|TFC|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                         except:pass
@@ -947,7 +957,7 @@ def Filmes_Filmes_Filmes(url):
                         if qualidade == '': qualidade = '---'
 			try:
 
-                                if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart.replace('w500','w1280'),ano,qualidade)
+                                if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart.replace('w500','w1280'),ano,qualidade)
 			except: pass
 			
 			a = a + 1
@@ -1038,19 +1048,25 @@ def Filmes_Filmes_Filmes(url):
                         for q_a_q_a in qq_aa:
                                 genero = genero.replace(str(q_a_q_a)+'  ','')
                         
-                        #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
-                        thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
-                        #if not thumbnail: thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
-                        if not thumbnail: thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img alt="image" height=".+?" src="(.+?)" width=".+?" />').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img src="(.+?)" height=".+?" width=".+?" />').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img height=".+?" src="(.+?)" width=".+?" />').findall(item)
+                        thumbnail = re.compile('<img height=".+?" src="(.+?)" width=".+?"').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
-                        else: thumb = ''
+                        else:         
+                                #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)        
+                                thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
+                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                else:
+                                        #if not thumbnail: thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+                                        thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                        else:
+                                                thumbnail = re.compile('<img alt="image" height=".+?" src="(.+?)" width=".+?"').findall(item)
+                                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                                else:
+                                                        thumbnail = re.compile('<img src="(.+?)" height=".+?" width=".+?"').findall(item)
+                                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
                         if 'container' in thumb:
                                 thumbnail = re.compile('url=(.+?)blogspot(.+?)&amp;container').findall(thumb)
                                 if thumbnail: thumb = thumbnail[0][0].replace('%3A',':').replace('%2F','/')+'blogspot'+thumbnail[0][1].replace('%3A',':').replace('%2F','/')
-
 
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
@@ -1143,7 +1159,7 @@ def Filmes_Filmes_Filmes(url):
                                                         else: fanart = '---'
                                                 else: fanart = '---'
                         if selfAddon.getSetting('Fanart') == "true":
-                                if nome not in read_Filmes_File or fanart == '---':
+                                if nome not in read_Filmes_File:# or fanart == '---':
                                         nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                         if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
                                         if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
@@ -1189,18 +1205,20 @@ def Filmes_Filmes_Filmes(url):
                                                 try:
                                                         html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 Filmes_File.write('|SITE|FTT|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                         except:pass
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
-                        if fanart == '---': fanart = thumb
+                        if fanart == '---': fanart = ''
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         try:
-                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,sinopse,fanart.replace('w500','w1280'),anofilme,genero)
+                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + O_Nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,sinopse,fanart.replace('w500','w1280'),anofilme,genero)
                         except: pass
                         i = i + 1
                         a = a + 1
@@ -1288,6 +1306,7 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
+                        O_Nome = nome
                         nome = nome.lower()
                         nome = nome.title()
                         if nome in read_Filmes_File:
@@ -1306,7 +1325,7 @@ def Filmes_Filmes_Filmes(url):
                                                 else: fanart = '---'
                         
                         if selfAddon.getSetting('Fanart') == "true":
-                                if nome not in read_Filmes_File or fanart == '---':
+                                if nome not in read_Filmes_File:# or fanart == '---':
                                         nnnn = re.compile('(.+?):').findall(nome)
                                         if not nnnn:
                                                 nomes = '|'+nome.replace(' - ','|')
@@ -1351,8 +1370,10 @@ def Filmes_Filmes_Filmes(url):
                                                 try:
                                                         html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 Filmes_File.write('|SITE|CMT|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                         except:pass
@@ -1370,7 +1391,7 @@ def Filmes_Filmes_Filmes(url):
                                         num_mode = 712
                                 else:
                                         num_mode = 703
-                                addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano[0],genre)
+                                addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano[0],genre)
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -1475,11 +1496,11 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        #nome = nome_original
+                        O_Nome = nome
                         nome = nome.lower()
                         nome = nome.title()
-                        n = re.compile('.+?[[](.+?)[]]').findall(nome)
-                        if n: nome = n[0]
+##                        n = re.compile('.+?[[](.+?)[]]').findall(nome)
+##                        if n: nome = n[0]
                         if nome in read_Filmes_File:
                                 for x in range(len(_filmes_)):
                                         if nome in _filmes_[x]:
@@ -1495,7 +1516,7 @@ def Filmes_Filmes_Filmes(url):
                                                         else: fanart = '---'
                                                 else: fanart = '---'
                         if selfAddon.getSetting('Fanart') == "true":
-                                if nome not in read_Filmes_File or fanart == '---':
+                                if nome not in read_Filmes_File:# or fanart == '---':
                                         nome_pesquisa = nome
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
                                         nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -1535,8 +1556,10 @@ def Filmes_Filmes_Filmes(url):
                                                 try:
                                                         html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 Filmes_File.write('|SITE|TFV|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                         except:pass
@@ -1554,7 +1577,7 @@ def Filmes_Filmes_Filmes(url):
                                         num_mode = 42
                                 else:
                                         num_mode = 33
-                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano[0],genre)
+                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano[0],genre)
                         except: pass
                         i = i + 1
                         a = a + 1
@@ -1636,8 +1659,9 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        nnn = re.compile('(.+?) - ').findall(nome)
-                        if nnn: nome = nnn[0]
+##                        nnn = re.compile('(.+?) - ').findall(nome)
+##                        if nnn: nome = nnn[0]
+                        O_Nome = nome
                         nome = nome.lower()
                         nome = nome.title()
                         if nome in read_Filmes_File:
@@ -1655,7 +1679,7 @@ def Filmes_Filmes_Filmes(url):
                                                         else: fanart = '---'
                                                 else: fanart = '---'
                         if selfAddon.getSetting('Fanart') == "true":
-                                if nome not in read_Filmes_File or fanart == '---':
+                                if nome not in read_Filmes_File:# or fanart == '---':
                                         nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                         if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
                                         if not nnnn: nnnn = re.compile('(.+?)[:]').findall(nome)
@@ -1700,8 +1724,10 @@ def Filmes_Filmes_Filmes(url):
                                                 try:
                                                         html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 Filmes_File.write('|SITE|MVT|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                         except:pass
@@ -1711,7 +1737,7 @@ def Filmes_Filmes_Filmes(url):
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         try:
-                                addDir_teste('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0].replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumb.replace(' ','%20'),sinopse,fanart.replace('w500','w1280').replace(' ','%20'),ano[0],genero)
+                                addDir_teste('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + O_Nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0].replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumb.replace(' ','%20'),sinopse,fanart.replace('w500','w1280').replace(' ','%20'),ano[0],genero)
                         except: pass
                         a = a + 1
                         i = i + 1
@@ -1742,7 +1768,7 @@ def Filmes_Filmes_Filmes(url):
 def Series_Series(url):
         origem = url
         conta_os_items = 0
-        folder = addonfolder + '/resources/'
+        folder = perfil
         Series_File = open(folder + 'series.txt', 'a')
         Series_Fi = open(folder + 'series.txt', 'r')
         read_Series_File = ''
@@ -2015,9 +2041,11 @@ def Series_Series(url):
                                                         try:
                                                                 html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
-                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                        else: fanart = thumb.replace('s72-c','s320')
+                                                        if 'There are no backdrops added to this tv.' not in html_pesquisa:
+                                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                                else: fanart = '---'
+                                                        else: fanart = '---'
 
                                         if qualidade:
                                                 qualidade = qualidade[0]
@@ -2293,9 +2321,11 @@ def Series_Series(url):
                                                         try:
                                                                 html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
-                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                        else: fanart = thumb
+                                                        if 'There are no backdrops added to this tv.' not in html_pesquisa:
+                                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                                else: fanart = '---'
+                                                        else: fanart = '---'
                                         ano_filme = '('+ano_filme+')'
                                         qualidade = '('+qualidade
                                         audio_filme = audio_filme+')'
@@ -2576,9 +2606,11 @@ def Series_Series(url):
                                                         try:
                                                                 html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
-                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                        else: fanart = thumb
+                                                        if 'There are no backdrops added to this tv.' not in html_pesquisa:
+                                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                                else: fanart = '---'
+                                                        else: fanart = '---'
                                         ano_filme = '('+ano_filme+')'
                                         qualidade = '('+qualidade
                                         audio_filme = audio_filme+')'
@@ -2676,7 +2708,7 @@ def Series_Series(url):
 
 
 def Filmes_Animacao(url):
-        folder = addonfolder + '/resources/'
+        folder = perfil
         Filmes_File = open(folder + 'filmes.txt', 'a')
         Filmes_Fi = open(folder + 'filmes.txt', 'r')
         read_Filmes_File = ''
@@ -2888,6 +2920,7 @@ def Filmes_Animacao(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
+                        O_Nome = nome
                         try:
                                 nome = nome.lower()
                                 nome = nome.title()
@@ -2908,7 +2941,7 @@ def Filmes_Animacao(url):
                                                                 else: fanart = '---'
                                                         else: fanart = '---'
                                 if selfAddon.getSetting('Fanart') == "true":
-                                        if nome not in read_Filmes_File or fanart == '---':
+                                        if nome not in read_Filmes_File:# or fanart == '---':
                                                 n = re.compile('(.+?)[[].+?[]]').findall(nome)
                                                 if n:
                                                         nome_pesquisa = n[0]
@@ -2954,13 +2987,14 @@ def Filmes_Animacao(url):
                                                         try:
                                                                 html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
-                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
+                                                        if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                                if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
+                                                                else: fanart = '---'
                                                         else: fanart = '---'
                                                         Filmes_File.write('|SITE|TPT|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                                 except: pass
                         except: pass
-                        if fanart == '': fanart = thumb
                         ano_filme = '('+ano_filme+')'
                         qualidade = '('+qualidade
                         audio_filme = audio_filme+')'
@@ -2970,7 +3004,7 @@ def Filmes_Animacao(url):
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         try:
-                                addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart.replace('w500','w1280'),ano_filme.replace('(','').replace(')',''),genero)
+                                addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart.replace('w500','w1280'),ano_filme.replace('(','').replace(')',''),genero)
                         except: pass
                         i = i + 1
                         a = a + 1
@@ -3109,7 +3143,7 @@ def Filmes_Animacao(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                                
+                        O_Nome = nome        
                         nome = nome.lower()
                         nome = nome.title()
                         if nome in read_Filmes_File:
@@ -3127,7 +3161,7 @@ def Filmes_Animacao(url):
                                                         else: fanart = '---'
                                                 else: fanart = '---'
                         if selfAddon.getSetting('Fanart') == "true":
-                                if nome not in read_Filmes_File or fanart == '---':
+                                if nome not in read_Filmes_File:# or fanart == '---':
                                         nome_pesquisa = nome
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
                                         nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -3167,8 +3201,10 @@ def Filmes_Animacao(url):
                                                 try:
                                                         html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 Filmes_File.write('|SITE|TFC|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                         except:pass
@@ -3179,7 +3215,7 @@ def Filmes_Animacao(url):
                         if thumb == '': thumb = '---'
                         if qualidade == '': qualidade = '---'
 			try:
-				if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart.replace('w500','w1280'),ano,qualidade)
+				if 'ASSISTIR O FILME' in item: addDir_teste('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart.replace('w500','w1280'),ano,qualidade)
 			except: pass
 			a = a + 1
                         i = i + 1
@@ -3268,19 +3304,25 @@ def Filmes_Animacao(url):
                         for q_a_q_a in qq_aa:
                                 genero = genero.replace(str(q_a_q_a)+'  ','')
                         
-                        #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
-                        thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
-                        #if not thumbnail: thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
-                        if not thumbnail: thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img alt="image" height=".+?" src="(.+?)" width=".+?" />').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img src="(.+?)" height=".+?" width=".+?" />').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img height=".+?" src="(.+?)" width=".+?" />').findall(item)
+                        thumbnail = re.compile('<img height=".+?" src="(.+?)" width=".+?"').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
-                        else: thumb = ''
+                        else:         
+                                #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)        
+                                thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
+                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                else:
+                                        #if not thumbnail: thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+                                        thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                        else:
+                                                thumbnail = re.compile('<img alt="image" height=".+?" src="(.+?)" width=".+?"').findall(item)
+                                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                                else:
+                                                        thumbnail = re.compile('<img src="(.+?)" height=".+?" width=".+?"').findall(item)
+                                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
                         if 'container' in thumb:
                                 thumbnail = re.compile('url=(.+?)blogspot(.+?)&amp;container').findall(thumb)
                                 if thumbnail: thumb = thumbnail[0][0].replace('%3A',':').replace('%2F','/')+'blogspot'+thumbnail[0][1].replace('%3A',':').replace('%2F','/')
-
                         
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
@@ -3357,6 +3399,7 @@ def Filmes_Animacao(url):
 ##                        if nnn: nome = nnn[0]
 ##                        nnn = re.compile('[[](.+?)[]]').findall(nome)
 ##                        if nnn: nome = nnn[0]
+                        O_Nome = nome
                         nome = nome.lower()
                         nome = nome.title()
                         if nome in read_Filmes_File:
@@ -3374,7 +3417,7 @@ def Filmes_Animacao(url):
                                                         else: fanart = '---'
                                                 else: fanart = '---'
                         if selfAddon.getSetting('Fanart') == "true":
-                                if nome not in read_Filmes_File or fanart == '---':
+                                if nome not in read_Filmes_File:# or fanart == '---':
                                         nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                         if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
                                         if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
@@ -3420,8 +3463,10 @@ def Filmes_Animacao(url):
                                                 try:
                                                         html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 Filmes_File.write('|SITE|FTT|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                         except:pass
@@ -3431,7 +3476,7 @@ def Filmes_Animacao(url):
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         try:
-                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,sinopse,fanart.replace('w500','w1280'),anofilme,genero)
+                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + O_Nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,sinopse,fanart.replace('w500','w1280'),anofilme,genero)
                         except: pass
                         i = i + 1
                         a = a + 1
@@ -3517,6 +3562,7 @@ def Filmes_Animacao(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
+                        O_Nome = nome
                         nome = nome.lower()
                         nome = nome.title()
                         if nome in read_Filmes_File:
@@ -3534,7 +3580,7 @@ def Filmes_Animacao(url):
                                                         else: fanart = '---'
                                                 else: fanart = '---'
                         if selfAddon.getSetting('Fanart') == "true":
-                                if nome not in read_Filmes_File or fanart == '---':
+                                if nome not in read_Filmes_File:# or fanart == '---':
         ##                                nnnn = re.compile('(.+?):').findall(nome)
         ##                                if not nnnn:
                                         nomes = '|'+nome.replace(' - ','|')
@@ -3579,8 +3625,10 @@ def Filmes_Animacao(url):
                                                 try:
                                                         html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 Filmes_File.write('|SITE|CMT|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                         except:pass
@@ -3598,7 +3646,7 @@ def Filmes_Animacao(url):
                                         num_mode = 712
                                 else:
                                         num_mode = 703
-                                addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano[0],genre)
+                                addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano[0],genre)
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -3703,11 +3751,11 @@ def Filmes_Animacao(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
+                        O_Nome = nome
                         nome = nome.lower()
                         nome = nome.title()
-                        n = re.compile('.+?[[](.+?)[]]').findall(nome)
-                        if n: nome = n[0]
-
+##                        n = re.compile('.+?[[](.+?)[]]').findall(nome)
+##                        if n: nome = n[0]
                         if nome in read_Filmes_File:
                                 for x in range(len(_filmes_)):
                                         if nome in _filmes_[x]:
@@ -3723,7 +3771,7 @@ def Filmes_Animacao(url):
                                                         else: fanart = '---'
                                                 else: fanart = '---'
                         if selfAddon.getSetting('Fanart') == "true":
-                                if nome not in read_Filmes_File or fanart == '---':
+                                if nome not in read_Filmes_File:# or fanart == '---':
                                         nome_pesquisa = nome
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
                                         nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -3763,8 +3811,10 @@ def Filmes_Animacao(url):
                                                 try:
                                                         html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 Filmes_File.write('|SITE|TFV|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                         except:pass
@@ -3782,7 +3832,7 @@ def Filmes_Animacao(url):
                                         num_mode = 42
                                 else:
                                         num_mode = 33
-                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano[0],genre)
+                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano[0],genre)
                         except: pass
                         i = i + 1
                         a = a + 1
@@ -3865,8 +3915,9 @@ def Filmes_Animacao(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
 
-                        nnn = re.compile('(.+?) - ').findall(nome)
-                        if nnn: nome = nnn[0]
+##                        nnn = re.compile('(.+?) - ').findall(nome)
+##                        if nnn: nome = nnn[0]
+                        O_Nome = nome
                         nome = nome.lower()
                         nome = nome.title()
                         if nome in read_Filmes_File:
@@ -3884,7 +3935,7 @@ def Filmes_Animacao(url):
                                                         else: fanart = '---'
                                                 else: fanart = '---'
                         if selfAddon.getSetting('Fanart') == "true":
-                                if nome not in read_Filmes_File or fanart == '---':
+                                if nome not in read_Filmes_File:# or fanart == '---':
                                         nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                         if not nnnn: nnnn = re.compile('.+?[[](.+?)[)]').findall(nome)
                                         if not nnnn: nnnn = re.compile('(.+?)[:]').findall(nome)
@@ -3929,8 +3980,10 @@ def Filmes_Animacao(url):
                                                 try:
                                                         html_pesquisa = MASH_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 Filmes_File.write('|SITE|MVT|NOME|'+nome+'|FANART|'+fanart.replace('w500','w1280')+'|END|\n')
                                         except:pass
@@ -3940,7 +3993,7 @@ def Filmes_Animacao(url):
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         try:
-                                addDir_teste('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0].replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumb.replace(' ','%20'),sinopse,fanart.replace('w500','w1280'),ano[0],genero)
+                                addDir_teste('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + O_Nome + ' [/COLOR][/B][COLOR yellow](' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0].replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumb.replace(' ','%20'),sinopse,fanart.replace('w500','w1280'),ano[0],genero)
                         except: pass
                         a = a + 1
                         i = i + 1

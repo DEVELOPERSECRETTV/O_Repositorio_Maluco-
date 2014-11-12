@@ -38,7 +38,7 @@ Anos = ['' for i in range(100)]
 
 def FTT_MenuPrincipal(artfolder):
         addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'P1.png','nao','')
-	if selfAddon.getSetting('menu-FTT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'FTT1.png',False,'')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'FTT1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://foitatugacinemaonline.blogspot.pt/',602,artfolder + 'FT.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O',602,artfolder + 'FA.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',606,artfolder + 'CT.png','nao','')
@@ -106,6 +106,7 @@ def FTT_Top_Vistos(artfolder):
                         break
                 anofilme = ''
                 imdbcode = ''
+                fanart = ''
 
                 imdb = re.compile('imdb.com/title/(.+?)/').findall(item_categorias)
                 if imdb: imdbcode = imdb[0]
@@ -179,8 +180,10 @@ def FTT_Top_Vistos(artfolder):
                                         try:
                                                 html_pesquisa = FTT_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
                                         snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
                                         if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
@@ -293,19 +296,28 @@ def FTT_encontrar_fontes_filmes(url):
                         conta = 0
                         for q_a_q_a in qq_aa:
                                 genero = genero.replace(str(q_a_q_a)+'  ','')
-                        
-                        #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
-                        thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
-                        #if not thumbnail: thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
-                        if not thumbnail: thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img alt="image" height=".+?" src="(.+?)" width=".+?" />').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img src="(.+?)" height=".+?" width=".+?" />').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img height=".+?" src="(.+?)" width=".+?" />').findall(item)
+
+                        thumbnail = re.compile('<img height=".+?" src="(.+?)" width=".+?"').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
-                        else: thumb = ''
+                        else:         
+                                #thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)        
+                                thumbnail = re.compile('document.write[(]bp_thumbnail_resize[(]"(.+?)",".+?"[)]').findall(item)
+                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                else:
+                                        #if not thumbnail: thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+                                        thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                        else:
+                                                thumbnail = re.compile('<img alt="image" height=".+?" src="(.+?)" width=".+?"').findall(item)
+                                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                                else:
+                                                        thumbnail = re.compile('<img src="(.+?)" height=".+?" width=".+?"').findall(item)
+                                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
                         if 'container' in thumb:
                                 thumbnail = re.compile('url=(.+?)blogspot(.+?)&amp;container').findall(thumb)
                                 if thumbnail: thumb = thumbnail[0][0].replace('%3A',':').replace('%2F','/')+'blogspot'+thumbnail[0][1].replace('%3A',':').replace('%2F','/')
+               
+                                
 
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
@@ -429,11 +441,12 @@ def FTT_encontrar_fontes_filmes(url):
                                         try:
                                                 html_pesquisa = FTT_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this movie.' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280').replace('w500','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
-                        #if selfAddon.getSetting('movie-fanart-FTT') == "true":
-                                #if fanart == '': fanart = thumb
+
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
                         if fanart == '---': fanart = ''
@@ -475,13 +488,15 @@ def FTT_encontrar_videos_filmes(name,url):
                 n1 = re.compile('--(.+?)--').findall(nn)
                 addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1[0],'url',1004,iconimage,False,fanart)
                 addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n[0],'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+                nome_pesquisa = n1[0]
         else:
                 n1 = re.compile('--(.+?)--').findall(nn)
                 addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1[0],'url',1004,iconimage,False,fanart)
+                nome_pesquisa = n1[0]
         ################################################
         if imdbcode == '' or imdbcode == '---':
                 conta = 0
-                nome_pesquisa = n1[0]
+                #nome_pesquisa = n[0]
                 nome_pesquisa = nome_pesquisa.replace('é','e')
                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -510,7 +525,7 @@ def FTT_encontrar_videos_filmes(name,url):
                 filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
                 imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
                 imdbcode = imdbc[0]
-                
+            
         addDir1(name,'url',1002,iconimage,False,fanart)
         conta_id_video = 0
         try:
@@ -545,7 +560,7 @@ def FTT_encontrar_videos_filmes(name,url):
                                                 url = 'http://videomega.tv/iframe.php?ref=' + refvideo[0] + '///' + name
                                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
-                match2 = re.compile('<iframe.+?src="(.+?)".+?></iframe>').findall(fonte_e_url)
+                match2 = re.compile('<iframe.+?src="(.+?)" .+?</iframe>').findall(fonte_e_url)
                 for fonte_id in match2:
                         if 'videomega' in fonte_id:
                                 try:
@@ -579,7 +594,7 @@ def FTT_encontrar_videos_filmes(name,url):
                 n = re.compile('---(.+?)---').findall(nn)
                 n1 = re.compile('--(.+?)--').findall(nn)
                 url = 'IMDB'+imdbcode+'IMDB'
-                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'FTT',url)
+                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'FTT',url)
         else:
                 n1 = re.compile('--(.+?)--').findall(nn)
                 url = 'IMDB'+imdbcode+'IMDB'
@@ -674,6 +689,11 @@ def FTT_resolve_not_videomega_filmes(url,nomeescolha,conta_id_video,fanart,iconi
 			fonte_id = '(Vidto.me)'
 			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
+	if "thevideo.me" in url:
+		try:
+                        fonte_id = '(TheVideo.me)'
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](TheVideo.me)[/COLOR][/B]',url,30,iconimage,'',fanart)
+		except:pass
         if "dropvideo" in url:
 		try:
                         url = url.replace('/video/','/embed/')
@@ -924,5 +944,6 @@ print "Iconimage: "+str(iconimage)
 print "Plot: "+str(plot)
 print "Year: "+str(year)
 print "Genre: "+str(genre)
+print "Fanart: "+str(fanart)
 
 

@@ -42,7 +42,7 @@ progress = xbmcgui.DialogProgress()
 def CMT_MenuPrincipal(artfolder):
         fanart = artfolder + 'FAN3.jpg'
         addDir('- Procurar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
-	if selfAddon.getSetting('menu-CMT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'CMT1.png',False,fanart)
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'CMT1.png',False,fanart)
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tugafilmes.org/search/label/Filmes',702,artfolder + 'FT.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tugafilmes.org/search/label/Anima%C3%A7%C3%A3o',702,artfolder + 'FA.png','nao',fanart)
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',709,artfolder + 'ANO.png','nao','')
@@ -149,7 +149,6 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        if selfAddon.getSetting('movie-fanart-CMT') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         thumb = ''
@@ -256,8 +255,10 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         try:
                                                 html_pesquisa = CMT_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
 
                         if qualidade:

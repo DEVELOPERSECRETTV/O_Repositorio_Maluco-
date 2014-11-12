@@ -1,0 +1,92 @@
+<window>
+    <defaultcontrol always="true">2001</defaultcontrol>
+    <allowoverlay>no</allowoverlay>
+	<include>dialogeffect</include>
+
+    <!--<backgroundcolor>ff000000</backgroundcolor>-->
+
+
+    
+    <controls>
+		<control type="group">
+			<posx>30</posx>
+			<posy>60</posy>
+			<control type="label" id="9999">
+				<description>Mensagem Fanart</description>
+			</control>
+			
+			<control type="image">
+				<posx>180</posx>
+				<posy>70</posy>
+				<width>860</width><!--710-->
+				<height>425</height>
+				<texture>Fundo1.png</texture>
+			</control>
+			<control type="image">
+				<posx>180</posx>
+				<posy>70</posy>
+				<width>860</width><!--710-->
+				<height>425</height>
+				<texture>Fundo1.png</texture>
+			</control>
+			<control type="image">
+				<posx>180</posx>
+				<posy>70</posy>
+				<width>860</width><!--710-->
+				<height>425</height>
+				<texture>Fundo1.png</texture>
+			</control>
+			<control type="label" id="3000">
+				<description>Texto principal</description>
+				<posx>180</posx>
+				<posy>100</posy>
+				<width>850</width>
+				<height>500</height>
+				<font>font13</font>
+				<align>center</align>
+				<label>[B][COLOR red]AVISO:[/COLOR][COLOR white][/B][CR][CR][B] Se optar por procurar fanart no Mashup de Filmes e S√©ries, o addon[CR]torna-se um pouco mais lento na pesquisa dos mesmos.[CR]No entanto s√≥ ser√° mais lento quando pesquisar pela 1¬™ vez e/ou[CR]quando o filme/s√©rie ainda n√£o estiver guardado nos respetivos[CR]ficheiros (filmes.txt/series.txt) que ser√£o criados autom√°ticamente[CR]na pasta do addon.[/COLOR][/B]</label>
+				<textcolor>white</textcolor>
+				<shadowcolor>AA000000</shadowcolor>
+				<visible>Control.IsVisible(9999)</visible>
+			</control>
+			<control type="button" id="2001">
+                <description>OK button</description>
+			    <posx>510</posx>
+			    <posy>380</posy>
+			    <width>200</width>
+			    <height>40</height>
+			    <label>186</label>
+			    <font>font12_title</font>
+			    <textcolor>white</textcolor>
+			    <focusedcolor>white</focusedcolor>
+			    <align>center</align>
+		    </control>
+			<control type="label" id="3000">
+				<description>Ligar/Desligar</description>
+				<posx>180</posx>
+				<posy>300</posy>
+				<width>850</width>
+				<height>500</height>
+				<font>font6</font>
+				<align>center</align>
+				<label>[B][COLOR orange]A procura de fanart est· desligada por defeito.[CR]Para ligar/desligar a procura de fanart v· a [/COLOR]"[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]I«’ES[/COLOR][/B] (ADDON)".</label>
+				<textcolor>white</textcolor>
+				<shadowcolor>AA000000</shadowcolor>
+				<visible>Control.IsVisible(9999)</visible>
+			</control>
+			<control type="label" id="3000">
+				<description>Aparecer</description>
+				<posx>185</posx>
+				<posy>440</posy>
+				<width>850</width>
+				<height>500</height>
+				<font>font6</font>
+				<align>center</align>
+				<label>(Este aviso sÛ lhe aparecer· esta vez)</label>
+				<textcolor>white</textcolor>
+				<shadowcolor>AA000000</shadowcolor>
+				<visible>Control.IsVisible(9999)</visible>
+			</control>
+		</control>
+    </controls>
+</window>

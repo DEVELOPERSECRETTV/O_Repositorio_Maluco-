@@ -36,6 +36,7 @@ addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
+perfil = xbmc.translatePath(selfAddon.getAddonInfo('profile'))
 
 progress = xbmcgui.DialogProgress()
 
@@ -54,7 +55,7 @@ def TPT_MenuPrincipal(artfolder):
                 saber_url_series = re.compile('<a href="(.+?)">Series</a></li>').findall(toppt_source)
                 if not saber_url_series: saber_url_series = re.compile('<a href="(.+?)">SERIES</a></li>').findall(toppt_source)
                 addDir('- Procurar','url',1,artfolder + 'P1.png','nao','')
-                if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1001,artfolder + 'TPT1.png',False,'')
+                addDir1('[COLOR blue]Filmes:[/COLOR]','url',1001,artfolder + 'TPT1.png',False,'')
                 addDir('[COLOR yellow]- Todos[/COLOR]',saber_url_todos[0],232,artfolder + 'FT.png','nao','')
                 addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'FA.png','nao','')
                 addDir('[COLOR yellow]- Por Ano[/COLOR]','url',239,artfolder + 'ANO.png','nao','')
@@ -62,7 +63,7 @@ def TPT_MenuPrincipal(artfolder):
                 addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://toppt.net/',258,artfolder + 'TPF.png','nao','')
                 if selfAddon.getSetting('hide-porno') == "false":
                                 addDir('[B][COLOR red]M+18[/B][/COLOR]',saber_url_M18[0],232,artfolder + 'TPT1.png','nao','')		
-                if selfAddon.getSetting('menu-TPT-view') == "0": addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'TPT1.png',False,'')
+                addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'TPT1.png',False,'')
                 addDir('[COLOR yellow]- A a Z[/COLOR]','urlTPT',241,artfolder + 'SAZ1.png','nao','')#241
                 addDir('[COLOR yellow]- Últimos Episódios[/COLOR]',saber_url_series[0],232,artfolder + 'UE.png','nao','')
                 addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',259,artfolder + 'TPS.png','nao','')
@@ -183,8 +184,8 @@ def TPT_Menu_Top_Filmes(artfolder):
                                         for q_a_q_a in qq_aa:
                                                 if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                                         nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                        if 'Temporada' not in nome and 'Season' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                        if 'Temporada' in nome or 'Season' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                        if 'Temporada' not in nome and 'Season' not in nome and 'Mini-Série' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                        if 'Temporada' in nome or 'Season' in nome or 'Mini-Série' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
                                         if thumb == '':
                                                 try:
                                                         html_pesquisa = TPT_abrir_url(url_pesquisa)
@@ -202,8 +203,10 @@ def TPT_Menu_Top_Filmes(artfolder):
                                                 try:
                                                         html_pesquisa = TPT_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
                                                 if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
@@ -300,8 +303,8 @@ def TPT_Menu_Top_Series(artfolder):
                                         for q_a_q_a in qq_aa:
                                                 if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                                         nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                        if 'Temporada' not in nome and 'Season' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                        if 'Temporada' in nome or 'Season' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                        if 'Temporada' not in nome and 'Season' not in nome and 'Mini-Série' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                        if 'Temporada' in nome or 'Season' in nome or 'Mini-Série' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
                                         if thumb == '':
                                                 try:
                                                         html_pesquisa = TPT_abrir_url(url_pesquisa)
@@ -319,8 +322,10 @@ def TPT_Menu_Top_Series(artfolder):
                                                 try:
                                                         html_pesquisa = TPT_abrir_url(url_pesquisa)
                                                 except: html_pesquisa = ''
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                if 'There are no backdrops added to this' not in html_pesquisa:
+                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        else: fanart = '---'
                                                 else: fanart = '---'
                                                 snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
                                                 if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
@@ -375,10 +380,15 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
         message = ''
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
-        
-        Mashup.Series_Series(url)
 
-        folder = addonfolder + '/resources/'
+##        try:
+##                Series_Fi = open(folder + 'series.txt', 'r')
+##                Series_Fi.close()
+##                Mashup.Series_Series(url)
+##        except: pass
+                
+
+        folder = perfil
         Series_File = open(folder + 'series.txt', 'a')
         Series_Fi = open(folder + 'series.txt', 'r')
         read_Series_File = ''
@@ -618,7 +628,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                 if len(q_a_q_a) == 4:
                                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                                         nome = nome.replace(tirar_ano,'')
-                                        if fanart == '':
+                                        if selfAddon.getSetting('Fanart') == "true":
                                                 nome_pesquisa = nome_series
                                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -649,7 +659,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                         if items_pesquisa != []:
                                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                                if fanart == '':
+                                                if selfAddon.getSetting('Fanart') == "true":
                                                         try:
                                                                 html_pesquisa = TPT_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
@@ -658,9 +668,15 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                         try:
                                                                 html_pesquisa = TPT_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
-                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                                else: fanart = '---'
                                                         else: fanart = '---'
+                                                        if sinopse == '':
+                                                                snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_source)
+                                                                if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_source)
+                                                                if snpse: sinopse = snpse[0]
                                         ano_filme = '('+ano_filme+')'
                                         qualidade = '('+qualidade
                                         audio_filme = audio_filme+')'
@@ -881,7 +897,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                 if len(q_a_q_a) == 4:
                                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                                         nome = nome.replace(tirar_ano,'')
-                                        if fanart == '':
+                                        if selfAddon.getSetting('Fanart') == "true":
                                                 nome_pesquisa = nome_series
                                                 nome_pesquisa = nome_pesquisa.replace('é','e')
                                                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -912,7 +928,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                         if items_pesquisa != []:
                                                                 thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
                                                                 if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                                if fanart == '':
+                                                if selfAddon.getSetting('Fanart') == "true":
                                                         try:
                                                                 html_pesquisa = TPT_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
@@ -921,9 +937,15 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                         try:
                                                                 html_pesquisa = TPT_abrir_url(url_pesquisa)
                                                         except: html_pesquisa = ''
-                                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                                else: fanart = '---'
                                                         else: fanart = '---'
+                                                        if sinopse == '':
+                                                                snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_source)
+                                                                if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_source)
+                                                                if snpse: sinopse = snpse[0]
                                         ano_filme = '('+ano_filme+')'
                                         qualidade = '('+qualidade
                                         audio_filme = audio_filme+')'
@@ -1011,26 +1033,6 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
         n_name = name.replace('[COLOR yellow]','')
         n_name = n_name.replace('[/COLOR]','')
         series = 0
-##        if '-series-' in url:
-##                series = 1
-##                url = url.replace('-series-','')
-##        else: series = 0
-##        if 'Seguinte' not in name:
-##                if selfAddon.getSetting('movies-view') == "0":
-##                        addDir1(name + ':','url',1001,iconimage,False,'')
-##                        addDir1('','url',1001,artfolder,False,'')
-##        fan = 'nao'
-##        if selfAddon.getSetting('movie-fanart-TPT') == "false" and selfAddon.getSetting('series-fanart-TPT') == "false": fan = 'nao'
-##        if selfAddon.getSetting('movie-fanart-TPT') == "true" and selfAddon.getSetting('series-fanart-TPT') == "true": fan = 'sim'
-##        if selfAddon.getSetting('series-fanart-TPT') == "true" and series == 1: fan = 'sim'
-##        if selfAddon.getSetting('movie-fanart-TPT') == "true":
-##                if n_name != '- Recentes' and name != 'Seguinte >>':
-##                        fan = 'sim'
-##        if selfAddon.getSetting('series-fanart-TPT') == "true":
-##                if n_name == '- Recentes' or name == 'Seguinte >>':
-##                        fan = 'sim'
-##        #addDir1(str(series)+'|'+name+'|'+n_name+'|'+fan,'','',iconimage,False,'')
-##        #return
 	try:
 		html_source = TPT_abrir_url(url)
 	except: html_source = ''
@@ -1208,8 +1210,8 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
                                                 nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                if 'Temporada' not in nome and 'Season' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                if 'Temporada' in nome or 'Season' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
+                                if 'Temporada' not in nome and 'Season' not in nome and 'Mini-Série' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
+                                if 'Temporada' in nome or 'Season' in nome or 'Mini-Série' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
                                 if thumb == '':
                                         try:
                                                 html_pesquisa = TPT_abrir_url(url_pesquisa)
@@ -1227,9 +1229,11 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                         try:
                                                 html_pesquisa = TPT_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                        else: fanart = '---'
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
+                                else: fanart = '---'
 ##                        if fan == "sim":
 ##                                if fanart == '': fanart = thumb
                         ano_filme = '('+ano_filme+')'
@@ -1330,7 +1334,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
         conta_os_items = 0
         nometitulo = nomeescolha
         #return
-        if 'Season' in nometitulo or 'Temporada' in nometitulo:
+        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo:
                 num = 0
                 percent = 0
                 message = ''
@@ -1340,7 +1344,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
         conta_id_video = 0
         contaultimo = 0
         ##############################################
-        if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
+        if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo:
                 nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
                 nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
                 nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('[/COLOR]','').replace('[','---').replace(']','---').replace('TPT | ','')
@@ -1359,13 +1363,13 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
 		link2=TPT_abrir_url(url)
 	except: link2 = ''
 	if link2:
-                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and imdbcode == '':
+                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and imdbcode == '':
                         items = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', link2, re.DOTALL)
                         if items != []:
                                 imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
-                if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
+                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo:
                         newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
                         l=1
                 else:
@@ -1384,12 +1388,12 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                         l=4
                 #addDir1(str(l),'url',1001,iconimage,False,'')
                 if not newmatch:
-                        if newmatch1 != [] and 'Season' in nometitulo or 'Temporada' in nometitulo:
+                        if newmatch1 != [] and 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo:
                                 lin = re.findall('.+?EPIS',newmatch1[0],re.DOTALL)
                                 num = len(lin) + 0.0 - 1
                                 linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div><',newmatch1[0],re.DOTALL)
                                 for parte1,parte2 in linkseriesssss:
-                                        if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo:
                                                 percent = int( ( i / num ) * 100)
                                                 message = str(i) + " de " + str(int(num))
                                                 progress.update( percent, "", message, "" )
@@ -1413,7 +1417,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
                                         i = i + 1
                 if newmatch:
-                        if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
+                        if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo:
                                 match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(newmatch[0])
                                 for url in match:
                                         if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
@@ -1427,7 +1431,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                 num = num + len(lin) + 0.0
                                 linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div><',newmatch1[0],re.DOTALL)
                                 for parte1,parte2 in linkseriesssss:
-                                        if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                        if 'Season' in nometitulo or 'Temporada' in nometitulo and 'Mini-Série' not in nometitulo:
                                                 percent = int( ( i / num ) * 100)
                                                 message = str(i) + " de " + str(int(num))
                                                 progress.update( percent, "", message, "" )
@@ -1647,7 +1651,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                         if linksseccao:
                                                                 ultima_parte = ''
                                                                 for parte1,parte2 in linksseccao:
-                                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo and 'Mini-Série' not in nometitulo:
                                                                                 percent = int( ( i / num ) * 100)
                                                                                 message = str(i) + " de " + str(int(num))
                                                                                 progress.update( percent, "", message, "" )
@@ -1691,7 +1695,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                 linksseccao = re.findall('ODIO (.+?)</p>\n<p><b>(.+?)EPIS',nmatch[0],re.DOTALL)
                                                                 if linksseccao:
                                                                         for parte1,parte2 in linksseccao:
-                                                                                if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                                                if 'Season' in nometitulo or 'Temporada' in nometitulo and 'Mini-Série' not in nometitulo:
                                                                                         percent = int( ( i / num ) * 100)
                                                                                         message = str(i) + " de " + str(int(num))
                                                                                         progress.update( percent, "", message, "" )
@@ -1758,7 +1762,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                 if linksseccao:
                                                                         #addDir1('sim1','url',1001,artfolder,False,'')
                                                                         for parte1,parte2 in linksseccao:
-                                                                                if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                                                if 'Season' in nometitulo or 'Temporada' in nometitulo and 'Mini-Série' not in nometitulo:
                                                                                         percent = int( ( i / num ) * 100)
                                                                                         message = str(i) + " de " + str(int(num))
                                                                                         progress.update( percent, "", message, "" )
@@ -1794,7 +1798,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                         nmatch = re.findall(v_id[0]+'(.+?)<img',newmatch[0],re.DOTALL)
                                                                         linksseccao = re.findall('<p>(.+?)EPISODIO<br/>(.+?)</iframe>',nmatch[0],re.DOTALL)
                                                                         for parte1,parte2 in linksseccao:
-                                                                                if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                                                if 'Season' in nometitulo or 'Temporada' in nometitulo and 'Mini-Série' not in nometitulo:
                                                                                         percent = int( ( i / num ) * 100)
                                                                                         message = str(i) + " de " + str(int(num))
                                                                                         progress.update( percent, "", message, "" )
@@ -1831,7 +1835,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                 nmatch = re.findall(v_id[0]+'(.*)',newmatch[0],re.DOTALL)
                                                                                 linksseccao = re.findall('/>(.+?)EPISODIO<br/>(.+?)</iframe>',nmatch[0],re.DOTALL)
                                                                                 for parte1,parte2 in linksseccao:
-                                                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo:
+                                                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo:
                                                                                                 percent = int( ( i / num ) * 100)
                                                                                                 message = str(i) + " de " + str(int(num))
                                                                                                 progress.update( percent, "", message, "" )
@@ -1956,10 +1960,10 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                         conta_os_items = conta_os_items + 1
                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-        if 'Season' in nometitulo or 'Temporada' in nometitulo:
+        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo:
                 percent = int( ( 100 / 100.0 ) * 100)
                 progress.update( percent, "", message, "" )
-        if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
+        if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo:
                 nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
                 nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
                 nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('[/COLOR]','').replace('[','---').replace(']','---').replace('TPT | ','')
@@ -1972,7 +1976,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                         n1 = re.compile('--(.+?)--').findall(nn)
                         url = 'IMDB'+imdbcode+'IMDB'
                         FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'TPT',url)
-        if 'Season' in nometitulo or 'Temporada' in nometitulo: progress.close()
+        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo: progress.close()
 
 
 		
@@ -2118,13 +2122,13 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
 		link2=TPT_abrir_url(url)
 	except: link2 = ''
 	if link2:
-                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and imdbcode == '':
+                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and imdbcode == '':
                         items = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', link2, re.DOTALL)
                         if items != []:
                                 imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
-                if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
+                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo:
                         newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
                         l=1
                 else:
@@ -2142,7 +2146,7 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                         newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
                         l=4
                 if not newmatch:
-                        if newmatch1 != [] and 'Season' in nometitulo or 'Temporada' in nometitulo:
+                        if newmatch1 != [] and 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo:
                                 lin = re.findall('.+?EPIS',newmatch1[0],re.DOTALL)
                                 num = len(lin) + 0.0 - 1
                                 linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div><',newmatch1[0],re.DOTALL)
@@ -2163,7 +2167,7 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
                                         i = i + 1
                 if newmatch:
-                        if 'Season' not in nometitulo and 'Temporada' not in nometitulo:
+                        if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo:
                                 match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(newmatch[0])
                                 for url in match:
                                         if "videomega" in url or "vidto.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:

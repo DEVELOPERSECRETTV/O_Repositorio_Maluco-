@@ -37,7 +37,7 @@ progress = xbmcgui.DialogProgress()
 
 def TFC_MenuPrincipal(artfolder):
         addDir('- Procurar','http://www.tuga-filmes.info/search?q=',1,artfolder + 'P1.png','nao','')
-	if selfAddon.getSetting('menu-TFC-view') == "0": addDir1('[COLOR blue]Filmes:[/COLOR]','url',1003,artfolder + 'TFC1.png',False,'')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1003,artfolder + 'TFC1.png',False,'')
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.info/',72,artfolder + 'FT.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20',72,artfolder + 'FA.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',78,artfolder + 'CT.png','nao','')
@@ -101,8 +101,10 @@ def TFC_Menu_Filmes_Top_10(artfolder):
                                         try:
                                                 html_pesquisa = TFC_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = ''
                                         else: fanart = ''
                                         snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_pesquisa)
                                         if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_pesquisa)
@@ -317,8 +319,10 @@ def TFC_encontrar_fontes_filmes(url):
                                         try:
                                                 html_pesquisa = TFC_abrir_url(url_pesquisa)
                                         except: html_pesquisa = ''
-                                        url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                        if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                        if 'There are no backdrops added to this' not in html_pesquisa:
+                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
+                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
+                                                else: fanart = '---'
                                         else: fanart = '---'
 
                         if genero == '': genero = '---'
