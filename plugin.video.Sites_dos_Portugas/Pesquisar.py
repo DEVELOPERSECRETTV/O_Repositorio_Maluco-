@@ -18,7 +18,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os
-
+from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -62,8 +62,8 @@ def pesquisar():
                 progress.create('Progresso', 'A Procurar')
                 progress.update( percent, 'A Procurar...'+site, message, "" )
 
-                addDir1('[COLOR yellow]PROCUROU POR:[/COLOR] '+str(encode),'url',1004,artfolder + 'SDPI.png',False,'')
-
+                addDir1('[COLOR yellow]PROCUROU POR:[/COLOR] '+str(encode).replace('%2B',' '),'url',1004,artfolder + 'SDPI.png',False,'')
+                #return
                 if FS == 'FS' or FS == 'F':
                         addDir1('[B][COLOR blue]Filmes:[/COLOR][/B]','url',1004,artfolder + 'FILMES1.png',False,'')
                         FSS = 'F'
@@ -239,57 +239,38 @@ def encontrar_fontes_pesquisa_TFV(url,pesquisou,FS):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
 
-                        if fanart == '':
+                        if ano: anofilme = ano[0]
+                        else: anofilme = ''
+                        if 'Temporada' in urletitulo[0][1] or 'Season' in urletitulo[0][1] or 'Mini-Série' in urletitulo[0][1]:
+                                nome = urletitulo[0][1]
+                                nnnn = re.compile('(.+?)[(].+?[)]').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
+                                if nnnn : nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome
+                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,anofilme.replace(' ',''))
+                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                if ftart:
+                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+        ##                                        for nt in range(20):
+        ##                                                try:
+        ##                                                        thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-'+str(nt)+'.jpg'
+        ##                                                        f = urllib2.urlopen(urllib2.Request(thumb))
+        ##                                                        deadLinkFound = False
+        ##                                                except: deadLinkFound = True
+        ##                                                if deadLinkFound == False: break                                        
+                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                if snpse: sinopse = snpse[0]
+                        else:
+                                #nome = urletitulo[0][1]
                                 nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                 if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
                                 if nnnn : nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
-                                nome_pesquisa = nome_pesquisa.replace('é','e')
-                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                nome_pesquisa = nome_pesquisa.replace('á','a')
-                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                nome_pesquisa = nome_pesquisa.replace('è','e')
-                                nome_pesquisa = nome_pesquisa.replace('í','i')
-                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                nome_pesquisa = nome_pesquisa.replace('.',"")
-                                a_q = re.compile('\w+')
-                                qq_aa = a_q.findall(nome_pesquisa)
-                                nome_pesquisa = ''
-                                for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                if "Temporada" in urletitulo[0][1] or 'Season' in urletitulo[0][1]: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
-                                else: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-
-                                if thumb == '':
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                        if items_pesquisa != []:
-                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if fanart == '':
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
-                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        if 'There are no backdrops added to this' not in html_pesquisa:
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                else: fanart = '---'
-                                        else: fanart = '---'
-
+                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme.replace(' ',''))
+                                if thumb == '' or 's1600' in thumb: thumb = poster
+                        #return
+                        
                         if qualidade:
                                 qualidade = qualidade[0]
                         else:
@@ -299,20 +280,20 @@ def encontrar_fontes_pesquisa_TFV(url,pesquisou,FS):
                         if fanart == '---': fanart = ''
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
+
                         try:
                                 if "Temporada" in urletitulo[0][1] or 'Season' in urletitulo[0][1]:
                                         num_mode = 42
                                 else:
                                         num_mode = 33
-                                if ("Temporada" in urletitulo[0][1] and FS == 'FS') or ("Temporada" in urletitulo[0][1] and FS == 'S'):
-                                        addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace(tirar_ano,'') + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
-                                        #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
-                                if ("Temporada" not in urletitulo[0][1] and FS == 'FS') or ("Temporada" not in urletitulo[0][1] and FS == 'F'):
-                                        addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
-                                        #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
-
-                                num_f = num_f + 1
+                                if anofilme != '---' and sinopse != '---' and imdbcode != '---' and genre != '---':
+                                        if ("Temporada" not in urletitulo[0][1] and FS == 'FS') or ("Temporada" not in urletitulo[0][1] and FS == 'F'):
+                                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + anofilme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,anofilme,genre)
+                                        if ("Temporada" in urletitulo[0][1] and FS == 'FS') or ("Temporada" in urletitulo[0][1] and FS == 'S'):
+                                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace(tirar_ano,'') + '[/COLOR][/B][COLOR yellow](' + anofilme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,anofilme,genre)
                         except: pass
+                                        #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
+                                        #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
 
         else: return
 	return
@@ -440,51 +421,15 @@ def encontrar_fontes_filmes_TFC(url,pesquisou,FS):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        if fanart == '':
-                                nome_pesquisa = nome
-                                nome_pesquisa = nome_pesquisa.replace('é','e')
-                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                nome_pesquisa = nome_pesquisa.replace('á','a')
-                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                nome_pesquisa = nome_pesquisa.replace('è','e')
-                                nome_pesquisa = nome_pesquisa.replace('í','i')
-                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                nome_pesquisa = nome_pesquisa.replace('.',"")
-                                a_q = re.compile('\w+')
-                                qq_aa = a_q.findall(nome_pesquisa)
-                                nome_pesquisa = ''
-                                for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                if thumb == '':
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                        if items_pesquisa != []:
-                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if fanart == '':
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
-                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        if 'There are no backdrops added to this' not in html_pesquisa:
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                else: fanart = '---'
-                                        else: fanart = '---'
+                                        
+                        nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
+                        if not nnnn: nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
+                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+                        if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
+                        if nnnn: nome_pesquisa = nnnn[0]
+                        else: nome_pesquisa = nome
+                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano)
+                        if thumb == '': thumb = poster
 
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
@@ -573,56 +518,9 @@ def encontrar_fontes_pesquisa_MVT(url,pesquisou,FS):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         
-                        if fanart == '':
-                                nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
-                                if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
-                                if not nnnn: nnnn = re.compile('(.+?)[:]').findall(nome)
-                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
-                                if nnnn : nome_pesquisa = nnnn[0]
-                                else: nome_pesquisa = nome
-                                nome_pesquisa = nome_pesquisa.replace('é','e')
-                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                nome_pesquisa = nome_pesquisa.replace('á','a')
-                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                nome_pesquisa = nome_pesquisa.replace('è','e')
-                                nome_pesquisa = nome_pesquisa.replace('í','i')
-                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                nome_pesquisa = nome_pesquisa.replace('.',"")
-                                a_q = re.compile('\w+')
-                                qq_aa = a_q.findall(nome_pesquisa)
-                                nome_pesquisa = ''
-                                for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                if thumb == '':
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                        if items_pesquisa != []:
-                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if fanart == '':
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
-                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        if 'There are no backdrops added to this' not in html_pesquisa:
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                else: fanart = '---'
-                                        else: fanart = '---'
+                        nome_pesquisa = nome
+                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
+                        
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
                         if fanart == '---': fanart = ''
@@ -686,25 +584,25 @@ def encontrar_fontes_filmes_TPT(url,pesquisou,FS):
                                         else:
                                                 qualidade = ''
                         
-                        snpse = re.compile("<b>SINOPSE:.+?/b>(.+?)<br/>").findall(item)
-                        if not snpse: snpse = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
-                        if snpse: sinopse = snpse[0]
-                        else:
-                                try:
-                                        fonte_video = abrir_url(urletitulo[0][0])
-                                except: fonte_video = ''
-                                fontes_video = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', fonte_video, re.DOTALL)
-                                if fontes_video != []:
-                                        snpse = re.compile('Sinopse.png".+?/><br/>\n(.+?)</p>').findall(fontes_video[0])
-                                        if snpse: sinopse = snpse[0]
-                                        else: sinopse = ''
-                        sinopse = sinopse.replace('&#8216;',"'")
-                        sinopse = sinopse.replace('&#8217;',"'")
-                        sinopse = sinopse.replace('&#8211;',"-")
-                        sinopse = sinopse.replace('&#8220;',"'")
-                        sinopse = sinopse.replace('&#8221;',"'")
-                        sinopse = sinopse.replace('&#39;',"'")
-                        sinopse = sinopse.replace('&amp;','&')
+##                        snpse = re.compile("<b>SINOPSE:.+?/b>(.+?)<br/>").findall(item)
+##                        if not snpse: snpse = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
+##                        if snpse: sinopse = snpse[0]
+##                        else:
+##                                try:
+##                                        fonte_video = abrir_url(urletitulo[0][0])
+##                                except: fonte_video = ''
+##                                fontes_video = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', fonte_video, re.DOTALL)
+##                                if fontes_video != []:
+##                                        snpse = re.compile('Sinopse.png".+?/><br/>\n(.+?)</p>').findall(fontes_video[0])
+##                                        if snpse: sinopse = snpse[0]
+##                                        else: sinopse = ''
+##                        sinopse = sinopse.replace('&#8216;',"'")
+##                        sinopse = sinopse.replace('&#8217;',"'")
+##                        sinopse = sinopse.replace('&#8211;',"-")
+##                        sinopse = sinopse.replace('&#8220;',"'")
+##                        sinopse = sinopse.replace('&#8221;',"'")
+##                        sinopse = sinopse.replace('&#39;',"'")
+##                        sinopse = sinopse.replace('&amp;','&')
                                         
                         genr = re.compile("NERO:.+?/b>(.+?)<br/>").findall(item)
                         if genr: genero = genr[0]
@@ -779,62 +677,32 @@ def encontrar_fontes_filmes_TPT(url,pesquisou,FS):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
-                        if fanart == '':
-##                                if series == 1:
-##                                        nn = 0
-##                                        nome_pesquisa = n_name
-##                                else:
+                                        
+                        if 'Temporada' in nome or 'Season' in nome or 'Mini-Série' in nome:
                                 n = re.compile('(.+?)[[].+?[]]').findall(nome)
-                                if n:
-                                        nome_pesquisa = n[0]
-                                        nn = 1
-                                else:
-                                        nome_pesquisa = nome
-                                        nn = 2
-                                nome_pesquisa = nome_pesquisa.replace('NCIS','NCIS:')
-                                nome_pesquisa = nome_pesquisa.replace('é','e')
-                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                nome_pesquisa = nome_pesquisa.replace('á','a')
-                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                nome_pesquisa = nome_pesquisa.replace('è','e')
-                                nome_pesquisa = nome_pesquisa.replace('í','i')
-                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                a_q = re.compile('\w+')
-                                qq_aa = a_q.findall(nome_pesquisa)
-                                nome_pesquisa = ''
-                                for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                if 'Temporada' not in nome and 'Season' not in nome and 'Mini-Série' not in nome: url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                if 'Temporada' in nome or 'Season' in nome or 'Mini-Série' in nome: url_pesquisa = 'http://www.themoviedb.org/search/tv?query=' + nome_pesquisa
-                                if thumb == '':
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                        if items_pesquisa != []:
-                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if fanart == '':
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
-                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        if 'There are no backdrops added to this' not in html_pesquisa:
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                else: fanart = '---'
-                                        else: fanart = '---'
+                                if n: nome_pesquisa = n[0]
+                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme)
+                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                if ftart:
+                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+##                                        for nt in range(20):
+##                                                try:
+##                                                        thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-'+str(nt)+'.jpg'
+##                                                        f = urllib2.urlopen(urllib2.Request(thumb))
+##                                                        deadLinkFound = False
+##                                                except: deadLinkFound = True
+##                                                if deadLinkFound == False: break                                        
+                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                if snpse: sinopse = snpse[0]
+                        else:
+                                nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
+                                if nnnn: nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome
+                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
+                                if thumb == '': thumb = poster
 
                         ano_filme = '('+ano_filme+')'
                         qualidade = '('+qualidade
@@ -1043,72 +911,23 @@ def encontrar_fontes_pesquisa_FTT(url,pesquisou,FS):
                         nome = nome.replace('()','(')
                         nome = nome.replace('  ','')
                         nome = nome.replace(' - []','')
-##                        nnn = re.compile('[(](.+?)[)]').findall(nome)
-##                        if nnn: nome = nnn[0]
-##                        nnn = re.compile('[[](.+?)[]]').findall(nome)
-##                        if nnn: nome = nnn[0]
-
-                        #if selfAddon.getSetting('movie-fanart-FTT') == "true" and fanart == '':
-                        if fanart == '':
-                                nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
-                                if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
-                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
-##                                        nomes = '|'+nome.replace(' - ','|')
-##                                        nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
-                                if nnnn : nome_pesquisa = nnnn[0]
-                                else: nome_pesquisa = nome
-                                nome_pesquisa = nome_pesquisa.replace('é','e')
-                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                nome_pesquisa = nome_pesquisa.replace('á','a')
-                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                nome_pesquisa = nome_pesquisa.replace('è','e')
-                                nome_pesquisa = nome_pesquisa.replace('í','i')
-                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                a_q = re.compile('\w+')
-                                qq_aa = a_q.findall(nome_pesquisa)
-                                nome_pesquisa = ''
-                                for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                if thumb == '':
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                        if items_pesquisa != []:
-                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                #if selfAddon.getSetting('series-fanart-FTT') == "true":
-                                if fanart == '':
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
-                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        if 'There are no backdrops added to this' not in html_pesquisa:
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                else: fanart = '---'
-                                        else: fanart = '---'
-                        #if selfAddon.getSetting('movie-fanart-FTT') == "true":
-                                #if fanart == '': fanart = thumb
+                        
+                        nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
+                        if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
+                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+                        if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
+                        if nnnn : nome_pesquisa = nnnn[0]
+                        else: nome_pesquisa = nome
+                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
+                        if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
+                        
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
                         if fanart == '---': fanart = ''
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         try:
-                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,sinopse,fanart,anofilme,genero)
+                                addDir_teste('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,sinopse,fanart,anofilme,genero)
                         except: pass
         else: return
 	return
@@ -1185,56 +1004,11 @@ def encontrar_fontes_pesquisa_CMT(url,pesquisou,FS):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                                         
-                        if fanart == '':
-                                nnnn = re.compile('(.+?): ').findall(nome)
-                                if not nnnn:
-                                        nomes = '|'+nome.replace(' - ','|')
-                                        nnnn = re.compile('[|](.+?)[|].+?').findall(nomes)
-                                if nnnn : nome_pesquisa = nnnn[0]
-                                else: nome_pesquisa = nome
-                                nome_pesquisa = nome_pesquisa.replace('é','e')
-                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                nome_pesquisa = nome_pesquisa.replace('á','a')
-                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                nome_pesquisa = nome_pesquisa.replace('è','e')
-                                nome_pesquisa = nome_pesquisa.replace('í','i')
-                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                nome_pesquisa = nome_pesquisa.replace('.',"")
-                                a_q = re.compile('\w+')
-                                qq_aa = a_q.findall(nome_pesquisa)
-                                nome_pesquisa = ''
-                                for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                if thumb == '':
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                        if items_pesquisa != []:
-                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if fanart == '':
-                                        try:
-                                                html_pesquisa = Cabrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
-                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
-                                        try:
-                                                html_pesquisa = abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        if 'There are no backdrops added to this' not in html_pesquisa:
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                else: fanart = '---'
-                                        else: fanart = '---'
+##                        nnnn = re.compile('(.+?): ').findall(nome)
+##                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+##                        if nnnn : nome_pesquisa = nnnn[0]
+                        nome_pesquisa = nome
+                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
 
                         if qualidade:
                                 qualidade = qualidade[0]

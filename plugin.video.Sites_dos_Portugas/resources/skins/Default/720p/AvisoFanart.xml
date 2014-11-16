@@ -44,7 +44,7 @@
 				<height>500</height>
 				<font>font13</font>
 				<align>center</align>
-				<label>[B][COLOR red]AVISO:[/COLOR][COLOR white][/B][CR][CR][B] Se optar por procurar fanart no Mashup de Filmes e SÃ©ries, o addon[CR]torna-se um pouco mais lento na pesquisa dos mesmos.[CR]No entanto sÃ³ serÃ¡ mais lento quando pesquisar pela 1Âª vez e/ou[CR]quando o filme/sÃ©rie ainda nÃ£o estiver guardado nos respetivos[CR]ficheiros (filmes.txt/series.txt) que serÃ£o criados automÃ¡ticamente[CR]na pasta do addon.[/COLOR][/B]</label>
+				<label>[B][COLOR red]AVISO:[/COLOR][COLOR white][/B][CR][CR][B] Se optar por procurar fanart no Mashup de Filmes e Séries, o addon[CR]torna-se um pouco mais lento na pesquisa dos mesmos.[CR]No entanto só será mais lento quando pesquisar pela 1ª vez e/ou[CR]quando o filme/série ainda não estiver guardado nos respetivos[CR]ficheiros (filmes.txt/séries.txt) que serão criados automáticamente[CR]na pasta do addon.[/COLOR][/B]</label>
 				<textcolor>white</textcolor>
 				<shadowcolor>AA000000</shadowcolor>
 				<visible>Control.IsVisible(9999)</visible>

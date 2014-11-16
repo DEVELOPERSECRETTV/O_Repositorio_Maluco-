@@ -24,6 +24,7 @@
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket
 from array import array
 from string import capwords
+from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv
 
 
 arrai_nome_series = ['' for i in range(50)]
@@ -393,8 +394,15 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
                                                 nome = nome.replace(' '+str(q_a_q_a),'')
                                                 ano = ' ('+str(q_a_q_a)+')'                                                
                         else: ano = ''
+##                        nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
+##                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+##                        if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
+##                        if nnnn: nome_pesquisa = nnnn[0]
+##                        else: nome_pesquisa = nome
+##                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano)
+##                        if thumb == '': thumb = poster
                         try:
-                                addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B][COLOR blue]' + ano + '[/COLOR][COLOR green] - ' + dubleg + '[/COLOR]',urlfilme,333,thumb,'nao','')
+                                addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B][COLOR blue]' + ano + '[/COLOR][COLOR green] - ' + dubleg + '[/COLOR]',urlfilme,333,thumb,'nao',fanart)
                         except: pass
 	proxima = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">»</a>').findall(html_source)		
 	try:
@@ -1805,12 +1813,13 @@ def addLink1(name,url,iconimage):
 	return ok
 
 def addDir(name,url,mode,iconimage,checker,fanart):
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
         text = 'nnnnnn'
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&fanart="+urllib.quote_plus(fanart)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": text } )
+	liz.setProperty('fanart_image',fanart)
+        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
         #cm = []
 	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
 	#liz.addContextMenuItems(cm, replaceItems=True)

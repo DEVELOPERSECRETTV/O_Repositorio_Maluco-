@@ -23,6 +23,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,FilmesAnima
+from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -138,56 +139,16 @@ def MVT_encontrar_fontes_filmes(url):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                         
-                        if fanart == '':
-                                nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
-                                if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
-                                if not nnnn: nnnn = re.compile('(.+?)[:]').findall(nome)
-                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
-                                if nnnn : nome_pesquisa = nnnn[0]
-                                else: nome_pesquisa = nome
-                                nome_pesquisa = nome_pesquisa.replace('é','e')
-                                nome_pesquisa = nome_pesquisa.replace('ê','e')
-                                nome_pesquisa = nome_pesquisa.replace('á','a')
-                                nome_pesquisa = nome_pesquisa.replace('ã','a')
-                                nome_pesquisa = nome_pesquisa.replace('è','e')
-                                nome_pesquisa = nome_pesquisa.replace('í','i')
-                                nome_pesquisa = nome_pesquisa.replace('ó','o')
-                                nome_pesquisa = nome_pesquisa.replace('ô','o')
-                                nome_pesquisa = nome_pesquisa.replace('õ','o')
-                                nome_pesquisa = nome_pesquisa.replace('ú','u')
-                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
-                                nome_pesquisa = nome_pesquisa.replace('ç','c')
-                                nome_pesquisa = nome_pesquisa.replace('&#189;','½')
-                                nome_pesquisa = nome_pesquisa.replace('.',"")
-                                a_q = re.compile('\w+')
-                                qq_aa = a_q.findall(nome_pesquisa)
-                                nome_pesquisa = ''
-                                for q_a_q_a in qq_aa:
-                                        if len(q_a_q_a) > 1 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-                                url_pesquisa = 'http://www.themoviedb.org/search/movie?query=' + nome_pesquisa
-                                if thumb == '':
-                                        try:
-                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.findall('<div class="poster">(.*?)<div style="clear: both;">', html_pesquisa, re.DOTALL)
-                                        if items_pesquisa != []:
-                                                thumbnail = re.compile('<img class="right_shadow" src="(.+?)" width=').findall(items_pesquisa[0])
-                                                if thumbnail: thumb = thumbnail[0].replace('w92','w600')
-                                if fanart == '':
-                                        try:
-                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        items_pesquisa = re.compile('<a href="(.+?)" title=".+?"><img class="right_shadow"').findall(html_pesquisa)
-                                        if items_pesquisa: url_pesquisa = 'http://www.themoviedb.org' + items_pesquisa[0]
-                                        try:
-                                                html_pesquisa = MVT_abrir_url(url_pesquisa)
-                                        except: html_pesquisa = ''
-                                        if 'There are no backdrops added to this' not in html_pesquisa:
-                                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_pesquisa)
-                                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
-                                                else: fanart = '---'
-                                        else: fanart = '---'
+##                        nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
+##                        if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
+##                        if not nnnn: nnnn = re.compile('(.+?)[:]').findall(nome)
+##                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+##                        if nnnn : nome_pesquisa = nnnn[0]
+##                        else: nome_pesquisa = nome
+                        nome_pesquisa = nome
+                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0])
+                        if thumb == '': thumb = poster
+                        
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
                         if fanart == '---': fanart = ''
@@ -221,18 +182,39 @@ def MVT_encontrar_videos_filmes(name,url):
         nomeescolha = name
         colecao = 'nao'
         ########################################
+        n1 = ''
+        n2 = ''
         nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
         nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
-        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
-        n = re.compile('--(.+?)--').findall(nn)
-        addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n[0],'url',1004,iconimage,False,fanart)
+        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        if nnnn:
+                n2 = nnnn[0][0]
+                n1 = nnnn[0][1]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0][0]
+                        n1 = nnnn[0][1]        
+        if not nnnn:
+                nnnn = re.compile('(.+?) [-] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[:] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn : n1 = nnn[0]
+##        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
+##        n = re.compile('--(.+?)--').findall(nn)
+##        addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n[0],'url',1004,iconimage,False,fanart)
         ########################################
         if imdbcode == '' or '---' in imdbcode:
                 ano_pp = re.compile('[[]COLOR yellow[]](.+?)[[]/COLOR[]]').findall(name)
                 if ano_pp: ano_pesquisa = ano_pp[0].replace('(','').replace(')','')
                 else: ano_pesquisa = ''
                 conta = 0
-                nome_pesquisa = n[0] + ' ' + ano_pesquisa
+##                nome_pesquisa = n[0] + ' ' + ano_pesquisa
+                nome_pesquisa = n1 + ' ' + ano_pesquisa
                 nome_pesquisa = nome_pesquisa.replace('é','e')
                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -261,6 +243,12 @@ def MVT_encontrar_videos_filmes(name,url):
                 filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
                 imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
                 imdbcode = imdbc[0]
+
+        if n1 != '' and n2 != '':
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n2,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+        else:
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
                 
         addDir1(name,'url',1002,iconimage,False,fanart)
         conta_id_video = 0
@@ -338,12 +326,15 @@ def MVT_encontrar_videos_filmes(name,url):
                                                         url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
-        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
-        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
-        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
-        n = re.compile('--(.+?)--').findall(nn)
+##        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
+##        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+##        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
+##        n = re.compile('--(.+?)--').findall(nn)
+##        url = 'IMDB'+imdbcode+'IMDB'
+##        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'MVT',url)
+        #addLink(imdbcode,'','')
         url = 'IMDB'+imdbcode+'IMDB'
-        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'MVT',url)
+        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'MVT',url)
 
 
 def MVT_links(name,url,iconimage,fanart):
