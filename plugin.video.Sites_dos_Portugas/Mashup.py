@@ -52,11 +52,109 @@ i=arr_filmes[4]
 arr_filmes_anima = []
 arrai_filmes_anima = []
 
-#http://www.omdbapi.com/?i=tt0903624
+#http://www.omdbapi.com/?i=tt0903624http://api.themoviedb.org/3/movie/now_playing?api_key=3e7807c4a01f18298f64662b257d7059&append_to_response=overview&page=1
 
 progress = xbmcgui.DialogProgress()
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
+
+class themoviedb_api_pagina:
+        
+        api_key = '3e7807c4a01f18298f64662b257d7059'
+        tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        def fanart_and_id(self,movie_tv,num_mode,items,pagina):
+                a = 1
+                i = 0
+                percent = 0
+                message = ''
+                progress.create('Progresso', 'A Procurar')
+                progress.update( percent, 'A Procurar ...', message, "" )
+                url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(items) + '?api_key=' + self.api_key + '&language=en&page=' + urllib.quote(pagina)
+                try:datass = MASH_abrir_url(url_tmdb)
+                except: datass = ''
+                try: data = json_get(url_tmdb)
+                except: data = ''
+                if urllib.quote(movie_tv) == 'movie': n = re.findall('"title":"(.+?)"', datass, re.DOTALL)
+                if urllib.quote(movie_tv) == 'tv': n = re.findall('"name":"(.+?)"', datass, re.DOTALL)
+                numero = len(n)
+                num = numero + 0.0
+                for nn in n:
+                        percent = int( ( a / num ) * 100)
+                        message = str(a) + " de " + str(int(num))
+                        progress.update( percent, 'A Procurar Filmes em ', message, "" )
+                        print str(a) + " de " + str(int(num))
+                        if progress.iscanceled():
+                                break
+                        try:
+                                name=nn
+                        except: name = ''
+                        try: fanart=self.tmdb_base_url + data['results'][i]['backdrop_path']
+                        except: fanart = ''
+                        try: thumb=self.tmdb_base_url.replace('w1280','w600') + data['results'][i]['poster_path']
+                        except: thumb = ''
+                        try: tmdb_id=str(data['results'][i]['id'])
+                        except: tmdb_id = ''
+                        if urllib.quote(movie_tv) == 'movie':
+                                try:
+                                        year=str(data['results'][i]['release_date'])
+                                        y = re.compile('(.+?)[-].+?[-]').findall(year)
+                                        if y: year = y[0]
+                                except: year = ''
+                        if urllib.quote(movie_tv) == 'tv':
+                                try:
+                                        year=str(data['results'][i]['first_air_date'])
+                                        y = re.compile('(.+?)[-].+?[-]').findall(year)
+                                        if y: year = y[0]
+                                except: year = ''
+                        try:
+                                url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(tmdb_id)+'?language=pt&api_key=' + self.api_key
+                                try: datas = MASH_abrir_url(url_tmdb)
+                                except: datas = ''
+                                imdb = re.compile('"imdb_id":"(.+?)"').findall(datas)
+                                if imdb: imdbcode = imdb[0]
+                                else: imdbcode = ''
+                                sin = re.compile('"overview":"(.+?)"[,]"popularity').findall(datas)
+                                if sin: sinopse = sin[0].replace('\\"','"')
+                                else: sinopse = ''
+                                gen = re.findall('"genres":[[][{]"id":(.+?)[}][]]', datas, re.DOTALL)
+                                if gen:
+                                        gen = re.compile('"name":"(.+?)"').findall(gen[0])
+                                        if gen:
+                                                numgen = 0
+                                                for gene in gen:
+                                                        if numgen == 0:
+                                                                genero = gene
+                                                                numgen = 1
+                                                        else: genero = genero + ', ' + gene    
+                                else: genero = ''
+                        except: pass
+                        if sinopse == '' or sinopse == '",':
+                                try:
+                                        url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(tmdb_id)+'?language=en&api_key=' + self.api_key
+                                        try: datas = MASH_abrir_url(url_tmdb)
+                                        except: datas = ''
+                                        imdb = re.compile('"imdb_id":"(.+?)"').findall(datas)
+                                        if imdb: imdbcode = imdb[0]
+                                        else: imdbcode = ''
+                                        sin = re.compile('"overview":"(.+?)"[,]"popularity').findall(datas)
+                                        if sin: sinopse = sin[0].replace('\\"','"')
+                                        else: sinopse =''
+                                        if gen:
+                                                gen = re.compile('"name":"(.+?)"').findall(gen[0])
+                                                if gen:
+                                                        numgen = 0
+                                                        for gene in gen:
+                                                                if numgen == 0:
+                                                                        genero = gene
+                                                                        numgen = 1
+                                                                else: genero = genero + ', ' + gene    
+                                        else: genero = ''
+                                except: pass
+
+                        addDir_teste('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]','IMDB'+imdbcode+'IMDB',urllib.quote(num_mode),thumb,sinopse,fanart,year,genero)
+                        a = a + 1
+                        i = i + 1
+                        
 
 class thetvdb_api:
 	def _id(self,series_name,year):
@@ -94,6 +192,96 @@ class thetvdb_api:
 ####		else: pass
 ##		return fanart_image
 
+
+class themoviedb_api_IMDB1:
+        api_key = '3e7807c4a01f18298f64662b257d7059'
+        tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        
+        def fanart_and_id(self,movie_info_imdb_code):
+                try:
+                        url_tmdb = 'http://api.themoviedb.org/3/movie/'+urllib.quote_plus(movie_info_imdb_code)+'?language=pt&api_key=' + self.api_key 
+                        try: data = json_get(url_tmdb)
+                        except: data = ''
+                        
+                        try: fanart = self.tmdb_base_url + data[u'backdrop_path']
+                        except: fanart = ''
+                        
+                        try: thumb = tmdb_base_url.replace('w1280','w600') + data[u'poster_path']
+                        except: thumb =''
+                        
+                        try: id_tmdb = data[u'id']
+                        except: id_tmdb=''
+                except: pass
+
+                if fanart == '':
+                        try:
+                                url_tmdb = 'http://api.themoviedb.org/3/movie/'+urllib.quote_plus(movie_info_imdb_code)+'?language=en&api_key=' + self.api_key 
+                                try: data = json_get(url_tmdb)
+                                except: data = ''
+                                
+                                try: fanart = self.tmdb_base_url + data[u'backdrop_path']
+                                except: fanart = ''
+                                
+                                try: thumb = tmdb_base_url.replace('w1280','w600') + data[u'poster_path']
+                                except: thumb =''
+                                
+                                try: id_tmdb = data[u'id']
+                                except: id_tmdb=''
+                        except: pass
+                        
+                return fanart,str(id_tmdb),thumb
+
+class themoviedb_api_IMDB:
+        api_key = '3e7807c4a01f18298f64662b257d7059'
+        tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        
+        def fanart_and_id(self,movie_info_imdb_code,movie_info_year):
+                try:
+                        url_tmdb = 'http://api.themoviedb.org/3/movie/' + urllib.quote_plus(movie_info_imdb_code) + '?language=pt&api_key=' + self.api_key
+                        data = MASH_abrir_url(url_tmdb)
+                        
+                        fan = re.compile('"backdrop_path":"(.+?)"').findall(data)
+                        if fan: fanart = self.tmdb_base_url + fan[0]
+                        else: fanart = ''
+
+                        th = re.compile('"poster_path":"(.+?)"').findall(data)
+                        if th: thumb = tmdb_base_url.replace('w1280','w600') + th[0]
+                        else: thumb =''
+                        
+                        sin = re.compile('"overview":"(.+?)"[,]"popularity').findall(data)
+                        if sin: sinopse = sin[0].replace('\\"','"')
+                        else: sinopse =''
+                        
+                        id_t = re.compile('"id":"(.+?)"').findall(data)
+                        if id_t: id_tmdb = id_t[0]
+                        else: id_tmdb=''
+                except: pass
+                
+                if sinopse == '' or sinopse == '",':
+                        try:
+                                url_tmdb = 'http://api.themoviedb.org/3/movie/' + urllib.quote_plus(movie_info_imdb_code) + '?language=en&api_key=' + self.api_key
+                                data = MASH_abrir_url(url_tmdb)
+                        
+                                fan = re.compile('"backdrop_path":"(.+?)"').findall(data)
+                                if fan: fanart = self.tmdb_base_url + fan[0]
+                                else: fanart = ''
+
+                                th = re.compile('"poster_path":"(.+?)"').findall(data)
+                                if th: thumb = tmdb_base_url.replace('w1280','w600') + th[0]
+                                else: thumb =''
+                                
+                                sin = re.compile('"overview":"(.+?)"[,]"popularity').findall(data)
+                                if sin: sinopse = sin[0].replace('\\"','"')
+                                else: sinopse =''
+                                
+                                id_t = re.compile('"id":"(.+?)"').findall(data)
+                                if id_t: id_tmdb = id_t[0]
+                                else: id_tmdb=''
+                        except: pass
+                        
+                return fanart,str(id_tmdb),thumb,sinopse
+
+
 class themoviedb_api:
         api_key = '3e7807c4a01f18298f64662b257d7059'#'efdea87099d474a3fd5e6f83b8bc42a6'
         tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
@@ -102,20 +290,19 @@ class themoviedb_api:
                 try: data = json_get(url_tmdb)
                 except: data = ''
                 try: fanart=self.tmdb_base_url + data['results'][0]['backdrop_path']
-                except:
+                except: #fanart = ''
                         try:
                                 url_tmdb = 'http://api.themoviedb.org/3/search/movie?api_key=' + self.api_key + '&query=' + urllib.quote_plus(movie_info_original_title) + '&year='
                                 data = json_get(url_tmdb)
                         except: data = ''
                 try: fanart=self.tmdb_base_url + data['results'][0]['backdrop_path']
                 except: fanart=''
+                #addLink(fanart+movie_info_original_title+movie_info_year,'','')
                 try: thumb=tmdb_base_url.replace('w1280','w600') + data['results'][0]['poster_path']
                 except: thumb =''
-                try:
-                        plot=data['results'][0]['synopsis']
-                except: plot =''
                 try: id_tmdb = data['results'][0]['id']
                 except: id_tmdb=''
+
                 return fanart,str(id_tmdb),thumb
 
 ##        def trailer(self,id_tmdb):
@@ -138,10 +325,6 @@ class themoviedb_api_tv:
                 try:
                         thumb=tmdb_base_url.replace('w1280','w600') + data['results'][0]['poster_path']
                 except: thumb =''
-##                try:
-##                        plot='http://image.tmdb.org/t/p/original' + data['results'][0]['overview']
-##                        addLink(plot,'','')
-##                except: plot =''
                 try: id_tmdb = data['results'][0]['id']
                 except: id_tmdb=''
                 return fanart,str(id_tmdb),thumb
@@ -669,9 +852,10 @@ def Filmes_Filmes_Filmes(url):
                                 if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
                                 if nnnn: nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
-                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
+                                fanart,tmdb_id,poster,sinopse = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme)
+                                #fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
                                 if thumb == '': thumb = poster
-                                if imdbcode != '': sinopse = theomapi_api().sinopse(imdbcode)
+                                #if imdbcode != '': sinopse = theomapi_api().sinopse(imdbcode)
                                 
                                 if fanart == '---': fanart = ''
                                 ano_filme = '('+ano_filme+')'
@@ -836,6 +1020,7 @@ def Filmes_Filmes_Filmes(url):
                         if nnnn : nome_pesquisa = nnnn[0]
                         if nnnn: nome_pesquisa = nnnn[0]
                         else: nome_pesquisa = nome
+                        #fanart,tmdb_id,poster,overview = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme)
                         fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
                         if thumb == '': thumb = poster
                         
@@ -1586,6 +1771,16 @@ def Series_Series(url):
                                                                 si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_series_[x])
                                                                 if si: sinopse = si[0][0] + ' ' + si[0][1]
                                                                 else: sinopse = '---'
+                                                        if fanart == '' or fanart == '---':
+                                                                if selfAddon.getSetting('Fanart') == "true":
+                                                                        nome_pesquisa = nome_series
+                                                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                                        if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                                        #thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                                        if sinopse == '---':
+                                                                                if snpse: sinopse = snpse[0]
                                                         todas_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb.replace('s72-c','s320')+'|ANO|'+ano_filme.replace('  ','').replace(' ','')+'|FANART|'+fanart+'|GENERO|'+genre+'|SINOPSE|'+sinopse+'|END|'
                                                         arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb.replace('s72-c','s320')+'|ANO|'+ano_filme.replace('  ','').replace(' ','')+'|FANART|'+fanart+'|GENERO|'+genre+'|SINOPSE|'+sinopse+'|END|'
                                                         arr_series[i] = nome_series
@@ -1694,7 +1889,7 @@ def Series_Series(url):
                                                 thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
                                                 ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                 if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                #thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
                                                 if snpse: sinopse = snpse[0]
 
@@ -1719,6 +1914,16 @@ def Series_Series(url):
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         if nome_series not in arr_series:
+                                if fanart == '' or fanart == '---':
+                                        if selfAddon.getSetting('Fanart') == "true":
+                                                nome_pesquisa = nome_series
+                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                #thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                if sinopse == '---':
+                                                        if snpse: sinopse = snpse[0]
                                 arr_series[i] = nome_series
                                 if 'IMDB' in imdbcode:
                                         arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|'+endereco_series+'|THUMB|'+thumb.replace('s72-c','s320')+'|ANO|'+ano_filme.replace('  ','').replace(' ','')+'|FANART|'+fanart+'|GENERO|'+genre+'|SINOPSE|'+sinopse+'|END|'
@@ -1954,6 +2159,15 @@ def Series_Series(url):
                                         print str(p) + " de " + str(int(num))
                                         if progress.iscanceled():
                                                 break
+                                if fanart == '' or fanart == '---':
+                                        if selfAddon.getSetting('Fanart') == "true":
+                                                nome_pesquisa = nome_series
+                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                if sinopse == '---':
+                                                        if snpse: sinopse = snpse[0]
                                 arr_series[i] = nome_series
                                 if 'IMDB' in imdbcode:
                                         arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|'+endereco_series+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
@@ -2183,6 +2397,15 @@ def Series_Series(url):
                                         print str(p) + " de " + str(int(num))
                                         if progress.iscanceled():
                                                 break
+                                if fanart == '' or fanart == '---':
+                                        if selfAddon.getSetting('Fanart') == "true":
+                                                nome_pesquisa = nome_series
+                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                if sinopse == '---':
+                                                        if snpse: sinopse = snpse[0]
                                 arr_series[i] = nome_series
                                 if 'IMDB' in imdbcode:
                                         arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|'+endereco_series+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
@@ -3563,8 +3786,6 @@ def Filmes_Animacao(url):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
-
-
 	
 def MASH_abrir_url(url):
 	req = urllib2.Request(url)

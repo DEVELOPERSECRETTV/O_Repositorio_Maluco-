@@ -35,6 +35,7 @@ perfil = xbmc.translatePath(selfAddon.getAddonInfo('profile'))
 arr_series = ['' for i in range(500)]
 arrai_series = ['' for i in range(500)]
 _series_ = []
+_seriesALL_ = []
 Anos = ['' for i in range(100)]
 
 progress = xbmcgui.DialogProgress()
@@ -218,12 +219,18 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
 ##        Mashup.Series_Series(url)
 
         folder = perfil
-        Series_File = open(folder + 'series.txt', 'a')
-        Series_Fi = open(folder + 'series.txt', 'r')
+        Series_File = open(folder + 'seriesTFV.txt', 'a') 
+        Series_Fi = open(folder + 'seriesTFV.txt', 'r')
         read_Series_File = ''
         for line in Series_Fi:
                 read_Series_File = read_Series_File + line
                 if line!='':_series_.append(line)
+
+        Series_File_ALL = open(folder + 'series.txt', 'r')
+        read_Series_File_ALL = ''
+        for linha in Series_File_ALL:
+                read_Series_File_ALL = read_Series_File_ALL + linha
+                if linha!='':_seriesALL_.append(linha)
                 
         url_series = 'http://www.tuga-filmes.us'
 	html_series_source = TFV_abrir_url(url_series)
@@ -278,9 +285,61 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
                                                                 si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_series_[x])
                                                                 if si: sinopse = si[0][0] + ' ' + si[0][1]
                                                                 else: sinopse = '---'
+                                                        if fanart == '' or fanart == '---':
+                                                                if selfAddon.getSetting('Fanart') == "true":
+                                                                        nome_pesquisa = nome_series
+                                                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                                        if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                                        #thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                                        if sinopse == '---':
+                                                                                if snpse: sinopse = snpse[0]
+                                                                
                                                         arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb.replace('s72-c','s320')+'|ANO|'+ano_filme.replace('  ','').replace(' ','')+'|FANART|'+fanart+'|GENERO|'+genre+'|SINOPSE|'+sinopse+'|END|'
                                                         arr_series[i] = nome_series
-                                                
+                        elif nome_series in read_Series_File_ALL:
+                                for x in range(len(_seriesALL_)):
+                                        if nome_series in _seriesALL_[x]:
+                                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_seriesALL_[x])
+                                                if _n: nome = _n[0]
+                                                else: nome = '---'
+                                                if nome_series in nome:
+                                                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_seriesALL_[x])
+                                                        if _i: imdbcode = _i[0]
+                                                        else: imdbcode = '---'
+                                                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_seriesALL_[x])
+                                                        if _t: thumb = _t[0]
+                                                        else: thumb = '---'
+                                                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_seriesALL_[x])
+                                                        if _a: ano_filme = _a[0]
+                                                        else: ano_filme = '---'
+                                                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_seriesALL_[x])
+                                                        if _f: fanart = _f[0]
+                                                        else: fanart = '---'
+                                                        _g = re.compile('[|]GENERO[|](.+?)[|]SINOPSE[|]').findall(_seriesALL_[x])
+                                                        if _g: genre = _g[0]
+                                                        else: genre = '---'
+                                                        _s = re.compile('[|]SINOPSE[|](.*)').findall(_seriesALL_[x])
+                                                        if _s: s = _s[0]
+                                                        if '|END|' in s: sinopse = s.replace('|END|','')
+                                                        else:
+                                                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_seriesALL_[x])
+                                                                if si: sinopse = si[0][0] + ' ' + si[0][1]
+                                                                else: sinopse = '---'
+                                                        if fanart == '' or fanart == '---':
+                                                                if selfAddon.getSetting('Fanart') == "true":
+                                                                        nome_pesquisa = nome_series
+                                                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                                        if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                                        #thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                                        if sinopse == '---':
+                                                                                if snpse: sinopse = snpse[0]
+                                                                
+                                                        arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb.replace('s72-c','s320')+'|ANO|'+ano_filme.replace('  ','').replace(' ','')+'|FANART|'+fanart+'|GENERO|'+genre+'|SINOPSE|'+sinopse+'|END|'
+                                                        arr_series[i] = nome_series                        
                         else:
                                 try:
                                         html_source = TFV_abrir_url(endereco_series)
@@ -384,7 +443,9 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
                                                 if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
                                                 thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                if snpse: sinopse = snpse[0]
+                                                if sinopse == '---':
+                                                        if snpse: sinopse = snpse[0]
+                                                
                                         if qualidade:
                                                 qualidade = qualidade[0]
                                         else:
@@ -405,6 +466,16 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         if nome_series not in arr_series:
+                                if fanart == '' or fanart == '---':
+                                        if selfAddon.getSetting('Fanart') == "true":
+                                                nome_pesquisa = nome_series
+                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                #thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                if sinopse == '---':
+                                                        if snpse: sinopse = snpse[0]
                                 arr_series[i] = nome_series
                                 if 'IMDB' in imdbcode:
                                         arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|'+endereco_series+'|THUMB|'+thumb.replace('s72-c','s320')+'|ANO|'+ano_filme.replace('  ','').replace(' ','')+'|FANART|'+fanart+'|GENERO|'+genre+'|SINOPSE|'+sinopse+'|END|'
@@ -441,10 +512,14 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
                                 if si: sinopse = si[0][0] + ' ' + si[0][1]
                                 else: sinopse = '---'
                         if fanart == '---': fanart = ''
-                        addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',imdbcode,3006,thumb,sinopse,fanart,ano,genero)
-
+                        addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',imdbcode,3007,thumb,sinopse,fanart,ano,genero)
+        SeriesFile = open(folder + 'seriesTFV.txt', 'w')
+        for x in range(len(arrai_series)):
+                if arrai_series[x] != '': SeriesFile.write(arrai_series[x]+'\n')
+        Series_Fi.close()
         Series_Fi.close()
         Series_File.close()
+        Series_File_ALL.close()
         progress.close()
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')

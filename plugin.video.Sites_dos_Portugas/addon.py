@@ -22,7 +22,7 @@ import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,ur
 import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TopPt,FilmesAnima,Mashup,Armagedom,FoitaTuga,Cinematuga
 from array import array
 from string import capwords
-from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv,theomapi_api,theomapi_api_nome
+from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv,theomapi_api,theomapi_api_nome,themoviedb_api_pagina
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -136,9 +136,9 @@ def FILMES_MENU():
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)                                                          #6
         addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,507,artfolder + 'FA.png','nao','')
-        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (TMDB)','http://www.themoviedb.org/movie/now-playing',3002,artfolder + 'NC.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (TMDB)','http://www.themoviedb.org/movie/top-rated',3001,artfolder + 'FMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (TMDB)','http://www.themoviedb.org/movie',3000,artfolder + 'MP.png','nao','')
+        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (TMDB)','1',3002,artfolder + 'NC.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (TMDB)','1',3001,artfolder + 'FMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (TMDB)','1',3000,artfolder + 'MP.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
 
 def SERIES_MENU():
@@ -150,9 +150,9 @@ def SERIES_MENU():
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_ultimos_episodios = urllib.urlencode(parameters)
         addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
-        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (TMDB)','http://www.themoviedb.org/tv/on-the-air',3002,artfolder + 'EE.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (TMDB)','http://www.themoviedb.org/tv/top-rated',3001,artfolder + 'SMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (TMDB)','http://www.themoviedb.org/tv',3000,artfolder + 'MP.png','nao','')
+        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (TMDB)','1',3008,artfolder + 'EE.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (TMDB)','1',3009,artfolder + 'SMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (TMDB)','1',3010,artfolder + 'MP.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
      
 
@@ -283,266 +283,80 @@ def passar_nome_SERIES_IMDB(name):
         url = 'IMDB'+imdbcode+'IMDB'
         pesquisar_SERIES_IMDB(str(nome_pesquisa),url)
         
+###############################   FILMES TMDB
+        
 def MPOPULARES():
-        progress = xbmcgui.DialogProgress()
-        i = 1
-        percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
-        html_pop_source = abrir_url(url)
+        num_pag = urllib.quote(url)
         conta = 0
         num_mode = 7
-	html_pop = re.findall("<h3>Popular Movies</h3>(.*?)<h3>Latest movies", html_pop_source, re.DOTALL)
-	if not html_pop:
-                html_pop = re.findall("<h3>Popular TV Shows</h3>(.*?)<h3>Latest TV shows", html_pop_source, re.DOTALL)
-                num_mode = 3007
-        for items_pop in html_pop:
-                filmes_pop = re.findall('<li class="w480">(.*?)<ul class="icons left_padding">', items_pop, re.DOTALL)
-                num = len(filmes_pop) + 0.0
-                for pop_filmes in filmes_pop:
-                        imdbcode = ''
-                        sinopse = ''
-                        fanart = ''
-                        genero = ''
-                        thumb = ''
-                        percent = int( ( i / num ) * 100)
-                        message = str(i) + " de " + str(int(num))
-                        progress.update( percent, "", message, "" )
-                        print str(i) + " de " + str(int(num))
-                        if progress.iscanceled():
-                                break
-                        nome_ano = re.compile('<h4><a href="(.+?)">(.+?)</a> <span class="date">(.+?)</span></h4>').findall(pop_filmes)
-                        thumb_pop = re.compile('<img class="shadow" src="(.+?)" width="92" />').findall(pop_filmes)
-                        #############
-                        if num_mode == 7:
-                                fanart,tmdb_id,thumb = themoviedb_api().fanart_and_id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
-                                sinopse = theomapi_api_nome().sinopse(nome_ano[0][1])
-                                url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0]# + '?language=pt'
-                        if num_mode == 3007:
-                                thetvdb_id = thetvdb_api()._id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
-                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                if ftart:
-                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'                                       
-                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                if snpse: sinopse = snpse[0]
-                                #fanart,tmdb_id,thumb = themoviedb_api_tv().fanart_and_id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
-                                #url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0]
-##                        try:
-##                                html_source = abrir_url(url_pesquisa)
-##                        except: html_source = ''
-##                        if html_source == '':
-##                                if num_mode == 7: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=en'
-##                                if num_mode == 3007: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=en'
-##                                try:
-##                                        html_source = abrir_url(url_pesquisa)
-##                                except: html_source = ''
-##                        snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_source)
-##                        if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_source)
-##                        if snpse: sinopse = snpse[0]
-##                        if 'There are no backdrops added to this' not in html_source:
-##                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_source)
-##                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
-##                        else: fanart = ''
-##                        genre = re.compile('<span itemprop="genre">(.+?)</span></a>').findall(html_source)
-##                        conta = 0
-##                        for gen in genre:
-##                                if conta == 0:
-##                                        genero = gen
-##                                        conta = 1
-##                                else:
-##                                        genero = genero + ' ' + gen
-                        ##############
-                        addDir_teste('[B][COLOR green]' + nome_ano[0][1] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][2] + '[/COLOR]','IMDB'+imdbcode+'IMDB',num_mode,thumb_pop[0].replace('w92','w396'),sinopse,fanart,nome_ano[0][2].replace('(','').replace(')',''),genero)
-                        #addDir('[B][COLOR green]' + nome_ano[0][1] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][2] + '[/COLOR]','IMDB'+imdbcode+'IMDB',num_mode,thumb_pop[0].replace('w92','w396'),'nao','')
-                        i = i + 1
-        npag = re.compile('<p class="left">Currently on page: (.+?)</p>').findall(html_pop[0])
-        numpag = '('+npag[0].replace(' of ','/')+')'
-        npagseg = re.compile('<p class="left">Currently on page: (\d+) of .+?</p>').findall(html_pop[0])
-        npseg = int(npagseg[0]) + 1
-        proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
-        if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
-	try:
-                proximap = 'http://www.themoviedb.org' + proxima[0]
-		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3000,artfolder + 'PAGS1.png','','')
-	except: pass
-        progress.close()
+        if num_mode == 7: noscinemas = themoviedb_api_pagina().fanart_and_id('movie','7','popular',str(num_pag))
+        npag = urllib.quote(url)
+        numpag = '('+str(npag)+'/22)'
+        npseg = int(npag) + 1
+	addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',str(npseg),3000,artfolder + 'PAGS1.png','','')
 
 def MVOTADOS():
-        progress = xbmcgui.DialogProgress()
-        i = 1
-        percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
-        html_pop_source = abrir_url(url)
+        num_pag = urllib.quote(url)
         conta = 0
         num_mode = 7
-	html_pop = re.findall('<h3>Top Rated Movies</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
-	if not html_pop:
-                html_pop = re.findall('<h3>Top Rated TV Shows</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
-                num_mode = 3007
-        for items_pop in html_pop:
-                filmes_pop = re.findall('<li class="w480">(.*?)<ul class="icons left_padding">', items_pop, re.DOTALL)
-                num = len(filmes_pop) + 0.0
-                for pop_filmes in filmes_pop:
-                        imdbcode = ''
-                        sinopse = ''
-                        fanart = ''
-                        genero = ''
-                        thumb = ''
-                        percent = int( ( i / num ) * 100)
-                        message = str(i) + " de " + str(int(num))
-                        progress.update( percent, "", message, "" )
-                        print str(i) + " de " + str(int(num))
-                        if progress.iscanceled():
-                                break
-                        nome_ano = re.compile('<h4><a href="(.+?)">(.+?)</a> <span class="date">(.+?)</span></h4>').findall(pop_filmes)
-                        thumb_pop = re.compile('<img class="shadow" src="(.+?)" width="92" />').findall(pop_filmes)
-                        #############
-                        if num_mode == 7:
-                                fanart,tmdb_id,thumb = themoviedb_api().fanart_and_id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
-                                sinopse = theomapi_api_nome().sinopse(nome_ano[0][1])
-                                #url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=pt'
-                        if num_mode == 3007:
-                                thetvdb_id = thetvdb_api()._id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
-                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                if ftart:
-                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'                                       
-                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                if snpse: sinopse = snpse[0]
-                                #fanart,tmdb_id,thumb = themoviedb_api_tv().fanart_and_id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
-                                #url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=pt'
-##                        try:
-##                                html_source = abrir_url(url_pesquisa)
-##                        except: html_source = ''
-##                        if html_source == '':
-##                                if num_mode == 7: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=en'
-##                                if num_mode == 3007: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0] + '?language=en'
-##                                try:
-##                                        html_source = abrir_url(url_pesquisa)
-##                                except: html_source = ''
-##                        snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_source)
-##                        if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_source)
-##                        if snpse: sinopse = snpse[0]
-##                        if 'There are no backdrops added to this' not in html_source:
-##                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_source)
-##                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
-##                        else: fanart = ''
-##                        genre = re.compile('<span itemprop="genre">(.+?)</span></a>').findall(html_source)
-##                        conta = 0
-##                        for gen in genre:
-##                                if conta == 0:
-##                                        genero = gen
-##                                        conta = 1
-##                                else:
-##                                        genero = genero + ' ' + gen
-                        ##############
-                        addDir_teste('[B][COLOR green]' + nome_ano[0][1] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][2] + '[/COLOR]','IMDB'+imdbcode+'IMDB',num_mode,thumb,sinopse,fanart,nome_ano[0][2].replace('(','').replace(')',''),genero)
-                        #addDir('[B][COLOR green]' + nome_ano[0][0] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][1] + '[/COLOR]','IMDB'+imdbcode+'IMDB',num_mode,thumb_pop[0].replace('w92','w396'),'nao','')
-                        i = i + 1
-        npag = re.compile('<p class="left">Currently on page: (.+?)</p>').findall(html_pop[0])
-        numpag = '('+npag[0].replace(' of ','/')+')'
-        npagseg = re.compile('<p class="left">Currently on page: (\d+) of .+?</p>').findall(html_pop[0])
-        npseg = int(npagseg[0]) + 1
-        proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
-        if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
-	try:
-                proximap = 'http://www.themoviedb.org' + proxima[0]
-		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3001,artfolder + 'PAGS1.png','','')
-	except: pass
-        progress.close()
+        if num_mode == 7: noscinemas = themoviedb_api_pagina().fanart_and_id('movie','7','top_rated',str(num_pag))
+        npag = urllib.quote(url)
+        numpag = '('+str(npag)+'/22)'
+        npseg = int(npag) + 1
+	addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',str(npseg),3001,artfolder + 'PAGS1.png','','')
 
 def NCINEMAS():
-        progress = xbmcgui.DialogProgress()
-        i = 1
-        percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
-        html_pop_source = abrir_url(url)
+        num_pag = urllib.quote(url)
         conta = 0
         num_mode = 7
-	html_pop = re.findall('<h3>Now Playing Movies</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
-	if not html_pop:
-                html_pop = re.findall('<h3>Currently Airing TV Shows</h3>(.*?)<div id="footer">', html_pop_source, re.DOTALL)
-                num_mode = 3007
-        for items_pop in html_pop:
-                filmes_pop = re.findall('<li class="w480">(.*?)<ul class="icons left_padding">', items_pop, re.DOTALL)
-                num = len(filmes_pop) + 0.0
-                for pop_filmes in filmes_pop:
-                        imdbcode = ''
-                        sinopse = ''
-                        fanart = ''
-                        genero = ''
-                        thumb = ''
-                        percent = int( ( i / num ) * 100)
-                        message = str(i) + " de " + str(int(num))
-                        progress.update( percent, "", message, "" )
-                        print str(i) + " de " + str(int(num))
-                        if progress.iscanceled():
-                                break
-                        nome_ano = re.compile('<h4><a href="(.+?)">(.+?)</a> <span class="date">(.+?)</span></h4>').findall(pop_filmes)
-                        thumb_pop = re.compile('<img class="shadow" src="(.+?)" width="92" />').findall(pop_filmes)
-                        #############
-                        if num_mode == 7:
-                                fanart,tmdb_id,thumb = themoviedb_api().fanart_and_id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
-                                sinopse = theomapi_api_nome().sinopse(nome_ano[0][1])
-                                #url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0]# + '?language=pt'
-                        if num_mode == 3007:
-                                thetvdb_id = thetvdb_api()._id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
-                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                if ftart:
-                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'                                       
-                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                if snpse: sinopse = snpse[0]
-                                #fanart,tmdb_id,thumb = themoviedb_api_tv().fanart_and_id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
-                                #url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0]
-##                        try:
-##                                html_source = abrir_url(url_pesquisa)
-##                        except: html_source = ''
-##                        snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_source)
-##                        if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_source)
-##                        if snpse: sinopse = snpse[0]
-####                        else:
-####                                if num_mode == 7: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0]
-####                                if num_mode == 3005: url_pesquisa = 'http://www.themoviedb.org' + nome_ano[0][0]
-####                                try:
-####                                        html_source = abrir_url(url_pesquisa)
-####                                except: html_source = ''
-####                                snpse = re.compile('<p id="overview" itemprop="description">(.+?)</p>').findall(html_source)
-####                                if not snpse: snpse = re.compile('<h3>Overview</h3>\n<p>(.+?)</p>').findall(html_source)
-####                                if snpse: sinopse = snpse[0]
-##                        if 'There are no backdrops added to this' not in html_source:
-##                                url_fan = re.compile('<meta name="twitter:image" content="(.+?)" />').findall(html_source)
-##                                if url_fan: fanart = url_fan[0].replace('w780','w1280')
-##                        else: fanart = ''
-##                        genre = re.compile('<span itemprop="genre">(.+?)</span></a>').findall(html_source)
-##                        conta = 0
-##                        for gen in genre:
-##                                if conta == 0:
-##                                        genero = gen
-##                                        conta = 1
-##                                else:
-##                                        genero = genero + ' ' + gen
-                        ##############
-                        addDir_teste('[B][COLOR green]' + nome_ano[0][1] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][2] + '[/COLOR]','IMDB'+imdbcode+'IMDB',num_mode,thumb_pop[0].replace('w92','w396'),sinopse,fanart,nome_ano[0][2].replace('(','').replace(')',''),genero)
-                        #addDir('[B][COLOR green]' + nome_ano[0][0] + '[/COLOR][/B][COLOR yellow] ' + nome_ano[0][1] + '[/COLOR]','IMDB'+imdbcode+'IMDB',num_mode,thumb_pop[0].replace('w92','w396'),'nao','')
-                        i = i + 1
-        npag = re.compile('<p class="left">Currently on page: (.+?)</p>').findall(html_pop[0])
-        numpag = '('+npag[0].replace(' of ','/')+')'
-        npagseg = re.compile('<p class="left">Currently on page: (\d+) of .+?</p>').findall(html_pop[0])
-        npseg = int(npagseg[0]) + 1
-        proxima = re.compile('Previous</a> [|] <a href="(.+?)">Next').findall(html_pop[0])
-        if not proxima: proxima = re.compile('<a href="(.+?)">Next').findall(html_pop[0])
-	try:
-                proximap = 'http://www.themoviedb.org' + proxima[0]
-		addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',proximap,3002,artfolder + 'PAGS1.png','','')
-	except: pass
-        progress.close()
+        if num_mode == 7: noscinemas = themoviedb_api_pagina().fanart_and_id('movie','7','now_playing',str(num_pag))
+        npag = urllib.quote(url)
+        numpag = '('+str(npag)+'/22)'
+        npseg = int(npag) + 1
+	addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',str(npseg),3002,artfolder + 'PAGS1.png','','')
+
+###############################   SÉRIES TMDB
+
+def EMEXIBICAO():
+        num_pag = urllib.quote(url)
+        conta = 0
+        num_mode = 3007
+        if num_mode == 3007: emexibicao = themoviedb_api_pagina().fanart_and_id('tv','3007','on_the_air',str(num_pag))
+##                fanart,tmdb_id,thumb = themoviedb_api().fanart_and_id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
+##                sinopse = theomapi_api_nome().sinopse(nome_ano[0][1])
+##        if num_mode == 3007:
+##                thetvdb_id = thetvdb_api()._id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
+##                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+##                if ftart:
+##                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+##                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'                                       
+##                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+##                if snpse: sinopse = snpse[0]
+        npag = urllib.quote(url)
+        numpag = '('+str(npag)+'/22)'
+        npseg = int(npag) + 1
+	addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',str(npseg),3008,artfolder + 'PAGS1.png','','')
+
+def MVOTADAS():
+        num_pag = urllib.quote(url)
+        conta = 0
+        num_mode = 3007
+        if num_mode == 3007: emexibicao = themoviedb_api_pagina().fanart_and_id('tv','3007','top_rated',str(num_pag))
+        npag = urllib.quote(url)
+        numpag = '('+str(npag)+'/22)'
+        npseg = int(npag) + 1
+	addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',str(npseg),3009,artfolder + 'PAGS1.png','','')
+
+def MPOPULARESTV():
+        num_pag = urllib.quote(url)
+        conta = 0
+        num_mode = 3007
+        if num_mode == 3007: emexibicao = themoviedb_api_pagina().fanart_and_id('tv','3007','popular',str(num_pag))
+        npag = urllib.quote(url)
+        numpag = '('+str(npag)+'/22)'
+        npseg = int(npag) + 1
+	addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',str(npseg),3010,artfolder + 'PAGS1.png','','')
+
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -554,7 +368,6 @@ def pesquisar_SERIES_IMDB(nome_pesquisa,url):
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
         pp = nome_pesquisa
-        
         progress = xbmcgui.DialogProgress()
         percent = 0
         message = ''
@@ -562,52 +375,55 @@ def pesquisar_SERIES_IMDB(nome_pesquisa,url):
         progress.create('Progresso', 'A Procurar')
         progress.update( percent, 'A Procurar...'+site, message, "" )
         pesquisou = nome_pesquisa
-        if '-' in nome_pesquisa:
-                nome_p = re.compile('.+?[-](.+?)').findall(nome_pesquisa)
-                if len(nome_p[0])>2:
-                        nome_pesquisa = nome_p[0]
-        else:
-                if ':' in nome_pesquisa:
-                        nome_p = re.compile('(.+?)[:].+?').findall(nome_pesquisa)
-                        nome_pesquisa = nome_p[0]
-
-        nome_pesquisa = nome_pesquisa.replace('é','e')
-        nome_pesquisa = nome_pesquisa.replace('ê','e')
-        nome_pesquisa = nome_pesquisa.replace('á','a')
-        nome_pesquisa = nome_pesquisa.replace('à','a')
-        nome_pesquisa = nome_pesquisa.replace('ã','a')
-        nome_pesquisa = nome_pesquisa.replace('è','e')
-        nome_pesquisa = nome_pesquisa.replace('í','i')
-        nome_pesquisa = nome_pesquisa.replace('ó','o')
-        nome_pesquisa = nome_pesquisa.replace('ô','o')
-        nome_pesquisa = nome_pesquisa.replace('õ','o')
-        nome_pesquisa = nome_pesquisa.replace('ú','u')
-        nome_pesquisa = nome_pesquisa.replace('Ú','U')
-        nome_pesquisa = nome_pesquisa.replace('ç','c')
-        nome_pesquisa = nome_pesquisa.replace('ç','c')
-
-        nome_pesquisa = nome_pesquisa.lower()
+##        if '-' in nome_pesquisa:
+##                nome_p = re.compile('.+?[-](.+?)').findall(nome_pesquisa)
+##                if len(nome_p[0])>2:
+##                        nome_pesquisa = nome_p[0]
+##        else:
+##                if ':' in nome_pesquisa:
+##                        nome_p = re.compile('(.+?)[:].+?').findall(nome_pesquisa)
+##                        nome_pesquisa = nome_p[0]
+##
+##        nome_pesquisa = nome_pesquisa.replace('é','e')
+        nome_pesquisa = nome_pesquisa.replace("'s",'')
+        nome_pesquisa = nome_pesquisa.replace("&",'')
+        nome_pesquisa = nome_pesquisa.replace(":",'')
+##        nome_pesquisa = nome_pesquisa.replace('ê','e')
+##        nome_pesquisa = nome_pesquisa.replace('á','a')
+##        nome_pesquisa = nome_pesquisa.replace('à','a')
+##        nome_pesquisa = nome_pesquisa.replace('ã','a')
+##        nome_pesquisa = nome_pesquisa.replace('è','e')
+##        nome_pesquisa = nome_pesquisa.replace('í','i')
+##        nome_pesquisa = nome_pesquisa.replace('ó','o')
+##        nome_pesquisa = nome_pesquisa.replace('ô','o')
+##        nome_pesquisa = nome_pesquisa.replace('õ','o')
+##        nome_pesquisa = nome_pesquisa.replace('ú','u')
+##        nome_pesquisa = nome_pesquisa.replace('Ú','U')
+##        nome_pesquisa = nome_pesquisa.replace('ç','c')
+##        nome_pesquisa = nome_pesquisa.replace('ç','c')
+##
+##        nome_pesquisa = nome_pesquisa.lower()
         pesquisou = nome_pesquisa
-
-        numpontos=re.compile('[.](.+?)').findall(nome_pesquisa)
-        pontos = len(numpontos)
-        if pontos > 1: nome_pesquisa = nome_pesquisa.replace('.','')
-
-        conta = 0
-        a_q = re.compile('\w+')
-        qq_aa = a_q.findall(nome_pesquisa)
-        nome_pesquisa = ''
-        for q_a_q_a in qq_aa:
-                if len(q_a_q_a) > 0 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
-                #if len(q_a_q_a) > 1:
-                        if conta == 0:
-                                nome_pesquisa = q_a_q_a
-                                conta = 1
-                        else:
-                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
-
-        nome_pesquisa = nome_pesquisa.lower()
-        nome_pesquisa = nome_pesquisa.replace('  ','')
+        nome_pesquisa = urllib.quote_plus(nome_pesquisa)
+##        numpontos=re.compile('[.](.+?)').findall(nome_pesquisa)
+##        pontos = len(numpontos)
+##        if pontos > 1: nome_pesquisa = nome_pesquisa.replace('.','')
+##
+##        conta = 0
+##        a_q = re.compile('\w+')
+##        qq_aa = a_q.findall(nome_pesquisa)
+##        nome_pesquisa = ''
+##        for q_a_q_a in qq_aa:
+##                if len(q_a_q_a) > 0 or q_a_q_a == '1' or q_a_q_a == '2' or q_a_q_a == '3' or q_a_q_a == '4'or q_a_q_a == '5' or q_a_q_a == '6':
+##                #if len(q_a_q_a) > 1:
+##                        if conta == 0:
+##                                nome_pesquisa = q_a_q_a
+##                                conta = 1
+##                        else:
+##                                nome_pesquisa = nome_pesquisa + '+' + q_a_q_a
+##
+##        nome_pesquisa = nome_pesquisa.lower()
+##        nome_pesquisa = nome_pesquisa.replace('  ','')
         encode=urllib.quote(nome_pesquisa)
 
         a = 0
@@ -734,6 +550,7 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
+                        
                         if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
                         gener = re.compile("nero</b>:(.+?)<br />").findall(item)
                         if gener: genero = gener[0]
@@ -777,7 +594,7 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                         audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
-                        imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
+                        #imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
                         if audio != []:
                                 if 'Portug' in audio[0]:
                                         audio_filme = ': PT-PT'
@@ -808,8 +625,7 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                         else:
                                 qualidade = ''
                         try:
-                                #addLink(nome,'','')
-                                
+                                #addLink(nome +'-'+ imdbcode +'-'+ imdbcode_passado + '-'+imdbc,'','')
                                 if 'Temporada' in nome or 'Season' in nome:
                                         if imdbc != '' and imdbcode != '':
                                                 if imdbcode == imdbc:
@@ -872,7 +688,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
         if not urlimdb: url = url.replace('IMDBIMDB','').replace('IMDB','')
         else: url = urlimdb[0].replace('IMDBIMDB','').replace('IMDB','')
         imdbcode_passado = ''
-
+        
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
@@ -892,6 +708,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
+                        
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         
@@ -1016,6 +833,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                 if fanart == '': fanart = '---'
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
+                                #addLink(nome +'-'+ imdbcode +'-'+ imdbcode_passado + '-'+imdbc,'','')
                                 if imdbc != '' and imdbcode != '':
                                         if imdbcode == imdbc:
                                                 #addLink(imdbcode_passado+'-'+imdbcode,'','')
@@ -1700,6 +1518,21 @@ elif mode == 3006:
         #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 3007:
         passar_nome_SERIES_IMDB(name)
+elif mode == 3008:
+        EMEXIBICAO()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(515)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 3009:
+        MVOTADAS()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(515)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 3010:
+        MPOPULARESTV()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(515)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 

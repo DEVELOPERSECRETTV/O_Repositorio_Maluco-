@@ -165,6 +165,7 @@ def encontrar_fontes_pesquisa_TFV(url,pesquisou,FS):
                         audio_filme = ''
                         imdbcode = ''
                         tirar_ano = ''
+                        genre = ''
 
                         imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
                         if imdb: imdbcode = imdb[0]
@@ -737,10 +738,11 @@ def encontrar_fontes_filmes_TPT(url,pesquisou,FS):
                         if thumb == '': thumb = '---'
 
                         try:
-                                if (("Season" in nome or 'Mini-Série' in nome) and FS == 'FS') or (("Season" in nome or 'Mini-Série' in nome) and FS == 'S'):
-                                        addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
-                                if ("Season" not in nome and 'Mini-Série' not in nome and FS == 'FS') or ("Season" not in nome and 'Mini-Série' not in nome and FS == 'F'):
-                                        addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
+                                if ano and genr and audio:
+                                        if (("Season" in nome or 'Mini-Série' in nome) and FS == 'FS') or (("Season" in nome or 'Mini-Série' in nome) and FS == 'S'):
+                                                addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
+                                        if ("Season" not in nome and 'Mini-Série' not in nome and FS == 'FS') or ("Season" not in nome and 'Mini-Série' not in nome and FS == 'F'):
+                                                addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
                         except: pass
         else: return
 	return

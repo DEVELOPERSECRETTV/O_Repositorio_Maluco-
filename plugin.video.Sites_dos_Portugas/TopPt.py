@@ -24,11 +24,12 @@
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,FilmesAnima,Mashup
 from array import array
 from string import capwords
-from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv,theomapi_api
+from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv,theomapi_api,themoviedb_api_IMDB
 
 arr_series = ['' for i in range(500)]
 arrai_series = ['' for i in range(500)]
 _series_ = []
+_seriesALL_ = []
 _series = []
 _s_ = []
 sri = []
@@ -315,12 +316,19 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                 
 
         folder = perfil
-        Series_File = open(folder + 'series.txt', 'a')
-        Series_Fi = open(folder + 'series.txt', 'r')
+        Series_File = open(folder + 'seriesTPT.txt', 'a')
+        Series_Fi = open(folder + 'seriesTPT.txt', 'r')
         read_Series_File = ''
         for line in Series_Fi:
                 read_Series_File = read_Series_File + line
                 if line!='':_series_.append(line)
+
+        Series_File_ALL = open(folder + 'series.txt', 'r')
+        read_Series_File_ALL = ''
+        for linha in Series_File_ALL:
+                read_Series_File_ALL = read_Series_File_ALL + linha
+                if linha!='':_seriesALL_.append(linha)
+                
         urltpt = 'http://toppt.net/'
         
         try:
@@ -416,7 +424,71 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                                 si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_series_[x])
                                                                 if si: sinopse = si[0][0] + ' ' + si[0][1]
                                                                 else: sinopse = '---'
-
+                                                        if fanart == '' or fanart == '---':
+                                                                if selfAddon.getSetting('Fanart') == "true":
+                                                                        nome_pesquisa = nome_series
+                                                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                                        if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                                        if sinopse == '---':
+                                                                                if snpse: sinopse = snpse[0]
+                                                        if sinopse == '' or sinopse == '---':
+                                                                nome_pesquisa = nome_series
+                                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                                if snpse: sinopse = snpse[0]
+                                                        arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
+                                                        arr_series[i] = nome_series
+                        elif nome_series in read_Series_File_ALL:
+                                percent = int( ( i / num ) * 100)
+                                message = str(i) + " de " + str(int(num))
+                                progress.update( percent, 'A Procurar Séries em '+site, message, "" )
+                                print str(i) + " de " + str(int(num))
+                                if progress.iscanceled():
+                                        break
+                                for x in range(len(_seriesALL_)):
+                                        if nome_series in _seriesALL_[x]:
+                                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_seriesALL_[x])
+                                                if _n: nome = _n[0]
+                                                else: nome = '---'
+                                                if nome_series in nome:
+                                                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_seriesALL_[x])
+                                                        if _i: imdbcode = _i[0]
+                                                        else: imdbcode = '---'
+                                                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_seriesALL_[x])
+                                                        if _t: thumb = _t[0]
+                                                        else: thumb = '---'
+                                                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_seriesALL_[x])
+                                                        if _a: ano_filme = _a[0]
+                                                        else: ano_filme = '---'
+                                                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_seriesALL_[x])
+                                                        if _f: fanart = _f[0]
+                                                        else: fanart = '---'
+                                                        _g = re.compile('[|]GENERO[|](.+?)[|]SINOPSE[|]').findall(_seriesALL_[x])
+                                                        if _g: genero = _g[0]
+                                                        else: genero = '---'
+                                                        _s = re.compile('[|]SINOPSE[|](.*)').findall(_seriesALL_[x])
+                                                        if _s: s = _s[0]
+                                                        if '|END|' in s: sinopse = s.replace('|END|','')
+                                                        else:
+                                                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_seriesALL_[x])
+                                                                if si: sinopse = si[0][0] + ' ' + si[0][1]
+                                                                else: sinopse = '---'
+                                                        if fanart == '' or fanart == '---':
+                                                                if selfAddon.getSetting('Fanart') == "true":
+                                                                        nome_pesquisa = nome_series
+                                                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                                        if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                                        if sinopse == '---':
+                                                                                if snpse: sinopse = snpse[0]
+                                                        if sinopse == '' or sinopse == '---':
+                                                                nome_pesquisa = nome_series
+                                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                                if snpse: sinopse = snpse[0]
                                                         arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
                                                         arr_series[i] = nome_series
                         else:
@@ -557,9 +629,15 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                         
                                         if selfAddon.getSetting('Fanart') == "true":
                                                 nome_pesquisa = nome_series
-                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme)
+                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
                                                 ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                 if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                if sinopse == '---':
+                                                        if snpse: sinopse = snpse[0]
+                                        if sinopse == '' or sinopse == '---':
+                                                nome_pesquisa = nome_series
+                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
                                                 if snpse: sinopse = snpse[0]
                                                 
@@ -589,6 +667,20 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                 print str(i) + " de " + str(int(num))
                                 if progress.iscanceled():
                                         break
+                                if fanart == '' or fanart == '---':
+                                        if selfAddon.getSetting('Fanart') == "true":
+                                                nome_pesquisa = nome_series
+                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                if sinopse == '---':
+                                                        if snpse: sinopse = snpse[0]
+                                if sinopse == '' or sinopse == '---':
+                                        nome_pesquisa = nome_series
+                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                        if snpse: sinopse = snpse[0]
                                 arr_series[i] = nome_series
                                 if 'IMDB' in imdbcode:
                                         arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|'+endereco_series+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
@@ -644,10 +736,73 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                                 si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(arrai_series[x])
                                                                 if si: sinopse = si[0][0] + ' ' + si[0][1]
                                                                 else: sinopse = '---'
-                                                        
+                                                        if fanart == '' or fanart == '---':
+                                                                if selfAddon.getSetting('Fanart') == "true":
+                                                                        nome_pesquisa = nome_series
+                                                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                                        if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                                        if sinopse == '---':
+                                                                                if snpse: sinopse = snpse[0]
+                                                        if sinopse == '' or sinopse == '---':
+                                                                nome_pesquisa = nome_series
+                                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                                if snpse: sinopse = snpse[0]
                                                         arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
                                                         arr_series[i] = nome_series
-
+                        elif nome_series in read_Series_File_ALL:
+                                percent = int( ( i / num ) * 100)
+                                message = str(i) + " de " + str(int(num))
+                                progress.update( percent, 'A Procurar Séries em '+site, message, "" )
+                                print str(i) + " de " + str(int(num))
+                                if progress.iscanceled():
+                                        break
+                                for x in range(len(_seriesALL_)):
+                                        if nome_series in _seriesALL_[x]:
+                                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_seriesALL_[x])
+                                                if _n: nome = _n[0]
+                                                else: nome = '---'
+                                                if nome_series in nome:
+                                                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_seriesALL_[x])
+                                                        if _i: imdbcode = _i[0]
+                                                        else: imdbcode = '---'
+                                                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_seriesALL_[x])
+                                                        if _t: thumb = _t[0]
+                                                        else: thumb = '---'
+                                                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_seriesALL_[x])
+                                                        if _a: ano_filme = _a[0]
+                                                        else: ano_filme = '---'
+                                                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_seriesALL_[x])
+                                                        if _f: fanart = _f[0]
+                                                        else: fanart = '---'
+                                                        _g = re.compile('[|]GENERO[|](.+?)[|]SINOPSE[|]').findall(_seriesALL_[x])
+                                                        if _g: genero = _g[0]
+                                                        else: genero = '---'
+                                                        _s = re.compile('[|]SINOPSE[|](.*)').findall(_seriesALL_[x])
+                                                        if _s: s = _s[0]
+                                                        if '|END|' in s: sinopse = s.replace('|END|','')
+                                                        else:
+                                                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_seriesALL_[x])
+                                                                if si: sinopse = si[0][0] + ' ' + si[0][1]
+                                                                else: sinopse = '---'
+                                                        if fanart == '' or fanart == '---':
+                                                                if selfAddon.getSetting('Fanart') == "true":
+                                                                        nome_pesquisa = nome_series
+                                                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                                        if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                                        if sinopse == '---':
+                                                                                if snpse: sinopse = snpse[0]
+                                                        if sinopse == '' or sinopse == '---':
+                                                                nome_pesquisa = nome_series
+                                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                                if snpse: sinopse = snpse[0]
+                                                        arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
+                                                        arr_series[i] = nome_series
                         else:
                                 try:
                                         html_source = TPT_abrir_url(endereco_series)
@@ -786,9 +941,16 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                         
                                         if selfAddon.getSetting('Fanart') == "true":
                                                 nome_pesquisa = nome_series
-                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme)
+                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
                                                 ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                 if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                if sinopse == '---':
+                                                        if snpse: sinopse = snpse[0]
+
+                                        if sinopse == '' or sinopse == '---':
+                                                nome_pesquisa = nome_series
+                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
                                                 if snpse: sinopse = snpse[0]
                                                 
@@ -818,6 +980,20 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                 print str(i) + " de " + str(int(num))
                                 if progress.iscanceled():
                                         break
+                                if fanart == '' or fanart == '---':
+                                        if selfAddon.getSetting('Fanart') == "true":
+                                                nome_pesquisa = nome_series
+                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                                if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                                if sinopse == '---':
+                                                        if snpse: sinopse = snpse[0]
+                                if sinopse == '' or sinopse == '---':
+                                        nome_pesquisa = nome_series
+                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                        if snpse: sinopse = snpse[0]
                                 arr_series[i] = nome_series
                                 if 'IMDB' in imdbcode:
                                         arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|'+endereco_series+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
@@ -854,18 +1030,19 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                 if si: sinopse = si[0][0] + ' ' + si[0][1]
                                 else: sinopse = '---'
                         if fanart == '---': fanart = ''
-                        addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',imdbcode,3006,thumb,sinopse,fanart,ano,genero)
-        Series_File = open(folder + 'series.txt', 'w')
-        for x in range(len(_series_)):
-                if _series_[x] != '': Series_File.write(_series_[x])
-        #Series_File.write
+                        addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',imdbcode,3007,thumb,sinopse,fanart,ano,genero)
+        SeriesFile = open(folder + 'seriesTPT.txt', 'w')
+        for x in range(len(arrai_series)):
+                if arrai_series[x] != '': SeriesFile.write(arrai_series[x]+'\n')
+        Series_Fi.close()
         Series_Fi.close()
         Series_File.close()
+        Series_File_ALL.close()
         progress.close()
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(515)")
-        #xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #-------------------------------------------------------------------  Filmes  -----------------------------------------------------------------#
@@ -1050,10 +1227,17 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
                                 if nnnn: nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
-                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
+                                fanart,tmdb_id,poster,sinopse = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme)
+##                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
                                 if thumb == '': thumb = poster
-                                if imdbcode != '': sinopse = theomapi_api().sinopse(imdbcode)
+##                                if imdbcode != '': sinopse = theomapi_api().sinopse(imdbcode)
 
+##                                try:
+##                                        pl=MASH_abrir_url('http://api.themoviedb.org/3/movie/'+tmdb_id+'?api_key=' + self.api_key + '&language=pt')
+##                                except: pl =''
+##                                if pl != '': plot=re.compile('"overview":"(.+?)"').findall(pl)
+##                                addLink(str(id_tmdb),'','')
+##                                if plot: addLink(plot[0],'','') 
                         #################################
 
                         ano_filme = '('+ano_filme+')'
