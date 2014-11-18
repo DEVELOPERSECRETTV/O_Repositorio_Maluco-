@@ -672,7 +672,7 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         try:
-                                if "Temporada" in urletitulo[0][1] or 'Season' in urletitulo[0][1]:
+                                if "Temporada" in urletitulo[0][1] or 'Season' in urletitulo[0][1] or 'Mini-Série' in urletitulo[0][1]:
                                         num_mode = 42
                                 else:
                                         num_mode = 33
@@ -1191,7 +1191,6 @@ def TFV_encontrar_fontes_series_recentes(url):
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
                         print str(i) + " de " + str(len(items))
-                        #if selfAddon.getSetting('series-fanart-TFV') == "false": xbmc.sleep( 50 )
                         if progress.iscanceled():
                                 break
                         gene = re.compile("nero</b>:(.+?)<br />").findall(item)
