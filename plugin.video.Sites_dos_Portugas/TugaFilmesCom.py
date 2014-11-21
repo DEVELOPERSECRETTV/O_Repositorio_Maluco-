@@ -123,7 +123,7 @@ def TFC_Menu_Filmes_Top_10(artfolder):
                                                         qualidade = qualidade + espaco + qua_qua
                                                         espaco = ' '
                                         if len(ano) < 4:
-                                                ano = 'Ano'
+                                                ano = ''
                                         if qualidade == 'PT PT':
                                                 qualidade = 'PT-PT'
                                         if qualidade == '':
@@ -303,7 +303,7 @@ def TFC_encontrar_fontes_filmes(url):
                                                 qualidade = qualidade + espaco + qua_qua
                                                 espaco = ' '
                                 if len(ano) < 4:
-                                        ano = 'Ano'
+                                        ano = ''
                                 if qualidade == 'PT PT':
                                         qualidade = 'PT-PT'
                                 if qualidade == '':

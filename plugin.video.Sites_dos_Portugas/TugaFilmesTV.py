@@ -22,7 +22,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,FilmesAnima,Mashup
-from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv
+from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv,themoviedb_api_IMDB_episodios,themoviedb_api_TMDB
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -769,11 +769,15 @@ def TFV_encontrar_videos_filmes(name,url):
         if 'Parte 1' and 'Parte 2' not in link2:
                 num_leg = 1
                 num_ptpt = 1
-                matchvid = re.findall("Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("Assistir(.+?)\n</p>", link2, re.DOTALL)
+                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", link2, re.DOTALL)
+                #addLink(str(len(matchvid)),'','')
                 if matchvid:
-                        for matchsvids in matchvid:
+                        for servidor,matchsvids in matchvid:
                                 if 'Legendado' in matchsvids and num_leg == 1:
                                         num_leg = 0
                                         if num_ptpt == 0: conta_id_video = 0
@@ -796,6 +800,12 @@ def TFV_encontrar_videos_filmes(name,url):
                                                         identifica_video = re.compile('=(.*)').findall(url)
                                                         id_video = identifica_video[0]
                                                         conta_id_video = conta_id_video + 1
+                                                        #addLink(servidor,'','')
+                                                        if "ep" in servidor: url = 'videomega'
+                                                        if "vw" in servidor: url = 'videowood'
+                                                        if "dv" in servidor: url = 'dropvideo'
+                                                        if "vt" in servidor: url = 'vidto.me'
+                                                        if "nv" in servidor: url = 'nowvideo'
                                                         TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
                                         except:pass
                 else:
@@ -805,11 +815,14 @@ def TFV_encontrar_videos_filmes(name,url):
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'',fanart)
 
         if 'Parte 1' and 'Parte 2' in link2:
-                matchvid = re.findall("Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("Assistir(.+?)\n</p>", link2, re.DOTALL)
+                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", link2, re.DOTALL)
                 if matchvideo:
-                        for parte in matchvideo:
+                        for servidor,parte in matchvideo:
                                 nome_video = re.compile('(.+?)</div></h3><p>').findall(parte)
                                 if nome_video: nome = nome_video[0]
                                 else: nome = ''
@@ -821,19 +834,24 @@ def TFV_encontrar_videos_filmes(name,url):
                                         url = url_not_videomega[0]
                                         identifica_video = re.compile('=(.*)').findall(url)
                                         id_video = identifica_video[0]
+                                if "ep" in servidor: url = 'videomega'
+                                if "vw" in servidor: url = 'videowood'
+                                if "dv" in servidor: url = 'dropvideo'
+                                if "vt" in servidor: url = 'vidto.me'
+                                if "nv" in servidor: url = 'nowvideo'
                                 if "videomega" in url:
                                         try:
                                                 url = url + '///' + name
                                                 addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                         except: pass
                                 else:
-                                        req = urllib2.Request(url)
-                                        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-                                        response = urllib2.urlopen(req)
-                                        link4=response.read()
-                                        response.close()
-                                        match = re.compile('<iframe src="(.+?)".+?></iframe></center>').findall(link4)
-                                        url=match[0]
+##                                        req = urllib2.Request(url)
+##                                        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+##                                        response = urllib2.urlopen(req)
+##                                        link4=response.read()
+##                                        response.close()
+##                                        match = re.compile('<iframe src="(.+?)".+?></iframe></center>').findall(link4)
+##                                        url=match[0]
                                         if "videomega" in url:
                                                 try:
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
@@ -904,13 +922,13 @@ def TFV_encontrar_videos_filmes(name,url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
-        req = urllib2.Request(url)
-        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-        response = urllib2.urlopen(req)
-        link4=response.read()
-        response.close()
-        match = re.compile('<iframe src="(.+?)".+?></iframe></center>').findall(link4)
-        url=match[0]
+##        req = urllib2.Request(url)
+##        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+##        response = urllib2.urlopen(req)
+##        link4=response.read()
+##        response.close()
+##        match = re.compile('<iframe src="(.+?)".+?></iframe></center>').findall(link4)
+##        url=match[0]
         if "videomega" in url:
 		try:
                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
@@ -990,11 +1008,14 @@ def TFV_links(name,url,iconimage,fanart):
         if 'Parte 1' and 'Parte 2' not in link2:
                 num_leg = 1
                 num_ptpt = 1
-                matchvid = re.findall("Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("Assistir(.+?)\n</p>", link2, re.DOTALL)
+                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", link2, re.DOTALL)
                 if matchvid:
-                        for matchsvids in matchvid:
+                        for servidor,matchsvids in matchvid:
                                 if 'Legendado' in matchsvids and num_leg == 1:
                                         num_leg = 0
                                         if num_ptpt == 0: conta_id_video = 0
@@ -1017,63 +1038,12 @@ def TFV_links(name,url,iconimage,fanart):
                                                         identifica_video = re.compile('=(.*)').findall(url)
                                                         id_video = identifica_video[0]
                                                         conta_id_video = conta_id_video + 1
-                                                  ##################      
-                                                        req = urllib2.Request(url)
-                                                        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-                                                        response = urllib2.urlopen(req)
-                                                        link4=response.read()
-                                                        response.close()
-                                                        matchs = re.compile('<iframe src="(.+?)".+?></iframe></center>').findall(link4)
-                                                        url=matchs[0]
-                                                        if "videomega" in url:
-                                                                try:
-                                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
-                                                                        print url
-                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                                except: pass
-                                                        if "vidto.me" in url:
-                                                                try:
-                                                                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
-                                                                        print url
-                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                                except: pass
-                                                        if "dropvideo" in url:
-                                                                try:
-                                                                        url = 'http://dropvideo.com/embed/' + id_video + '///' + name
-                                                                        print url
-                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                                except:pass
-                                                        if "streamin.to" in url:
-                                                                try:
-                                                                        url = 'http://streamin.to/embed-' + id_video + '.html' + '///' + name
-                                                                        print url
-                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'',fanart)
-                                                                except:pass                        
-                                                        if "putlocker" in url:
-                                                                try:
-                                                                        url = 'http://www.putlocker.com/embed/' + id_video + '///' + name
-                                                                        print url
-                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                                except:pass
-                                                        if "nowvideo" in url:
-                                                                try:
-                                                                        url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video + '///' + name
-                                                                        print url
-                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                                except:pass
-                                                        if "videowood" in url:
-                                                                try:
-                                                                        if '/video/' in url: url = url.replace('/video/','/embed/')
-                                                                        url = 'http://www.videowood.tv/embed/' + id_video + '///' + name
-                                                                        print url
-                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                                except:pass
-                                                        if "firedrive" in url:
-                                                                try:
-                                                                        url = 'http://www.firedrive.com/file/' + id_video + '///' + name
-                                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                                except:pass
-                                                        ##################        
+                                                        if "ep" in servidor: url = 'videomega'
+                                                        if "vw" in servidor: url = 'videowood'
+                                                        if "dv" in servidor: url = 'dropvideo'
+                                                        if "vt" in servidor: url = 'vidto.me'
+                                                        if "nv" in servidor: url = 'nowvideo'
+                                                        TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)    
                                                         #TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
                                         except:pass
                 else:
@@ -1083,9 +1053,12 @@ def TFV_links(name,url,iconimage,fanart):
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'',fanart)
 
         if 'Parte 1' and 'Parte 2' in link2:
-                matchvid = re.findall("Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("Assistir(.+?)\n</p>", link2, re.DOTALL)
+                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", link2, re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", link2, re.DOTALL)
                 if matchvideo:
                         for parte in matchvideo:
                                 nome_video = re.compile('(.+?)</div></h3><p>').findall(parte)
@@ -1099,19 +1072,24 @@ def TFV_links(name,url,iconimage,fanart):
                                         url = url_not_videomega[0]
                                         identifica_video = re.compile('=(.*)').findall(url)
                                         id_video = identifica_video[0]
+                                if "ep" in servidor: url = 'videomega'
+                                if "vw" in servidor: url = 'videowood'
+                                if "dv" in servidor: url = 'dropvideo'
+                                if "vt" in servidor: url = 'vidto.me'
+                                if "nv" in servidor: url = 'nowvideo'
                                 if "videomega" in url:
                                         try:
                                                 url = url + '///' + name
                                                 addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                         except: pass
                                 else:
-                                        req = urllib2.Request(url)
-                                        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-                                        response = urllib2.urlopen(req)
-                                        link4=response.read()
-                                        response.close()
-                                        match = re.compile('<iframe src="(.+?)".+?></iframe></center>').findall(link4)
-                                        url=match[0]
+##                                        req = urllib2.Request(url)
+##                                        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+##                                        response = urllib2.urlopen(req)
+##                                        link4=response.read()
+##                                        response.close()
+##                                        match = re.compile('<iframe src="(.+?)".+?></iframe></center>').findall(link4)
+##                                        url=match[0]
                                         if "videomega" in url:
                                                 try:
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
@@ -1193,6 +1171,9 @@ def TFV_encontrar_fontes_series_recentes(url):
                         print str(i) + " de " + str(len(items))
                         if progress.iscanceled():
                                 break
+                        imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
                         gene = re.compile("nero</b>:(.+?)<br />").findall(item)
                         if gene: genero = gene[0]
                         else: genero = ''
@@ -1231,9 +1212,9 @@ def TFV_encontrar_fontes_series_recentes(url):
                                 if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'                                       
                         snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
                         if snpse: sinopse = snpse[0]
-                                        
+          
 			try:
-				addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0],42,thumb.replace('s72-c','s320'),sinopse,fanart,ano,genero)
+				addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',42,thumb.replace('s72-c','s320'),sinopse,fanart,ano,genero)
 			except: pass
 			i = i + 1
 	else:
@@ -1248,15 +1229,40 @@ def TFV_encontrar_fontes_series_recentes(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def TFV_encontrar_videos_series(name,url):
+##        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+##        if nnn: nnnn = re.compile('(.+?)[(].+?[)]').findall(nnn[0])
+##        if nnnn : n_pesquisa = nnnn[0]
+##        else: n_pesquisa = ''
+##        nnn = re.compile('[[]COLOR yellow[]](.+?)[[]/COLOR[]]').findall(name)
+##        if nnn: nnnn = re.compile('[(](.+?)[)]').findall(nnn[0])
+##        if nnn : anne = nnnn[0]
+##        else: anne = ''
+##        imdb = re.compile('IMDB(.+?)IMDB').findall(url)
+##        if imdb: imdbcode = imdb[0]
+##        else: imdbcode = ''
+##        #addLink(n_pesquisa+anne,'','')
+##        tmdbcode = '---'
+##        if imdbcode != '': tmdbcode = themoviedb_api_TMDB().fanart_and_id(n_pesquisa,anne)
+##        season = re.compile('[(](.+?)[-].+?[)]').findall(name)
+##        if season: season = season[0]
+##        else:
+##                season = re.compile('[(](.+?)[)]').findall(name)
+##                if season: season = season[0]
+##                else: season = ''
+##        temporada = re.compile('(\d+)').findall(season)
+##        if temporada: temporada = temporada[0]
+##        else: temporada = ''
         urlseries = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlseries: url = url.replace('IMDBIMDB','')
         else: url = urlseries[0]
+        
         i = 1
         percent = 0
         message = ''
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
         conta_id_video = 0
+
 	try:
 		link_series=TFV_abrir_url(url)
 	except: link_series = ''
@@ -1286,6 +1292,7 @@ def TFV_encontrar_videos_series(name,url):
                                                         nome = nome.replace('&#8211;',"-")
                                                         nome = nome.replace('&#39;',"'")
                                                         nome = nome.replace('&amp;','&')
+                                                        #air_date,nome_e,thumb,sinopse = themoviedb_api_IMDB_episodios().fanart_and_id(imdbcode,temporada,episodio)
                                                         addDir('[B][COLOR green]' + nome + '[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',videomega_video_url[0],30,iconimage,'',fanart)
                                                 except:pass
                                         if 'ep' and 'src' and 'iframe' in item_vid_series:
@@ -1303,6 +1310,11 @@ def TFV_encontrar_videos_series(name,url):
                                                         nome_cada_episodio = nome_cada_episodio.replace('&#8211;',"-")
                                                         nome_cada_episodio = nome_cada_episodio.replace('&#39;',"'")
                                                         nome_cada_episodio = nome_cada_episodio.replace('&amp;','&')
+                                                        if "idep" in item_vid_series: url = 'videomega'
+                                                        if "idvw" in item_vid_series: url = 'videowood'
+                                                        if "iddv" in item_vid_series: url = 'dropvideo'
+                                                        if "idvt" in item_vid_series: url = 'vidto.me'
+                                                        if "idnv" in item_vid_series: url = 'nowvideo'
                                                         TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
                                                 except:pass
                                         if 'href' and 'Clique' in item_vid_series:
@@ -1323,6 +1335,19 @@ def TFV_encontrar_videos_series(name,url):
                                                         nome_cada_episodio = nome_cada_episodio.replace('&#8211;',"-")
                                                         nome_cada_episodio = nome_cada_episodio.replace('&#39;',"'")
                                                         nome_cada_episodio = nome_cada_episodio.replace('&amp;','&')
+##                                                        episodio = re.compile('(\d+)').findall(nome_cada_episodio)
+##                                                        if episodio: episodio = episodio[0]
+##                                                        #addLink(temporada+'-'+episodio+'-'+imdbcode+'-'+tmdbcode,'','')
+##                                                        air_date,nome_e,thumbep,sinopse = themoviedb_api_IMDB_episodios().fanart_and_id(str(tmdbcode),str(temporada),str(episodio))
+##                                                        #fanart = thumbep
+##                                                        #checker = str(sinopse)
+##                                                        #addLink(checker,'','')
+##                                                        #iconimage = thumbep
+                                                        if "idep" in item_vid_series: url = 'videomega'
+                                                        if "idvw" in item_vid_series: url = 'videowood'
+                                                        if "iddv" in item_vid_series: url = 'dropvideo'
+                                                        if "idvt" in item_vid_series: url = 'vidto.me'
+                                                        if "idnv" in item_vid_series: url = 'nowvideo'
                                                         TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
                                                 except:pass
                                         #if 'calendar_title' not in item_vid_series:
@@ -1340,16 +1365,16 @@ def TFV_encontrar_videos_series(name,url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
 def TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href):
-        req = urllib2.Request(url)
-        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-        response = urllib2.urlopen(req)
-        link4=response.read()
-        response.close()
-        if src_href == 'href':
-                match = re.compile('<iframe src="(.+?)".+?></iframe>').findall(link4)
-        if src_href == 'src':
-                match = re.compile('<iframe .+? src="(.+?)" .+?></iframe>').findall(link4)
-        url=match[0]        
+##        req = urllib2.Request(url)
+##        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+##        response = urllib2.urlopen(req)
+##        link4=response.read()
+##        response.close()
+##        if src_href == 'href':
+##                match = re.compile('<iframe src="(.+?)".+?></iframe>').findall(link4)
+##        if src_href == 'src':
+##                match = re.compile('<iframe .+? src="(.+?)" .+?></iframe>').findall(link4)
+##        url=match[0]        
         if "videomega" in url:
 		try:
                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name

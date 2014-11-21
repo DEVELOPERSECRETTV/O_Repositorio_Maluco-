@@ -847,6 +847,7 @@ def ARM_encontrar_videos_filmes(name,url):
                         matchvideo = re.findall('<li id=".+?" class="box-temp">(.*?)</li>', link2, re.DOTALL)
                         if not matchvideo: matchvideo = re.findall('<li id=".+?">(.*?)</li>', link2, re.DOTALL)
                         #addDir1(str(len(matchvideo)),'','',iconimage,False,'')
+                        #return
                         if matchvideo:
                                 for vidlink in matchvideo:
                                         #addDir1(vidlink,'','',iconimage,False,'')
@@ -854,48 +855,55 @@ def ARM_encontrar_videos_filmes(name,url):
                                         #if '/ads/' not in vidlink and 'megafilmes' in vidlink and '<span' not in vidlink:
                                                 linkvmatch = re.compile('src="(.+?)"').findall(vidlink)
                                                 if linkvmatch and 'filmes-engracados.html' not in linkvmatch[0]:
-                                                        #addDir1(linkvmatch[0],'','',iconimage,False,'')
-                                                        try:
-                                                                link2=ARM_abrir_url(linkvmatch[0])
-                                                        except: link2 = ''
-                                                        vlink = re.findall('<iframe(.*?)</iframe>', link2, re.DOTALL)
-                                                        
-                                                        for vidurl in vlink:
-                                                                linkinho=vidurl
-                                                        #if vlink: addDir1(str(len(vlink))+'----'+linkinho,'','',iconimage,False,'')
-                                                        linkv = re.compile('src="(.+?)"').findall(linkinho)
-                                                        if linkv:
-                                                                if 'adsnewflut' not in linkv: url_video = linkv[0]
-                                                        else: url_video = ''
-                                                        #addDir1(url_video+'----','','',iconimage,False,'')
-                                                        if url_video == '':
-                                                                linkv = re.compile("src='(.+?)'").findall(linkinho)
+                                                        #addDir1('1'+linkvmatch[0],'','',iconimage,False,'')
+                                                        if 'videoapi' in linkvmatch[0] or 'mailru.php' in linkvmatch[0]:
+                                                                num_fonte = num_fonte + 1
+                                                                ARM_resolve_not_videomega_filmes_telecine(linkvmatch[0],id_video,num_fonte)
+                                                        else:
+                                                                try:
+                                                                        link2v=ARM_abrir_url(linkvmatch[0])
+                                                                except: link2v = ''
+                                                                vlink = re.findall('<iframe(.*?)</iframe>', link2v, re.DOTALL)
+                                                                
+                                                                for vidurl in vlink:
+                                                                        linkinho=vidurl
+                                                                #if vlink: addDir1(str(len(vlink))+'----'+linkinho,'','',iconimage,False,'')
+                                                                #return    ############                    
+                                                                linkv = re.compile('src="(.+?)"').findall(linkinho)
                                                                 if linkv:
                                                                         if 'adsnewflut' not in linkv: url_video = linkv[0]
                                                                 else: url_video = ''
-                                                        vlink = re.findall('<embed(.*?)</object>', link2, re.DOTALL)
-                                                        if vlink: linkv = re.compile('src="(.+?)"').findall(vlink[0])
-                                                        if linkv: url_video = linkv[0]
-                                                        #addDir1(url_video+'----','','',iconimage,False,'')
-                                                        if 'adsnewflut' not in url_video and 'filmes-engracados.html' not in url_video: num_fonte = num_fonte + 1
-                                                        if 'flashx.tv' not in url_video and 'filmes-engracados.html' not in url_video: ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)                                            
-                                                        else:
-                                                                try:
-                                                                        funciona = ''
+                                                                #return
+                                                                #addDir1(url_video+'----','','',iconimage,False,'')
+        ##                                                        if url_video == '':
+        ##                                                                linkv = re.compile("src='(.+?)'").findall(linkinho)
+        ##                                                                if linkv:
+        ##                                                                        if 'adsnewflut' not in linkv: url_video = linkv[0]
+        ##                                                                else: url_video = ''
+                                                                vlink = re.findall('<embed(.*?)</object>', link2v, re.DOTALL)
+                                                                if vlink: linkv = re.compile('src="(.+?)"').findall(vlink[0])
+                                                                if linkv: url_video = linkv[0]
+                                                                #return
+                                                                #addDir1(url_video+'----','','',iconimage,False,'')
+                                                                if 'adsnewflut' not in url_video and 'filmes-engracados.html' not in url_video: num_fonte = num_fonte + 1
+                                                                if 'flashx.tv' not in url_video and 'filmes-engracados.html' not in url_video: ARM_resolve_not_videomega_filmes_telecine(url_video,id_video,num_fonte)                                            
+                                                                else:
                                                                         try:
-                                                                                flashxtv=ARM_abrir_url(url_video)
-                                                                        except: flashxtv = ''
-                                                                        flashurl = re.compile('addthis:url="(.+?)" addthis:').findall(flashxtv)
-                                                                        if flashurl:
-                                                                                url = flashurl[0]
-                                                                                url = url + '///' + name
-                                                                        else:
-                                                                                url = url + '///' + name
-                                                                                funciona = '[COLOR red] - Sem link[/COLOR]'
-                                                                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]'+funciona,url,30,iconimage,'','')
-                                                                except:pass
-                                                                #url_video = url_video + '///' + name
-                                                                #addDir(url_video+'[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]',url_video,30,iconimage,'','')
+                                                                                funciona = ''
+                                                                                try:
+                                                                                        flashxtv=ARM_abrir_url(url_video)
+                                                                                except: flashxtv = ''
+                                                                                flashurl = re.compile('addthis:url="(.+?)" addthis:').findall(flashxtv)
+                                                                                if flashurl:
+                                                                                        url = flashurl[0]
+                                                                                        url = url + '///' + name
+                                                                                else:
+                                                                                        url = url + '///' + name
+                                                                                        funciona = '[COLOR red] - Sem link[/COLOR]'
+                                                                                addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]'+funciona,url,30,iconimage,'','')
+                                                                        except:pass
+                                                                        #url_video = url_video + '///' + name
+                                                                        #addDir(url_video+'[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](FlashX.tv)[/COLOR][/B]',url_video,30,iconimage,'','')
                                         else:
                                                 if '/ads/' not in vidlink and '<span' not in vidlink:
                                                         linkvmatch = re.compile('src="(.+?)"').findall(vidlink)
@@ -908,7 +916,7 @@ def ARM_encontrar_videos_filmes(name,url):
                                                 
                         else:
                                 matchvideo = re.findall('<div class="btn-ver">(.*?)</div>', link2, re.DOTALL)
-                                #addDir1(str(len(matchvideo)),'','',iconimage,False,'')
+                                addDir1(str(len(matchvideo)),'','',iconimage,False,'')
                                 if matchvideo:
                                         linkvmatch = re.compile('href="(.+?)"').findall(matchvideo[0])
                                         #addDir1(linkvmatch[0],'','',iconimage,False,'')
@@ -1478,6 +1486,11 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Primeshare.tv)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
+    	if "filehoot" in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Filehoot)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
     	if "videoslasher" in url:
                 try:
                         url = url + '///' + name
@@ -1488,11 +1501,16 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Sockshare)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
-    	if "video.mail.ru" in url or 'dcd.php' in url:
+    	if "video.mail.ru" in url or 'dcd.php' in url or 'videoapi' in url or 'mailru.php' in url:
                 try:
                         #url = url.replace('/embed/','/').replace('.html','.json')
-                        if '/videos/' not in url:
-                                url = url.replace('http://video.mail.ru/mail/megafilmes/_myvideo/','http://api.video.mail.ru/videos/embed/mail/megafilmes/_myvideo/')
+                        if 'mailru.php?id' in url:
+                                u = re.compile('id=(.*)').findall(url)
+                                if u: url = 'http://api.video.mail.ru/videos/mail/megafilmeshdtv/_myvideo/'+u[0]+'.json'
+                        if 'videoapi' in url: url = url.replace('embed/','').replace('.html','.json')
+                        else:
+                                if '/videos/' not in url:
+                                        url = url.replace('http://video.mail.ru/mail/megafilmes/_myvideo/','http://api.video.mail.ru/videos/embed/mail/megafilmes/_myvideo/')
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.mail.ru)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
@@ -1550,6 +1568,11 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
 
 def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
         #addDir1(url,'','',iconimage,False,'')
+        if "filehoot" in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Filehoot)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
         if "cloudzilla" in url:
                 try:
                         if '/share/file/' in url: url = url.replace('/share/file/','/embed/')
@@ -1683,11 +1706,16 @@ def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
                         url = url + '///' + name
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](PlayfreeHD)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass
-    	if "video.mail.ru" in url or 'dcd.php' in url:
+    	if "video.mail.ru" in url or 'dcd.php' in url or 'videoapi' in url or 'mailru.php' in url:
                 try:
                         #url = url.replace('/embed/','/').replace('.html','.json')
-                        if '/videos/' not in url:
-                                url = url.replace('http://video.mail.ru/mail/megafilmes/_myvideo/','http://api.video.mail.ru/videos/embed/mail/megafilmes/_myvideo/')
+                        if 'mailru.php?id' in url:
+                                u = re.compile('id=(.*)').findall(url)
+                                if u: url = 'http://api.video.mail.ru/videos/mail/megafilmeshdtv/_myvideo/'+u[0]+'.json'
+                        if 'videoapi' in url: url = url.replace('embed/','').replace('.html','.json')
+                        else:
+                                if '/videos/' not in url:
+                                        url = url.replace('http://video.mail.ru/mail/megafilmes/_myvideo/','http://api.video.mail.ru/videos/embed/mail/megafilmes/_myvideo/')
                         url = url + '///' + name  #http://api.video.mail.ru/videos/mail/megafilmes/_myvideo/172.json
                         addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Video.mail.ru)[/COLOR][/B]',url,30,iconimage,'','')
     		except:pass

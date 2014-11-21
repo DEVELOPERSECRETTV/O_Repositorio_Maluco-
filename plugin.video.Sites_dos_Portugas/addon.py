@@ -732,26 +732,6 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                 qualidade = qualidade.replace(']','')
                                         else:
                                                 qualidade = ''
-                        
-##                        snpse = re.compile("<b>SINOPSE:.+?/b>(.+?)<br/>").findall(item)
-##                        if not snpse: snpse = re.compile("<b>SINOPSE:.+?</b>(.+?)<br/>").findall(item)
-##                        if snpse: sinopse = snpse[0]
-##                        else:
-##                                try:
-##                                        fonte_video = abrir_url(urletitulo[0][0])
-##                                except: fonte_video = ''
-##                                fontes_video = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', fonte_video, re.DOTALL)
-##                                if fontes_video != []:
-##                                        snpse = re.compile('Sinopse.png".+?/><br/>\n(.+?)</p>').findall(fontes_video[0])
-##                                        if snpse: sinopse = snpse[0]
-##                                        else: sinopse = ''
-##                        sinopse = sinopse.replace('&#8216;',"'")
-##                        sinopse = sinopse.replace('&#8217;',"'")
-##                        sinopse = sinopse.replace('&#8211;',"-")
-##                        sinopse = sinopse.replace('&#8220;',"'")
-##                        sinopse = sinopse.replace('&#8221;',"'")
-##                        sinopse = sinopse.replace('&#39;',"'")
-##                        sinopse = sinopse.replace('&amp;','&')
                                         
                         genr = re.compile("NERO:.+?/b>(.+?)<br/>").findall(item)
                         if genr: genero = genr[0]
@@ -861,7 +841,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                                 else:
                                                                         n = re.compile('[(](.+?)[)]').findall(nome)
                                                                         if n: nome = n[0]
-                                                addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
+                                                addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB'+nome_pesquisa,233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
                                                 num_f = num_f + 1
                                 else:
                                         if imdbcode_passado != imdbcode:
@@ -888,7 +868,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                         else:
                                                                 n = re.compile('[(](.+?)[)]').findall(nome)
                                                                 if n: nome = n[0]
-                                        addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
+                                        addDir_teste('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB'+nome_pesquisa,233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
                                         num_f = num_f + 1
                         except: pass
 ##                        addLink(str(len(items)),'','')
@@ -904,6 +884,30 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
 ##                        addLink(imdbcode,'','')
         return
 
+
+def INDEX():
+        i = 1
+        _nomeservidor_ = []
+        _linkservidor_ = []
+
+        nomeepi = re.compile('[[]COLOR grey[]](.*)').findall(url)
+        if nomeepi: nomeepisodio = '[COLOR grey]'+nomeepi[0]
+        
+        n = re.compile('[(](.+?)[)](.+?)[|]').findall(url.replace('//[COLOR grey]','|[COLOR grey]'))
+        for n1,n2 in n:
+                _nomeservidor_.append('Fonte '+str(i)+': [COLOR yellow]'+n1+'[/COLOR]')
+                _linkservidor_.append(n2+'///'+nomeepisodio)
+                i = i + 1
+
+        index = xbmcgui.Dialog().select('Escolha o Stream', _nomeservidor_)
+        if index > -1: Play.PLAY_movie(_linkservidor_[index],_nomeservidor_[index],iconimage,'',fanart)
+        else: return
+
+
+
+
+
+        
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -1165,8 +1169,13 @@ elif mode == 41:
         TugaFilmesTV.TFV_Menu_Series_A_a_Z(artfolder,url)
         #setViewMode_series_AZ_TFV()
         #xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode == 42: TugaFilmesTV.TFV_encontrar_videos_series(name,url)
-elif mode == 43: TugaFilmesTV.TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
+elif mode == 42:
+        TugaFilmesTV.TFV_encontrar_videos_series(name,url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'tvshows')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 43:
+        TugaFilmesTV.TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
 elif mode == 44:
         TugaFilmesTV.TFV_encontrar_fontes_series_recentes(url)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -1533,6 +1542,10 @@ elif mode == 3010:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+elif mode == 7000:
+        INDEX()
+
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 

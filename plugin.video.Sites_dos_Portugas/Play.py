@@ -105,13 +105,56 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 		except: pass
 	if "thevideo.me" in url:
 		try:
-			sources = []
-			hosted_media = urlresolver.HostedMediaFile(url)
-			sources.append(hosted_media)
-			source = urlresolver.choose_source(sources)
-			if source: 
-				url = source.resolve()
-    			else: url = ''
+			iframe_url = url
+			print iframe_url
+			link3 = PLAY_abrir_url(iframe_url)
+			if link3:
+                                mp4 = re.compile('[|]logo[|]100[|](.+?)[|]label[|]').findall(link3)
+                                if mp4: mp4 = mp4[0]
+                                else: mp4='111'
+			else: mp4 = '--'
+			imagem = re.compile('<span id=.+?><img src="(.+?)"').findall(link3)
+			if imagem:
+                                iconimage = imagem[0]
+                                ip = re.compile('(.+?)/i/').findall(iconimage)
+                                if ip: ip = ip[0]
+			todassources = re.compile('[|]sharing(.+?)sources[|]').findall(link3)
+			sourc = re.compile('.+?[|](.+?)0p[|]').findall(todassources[0])
+			addDir1('[COLOR orange]Escolha o stream:[/COLOR]','url',1004,artfolder,False,'')
+			i = 1
+			a = 0
+			if len(sourc) == 5:
+                                sources = re.compile('[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                for x in range(5):
+                                        url = ip + '/' + sources[0][a] + '/v.' + mp4
+                                        a = a + 2                                        
+                                        addLink(sources[0][i]+' | '+name,url,iconimage)
+                                        i = a + 1
+                        if len(sourc) == 4:
+                                sources = re.compile('[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                for x in range(4):
+                                        url = ip + '/' + sources[0][a] + '/v.' + mp4
+                                        a = a + 2                                        
+                                        addLink(sources[0][i]+' | '+name,url,iconimage)
+                                        i = a + 1
+			if len(sourc) == 3:
+                                sources = re.compile('[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                for x in range(3):
+                                        url = ip + '/' + sources[0][a] + '/v.' + mp4
+                                        a = a + 2                                        
+                                        addLink(sources[0][i]+' | '+name,url,iconimage)
+                                        i = a + 1
+			if len(sourc) == 2:
+                                sources = re.compile('[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                for x in range(2):
+                                        url = ip + '/' + sources[0][a] + '/v.' + mp4
+                                        a = a + 2                                        
+                                        addLink(sources[0][i]+' | '+name,url,iconimage)
+                                        i = a + 1
+                        if len(sourc) == 1:
+                                sources = re.compile('[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                url = ip + '/' + sources[0][0] + '/v.' + mp4
+                                addLink(sources[0][1]+' | '+name,url,iconimage)
 		except: pass
 	if "vidzi.tv" in url:       
 		try:
@@ -310,10 +353,22 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 				url = source.resolve()
     			else: url = ''
 		except: pass
-	if "video.mail.ru" in url:
+	if "filehoot" in url:
+		try:
+			sources = []
+			hosted_media = urlresolver.HostedMediaFile(url)
+			sources.append(hosted_media)
+			source = urlresolver.choose_source(sources)
+			if source: 
+				url = source.resolve()
+    			else: url = ''
+		except: pass
+	if "video.mail.ru" in url or 'videoapi.my.mail' in url:
+                #addLink(url,'','')
 		try:
 			iframe_url = url###http://api.video.mail.ru/videos/mail/megafilmeshdtv/_myvideo/874.json
 			print iframe_url
+			#addLink(iframe_url,'','')
 			addDir1('[COLOR orange]Escolha o stream:[/COLOR]','url',1004,artfolder,False,'')
 			iframe_url = iframe_url.replace('/embed','').replace('.html','.json')
                         try:
@@ -601,7 +656,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 	#addLink(url+'  ','','')
 	#return
         #if 'vk.com' not in url and 'video.mail.ru' not in url and 'video.tt' not in url:
-        if 'vk.com' not in iframe_url and 'video.mail.ru' not in iframe_url and 'vidzi.tv' not in iframe_url and 'playfreehd' not in iframe_url:# and 'iiiiiiiiii' in url:
+        if 'vk.com' not in iframe_url and 'video.mail.ru' not in iframe_url and 'videoapi.my.mail' not in iframe_url and 'vidzi.tv' not in iframe_url and 'playfreehd' not in iframe_url  and 'thevideo.me' not in iframe_url:# and 'iiiiiiiiii' in url:
                 try:
                         playlist = xbmc.PlayList(1)
                         playlist.clear()             

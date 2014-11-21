@@ -154,6 +154,49 @@ class themoviedb_api_pagina:
                         addDir_teste('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]','IMDB'+imdbcode+'IMDB',urllib.quote(num_mode),thumb,sinopse,fanart,year,genero)
                         a = a + 1
                         i = i + 1
+
+
+class thetvdb_api_tvdbid:
+	def _id(self,series_name,year):
+		try:
+			url = 'http://thetvdb.com/api/GetSeries.php?seriesname=' + urllib.quote(series_name)+'&language=pt'
+			html_source = MASH_abrir_url(url)
+		except: html_source = ''
+		idtvdb = re.findall('<seriesid>(.+?)</seriesid>', html_source, re.DOTALL)
+		if idtvdb: tvdbid = idtvdb[0]
+		else: tvdbid = ''
+		return str(tvdbid)
+
+class thetvdb_api_episodes:
+        
+	def _id(self,idtvdb,temporada,episodio):
+                try:
+                        url = 'http://thetvdb.com/api/23B3F3D91B980C9F/series/'+urllib.quote(idtvdb)+'/all/pt.xml'
+                        html_source = MASH_abrir_url(url)
+                except: html_source = ''
+                info = re.findall('<Episode>(.+?)</Episode>', html_source, re.DOTALL)
+                for infos in info:
+                        try:
+                                season = re.compile('<DVD_season>(.+?)</DVD_season>').findall(infos)
+                                if not season: season = re.compile('<Combined_season>(.+?)</Combined_season>').findall(infos)
+                                episode = re.compile('<EpisodeNumber>(.+?)</EpisodeNumber>').findall(infos)
+                                if season and episode:
+                                        if season[0] == str(temporada) and episode[0] == str(episodio):
+                                                epi_nome =re.compile('<EpisodeName>(.+?)</EpisodeName>').findall(infos)
+                                                air = re.compile('<FirstAired>(.+?)</FirstAired>').findall(infos)
+                                                sin = re.compile('<Overview>(.+?)</Overview>').findall(infos)
+                                                th = re.compile('<filename>(.+?)</filename>').findall(infos)
+                                                try: epi_nome = epi_nome[0]
+                                                except: epi_nome = ''
+                                                try: air = air[0]
+                                                except: air = ''
+                                                try: sin = sin[0]
+                                                except: sin = ''
+                                                try: th = 'http://thetvdb.com/banners/'+th[0]
+                                                except: th = ''
+                        except: pass
+
+                return str(epi_nome),str(air),str(sin),str(th)
                         
 
 class thetvdb_api:
@@ -231,6 +274,45 @@ class themoviedb_api_IMDB1:
                         
                 return fanart,str(id_tmdb),thumb
 
+class themoviedb_api_TMDB:
+        api_key = '3e7807c4a01f18298f64662b257d7059'
+        
+        def fanart_and_id(self,movie_info_original_title,movie_info_year):#movie_info_imdb_code):
+                try:
+                        url_tmdb = 'http://api.themoviedb.org/3/search/tv?api_key=' + self.api_key + '&query=' + urllib.quote_plus(movie_info_original_title) + '&year=' + urllib.quote_plus(movie_info_year)
+                        #url_tmdb = 'http://api.themoviedb.org/3/tv/'+urllib.quote_plus(movie_info_imdb_code)+'?language=en&api_key=' + self.api_key 
+                        try: data = json_get(url_tmdb)
+                        except: data = ''
+
+                        try: id_tmdb = data['results'][0]['id']
+                        except: id_tmdb=''
+                except: pass
+                        
+                return str(id_tmdb)
+
+class themoviedb_api_search_imdbcode:
+        api_key = '3e7807c4a01f18298f64662b257d7059'
+        
+        def fanart_and_id(self,movie_info_original_title,movie_info_year):#movie_info_imdb_code):
+                try:
+                        url_tmdb = 'http://api.themoviedb.org/3/search/tv?api_key=' + self.api_key + '&query=' + urllib.quote_plus(movie_info_original_title) + '&year=' + urllib.quote_plus(movie_info_year)
+                        try: data = json_get(url_tmdb)
+                        except: data = ''
+                        
+                        try: id_tmdb = data['results'][0]['id']
+                        except: id_tmdb=''
+
+                        url_tmdb = 'http://api.themoviedb.org/3/tv/'+str(id_tmdb)+'/external_ids?api_key='+self.api_key
+                        try: data = MASH_abrir_url(url_tmdb)
+                        except: data = ''
+                        try:
+                                imdb = re.compile('"imdb_id":"(.+?)"').findall(data)
+                                imdbcode = imdb[0]
+                        except: imdbcode=''
+                except: pass
+                        
+                return str(imdbcode)
+
 class themoviedb_api_IMDB:
         api_key = '3e7807c4a01f18298f64662b257d7059'
         tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
@@ -280,7 +362,58 @@ class themoviedb_api_IMDB:
                         except: pass
                         
                 return fanart,str(id_tmdb),thumb,sinopse
+        
+class themoviedb_api_IMDB_episodios:
+        api_key = '3e7807c4a01f18298f64662b257d7059'
+        tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        
+        def fanart_and_id(self,movie_info_imdb_code,season,episode):
+##                addLink('d','','')
+##                return '1'
+                try:
+                        url_tmdb = 'http://api.themoviedb.org/3/tv/' + urllib.quote_plus(movie_info_imdb_code) + '/season/' + urllib.quote_plus(season) + '/episode/' + urllib.quote_plus(episode) + '?&api_key=' + self.api_key + '&language=pt'
+                        data = MASH_abrir_url(url_tmdb)
+                        
+                        air = re.compile('"air_date":"(.+?)"').findall(data)
+                        if air: air_date = air[0]
+                        else: air_date = ''
 
+                        th = re.compile('"still_path":"(.+?)"').findall(data)
+                        if th: thumbep = tmdb_base_url.replace('w1280','w600') + th[0]
+                        else: thumbep =''
+                                
+                        sin = re.compile('"overview":"(.+?)"[,]"id').findall(data)
+                        if sin: sinopse = sin[0].replace('\\"','"')
+                        else: sinopse =''
+                                
+                        nome_t = re.compile('"name":"(.+?)","overview"').findall(data)
+                        if nome_t: nome_e = nome_t[0]
+                        else: nome_e=''
+                except: pass
+                
+                if sinopse == '' or sinopse == '",':
+                        try:
+                                url_tmdb = 'http://api.themoviedb.org/3/tv/' + urllib.quote_plus(movie_info_imdb_code) + '/season/' + urllib.quote_plus(season) + '/episode/' + urllib.quote_plus(episode) + '?&api_key=' + self.api_key + '&language=en'
+                                data = MASH_abrir_url(url_tmdb)
+                        
+                                air = re.compile('"air_date":"(.+?)"').findall(data)
+                                if air: air_date = air[0]
+                                else: air_date = ''
+
+                                th = re.compile('"still_path":"(.+?)"').findall(data)
+                                if th: thumbep = tmdb_base_url.replace('w1280','w600') + th[0]
+                                else: thumbep =''
+                                
+                                sin = re.compile('"overview":"(.+?)"[,]"id').findall(data)
+                                if sin: sinopse = sin[0].replace('\\"','"')
+                                else: sinopse =''
+                                
+                                nome_t = re.compile('"name":"(.+?)","overview"').findall(data)
+                                if nome_t: nome_e = nome_t[0]
+                                else: nome_e=''
+                        except: pass
+                        
+                return air_date,nome_e,thumbep,sinopse
 
 class themoviedb_api:
         api_key = '3e7807c4a01f18298f64662b257d7059'
@@ -978,7 +1111,7 @@ def Filmes_Filmes_Filmes(url):
                                                 qualidade = qualidade + espaco + qua_qua
                                                 espaco = ' '
                                 if len(ano) < 4:
-                                        ano = 'Ano'
+                                        ano = ''
                                 if qualidade == 'PT PT':
                                         qualidade = 'PT-PT'
                                 if qualidade == '':
@@ -1447,6 +1580,8 @@ def Filmes_Filmes_Filmes(url):
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         if not qualidade: qualidade = re.compile("Ass.+?tir online .+?[(](.+?)[)]").findall(item)
+                        if qualidade: qualidade = qualidade[0]
+                        else: qualidade = ''
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                         audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
                         imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
@@ -1520,10 +1655,10 @@ def Filmes_Filmes_Filmes(url):
                                 if fanart == '': fanart = '---'
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
-        ##                        nnnn = re.compile('(.+?): ').findall(nome)
-        ##                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
-        ##                        if nnnn : nome_pesquisa = nnnn[0]
-                                nome_pesquisa = nome
+                                nnnn = re.compile('(.+?): ').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+                                if nnnn : nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome
                                 fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
                                 Filmes_File.write('NOME|'+str(nome_filme)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace('s72-c','s320'))+'|ANO|'+str(ano[0].replace(' ',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genre)+'|END|\n')
                                                       
@@ -1533,8 +1668,7 @@ def Filmes_Filmes_Filmes(url):
                         if fanart == '---': fanart = ''
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
-                        if qualidade: qualidade = qualidade[0]
-                        else: qualidade = ''
+                        
                         
                         try:
                                 if "Temporada" in urletitulo[0][1]:
@@ -1633,6 +1767,8 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace('[ ',"[")
                         
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
+                        if qualidade: qualidade = qualidade[0]
+                        else: qualidade = ''
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                         audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
                         imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
@@ -1693,8 +1829,6 @@ def Filmes_Filmes_Filmes(url):
                                 if fanart == '---': fanart = ''
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
-                                if qualidade: qualidade = qualidade[0]
-                                else: qualidade = ''
                                 nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                 if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
                                 if nnnn : nome_pesquisa = nnnn[0]
@@ -1708,8 +1842,7 @@ def Filmes_Filmes_Filmes(url):
                         if fanart == '---': fanart = ''
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
-                        if qualidade: qualidade = qualidade[0]
-                        else: qualidade = ''
+                        
                         
                         try:
                                 if "Temporada" in urletitulo[0][1] or 'Season'  in urletitulo[0][1] or 'Mini-Série' in urletitulo[0][1]:

@@ -324,7 +324,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url,pesquisou):
                                                         qualidade = qualidade + espaco + qua_qua
                                                         espaco = ' '
                                         if len(ano) < 4:
-                                                ano = 'Ano'
+                                                ano = ''
                                                 #qualidade = q_a
                                         if qualidade == 'PT PT':
                                                 qualidade = 'PT-PT'

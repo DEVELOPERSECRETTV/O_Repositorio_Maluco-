@@ -48,7 +48,7 @@ def CMT_MenuPrincipal(artfolder):
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tugafilmes.org/search/label/Anima%C3%A7%C3%A3o',702,artfolder + 'FA.png','nao',fanart)
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',709,artfolder + 'ANO.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',708,artfolder + 'CT.png','nao','')
-	#addDir('[COLOR yellow]- Top 5 da Semana[/COLOR]','url',718,artfolder + 'TOPFILMES.png','nao','')
+	addDir('[COLOR yellow]- Top Semanal[/COLOR]','url',718,artfolder + 'TPSE.png','nao','')
 
 def CMT_Menu_Filmes_Top_5(artfolder):
         i = 1
@@ -72,28 +72,89 @@ def CMT_Menu_Filmes_Top_5(artfolder):
                         html_source = CMT_abrir_url(urletitulo[0][0])
                 except: html_source = ''
                 items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
-                thumbnail = re.compile('src="(.+?)"').findall(items[0])
-                ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(items[0])
-                imdbcode = ''
+                for item in items:
+                        thumb = ''
+                        fanart = ''
+                        versao = ''
+                        audio_filme = ''
+                        imdbcode = ''
 
-                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
-                if imdb: imdbcode = imdb[0]
-                else: imdbcode = ''
-                nome = urletitulo[0][1]
-                a_q = re.compile('\d+')
-                qq_aa = a_q.findall(nome)
-                for q_a_q_a in qq_aa:
-                        if len(q_a_q_a) == 4:
-                                tirar_ano = '(' + str(q_a_q_a) + ')'
-                                nome = nome.replace(tirar_ano,'')
-                print urletitulo,thumbnail
-                try:
-                        if "Temporada" in urletitulo[0][1]:
-                                num_mode = 712
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
+                        #if 'Portug' and 'Legendado' in item: versao = '[COLOR blue]2 VERSÕES[/COLOR]'
+                        genero = re.compile("nero</b>:(.+?)<br />").findall(item)
+                        if genero: genre = genero[0]
+                        else: genre = ''
+                        resumo = re.compile("<b>Resumo</b>:(.+?)<br />").findall(item)
+                        if resumo: sinopse = resumo[0]
+                        else: sinopse = ''
+                        titulooriginal = re.compile("tulo Original:</b>(.+?)<br />").findall(item)
+                        if titulooriginal:
+                                nome_original = titulooriginal[0]
+                                #addDir1(nome_original,'','','',False,'')
                         else:
-                                num_mode = 703
-                        addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
-                except: pass
+                                titulooriginal = re.compile("<b>T\xc3\xadtulo Portugu\xc3\xaas:</b>(.+?)<br />").findall(item)
+                                if titulooriginal:
+                                        nome_original = titulooriginal[0]
+                                else: nome_original = ''
+                                #addDir1(nome_original,'','','',False,'')
+                        #urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+                        qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
+                        if not qualidade: qualidade = re.compile("Ass.+?tir online .+?[(](.+?)[)]").findall(item)
+                        ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
+                        audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
+                        imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
+                        if audio != []:
+                                if 'Portug' in audio[0]:
+                                        audio_filme = ': PT-PT'
+                                else:
+                                        audio_filme = audio[0]
+                        thumbnail = re.compile('src="(.+?)"').findall(item)
+                        if thumbnail: thumb = thumbnail[0]
+                        else: thumb = ''
+                        print urletitulo,thumb
+                        nome = urletitulo[0][1]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&#183;',"-")
+                        nome = nome.replace('&amp;','&')
+                        nome = nome.replace('(PT-PT)',"")
+                        nome = nome.replace('(PT/PT)',"")
+                        nome = nome.replace('[PT-PT]',"")
+                        nome = nome.replace('[PT/PT]',"")
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+                                        
+                        nnnn = re.compile('(.+?): ').findall(nome)
+                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+                        if nnnn : nome_pesquisa = nnnn[0]
+                        else: nome_pesquisa = nome
+                        
+                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
+
+                        if qualidade:
+                                qualidade = qualidade[0]
+                        else:
+                                qualidade = ''
+                        if genre == '': genre = '---'
+                        if sinopse == '': sinopse = '---'
+                        if fanart == '---': fanart = ''
+                        if imdbcode == '': imdbcode = '---'
+                        if thumb == '': thumb = '---'
+                        try:
+                                if "Temporada" in urletitulo[0][1]:
+                                        num_mode = 712
+                                else:
+                                        num_mode = 703
+                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                        except: pass
                 i = i + 1
 
 def CMT_Menu_Filmes_Por_Ano(artfolder):
@@ -104,6 +165,7 @@ def CMT_Menu_Filmes_Por_Ano(artfolder):
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<option value='(.+?)'>Filmes (\d+)\n</option>").findall(item_categorias)
+                if not filmes_por_categoria: filmes_por_categoria = re.compile("<a dir='ltr' href='(.+?)'>Filmes (\d+)</a>").findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
                         Anos[i] = nome_categoria+'|'+endereco_categoria
                         i = i + 1
@@ -122,6 +184,7 @@ def CMT_Menu_Filmes_Por_Categorias(artfolder):
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n</option>").findall(item_categorias)
+                if not filmes_por_categoria: filmes_por_categoria = re.compile("<a dir='ltr' href='(.+?)'>(.+?)</a>").findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
                         addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria,702,artfolder + 'CMT1.png','nao','')
 
@@ -211,10 +274,10 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                                         
-##                        nnnn = re.compile('(.+?): ').findall(nome)
-##                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
-##                        if nnnn : nome_pesquisa = nnnn[0]
-                        nome_pesquisa = nome
+                        nnnn = re.compile('(.+?): ').findall(nome)
+                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+                        if nnnn : nome_pesquisa = nnnn[0]
+                        else: nome_pesquisa = nome
                         fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
 
                         if qualidade:
@@ -267,6 +330,7 @@ def CMT_encontrar_videos_filmes(name,url):
         nomeescolha = name
         conta_id_video = 0
         conta_os_items = 0
+
         ######################################
         n1 = ''
         n2 = ''
@@ -294,7 +358,8 @@ def CMT_encontrar_videos_filmes(name,url):
 ##        n = re.compile('--(.+?)--').findall(nn)
 ##        addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n[0],'url',1004,iconimage,False,fanart)
         ######################################
-	addLink(imdbcode,'','')
+	#addLink(imdbcode,'','')
+
 	if imdbcode == '' or imdbcode == '---':
                 try:
                         link2=CMT_abrir_url(url)
@@ -313,6 +378,9 @@ def CMT_encontrar_videos_filmes(name,url):
                 addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
         addDir1(name,'url',1004,iconimage,False,fanart)
         
+        try:
+                link2=CMT_abrir_url(url)
+        except: link2 = ''
 	nao = 0
         matchvid = re.findall("Assitir online(.+?)</iframe>", link2, re.DOTALL)
         if not matchvid:
