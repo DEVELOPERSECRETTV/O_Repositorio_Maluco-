@@ -1300,7 +1300,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                 tvdbid = thetvdb_api_tvdbid()._id(n_pesquisa,anne)
                 #addLink(temporadat+'-'+anne+'-'+n_pesquisa,'','')
                 #return
-
+        
         f_id = ''
         iconimage = iconimage
         nomeescolha = name
@@ -1436,7 +1436,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                         fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
                                                         if f_id == '': f_id = fonte_id
                                                         else: f_id = f_id + '|' + fonte_id
-
+                                        
                                         addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
                                         f_id = ''
                                         i = i + 1
@@ -2248,10 +2248,12 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         match = re.compile('http://vidto.me/embed-(.+?).html').findall(url)
 			if match:
 				id_video = match[0]
+				url1 = 'http://vidto.me/' + id_video + '.html'
+				fonte_id = '(Vidto.me)'+url1
 				url = 'http://vidto.me/' + id_video + '.html' + '///' + nomeescolha
-			fonte_id = '(Vidto.me)'+url
+			fonte_id1 = '(Vidto.me)'+url
 			if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id1.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
         if "dropvideo" in url:
 		try:
@@ -2355,11 +2357,11 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         url = url.replace('http://www.video.tt/embed/','http://video.tt/e/')
                         url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
                         
-                        
-                        url = url + '///' + nomeescolha
                         fonte_id = '(Video.tt)'+url
+                        url = url + '///' + nomeescolha
+                        fonte_id1 = '(Video.tt)'+url
                         if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id1.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "videowood" in url:
                 try:

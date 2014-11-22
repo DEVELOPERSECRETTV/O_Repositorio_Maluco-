@@ -644,7 +644,7 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                                                         n = re.compile('[(](.+?)[)]').findall(nome)
                                                         if n: nome = n[0]
                                                         #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'',fanart)
-                                                        addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genero)
+                                                        addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB'+nome_pesquisa,num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genero)
                                                         num_f = num_f + 1
                                         else:
                                                 if imdbcode_passado != imdbcode:
@@ -661,7 +661,7 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                                                 n = re.compile('[(](.+?)[)]').findall(nome)
                                                 if n: nome = n[0]
                                                 #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'',fanart)
-                                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0],num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genero)
+                                                addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB'+nome_pesquisa,num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genero)
                                                 num_f = num_f + 1
                         except: pass
 ##                        addLink(str(len(items)),'','')
@@ -889,7 +889,7 @@ def INDEX():
         i = 1
         _nomeservidor_ = []
         _linkservidor_ = []
-
+        #addLink(url,'','')
         nomeepi = re.compile('[[]COLOR grey[]](.*)').findall(url)
         if nomeepi: nomeepisodio = '[COLOR grey]'+nomeepi[0]
         
@@ -1171,9 +1171,7 @@ elif mode == 41:
         #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 42:
         TugaFilmesTV.TFV_encontrar_videos_series(name,url)
-        xbmcplugin.setContent(int(sys.argv[1]), 'tvshows')
-        xbmc.executebuiltin("Container.SetViewMode(502)")
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
 elif mode == 43:
         TugaFilmesTV.TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
 elif mode == 44:
