@@ -281,7 +281,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                         fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
 
                         if qualidade:
-                                qualidade = qualidade[0]
+                                qualidade = qualidade[0].replace('<b>','').replace('</b>','')
                         else:
                                 qualidade = ''
                         if genre == '': genre = '---'
@@ -390,7 +390,7 @@ def CMT_encontrar_videos_filmes(name,url):
                 try:
                         nome = re.compile('(.+?)\n.+?').findall(matchs)
                         if not nome: nome = re.compile('(.+?)</b>').findall(matchs)
-                        if nao == 0: addDir1('[COLOR blue]'+nome[0]+':[/COLOR]','url',1004,iconimage,False,fanart)
+                        #if nao == 0: addDir1('[COLOR blue]'+nome[0]+':[/COLOR]','url',1004,iconimage,False,fanart)
                         urlvideo = re.compile('<iframe.+?src="(.+?)"').findall(matchs)
                         if not urlvideo: urlvideo = re.compile('src="(.+?)"').findall(matchs)
                         url = urlvideo[0]
@@ -438,7 +438,7 @@ def CMT_links(name,url,iconimage,fanart):
                 try:
                         nome = re.compile('(.+?)\n.+?').findall(matchs)
                         if not nome: nome = re.compile('(.+?)</b>').findall(matchs)
-                        if nao == 0: addDir1('[COLOR blue]'+nome[0]+':[/COLOR]','url',1004,iconimage,False,fanart)
+                        #if nao == 0: addDir1('[COLOR blue]'+nome[0]+':[/COLOR]','url',1004,iconimage,False,fanart)
                         urlvideo = re.compile('<iframe.+?src="(.+?)"').findall(matchs)
                         if not urlvideo: urlvideo = re.compile('src="(.+?)"').findall(matchs)
                         url = urlvideo[0]

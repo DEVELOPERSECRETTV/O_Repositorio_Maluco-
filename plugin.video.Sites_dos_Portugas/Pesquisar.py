@@ -1014,7 +1014,7 @@ def encontrar_fontes_pesquisa_CMT(url,pesquisou,FS):
                         fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
 
                         if qualidade:
-                                qualidade = qualidade[0]
+                                qualidade = qualidade[0].replace('<b>','').replace('</b>','')
                         else:
                                 qualidade = ''
                         if genre == '': genre = '---'

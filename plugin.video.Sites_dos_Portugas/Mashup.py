@@ -181,6 +181,7 @@ class thetvdb_api_episodes:
                                 if not season: season = re.compile('<Combined_season>(.+?)</Combined_season>').findall(infos)
                                 episode = re.compile('<EpisodeNumber>(.+?)</EpisodeNumber>').findall(infos)
                                 if season and episode:
+                                        #addLink(season[0],'','')
                                         if season[0] == str(temporada) and episode[0] == str(episodio):
                                                 epi_nome =re.compile('<EpisodeName>(.+?)</EpisodeName>').findall(infos)
                                                 air = re.compile('<FirstAired>(.+?)</FirstAired>').findall(infos)
@@ -194,8 +195,12 @@ class thetvdb_api_episodes:
                                                 except: sin = ''
                                                 try: th = 'http://thetvdb.com/banners/'+th[0]
                                                 except: th = ''
-                        except: pass
-
+                                                
+                        except:
+                                epi_nome = ''
+                                air = ''
+                                sin = ''
+                                th = ''
                 return str(epi_nome),str(air),str(sin),str(th)
                         
 
@@ -1002,9 +1007,11 @@ def Filmes_Filmes_Filmes(url):
                                 if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
                                 if nnnn: nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
-                                fanart,tmdb_id,poster,sinopse = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme)
-                                #fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
-                                if thumb == '': thumb = poster
+                                try:
+                                        fanart,tmdb_id,poster,sinopse = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme)
+                                        #fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
+                                        if thumb == '': thumb = poster
+                                except: pass
                                 #if imdbcode != '': sinopse = theomapi_api().sinopse(imdbcode)
                                 Filmes_File.write('NOME|'+str(nome_filme)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb)+'|ANO|'+str(ano_filme.replace('(','').replace(')',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|SINOPSE|'+str(sinopse)+'|END|\n')
                                 
@@ -1221,8 +1228,10 @@ def Filmes_Filmes_Filmes(url):
                                 if nnnn: nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
                                 #fanart,tmdb_id,poster,overview = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme)
-                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano)
-                                if thumb == '': thumb = poster
+                                try:
+                                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano)
+                                        if thumb == '': thumb = poster
+                                except: pass
 ##                                addLink(ano,'','')
 ##                                addLink(fanart,'','')
 ##                                addLink(thumb,'','')
@@ -1492,8 +1501,10 @@ def Filmes_Filmes_Filmes(url):
                                 if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
                                 if nnnn : nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
-                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
-                                if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
+                                try:
+                                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
+                                        if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
+                                except: pass
                                 if genero == '': genero = '---'
                                 if sinopse == '': sinopse = '---'
                                 if fanart == '': fanart = '---'
@@ -1580,7 +1591,7 @@ def Filmes_Filmes_Filmes(url):
                         urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         if not qualidade: qualidade = re.compile("Ass.+?tir online .+?[(](.+?)[)]").findall(item)
-                        if qualidade: qualidade = qualidade[0]
+                        if qualidade: qualidade = qualidade[0].replace('<b>','').replace('</b>','')
                         else: qualidade = ''
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                         audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
@@ -1659,7 +1670,9 @@ def Filmes_Filmes_Filmes(url):
                                 if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
                                 if nnnn : nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
-                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
+                                try:
+                                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
+                                except: pass
                                 Filmes_File.write('NOME|'+str(nome_filme)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace('s72-c','s320'))+'|ANO|'+str(ano[0].replace(' ',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genre)+'|END|\n')
                                                       
                         if thumb == '': thumb = poster
@@ -1833,7 +1846,9 @@ def Filmes_Filmes_Filmes(url):
                                 if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
                                 if nnnn : nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
-                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
+                                try:
+                                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
+                                except: pass
                                 Filmes_File.write('NOME|'+str(nome_filme)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace('s72-c','s320'))+'|ANO|'+str(ano[0].replace(' ',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genre)+'|END|\n')
    
                         if thumb == '': thumb = '---'
@@ -1987,7 +2002,9 @@ def Filmes_Filmes_Filmes(url):
         ##                        if nnnn : nome_pesquisa = nnnn[0]
         ##                        else: nome_pesquisa = nome
                                 nome_pesquisa = nome
-                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
+                                try:
+                                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
+                                except: pass
                                 Filmes_File.write('NOME|'+str(nome_filme)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace(' ','%20'))+'|ANO|'+str(ano_filme)+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|END|\n')
                         
                         if thumb == '': thumb = '---'

@@ -512,8 +512,8 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
                                 si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(arrai_series[x])
                                 if si: sinopse = si[0][0] + ' ' + si[0][1]
                                 else: sinopse = '---'
-                        if fanart == '---': fanart = ''
-                        addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',imdbcode,3007,thumb,sinopse,fanart,ano,genero)
+                        if fanart == '---': fanart = ''                                                                     #3007
+                        addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',imdbcode,3006,thumb,sinopse,fanart,ano,genero)
         SeriesFile = open(folder + 'seriesTFV.txt', 'w')
         for x in range(len(arrai_series)):
                 if arrai_series[x] != '': SeriesFile.write(arrai_series[x]+'\n')
@@ -1152,7 +1152,7 @@ def TFV_encontrar_fontes_series_recentes(url):
         i = 1
         percent = 0
         message = ''
-        progress.create('Progresso', 'A Pesquisar:')
+        progress.create( 'Progresso', 'A Procurar Últimos Episódios...' )
         progress.update( percent, "", message, "" )
 	try:
 		html_source = TFV_abrir_url(url)
@@ -1166,12 +1166,7 @@ def TFV_encontrar_fontes_series_recentes(url):
                         fanart = ''
                         genero = ''
                         sinopse = ''
-                        percent = int( ( i / num ) * 100)
-                        message = str(i) + " de " + str(len(items))
-                        progress.update( percent, "", message, "" )
-                        print str(i) + " de " + str(len(items))
-                        if progress.iscanceled():
-                                break
+                        
                         imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
@@ -1217,6 +1212,11 @@ def TFV_encontrar_fontes_series_recentes(url):
 			try:
 				addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',42,thumb.replace('s72-c','s320'),sinopse,fanart,ano,genero)
 			except: pass
+			percent = int( ( i / num ) * 100)
+                        message = nome
+                        progress.update( percent, "", message, "" )
+                        if progress.iscanceled():
+                                break
 			i = i + 1
 	else:
 		items = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(html_source)
@@ -1288,11 +1288,13 @@ def TFV_encontrar_videos_series(name,url):
 
         episodioanterior = ''
         episodio = ''
+        episodiot = ''
+
         f_id = ''
-        i = 1
+        i = 0
         percent = 0
         message = ''
-        progress.create('Progresso', 'A Pesquisar:')
+        progress.create('Progresso', 'A Procurar Episódios...')
         progress.update( percent, "", message, "" )
         conta_id_video = 0
 
@@ -1303,67 +1305,53 @@ def TFV_encontrar_videos_series(name,url):
 	if link_series:
                 try:
                         items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", link_series, re.DOTALL)
-                        items_series = re.findall('<div class=(.+?)</a>', items[0], re.DOTALL)
-                        if not items_series: items_series = re.findall("<div class=(.+?)</p>", items[0], re.DOTALL)
+                        items_series = re.findall("<div class='id(.+?)</a>", items[0], re.DOTALL)
+                        if not items_series: items_series = re.findall("<div class='id(.+?)</p>", items[0], re.DOTALL)
                         n_items = len(items_series)
                         if 'calendar_title' in items[0]: n_items = n_items - 1
                         divide = n_items + 0.0
-##                        try:
-##                                episodioagora = ''
-##                                n_items = 0
-##                                for item_vid_series in items_series:
-##                                        not_videomeganome = re.compile('>(.+?)</div></h3><p>').findall(item_vid_series)
-##                                        if not not_videomeganome: not_videomeganome = re.compile('>(.+?)</div></h3><a').findall(item_vid_series)
-##                                        if 'div class=' in not_videomeganome[0]: not_videomegaome = re.compile('div class=.+?>(.*)').findall(not_videomeganome[0])
-##                                        nomecadaepisodio = not_videomeganome[0]
-##                                        episodioanterior = re.compile('(\d+)').findall(nomecadaepisodio)
-##                                        if episodioanterior: episodioanterior = episodioanterior[0]
-##                                        addLink(nomecadaepisodio,'','')
-####                                        if episodioanterior != episodioagora:
-####                                                n_items = n_items + 1
-####                                                episodioagora = str(episodioanterior)
-####                                episodioanterior = ''
-####                                divide = n_items + 0.0
-##                        except: pass
+      
                         for item_vid_series in items_series:
+                                
+                                #addLink(item_vid_series,'','')
+                                not_videomeganome = re.compile('>(.+?)</div></h3>').findall(item_vid_series)
+                                if not not_videomeganome: not_videomeganome = re.compile('>(.+?)</div></h3>').findall(item_vid_series)
+                                if 'div class=' in not_videomeganome[0]: not_videomeganome = re.compile('>(.*)').findall(not_videomeganome[0])
+                                nomecadaepisodio = not_videomeganome[0]
+                                episodioanterior = re.compile('(\d+) [-] ').findall(nomecadaepisodio)
+                                if episodioanterior: episodioanterior = episodioanterior[0]
+
                                 try:
 ##                                        if 'div class=' in item_vid_series:
 ##                                                ivs = re.compile('class=.+?>(.*)').findall(item_vid_series)
 ##                                                if ivs: item_vid_series = ivs[0]
                                         
-                                        not_videomeganome = re.compile('>(.+?)</div></h3><p>').findall(item_vid_series)
-                                        if not not_videomeganome: not_videomeganome = re.compile('>(.+?)</div></h3><a').findall(item_vid_series)
-                                        if 'div class=' in not_videomeganome[0]: not_videomegaome = re.compile('div class=.+?>(.*)').findall(not_videomeganome[0])
-                                        nomecadaepisodio = not_videomeganome[0]
-                                        episodioanterior = re.compile('(\d+)').findall(nomecadaepisodio)
-                                        if episodioanterior: episodioanterior = episodioanterior[0]
-                                        #addLink(episodio+'-'+episodioanterior,'','')
-                                        if episodioanterior != episodio and episodio != '':
-                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air)
-                                                f_id = ''
-                                                
+                                        #addLink(episodio+'-'+episodioanterior+'-'+item_vid_series+'-'+str(i)+'-'+str(n_items)+'-'+temporadat,'','')                                        
+         
                                         if 'videomega' in item_vid_series:
                                                 try:
-                                                        if 'div class=' in item_vid_series: videomega_video_nome = re.compile('class=.+?>(.+?)</div></h3>').findall(item_vid_series)
-                                                        videomega_video_nome = re.compile('>(.+?)</div></h3><p>').findall(item_vid_series)
-                                                        if not videomega_video_nome: videomega_video_nome = re.compile('>(.+?)</div></h3><a').findall(item_vid_series)
-                                                        if 'div class=' in videomega_video_nome[0]: videomega_video_nome = re.compile('div class=.+?>(.*)').findall(videomega_video_nome[0])
+##                                                        videomega_video_nome = re.compile('>(.+?)</div></h3>').findall(item_vid_series)
+##                                                        if not videomega_video_nome: videomega_video_nome = re.compile('>(.+?)</div></h3><p>').findall(item_vid_series)
+##                                                        if not videomega_video_nome: videomega_video_nome = re.compile('>(.+?)</div></h3><a').findall(item_vid_series)
+##                                                        if 'div class=' in videomega_video_nome[0]: videomega_video_nome = re.compile('>(.*)').findall(videomega_video_nome[0])
                                                         videomega_video_url = re.compile('<iframe .+? src="(.+?)"').findall(item_vid_series)
                                                         nome = videomega_video_nome[0]
                                                         nome = nome.replace('&#8217;',"'")
                                                         nome = nome.replace('&#8211;',"-")
                                                         nome = nome.replace('&#39;',"'")
                                                         nome = nome.replace('&amp;','&')
-                                                        #air_date,nome_e,thumb,sinopse = themoviedb_api_IMDB_episodios().fanart_and_id(imdbcode,temporada,episodio)
                                                         addDir('[B][COLOR green]' + nome + '[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',videomega_video_url[0],30,iconimage,'',fanart)
                                                 except:pass
+                                                
                                         if 'ep' and 'src' and 'iframe' in item_vid_series:
                                                 try:
                                                         not_videomega_video_url = re.compile('<iframe .+? src="(.+?)"').findall(item_vid_series)
-                                                        not_videomega_video_nome = re.compile('>(.+?)</div></h3><p>').findall(item_vid_series)
-                                                        if not not_videomega_video_nome: not_videomega_video_nome = re.compile('>(.+?)</div></h3><a').findall(item_vid_series)
-                                                        if 'div class=' in not_videomega_video_nome[0]: not_videomega_video_nome = re.compile('div class=.+?>(.*)').findall(not_videomega_video_nome[0])
-                                                        nome_cada_episodio = not_videomega_video_nome[0]
+##                                                        not_videomega_video_nome = re.compile('>(.+?)</div></h3>').findall(item_vid_series)
+##                                                        if not not_videomega_video_nome: not_videomega_video_nome = re.compile('>(.+?)</div></h3><p>').findall(item_vid_series)
+##                                                        if not not_videomega_video_nome: not_videomega_video_nome = re.compile('>(.+?)</div></h3><a').findall(item_vid_series)
+##                                                        if 'div class=' in not_videomega_video_nome[0]: not_videomega_video_nome = re.compile('>(.*)').findall(not_videomega_video_nome[0])
+##                                                        nome_cada_episodio = not_videomega_video_nome[0]
+                                                        nome_cada_episodio = nomecadaepisodio
                                                         url = not_videomega_video_url[0]
                                                         identifica_video = re.compile('=(.*)').findall(not_videomega_video_url[0])                                                        
                                                         id_video = identifica_video[0]
@@ -1372,71 +1360,136 @@ def TFV_encontrar_videos_series(name,url):
                                                         nome_cada_episodio = nome_cada_episodio.replace('&#8211;',"-")
                                                         nome_cada_episodio = nome_cada_episodio.replace('&#39;',"'")
                                                         nome_cada_episodio = nome_cada_episodio.replace('&amp;','&')
-                                                        if "idep" in item_vid_series: url = 'videomega'
-                                                        if "idvw" in item_vid_series: url = 'videowood'
-                                                        if "iddv" in item_vid_series: url = 'dropvideo'
-                                                        if "idvt" in item_vid_series: url = 'vidto.me'
-                                                        if "idnv" in item_vid_series: url = 'nowvideo'
-                                                        TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
+                                                        if "ep" in item_vid_series: url = 'videomega'
+                                                        if "vw" in item_vid_series: url = 'videowood'
+                                                        if "dv" in item_vid_series: url = 'dropvideo'
+                                                        if "vt" in item_vid_series: url = 'vidto.me'
+                                                        if "nv" in item_vid_series: url = 'nowvideo'
+                                                        try:
+                                                                fonte_id = TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
+                                                        except: pass
                                                 except:pass
+                                                
                                         if 'href' and 'Clique' in item_vid_series:
                                                 try:
-                                                        not_videomega_video_url = re.compile('<a href="(.+?)"').findall(item_vid_series)
-                                                        if not not_videomega_video_url: not_videomega_video_url = re.compile('<a class=".+?" href="(.+?)"').findall(item_vid_series)
-                                                        
-                                                        not_videomega_video_nome = re.compile('>(.+?)</div></h3><p>').findall(item_vid_series)
-                                                        if not not_videomega_video_nome: not_videomega_video_nome = re.compile('>(.+?)</div></h3><a').findall(item_vid_series)
-                                                        if 'div class=' in not_videomega_video_nome[0]: not_videomega_video_nome = re.compile('div class=.+?>(.*)').findall(not_videomega_video_nome[0])
-                                                        
-                                                        nome_cada_episodio = not_videomega_video_nome[0]
-                                                        url = not_videomega_video_url[0]
+                                                        not_videomega_video_url = re.compile('href="(.+?)"').findall(item_vid_series)
+                                                        if not not_videomega_video_url: not_videomega_video_url = re.compile("href='(.+?)'").findall(item_vid_series)
+                                                        if not_videomega_video_url: url = not_videomega_video_url[0]
+                                                        else: url = ''
+
                                                         identifica_video = re.compile('=(.*)').findall(not_videomega_video_url[0])                                                        
-                                                        id_video = identifica_video[0]
+                                                        if identifica_video: id_video = identifica_video[0]
+                                                        else: id_video = ''
+                                                        
                                                         src_href = 'href'
+                                                        
+                                                        if "ep" in item_vid_series: url = 'videomega'
+                                                        if "vw" in item_vid_series: url = 'videowood'
+                                                        if "dv" in item_vid_series: url = 'dropvideo'
+                                                        if "vt" in item_vid_series: url = 'vidto.me'
+                                                        if "nv" in item_vid_series: url = 'nowvideo'
+
+##                                                        not_videomega_video_nome = re.compile('>(.+?)</div></h3>').findall(item_vid_series)
+##                                                        if not not_videomega_video_nome: not_videomega_video_nome = re.compile('>(.+?)</div></h3>').findall(item_vid_series)
+##                                                        if 'div class=' in not_videomega_video_nome[0]: not_videomega_video_nome = re.compile('>(.*)').findall(not_videomega_video_nome[0])
+##                                                        if not_videomega_video_nome: nome_cada_episodio = not_videomega_video_nome[0]
+##                                                        else: nome_cada_episodio = ''
+                                                        nome_cada_episodio = nomecadaepisodio
+                                                        
                                                         nome_cada_episodio = nome_cada_episodio.replace('&#8217;',"'")
                                                         nome_cada_episodio = nome_cada_episodio.replace('&#8211;',"-")
                                                         nome_cada_episodio = nome_cada_episodio.replace('&#39;',"'")
-                                                        nome_cada_episodio = nome_cada_episodio.replace('&amp;','&')                                                       
-                                                                                                
-                                                        if "idep" in item_vid_series: url = 'videomega'
-                                                        if "idvw" in item_vid_series: url = 'videowood'
-                                                        if "iddv" in item_vid_series: url = 'dropvideo'
-                                                        if "idvt" in item_vid_series: url = 'vidto.me'
-                                                        if "idnv" in item_vid_series: url = 'nowvideo'
-                                                        fonte_id = TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
+                                                        nome_cada_episodio = nome_cada_episodio.replace('&amp;','&')
+                                                        #addLink(nome_cada_episodio,'','')
+                                                        #addLink(url,'','')
+                                                        
+                                                        try:
+                                                                fonte_id = TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
+                                                        except: pass
                                                 except:pass
-                                        episodio = re.compile('(\d+)').findall(nome_cada_episodio)
-                                        if episodio:
-                                                episodiot = episodio[0]
-                                                episodio = episodio[0]
-                                        a_q = re.compile('\d+')
-                                        qq_aa = a_q.findall(episodio)
-                                        for q_a_q_a in qq_aa:
-                                                if len(q_a_q_a) == 1:
-                                                        episodiot = '0'+episodio
-                                                                
-                                        #addLink(episodio+'-'+episodioanterior,'','')
-                                        epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
-                                        #iconimage = th
-##                                                        
-##                                        #addLink(temporada+'-'+episodio+'-'+imdbcode+'-'+tmdbcode,'','')
-##                                        #air_date,nome_e,thumbep,sinopse = themoviedb_api_IMDB_episodios().fanart_and_id(str(tmdbcode),str(temporada),str(episodio))
-##                                       
-                                        if f_id == '': f_id = fonte_id
-                                        else: f_id = f_id + '|' + fonte_id
-                                        #addLink(f_id,'','')
-                                        
-                                        #if 'calendar_title' not in item_vid_series:
-                                        percent = int( ( i / divide ) * 100)
-                                        message = str(i) + " de " + str(int(divide)) + ' Links'
-                                        progress.update( percent, "", message, "" )
-                                        print str(i) + " de " + str(int(divide)) + ' Links'
-                                        xbmc.sleep(50)
-                                        if progress.iscanceled():
-                                                break
-                                        if i != int(divide): i = i + 1
+                                                
+                        
                                 except:pass
+                                
+                                
+                                try:
+                                        epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
+
+                                        if episodioanterior != episodio and episodio != '':
+                                                try:
+                                                        percent = int( ( i / divide ) * 100)
+                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
+                                                        progress.update( percent, "", message, "" )        
+                                                        if progress.iscanceled():
+                                                                break
+                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air)
+                                                        f_id = ''
+                                                except: pass
+                                except:
+                                        #addLink(nomecadaepisodio,'','')
+                                        nomeepisodio = re.compile(' [-] (.*)').findall(nomecadaepisodio)
+                                        if nomeepisodio: nomeepisodio = nomeepisodio[0]
+                                        else: nomeepisodio = nomecadaepisodio
+                                        
+                                        #addLink(episodio+'-'+episodioanterior,'','')
+                                        if episodioanterior != episodio and episodio != '':
+                                                percent = int( ( i / divide ) * 100)
+                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]'
+                                                progress.update( percent, "", message, "" )                                                
+                                                if progress.iscanceled():
+                                                        break
+                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodioanteror+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodioanteror+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                f_id = ''
+                                        else: nomeepisodioanteror = nomeepisodio
+
+                                episodio = re.compile('(\d+) [-] ').findall(nomecadaepisodio)
+                                if episodio:
+                                        episodiot = episodio[0]
+                                        episodio = episodio[0]
+                                a_q = re.compile('\d+')
+                                qq_aa = a_q.findall(episodio)
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) == 1:
+                                                episodiot = '0'+episodio
+
+                                if f_id == '': f_id = fonte_id
+                                else: f_id = f_id + '|' + fonte_id
+
+                                
+                                if i == int(divide):
+                                        try:
+                                                epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
+                                                
+                                                if (episodioanterior == episodio and episodio != '') or 'calendar_title' in item_vid_series:
+                                                        try:
+                                                                percent = int( ( i / divide ) * 100)
+                                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
+                                                                progress.update( percent, "", message, "" )        
+                                                                if progress.iscanceled():
+                                                                        break
+                                                                
+                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air)
+                                                                f_id = ''
+                                                        except: pass
+                                        except:                                     
+                                                nomeepisodio = re.compile(' [-] (.*)').findall(nomecadaepisodio)
+                                                if nomeepisodio: nomeepisodio = nomeepisodio[0]
+                                                else: nomeepisodio = nomecadaepisodio
+                                                
+                                                #addLink(episodio+'-'+episodioanterior,'','')
+                                                if episodioanterior == episodio and episodio != '':
+                                                        percent = int( ( i / divide ) * 100)
+                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]'
+                                                        progress.update( percent, "", message, "" )                                                
+                                                        if progress.iscanceled():
+                                                                break
+                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                        f_id = ''
+                                                        
+                                if i != int(divide): i = i + 1
+                                
                 except:pass
+                
         xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
         xbmc.executebuiltin("Container.SetViewMode(504)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))               

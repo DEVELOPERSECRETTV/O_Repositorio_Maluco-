@@ -876,7 +876,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url,pesquisou):
                         
 
                         if qualidade:
-                                qualidade = qualidade[0]
+                                qualidade = qualidade[0].replace('<b>','').replace('</b>','')
                         else:
                                 qualidade = ''
                                 
