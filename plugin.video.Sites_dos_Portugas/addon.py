@@ -19,7 +19,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,time,os
-import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TopPt,FilmesAnima,Mashup,Armagedom,FoitaTuga,Cinematuga
+import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TopPt,FilmesAnima,Mashup,Armagedom,FoitaTuga,Cinematuga,CinematugaEu,CinemaEmCasa
 from array import array
 from string import capwords
 from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv,theomapi_api,theomapi_api_nome,themoviedb_api_pagina
@@ -39,14 +39,26 @@ def MAIN_MENU():
                 d.doModal()
                 del d
                 selfAddon.setSetting('AvisoFanart',value='false')
-        #return
+        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://direct',3003,artfolder + 'SERIES1.png','nao','')
+        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://direct',3004,artfolder + 'FILMES1.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+        addDir1('','url',1004,artfolder,False,'')
+        addDir('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B] (Filmes/Séries)','url',10000,artfolder + 'SDB.png','nao','')
+        addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDB.png','nao','')
+        addDir1('','url',1004,artfolder,False,'')
+        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF1.png','nao','')#'ze-icon3.png'
+
+                
+def SITESdosPORTUGAS():
         #####################################
         url_TPT = 'http://toppt.net/'
         url_TFV = 'http://www.tuga-filmes.us/'
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
-        url_CMT = 'http://www.tugafilmes.org'#'http://www.tugafilmes.org/'
+        url_CMT = 'http://www.tugafilmes.org'#'http://www.cinematuga.net/'
+        url_CME = 'http://www.cinematuga.eu/'
+        url_CMC = 'http://www.cinemaemcasa.pt/'
         try:
 		html_source = abrir_url(url_TFV)
 	except: html_source = ''
@@ -83,20 +95,28 @@ def MAIN_MENU():
 	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
 	if items != []: CMT_ONOFF = '[COLOR green] | UP[/COLOR]'
 	else: CMT_ONOFF = '[COLOR red] | DOWN[/COLOR]'
+	try:
+		html_source = abrir_url(url_CME)
+	except: html_source = ''
+	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	if items != []: CME_ONOFF = '[COLOR green] | UP[/COLOR]'
+	else: CME_ONOFF = '[COLOR red] | DOWN[/COLOR]'
+	try:
+		html_source = abrir_url(url_CMC)
+	except: html_source = ''
+	items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+	if items != []: CMC_ONOFF = '[COLOR green] | UP[/COLOR]'
+	else: CMC_ONOFF = '[COLOR red] | DOWN[/COLOR]'
 	#########################################
-        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://direct',3003,artfolder + 'SERIES1.png','nao','')
-        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://direct',3004,artfolder + 'FILMES1.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
-        addDir1('','url',1004,artfolder,False,'')
+        
         addDir('[COLOR orange]FTT | [/COLOR][B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)'+FTT_ONOFF,'http://direct',601,artfolder + 'FTT1.png','nao','')
         addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B] (Filmes/Séries)'+TPT_ONOFF,'http://direct',231,artfolder + 'TPT1.png','nao','')
         addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]MOV[/COLOR][COLOR yellow]I[/COLOR][COLOR red]ETUGA[/COLOR][/B] (Filmes)'+MVT_ONOFF,'http://direct',101,artfolder + 'MVT1.png','nao','')
         addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B] (Filmes)'+CMT_ONOFF,'http://direct',701,artfolder + 'CMT1.png','nao','')
         addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)'+TFV_ONOFF,'http://direct',31,artfolder + 'TFV1.png','nao','')
         addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)'+TFC_ONOFF,'http://direct',71,artfolder + 'TFC1.png','nao','')
-        addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDB.png','nao','')
-        addDir1('','url',1004,artfolder,False,'')
-        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF1.png','nao','')#'ze-icon3.png'
+        addDir('[COLOR orange]CME | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B] (Filmes)'+CME_ONOFF+' [COLOR orange](NOVO)[/COLOR]','http://direct',801,artfolder + 'CME1.png','nao','')
+        addDir('[COLOR orange]CMC | [/COLOR][B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B] (Filmes)'+CMC_ONOFF+' [COLOR blue](IN PROGRESS)[/COLOR]','http://direct',901,artfolder,'nao','')
 
 class AvisoFanart(xbmcgui.WindowXMLDialog):
 
@@ -116,13 +136,14 @@ def FILMES_MENU():
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
         url_CMT = 'http://www.tugafilmes.org/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
+        url_CME = 'http://www.cinematuga.eu/search/label/Filmes'
         try:
                 toppt_source = abrir_url(url_toppt)
         except: toppt_source = ''
         saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
         if saber_url_todos: url_TPT = saber_url_todos[0]
         else: url_TPT = 'http://toppt.net/'
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
         addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'FT.png','nao','')
         url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
@@ -130,10 +151,11 @@ def FILMES_MENU():
         url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
         url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
         url_CMT = 'http://www.tugafilmes.org/search/label/Anima%C3%A7%C3%A3o'
+        url_CME = 'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
         saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
         if saber_url_animacao: url_TPT = saber_url_animacao[0]
         else: url_TPT = 'http://toppt.net/'
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)                                                          #6
         addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,507,artfolder + 'FA.png','nao','')
         addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (TMDB)','1',3002,artfolder + 'NC.png','nao','')
@@ -1397,7 +1419,7 @@ elif mode == 608:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-#----------------------------------------------  CINEMATUGA  -------------------------------------------------------
+#----------------------------------------------  CINEMATUGA.net  -------------------------------------------------------
 elif mode == 700: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)#,nomeAddon)
 elif mode == 701:
         Cinematuga.CMT_MenuPrincipal(artfolder)
@@ -1453,6 +1475,49 @@ elif mode == 718:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+#----------------------------------------------  CINEMATUGA.eu  -------------------------------------------------------
+elif mode == 800: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
+elif mode == 801:
+        CinematugaEu.CME_MenuPrincipal(artfolder)
+        #setViewMode_menuFTT()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 802:
+        CinematugaEu.CME_encontrar_fontes_filmes(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 803: CinematugaEu.CME_encontrar_videos_filmes(name,url)
+elif mode == 804: CinematugaEu.CME_pesquisar_filmes()
+elif mode == 805: CinematugaEu.CME_Menu_Filmes(artfolder)
+elif mode == 806: CinematugaEu.CME_Menu_Filmes_Por_Categorias(artfolder)
+elif mode == 807: CinematugaEu.CME_Menu_Filmes_Brevemente(artfolder)
+elif mode == 808:
+        CinematugaEu.CME_Top_Vistos(artfolder)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+#----------------------------------------------  CINEMAEMCASA  -------------------------------------------------------
+elif mode == 900: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
+elif mode == 901:
+        CinemaEmCasa.CMC_MenuPrincipal(artfolder)
+        #setViewMode_menuMVT()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 902:
+        CinemaEmCasa.CMC_encontrar_fontes_filmes(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 903: CinemaEmCasa.CMC_encontrar_videos_filmes(name,url)
+elif mode == 904: CinemaEmCasa.CMC_pesquisar_filmes()
+elif mode == 905: CinemaEmCasa.CMC_Menu_Filmes(artfolder)
+elif mode == 906: CinemaEmCasa.CMC_Menu_Filmes_Por_Categorias(artfolder)
+elif mode == 907: CinemaEmCasa.CMC_Menu_Filmes_Brevemente(artfolder)
+
 #-------------------------------------------------------------------------------------------------------------------------
 
 elif mode == 1000:
@@ -1543,6 +1608,12 @@ elif mode == 3010:
 
 elif mode == 7000:
         INDEX()
+
+elif mode == 10000:
+        SITESdosPORTUGAS()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

@@ -325,7 +325,8 @@ class themoviedb_api_IMDB:
         def fanart_and_id(self,movie_info_imdb_code,movie_info_year):
                 try:
                         url_tmdb = 'http://api.themoviedb.org/3/movie/' + urllib.quote_plus(movie_info_imdb_code) + '?language=pt&api_key=' + self.api_key
-                        data = MASH_abrir_url(url_tmdb)
+                        try: data = MASH_abrir_url(url_tmdb)
+                        except: data = ''
                         
                         fan = re.compile('"backdrop_path":"(.+?)"').findall(data)
                         if fan: fanart = self.tmdb_base_url + fan[0]
@@ -347,7 +348,8 @@ class themoviedb_api_IMDB:
                 if sinopse == '' or sinopse == '",':
                         try:
                                 url_tmdb = 'http://api.themoviedb.org/3/movie/' + urllib.quote_plus(movie_info_imdb_code) + '?language=en&api_key=' + self.api_key
-                                data = MASH_abrir_url(url_tmdb)
+                                try: data = MASH_abrir_url(url_tmdb)
+                                except: data = ''
                         
                                 fan = re.compile('"backdrop_path":"(.+?)"').findall(data)
                                 if fan: fanart = self.tmdb_base_url + fan[0]
@@ -365,7 +367,11 @@ class themoviedb_api_IMDB:
                                 if id_t: id_tmdb = id_t[0]
                                 else: id_tmdb=''
                         except: pass
-                        
+                if data == '':
+                        fanart = ''
+                        id_tmdb = ''
+                        thumb = ''
+                        sinopse = ''
                 return fanart,str(id_tmdb),thumb,sinopse
         
 class themoviedb_api_IMDB_episodios:
@@ -377,7 +383,8 @@ class themoviedb_api_IMDB_episodios:
 ##                return '1'
                 try:
                         url_tmdb = 'http://api.themoviedb.org/3/tv/' + urllib.quote_plus(movie_info_imdb_code) + '/season/' + urllib.quote_plus(season) + '/episode/' + urllib.quote_plus(episode) + '?&api_key=' + self.api_key + '&language=pt'
-                        data = MASH_abrir_url(url_tmdb)
+                        try: data = MASH_abrir_url(url_tmdb)
+                        except: data = ''
                         
                         air = re.compile('"air_date":"(.+?)"').findall(data)
                         if air: air_date = air[0]
@@ -399,7 +406,8 @@ class themoviedb_api_IMDB_episodios:
                 if sinopse == '' or sinopse == '",':
                         try:
                                 url_tmdb = 'http://api.themoviedb.org/3/tv/' + urllib.quote_plus(movie_info_imdb_code) + '/season/' + urllib.quote_plus(season) + '/episode/' + urllib.quote_plus(episode) + '?&api_key=' + self.api_key + '&language=en'
-                                data = MASH_abrir_url(url_tmdb)
+                                try: data = MASH_abrir_url(url_tmdb)
+                                except: data = ''
                         
                                 air = re.compile('"air_date":"(.+?)"').findall(data)
                                 if air: air_date = air[0]
@@ -440,7 +448,7 @@ class themoviedb_api:
                 except: thumb =''
                 try: id_tmdb = data['results'][0]['id']
                 except: id_tmdb=''
-
+                #addLink('2'+str(fanart),'','')
                 return fanart,str(id_tmdb),thumb
 
 ##        def trailer(self,id_tmdb):
@@ -778,13 +786,16 @@ def Filmes_Filmes_Filmes(url):
         progress.update( percent, 'A Procurar Filmes...'+site, message, "" )
         urlss = urllib.unquote(url)
         print urlss
-        urls=re.compile('url_TFC=(.+?)&url_CMT=(.+?)&url_FTT=(.+?)&url_TFV=(.+?)&url_MVT=(.+?)&xpto=xpto&url_TPT=(.+?)&fim=fim').findall(urlss)
+        #addLink(urlss,'','')
+        #return
+        urls=re.compile('url_TFC=(.+?)&url_CMT=(.+?)&url_FTT=(.+?)&url_TFV=(.+?)&url_MVT=(.+?)&xpto=xpto&url_CME=(.+?)&url_TPT=(.+?)&fim=fim').findall(urlss)
         url_TFV = urls[0][3]
         url_TFC = urls[0][0]
         url_MVT = urls[0][4]
-        url_TPT = urls[0][5]
+        url_TPT = urls[0][6]
         url_FTT = urls[0][2]
         url_CMT = urls[0][1]
+        url_CME = urls[0][5]
         #i = int(arr_filmes[4])
         i = 1
         #--------------------------------------------------
@@ -825,12 +836,22 @@ def Filmes_Filmes_Filmes(url):
 	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
 	if items != []:
 		num = num + len(items)
+	try:
+		html_source = MASH_abrir_url(url_CME)
+	except: html_source = ''
+	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	if items != []:
+		num = num + len(items)
 	num = num + 0.0
+	i = 1
+        a = 1
+	percent = int( ( a / num ) * 100)
+        message = str(a) + " de " + str(int(num))
+        progress.update( percent, 'A Procurar Filmes...', message, "" )
 	#----------------------------------------------------------------------------------------------------
 	site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
         progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
-        i = 1
-        a = 1
+        
         _filmes_ = []
         folder = perfil
         Filmes_File = open(folder + 'filmesTPT.txt', 'a')
@@ -1007,12 +1028,19 @@ def Filmes_Filmes_Filmes(url):
                                 if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
                                 if nnnn: nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
-                                try:
-                                        fanart,tmdb_id,poster,sinopse = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme)
-                                        #fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
-                                        if thumb == '': thumb = poster
-                                except: pass
-                                #if imdbcode != '': sinopse = theomapi_api().sinopse(imdbcode)
+                                if imdbcode != '':
+                                        try:
+                                                fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme)
+                                                if sinopse == '': sinopse = sin
+                                                if fanart == '': fanart,tmb,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
+                                                if thumb == '': thumb = poster
+                                        except:pass
+                                else:
+                                        try:
+                                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
+                                                if thumb == '': thumb = poster
+                                        except: pass
+
                                 Filmes_File.write('NOME|'+str(nome_filme)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb)+'|ANO|'+str(ano_filme.replace('(','').replace(')',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|SINOPSE|'+str(sinopse)+'|END|\n')
                                 
                         if fanart == '---': fanart = ''
@@ -1314,6 +1342,7 @@ def Filmes_Filmes_Filmes(url):
                                 nome = ''
 
                         snpse = re.compile('Sinopse.png"></a></div>\n(.+?)\n').findall(item)
+                        if not snpse: snpse = re.compile('Sinopse.png" /></a></div>\n(.+?)\n').findall(item)
                         if snpse: sinopse = snpse[0]
                         sinopse = sinopse.replace('&#8216;',"'")
                         sinopse = sinopse.replace('&#8217;',"'")
@@ -1446,7 +1475,7 @@ def Filmes_Filmes_Filmes(url):
                         nome = nome.replace(' --',"")
                         nome = nome.replace('--',"")
 
-                        if audio_filme != '': qualidade_filme = qualidade_filme + ' - ' + audio_filme
+                        if audio_filme != '': qualidade_filme = qualidade_filme# + ' - ' + audio_filme
 
                         nome = nome.replace('((','(')
                         nome = nome.replace('))',')')
@@ -1489,8 +1518,8 @@ def Filmes_Filmes_Filmes(url):
                                 except: fonte_video = ''
                                 fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
                                 if fontes_video != []:
-                                        qualid = re.compile('ASSISTIR ONLINE LEGENDADO(.+?)\n').findall(fontes_video[0])
-                                        if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')
+                                        qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
+                                        if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')
                                         else:
                                                 qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
                                                 if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')
@@ -1501,10 +1530,20 @@ def Filmes_Filmes_Filmes(url):
                                 if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
                                 if nnnn : nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
-                                try:
-                                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
-                                        if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
-                                except: pass
+                                if imdbcode != '':
+                                        try:
+                                                fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),anofilme)
+                                                if sinopse == '': sinopse = sin
+                                                if fanart == '': fanart,tmb,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
+                                                if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
+                                        except:pass
+                                else:
+                                        try:
+                                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
+                                                if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
+                                        except: pass
+                                
+
                                 if genero == '': genero = '---'
                                 if sinopse == '': sinopse = '---'
                                 if fanart == '': fanart = '---'
@@ -1536,7 +1575,7 @@ def Filmes_Filmes_Filmes(url):
 	Filmes_File.close()
         Filmes_Fi.close()
 #------------------------------------------------------------------------------------------------------------------------
-	site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]'
+	site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B]'
 	progress.update(percent, 'A Procurar Filmes em '+site, message, "")
 	_filmes_ = []
         folder = perfil
@@ -1568,6 +1607,7 @@ def Filmes_Filmes_Filmes(url):
                         sinopse = ''
                         audio_filme = ''
                         imdbcode = ''
+                        ano_filme = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
@@ -1594,6 +1634,9 @@ def Filmes_Filmes_Filmes(url):
                         if qualidade: qualidade = qualidade[0].replace('<b>','').replace('</b>','')
                         else: qualidade = ''
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
+                        if ano: ano_filme = ano[0]
+                        else: ano_filme = ''
+                        #return
                         audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
                         imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
                         if audio != []:
@@ -1627,6 +1670,7 @@ def Filmes_Filmes_Filmes(url):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
+                                        if ano_filme == '': ano_filme = str(q_a_q_a)
                         O_Nome = nome
                         n_f = re.compile('.org/(.+?)[.]html').findall(urletitulo[0][0])
                         nome_filme = n_f[0]#nome
@@ -1670,10 +1714,23 @@ def Filmes_Filmes_Filmes(url):
                                 if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
                                 if nnnn : nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
-                                try:
-                                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
-                                except: pass
-                                Filmes_File.write('NOME|'+str(nome_filme)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace('s72-c','s320'))+'|ANO|'+str(ano[0].replace(' ',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genre)+'|END|\n')
+                                if imdbcode != '':
+                                        try:
+                                                fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme.replace(' ',''))
+                                                if sinopse == '': sinopse = sin
+                                                if fanart == '': fanart,tmb,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme.replace(' ',''))
+                                        except:
+                                                fanart = '---'
+                                                tmdb_id = '---'
+                                                poster = ''
+                                else:
+                                        try:
+                                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme.replace(' ',''))
+                                        except: 
+                                                fanart = '---'
+                                                tmdb_id = '---'
+                                                poster = ''
+                                Filmes_File.write('NOME|'+str(nome_filme)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace('s72-c','s320'))+'|ANO|'+str(ano_filme.replace(' ',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genre)+'|END|\n')
                                                       
                         if thumb == '': thumb = poster
                         if genre == '': genre = '---'
@@ -1689,9 +1746,9 @@ def Filmes_Filmes_Filmes(url):
                                 else:
                                         num_mode = 703
                                 if 'IMDB' in imdbcode:
-                                        addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+imdbcode,num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano[0],genre)
+                                        addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+imdbcode,num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano_filme.replace(' ',''),genre)
                                 else:
-                                        addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano[0],genre)
+                                        addDir_teste('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + O_Nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano_filme.replace(' ',''),genre)
 
                         except: pass
                         #---------------------------------------------------------------
@@ -1846,9 +1903,20 @@ def Filmes_Filmes_Filmes(url):
                                 if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
                                 if nnnn : nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
-                                try:
-                                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
-                                except: pass
+                                if imdbcode != '':
+                                        try:
+                                                fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano[0].replace(' ',''))
+                                                if sinopse == '': sinopse = sin
+                                                if fanart == '': fanart,tmb,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
+                                                if thumb == '' or 's1600' in thumb: thumb = poster
+                                        except:pass
+                                else:
+                                        try:
+                                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
+                                                if thumb == '' or 's1600' in thumb: thumb = poster
+                                        except:pass
+                                
+
                                 Filmes_File.write('NOME|'+str(nome_filme)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace('s72-c','s320'))+'|ANO|'+str(ano[0].replace(' ',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genre)+'|END|\n')
    
                         if thumb == '': thumb = '---'
@@ -1993,7 +2061,7 @@ def Filmes_Filmes_Filmes(url):
                                 if fanart == '': fanart = '---'
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
-                                if ano: ano_filme = ano[0]
+                                if ano: ano_filme = ano[0].replace('20013','2013').replace(' ','')
                                 else: ano_filme = '---'
         ##                        nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
         ##                        if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
@@ -2002,9 +2070,17 @@ def Filmes_Filmes_Filmes(url):
         ##                        if nnnn : nome_pesquisa = nnnn[0]
         ##                        else: nome_pesquisa = nome
                                 nome_pesquisa = nome
-                                try:
-                                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
-                                except: pass
+                                if imdbcode != '':
+                                        try:
+                                                fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme)
+                                                if sinopse == '': sinopse = sin
+                                                if fanart == '': fanart,tmb,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
+                                        except:pass
+                                else:
+                                        try:
+                                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
+                                        except:pass
+
                                 Filmes_File.write('NOME|'+str(nome_filme)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace(' ','%20'))+'|ANO|'+str(ano_filme)+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|END|\n')
                         
                         if thumb == '': thumb = '---'
@@ -2035,12 +2111,189 @@ def Filmes_Filmes_Filmes(url):
         Filmes_File.close()
         Filmes_Fi.close()
         #----------------------------------------------------------------------------------------------------
-       
+        progress.update( percent, 'A Procurar Filmes em '+site, message, "" )
+        site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B]'
+        i = 3
+        _filmes_ = []
+        folder = perfil
+        Filmes_File = open(folder + 'filmesCME.txt', 'a')
+        Filmes_Fi = open(folder + 'filmesCME.txt', 'r')
+        read_Filmes_File = ''
+        for line in Filmes_Fi:
+                read_Filmes_File = read_Filmes_File + line
+                if line!='':_filmes_.append(line)
+        try:
+		html_source = MASH_abrir_url(url_CME)
+	except: html_source = ''
+	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	if items != []:
+		for item in items:
+                        percent = int( ( a / num ) * 100)
+                        message = str(a) + " de " + str(int(num))
+                        progress.update(percent, 'A Procurar Filmes em '+site, message, "")
+                        print str(a) + " de " + str(int(num))
+                        if progress.iscanceled():
+                                break
+                        
+                        thumb = ''
+                        genero = ''
+                        sinopse = ''
+                        fanart = ''
+                        anofilme= ''
+                        qualidade_filme = ''
+                        imdbcode = ''
+                        audio_filme = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)"').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+
+                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        if urletitulo:
+                                urlvideo = urletitulo[0][0].replace('#more','')
+                                nome = urletitulo[0][1]
+                        else:
+                                urlvideo = ''
+                                nome = ''
+                                
+                        snpse = re.compile('<b>sinopse</b><br>\n(.+?)<br>\n').findall(item)
+                        if snpse: sinopse = snpse[0]
+                        sinopse = sinopse.replace('&#8216;',"'")
+                        sinopse = sinopse.replace('&#8217;',"'")
+                        sinopse = sinopse.replace('&#8220;',"'")
+                        sinopse = sinopse.replace('&#8221;',"'")
+                        sinopse = sinopse.replace('&#8211;',"-")
+                        sinopse = sinopse.replace('&#39;',"'")
+                        sinopse = sinopse.replace('&amp;','&')
+                                
+                        ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
+                        if ano: anofilme = ano[0]
+                        else: anofilme = ''
+
+                        generos = re.compile("rel='tag'>(.+?)</a>").findall(item)
+                        conta = 0
+                        for gener in generos:
+                                if conta == 0:
+                                        if gener.replace(' ','') != anofilme.replace(' ',''):
+                                                genero = gener
+                                                conta = conta + 1
+                                else:
+                                        if gener.replace(' ','') != anofilme.replace(' ',''):
+                                                genero = genero +'  '+ gener
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(genero)
+                        conta = 0
+                        for q_a_q_a in qq_aa:
+                                genero = genero.replace(str(q_a_q_a)+'  ','')
+
+                        thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+                        if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
+                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                        else: thumb = ''
+               
+                                
+
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        nome = nome.replace('(Pedido)',"").replace('[Pedido]','')
+                        
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        anofilme = str(q_a_q_a)
+                                        tirar_ano = '('+str(q_a_q_a)+')'
+                                        nome = nome.replace(tirar_ano,'')
+
+                        if audio_filme != '': qualidade_filme = qualidade_filme# + ' - ' + audio_filme
+
+                        O_Nome = nome
+                        n_f = re.compile('.eu/(.+?)[.]html').findall(urlvideo)
+                        nome_filme = n_f[0]#nome
+                        if nome_filme in read_Filmes_File:
+                                for x in range(len(_filmes_)):
+                                        if nome_filme in _filmes_[x]:
+                                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
+                                                if _n: nomes = _n[0]
+                                                else: nomes = '---'
+                                                if nome_filme == nomes:
+                                                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_filmes_[x])
+                                                        if _i: imdbcode = _i[0]
+                                                        else: imdbcode = '---'
+                                                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_filmes_[x])
+                                                        if _t: thumb = _t[0]
+                                                        else: thumb = '---'
+                                                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_filmes_[x])
+                                                        if _a: ano_filme = _a[0]
+                                                        else: ano_filme = '---'
+                                                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
+                                                        if _f: fanart = _f[0]
+                                                        else: fanart = '---'
+                                                        _g = re.compile('[|]GENERO[|](.+?)[|]SINOPSE[|]').findall(_filmes_[x])
+                                                        if _g: genero = _g[0]
+                                                        else: genero = '---'
+                        else:
+                                if genero == '': genero = '---'
+                                if sinopse == '': sinopse = '---'
+                                if fanart == '---': fanart = ''
+                                if imdbcode == '': imdbcode = '---'
+                                if thumb == '': thumb = '---'
+                                nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
+                                if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+                                if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome) 
+                                if nnnn :
+                                        if 'Trilogia' in nnnn[0]: nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
+                                        nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome
+                                if imdbcode != '':
+                                        try:
+                                                fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),anofilme)
+                                                if sinopse == '': sinopse = sin
+                                                if fanart == '': fanart,tmb,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
+                                                if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
+                                        except:pass
+                                else:
+                                        try:
+                                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
+                                                if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
+                                        except: pass
+                                Filmes_File.write('NOME|'+str(nome_filme)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb)+'|ANO|'+str(ano_filme)+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|END|\n')
+                        
+                        if genero == '': genero = '---'
+                        if sinopse == '': sinopse = '---'
+                        if fanart == '---': fanart = ''
+                        if imdbcode == '': imdbcode = '---'
+                        if thumb == '': thumb = '---'
+                        try:
+                                if 'IMDB' in imdbcode:
+                                        addDir_teste('[COLOR orange]CME | [/COLOR][B][COLOR green]' + O_Nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]',urlvideo+imdbcode,803,thumb,sinopse,fanart,anofilme,genero)
+                                else:
+                                        addDir_teste('[COLOR orange]CME | [/COLOR][B][COLOR green]' + O_Nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',803,thumb,sinopse,fanart,anofilme,genero)
+                        except: pass
+                        #---------------------------------------------------------------
+                        i = i + 1
+                        a = a + 1
+                        #---------------------------------------------------------------
+        else: pass
+        if items != []:
+                proxima_CME = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)	
+                try:
+                        url_CME = proxima_CME.replace('&amp;','&')
+                except: pass
+	else: url_CME = 'http:'
+        Filmes_File.close()
+        Filmes_Fi.close()
+       #----------------------------------------------------------------------------------------------------
+	
         for x in range(len(arrai_filmes)):
                 if arrai_filmes[x] != '':           #8
                         addDir(arrai_filmes[x],'url',7,thumb_filmes[x],'nao','')
                         conta_os_items = conta_os_items + 1
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "fim": 'fim',"xpto":'xpto'}
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
         progress.close()
         addDir('[B]Página Seguinte >>[/B]',url_filmes_filmes,507,artfolder + 'PAGS1.png','','')

@@ -22,7 +22,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,FilmesAnima
-from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv
+from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv,themoviedb_api_IMDB
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -78,6 +78,7 @@ def CMT_Menu_Filmes_Top_5(artfolder):
                         versao = ''
                         audio_filme = ''
                         imdbcode = ''
+                        ano_filme = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
@@ -104,6 +105,8 @@ def CMT_Menu_Filmes_Top_5(artfolder):
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         if not qualidade: qualidade = re.compile("Ass.+?tir online .+?[(](.+?)[)]").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
+                        if ano: ano_filme = ano[0]
+                        else: ano_filme = ''
                         audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
                         imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
                         if audio != []:
@@ -131,13 +134,23 @@ def CMT_Menu_Filmes_Top_5(artfolder):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
+                                        if ano_filme == '': ano_filme = str(q_a_q_a)
                                         
                         nnnn = re.compile('(.+?): ').findall(nome)
                         if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
                         if nnnn : nome_pesquisa = nnnn[0]
                         else: nome_pesquisa = nome
-                        
-                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
+
+                        if imdbcode != '':
+                                try:
+                                        fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme.replace(' ',''))
+                                        if sinopse == '': sinopse = sin
+                                        if fanart == '': fanart,tmb,pter = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme.replace(' ',''))
+                                except:pass
+                        else:
+                                try:
+                                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme.replace(' ',''))
+                                except: pass
 
                         if qualidade:
                                 qualidade = qualidade[0]
@@ -153,7 +166,7 @@ def CMT_Menu_Filmes_Top_5(artfolder):
                                         num_mode = 712
                                 else:
                                         num_mode = 703
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano_filme.replace(' ',''),genre)
                         except: pass
                 i = i + 1
 
@@ -220,6 +233,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                         versao = ''
                         audio_filme = ''
                         imdbcode = ''
+                        ano_filme = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
@@ -246,6 +260,8 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         if not qualidade: qualidade = re.compile("Ass.+?tir online .+?[(](.+?)[)]").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
+                        if ano: ano_filme = ano[0]
+                        else: ano_filme = ''
                         audio = re.compile("<b>.+?udio</b>(.+?)<br />").findall(item)
                         imdb_code = re.compile('<b>Mais INFO</b>: <a href="http://www.imdb.com/title/(.+?)/" target="_blank">IMDb</a>').findall(item)
                         if audio != []:
@@ -273,12 +289,23 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
+                                        if ano_filme == '': ano_filme = str(q_a_q_a)
+
                                         
                         nnnn = re.compile('(.+?): ').findall(nome)
                         if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
                         if nnnn : nome_pesquisa = nnnn[0]
                         else: nome_pesquisa = nome
-                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano[0].replace(' ',''))
+                        if imdbcode != '':
+                                try:
+                                        fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),ano_filme.replace(' ',''))
+                                        if sinopse == '': sinopse = sin
+                                        if fanart == '': fanart,tmb,pter = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme.replace(' ',''))
+                                except:pass
+                        else:
+                                try:
+                                        fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme.replace(' ',''))
+                                except: pass
 
                         if qualidade:
                                 qualidade = qualidade[0].replace('<b>','').replace('</b>','')
@@ -294,7 +321,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         num_mode = 712
                                 else:
                                         num_mode = 703
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano[0],genre)
+                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano_filme.replace(' ',''),genre)
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
