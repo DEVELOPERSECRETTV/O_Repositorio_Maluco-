@@ -39,7 +39,7 @@ artfolder = addonfolder + '/resources/img/'
 def CMC_MenuPrincipal(artfolder):
         addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'P1.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'CMC1.png',False,'')
-	#addDir('[COLOR yellow]- Todos[/COLOR]','http://movie-tuga.blogspot.pt/',102,artfolder + 'FT.png','nao','')
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.cinemaemcasa.pt/',902,artfolder + 'FT.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o',902,artfolder + 'FA.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',906,artfolder + 'CT.png','nao','')
 	

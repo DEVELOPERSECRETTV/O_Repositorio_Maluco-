@@ -98,7 +98,7 @@ def TFC_Menu_Filmes_Top_10(artfolder):
                                 thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
                                 if thumbnail: thumb = thumbnail[0]
                                 print urletitulo,thumbnail
-                                ano = 'Ano'
+                                ano = ''
                                 qualidade = ''
                                 e_qua = 'nao'
                                 calid = ''

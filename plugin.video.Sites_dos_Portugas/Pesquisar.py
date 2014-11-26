@@ -160,8 +160,8 @@ def pesquisar():
                         if num_s == 0: addDir1('-----','url',1004,artfolder,False,'')
 
 
-                xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-                xbmc.executebuiltin("Container.SetViewMode(502)")
+                xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+                xbmc.executebuiltin("Container.SetViewMode(560)")#502
                 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
@@ -371,7 +371,7 @@ def encontrar_fontes_filmes_TFC(url,pesquisou,FS):
 			thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
 			if thumbnail: thumb = thumbnail[0]
 			print urletitulo,thumbnail
-			ano = 'Ano'
+			ano = ''
 			qualidade = ''
 			e_qua = 'nao'
 			calid = ''

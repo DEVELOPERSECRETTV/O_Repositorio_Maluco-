@@ -43,7 +43,7 @@ def MAIN_MENU():
         addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://direct',3004,artfolder + 'FILMES1.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
-        addDir('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B] (Filmes/Séries)','url',10000,artfolder + 'SDB.png','nao','')
+        addDir('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B] (Filmes/Séries)','url',10000,artfolder + 'SDPI.png','nao','')
         addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDB.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
         addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF1.png','nao','')#'ze-icon3.png'
@@ -115,8 +115,8 @@ def SITESdosPORTUGAS():
         addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B] (Filmes)'+CMT_ONOFF,'http://direct',701,artfolder + 'CMT1.png','nao','')
         addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)'+TFV_ONOFF,'http://direct',31,artfolder + 'TFV1.png','nao','')
         addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)'+TFC_ONOFF,'http://direct',71,artfolder + 'TFC1.png','nao','')
-        addDir('[COLOR orange]CME | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B] (Filmes)'+CME_ONOFF+' [COLOR orange](NOVO)[/COLOR]','http://direct',801,artfolder + 'CME1.png','nao','')
-        addDir('[COLOR orange]CMC | [/COLOR][B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B] (Filmes)'+CMC_ONOFF+' [COLOR blue](IN PROGRESS)[/COLOR]','http://direct',901,artfolder,'nao','')
+        addDir('[COLOR orange]CME | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B] (Filmes)'+CME_ONOFF,'http://direct',801,artfolder + 'CME1.png','nao','')
+        addDir('[COLOR orange]CMC | [/COLOR][B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B] (Filmes)'+CMC_ONOFF+'[COLOR blue] (IN PROGRESS)[/COLOR]','http://direct',901,artfolder + 'CMC1.png','nao','')
 
 class AvisoFanart(xbmcgui.WindowXMLDialog):
 
@@ -646,6 +646,27 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                                 qualidade = qualidade[0]
                         else:
                                 qualidade = ''
+                        ###########################
+                        season = re.compile('Temporada(.+?)[-].+?[(]').findall(nome)
+                        if season: season = season[0]
+                        else:
+                                season = re.compile('Temporada(.+?)[(]').findall(nome)
+                                if season: season = season[0]
+                                else:
+                                        season = re.compile('[(](.+?)[-].+?[)]').findall(nome)
+                                        if season: season = season[0]
+                                        else:
+                                                season = re.compile('[(](.+?)[)]').findall(nome)
+                                                if season: season = season[0]
+                                                else: season = ''
+                                        
+                                        
+                        temporada = re.compile('(\d+)').findall(season)
+                        if temporada:
+                                temporada = temporada[0]
+                        else:
+                                temporada = ''
+                        ###############################
                         try:
                                 #addLink(nome +'-'+ imdbcode +'-'+ imdbcode_passado + '-'+imdbc,'','')
                                 if 'Temporada' in nome or 'Season' in nome:
@@ -660,9 +681,10 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                                                                 thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano[0])
                                                                 ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                                 if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                                if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                                #thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                                if snpse: sinopse = snpse[0]
+                                                                if snpse and sinopse == '': sinopse = snpse[0]
+                                                        thumb = 'http://thetvdb.com/banners/seasons/' + ftart[0] + '-' + temporada + '.jpg'
                                                         n = re.compile('[(](.+?)[)]').findall(nome)
                                                         if n: nome = n[0]
                                                         #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'',fanart)
@@ -677,9 +699,10 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                                                         thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano[0])
                                                         ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                         if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                        if thumb == '' or 's1600' in thumb: thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                        #addLink(thumb,'','')
                                                         snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                        if snpse: sinopse = snpse[0]
+                                                        if snpse and sinopse == '': sinopse = snpse[0]
                                                 n = re.compile('[(](.+?)[)]').findall(nome)
                                                 if n: nome = n[0]
                                                 #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'',fanart)
@@ -841,7 +864,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                 #addLink(imdbcode_passado+'-'+imdbcode,'','')
                                                 if imdbcode_passado != imdbcode:
                                                         imdbcode_passado = imdbcode
-                                                        n = re.compile('(.+?)[[].+?[]]').findall(nome)
+                                                        n = re.compile('(.+?)[[].+?[]]').findall(nome)                                                        
                                                         if n: nome_pesquisa = n[0]
                                                         else: nome_pesquisa = nome
                                                         thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
@@ -849,7 +872,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                         if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
                                                         if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                         snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                        if snpse: sinopse = snpse[0]
+                                                        if snpse and sinopse == '---': sinopse = snpse[0]
                                                 n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(nome)
                                                 if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(nome)
                                                 if n: nome = n[0][0]+' - '+n[0][1]
@@ -876,7 +899,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                 if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
                                                 if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                if snpse: sinopse = snpse[0]
+                                                if snpse and sinopse == '---': sinopse = snpse[0]
                                         n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(nome)
                                         if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(nome)
                                         if n: nome = n[0][0]+' - '+n[0][1]
@@ -1168,8 +1191,8 @@ elif mode == 31:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 32:
         TugaFilmesTV.TFV_encontrar_fontes_filmes(url,artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 33: TugaFilmesTV.TFV_encontrar_videos_filmes(name,url)
 elif mode == 34: TugaFilmesTV.TFV_pesquisar()
@@ -1198,8 +1221,8 @@ elif mode == 43:
         TugaFilmesTV.TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_href)
 elif mode == 44:
         TugaFilmesTV.TFV_encontrar_fontes_series_recentes(url)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 45: TugaFilmesTV.TFV_pesquisar_series()
 elif mode == 46:
@@ -1214,8 +1237,8 @@ elif mode == 47:
         #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 48:
         TugaFilmesTV.TFV_Menu_Filmes_Top_5(artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 49: M18.M18_TFV_Menu_M18(artfolder)
 elif mode == 50: M18.M18_TFV_Menu_M18_Categorias(artfolder)
@@ -1237,8 +1260,8 @@ elif mode == 71:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 72:
         TugaFilmesCom.TFC_encontrar_fontes_filmes(url)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 73: TugaFilmesCom.TFC_encontrar_videos_filmes(name,url)
 elif mode == 74: TugaFilmesCom.TFC_pesquisar_filmes()
@@ -1248,8 +1271,8 @@ elif mode == 77: TugaFilmesCom.TFC_Menu_Filmes(artfolder)
 elif mode == 78: TugaFilmesCom.TFC_Menu_Filmes_Por_Categorias(artfolder)
 elif mode == 79:
         TugaFilmesCom.TFC_Menu_Filmes_Top_10(artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 80: TugaFilmesCom.TFC_Menu_Series(artfolder)
 elif mode == 81: TugaFilmesCom.TFC_Menu_Filmes_Brevemente(artfolder)
@@ -1272,8 +1295,8 @@ elif mode == 101:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 102:
         MovieTuga.MVT_encontrar_fontes_filmes(url)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 103: MovieTuga.MVT_encontrar_videos_filmes(name,url)
 elif mode == 104: MovieTuga.MVT_pesquisar_filmes()
@@ -1292,8 +1315,8 @@ elif mode == 231:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 232:
         TopPt.TPT_encontrar_fontes_filmes(url,artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 233: TopPt.TPT_encontrar_videos_filmes(name,url,iconimage)
 elif mode == 234: TopPt.TPT_pesquisar()
@@ -1327,13 +1350,13 @@ elif mode == 256: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
 elif mode == 257: TextBoxes.TBOX_TextBoxes_Sinopse(url)
 elif mode == 258:
         TopPt.TPT_Menu_Top_Filmes(artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 259:
         TopPt.TPT_Menu_Top_Series(artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 #----------------------------------------------------------------ARMAGEDOM--------------------------------------------------------------------#
 elif mode == 331: Armagedom.ARM_MenuPrincipal()
@@ -1387,14 +1410,14 @@ elif mode == 506: declara_variaveis(url)
 elif mode == 507:
         Mashup.Filmes_Filmes_Filmes(url)
         #setViewMode_filmes()
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')
+        xbmc.executebuiltin("Container.SetViewMode(560)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 508:
         Mashup.ultimos_episodios(url)
         #setViewMode_filmes()
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 #----------------------------------------------  FOITATUGA  -------------------------------------------------------
 elif mode == 600: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
@@ -1406,8 +1429,8 @@ elif mode == 601:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 602:
         FoitaTuga.FTT_encontrar_fontes_filmes(url)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 603: FoitaTuga.FTT_encontrar_videos_filmes(name,url)
 elif mode == 604: FoitaTuga.FTT_pesquisar_filmes()
@@ -1416,8 +1439,8 @@ elif mode == 606: FoitaTuga.FTT_Menu_Filmes_Por_Categorias(artfolder)
 elif mode == 607: FoitaTuga.FTT_Menu_Filmes_Brevemente(artfolder)
 elif mode == 608:
         FoitaTuga.FTT_Top_Vistos(artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 #----------------------------------------------  CINEMATUGA.net  -------------------------------------------------------
 elif mode == 700: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)#,nomeAddon)
@@ -1429,8 +1452,8 @@ elif mode == 701:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 702:
         Cinematuga.CMT_encontrar_fontes_filmes(url,artfolder)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 703: Cinematuga.CMT_encontrar_videos_filmes(name,url)
 elif mode == 704: Cinematuga.CMT_pesquisar()
@@ -1486,8 +1509,8 @@ elif mode == 801:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 802:
         CinematugaEu.CME_encontrar_fontes_filmes(url)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 803: CinematugaEu.CME_encontrar_videos_filmes(name,url)
 elif mode == 804: CinematugaEu.CME_pesquisar_filmes()

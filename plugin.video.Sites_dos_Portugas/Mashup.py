@@ -81,7 +81,8 @@ class themoviedb_api_pagina:
                 for nn in n:
                         percent = int( ( a / num ) * 100)
                         message = str(a) + " de " + str(int(num))
-                        progress.update( percent, 'A Procurar Filmes em ', message, "" )
+                        if urllib.quote(movie_tv) == 'movie': progress.update( percent, 'A Procurar Filmes...', message, "" )
+                        if urllib.quote(movie_tv) == 'tv': progress.update( percent, 'A Procurar Séries...', message, "" )
                         print str(a) + " de " + str(int(num))
                         if progress.iscanceled():
                                 break
@@ -209,30 +210,48 @@ class thetvdb_api:
 		_id_init = []
 		self.si = ''
 		self.sin = ''
+		self.idserie = ''
+		self.anne = ''
 		if series_name == "24 hours": series_name = "24"
 		try:
 			url = 'http://thetvdb.com/api/GetSeries.php?seriesname=' + urllib.quote(series_name)+'&language=pt'
 			html_source = MASH_abrir_url(url)
 		except: html_source = ''
-		id_and_year = re.findall('<seriesid>(.+?)</seriesid>.*?<Overview>(.+?)</Overview>.+?<FirstAired>(.+?)-.+?-.+?</FirstAired>', html_source, re.DOTALL)
-		if id_and_year == []:
-                        self.si = re.compile('<Overview>(.+?)</Overview>').findall(html_source)
-                        if self.si: self.sin = self.si[0]
-                        else: self.sin = '---'
-			_id = re.compile('<seriesid>(.+?)</seriesid>').findall(html_source)
-			if _id == []: return ''
-			else: return _id[0]+'|'+self.sin
-			
-		else:
-			for serieid,sino,ano in id_and_year:
-				if ano == year: _id_init.append(serieid)
-				else: pass
-			if _id_init == []: return id_and_year[0][0]+'|'+id_and_year[0][1]
-			else:
+		balisa = re.findall('<Series>(.+?)</Series>', html_source, re.DOTALL)
+		#addLink(str(len(balisa))+series_name,'','')
+		if balisa:
+                        for balisas in balisa:
+                                sid = re.compile('<seriesid>(.+?)</seriesid>').findall(balisas)
+                                overview = re.compile('<Overview>(.+?)</Overview>').findall(balisas)
+                                aired = re.compile('<FirstAired>(.+?)-.+?-.+?</FirstAired>').findall(balisas)
+                                if aired:
+                                        self.anne = aired[0]
+                                        if self.anne == year and self.idserie == '':
+                                                if overview: self.sin = overview[0]
+                                                else: self.sin = '---'
+                                                if sid: self.idserie = sid[0]
+                                                else: self.idserie = ''
+                if self.idserie != '': return self.idserie+'|'+self.sin                                          
+                else:
+                        id_and_year = re.findall('<seriesid>(.+?)</seriesid>.*?<Overview>(.+?)</Overview>.+?<FirstAired>(.+?)-.+?-.+?</FirstAired>', html_source, re.DOTALL)
+                        if id_and_year == []:
                                 self.si = re.compile('<Overview>(.+?)</Overview>').findall(html_source)
                                 if self.si: self.sin = self.si[0]
                                 else: self.sin = '---'
-                                return _id_init[0]+'|'+self.sin#id_and_year[0][1]
+                                _id = re.compile('<seriesid>(.+?)</seriesid>').findall(html_source)
+                                if _id == []: return ''
+                                else: return _id[0]+'|'+self.sin
+                                
+                        else:
+                                for serieid,sino,ano in id_and_year:
+                                        if ano == year: _id_init.append(serieid)
+                                        else: pass
+                                if _id_init == []: return id_and_year[0][0]+'|'+id_and_year[0][1]
+                                else:
+                                        self.si = re.compile('<Overview>(.+?)</Overview>').findall(html_source)
+                                        if self.si: self.sin = self.si[0]
+                                        else: self.sin = '---'
+                                        return _id_init[0]+'|'+self.sin#id_and_year[0][1]
 
 ##	def fanart(self,series_id):#http://thetvdb.com/banners/posters/72129-2.jpg
 ##		fanart_image = 'http://thetvdb.com/banners/fanart/original/' + series_id + '-1.jpg'
@@ -666,16 +685,15 @@ def ultimos_episodios(url):
                         if progress.iscanceled():
                                 break
                         
-                        if selfAddon.getSetting('Fanart') == "true":
-                                n = re.compile('(.+?)[[].+?[]]').findall(nome)
-                                if n: nome_pesquisa = n[0]
-                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme)
-                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                if ftart:
-                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                        thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
-                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                if snpse: sinopse = snpse[0]
+                        n = re.compile('(.+?)[[].+?[]]').findall(nome)
+                        if n: nome_pesquisa = n[0]
+                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme)
+                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                        if ftart:  
+                                fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                        if snpse and sinopse == '': sinopse = snpse[0]
       
                         ano_filme = '('+ano_filme+')'
                         qualidade = '('+qualidade
@@ -743,14 +761,15 @@ def ultimos_episodios(url):
                         n = re.compile('(.+?)[(].+?[)]').findall(nome)
                         if n: nome_original = n[0]
                         else: nome_original = nome
-                        if selfAddon.getSetting('Fanart') == "true":
-                                nome_pesquisa = nome_original
-                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano.replace('(','').replace(')',''))
-                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
-                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                if snpse: sinopse = snpse[0]
+
+                        nome_pesquisa = nome_original
+                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano.replace('(','').replace(')',''))
+                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                        if ftart:
+                                fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                if thumb == '' or 's1600' in thumb: thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                        if snpse and sinopse == '': sinopse = snpse[0]
 
 			try:
 				addDir_teste('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0],42,thumb.replace('s72-c','s320'),sinopse,fanart.replace('w500','w1280'),ano,genero)
@@ -2282,7 +2301,7 @@ def Filmes_Filmes_Filmes(url):
         if items != []:
                 proxima_CME = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)	
                 try:
-                        url_CME = proxima_CME.replace('&amp;','&')
+                        url_CME = proxima_CME[0].replace('&amp;','&')
                 except: pass
 	else: url_CME = 'http:'
         Filmes_File.close()
@@ -2442,7 +2461,7 @@ def Series_Series(url):
                                                                         thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
                                                                         ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                                         if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                                        #thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                                        if thumb == '' or 's1600' in thumb: thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                                         snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
                                                                         if sinopse == '---':
                                                                                 if snpse: sinopse = snpse[0]
@@ -2554,9 +2573,9 @@ def Series_Series(url):
                                                 thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
                                                 ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                 if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                #thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                if thumb == '' or 's1600' in thumb: thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                if snpse: sinopse = snpse[0]
+                                                if snpse and sinopse == '': sinopse = snpse[0]
 
                                         if qualidade:
                                                 qualidade = qualidade[0]
@@ -2585,7 +2604,7 @@ def Series_Series(url):
                                                 thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
                                                 ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                 if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                #thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                if thumb == '' or 's1600' in thumb: thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
                                                 if sinopse == '---':
                                                         if snpse: sinopse = snpse[0]
@@ -2788,7 +2807,7 @@ def Series_Series(url):
                                                 ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                 if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                if snpse: sinopse = snpse[0]
+                                                if snpse and sinopse == '': sinopse = snpse[0]
                                 
                                         ano_filme = '('+ano_filme+')'
                                         qualidade = '('+qualidade
@@ -3026,7 +3045,7 @@ def Series_Series(url):
                                                 ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                 if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                if snpse: sinopse = snpse[0]
+                                                if snpse and sinopse == '': sinopse = snpse[0]
                                                 
                                         ano_filme = '('+ano_filme+')'
                                         qualidade = '('+qualidade

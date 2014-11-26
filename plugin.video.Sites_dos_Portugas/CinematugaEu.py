@@ -44,8 +44,8 @@ def CME_MenuPrincipal(artfolder):
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o',802,artfolder + 'FA.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',806,artfolder + 'CT.png','nao','')
 	#addDir('[COLOR yellow]- Por Ano[/COLOR]','url',806,artfolder + 'ANO.png','nao','')
-	addDir('[COLOR yellow]- Novidades[/COLOR]','http://cinematugaeu.blogspot.pt/search/label/Destaques',802,artfolder,'nao','')
-	addDir('[COLOR yellow]- Recomendados[/COLOR]','http://cinematugaeu.blogspot.pt/search/label/Recomendados',802,artfolder,'nao','')
+	addDir('[COLOR yellow]- Novidades[/COLOR]','http://cinematugaeu.blogspot.pt/search/label/Destaques',802,artfolder + 'NOV.png','nao','')
+	addDir('[COLOR yellow]- Recomendados[/COLOR]','http://cinematugaeu.blogspot.pt/search/label/Recomendados',802,artfolder + 'REC1.png','nao','')
 
 def CME_Menu_Filmes_Por_Categorias(artfolder):
         i = 0
