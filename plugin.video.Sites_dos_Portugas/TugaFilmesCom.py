@@ -24,7 +24,10 @@
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket
 import Play,Pesquisar,Mashup,TugaFilmesTV,TopPt,MovieTuga,Armagedom,FilmesAnima
-from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv
+from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
+from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
+from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
+from Funcoes import get_params,abrir_url
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -56,7 +59,7 @@ def TFC_Menu_Filmes_Top_10(artfolder):
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
         url_top_10 = 'http://www.tuga-filmes.info/'
-        top_10_source = TFC_abrir_url(url_top_10)
+        top_10_source = abrir_url(url_top_10)
         filmes_top_10 = re.compile("<img alt=\'\' border=\'0\' height=\'72\' src=\'.+?\' width=\'72\'/>\n</a>\n</div>\n<div class=\'item-title\'><a href=\'(.+?)\'>.+?</a></div>\n</div>\n<div style=\'clear: both;\'>").findall(top_10_source)
         num = len(filmes_top_10) + 0.0
 	for endereco_top_10 in filmes_top_10:
@@ -67,7 +70,7 @@ def TFC_Menu_Filmes_Top_10(artfolder):
                 if progress.iscanceled():
                         break
                 try:
-                        html_source = TFC_abrir_url(endereco_top_10)
+                        html_source = abrir_url(endereco_top_10)
                 except: html_source = ''
                 items = re.findall("<div id='title1'>(.*?)<div class='postmeta'>", html_source, re.DOTALL)
                 #addLink(str(len(items)),'','')
@@ -200,7 +203,7 @@ def TFC_Menu_Filmes_Top_10(artfolder):
                                 if thumb == '': thumb = '---'
                                 if qualidade == '': qualidade = '---'
                                 try:
-                                        if 'ASSISTIR O FILME' in item: addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,qualidade)
+                                        if 'ASSISTIR O FILME' in item: addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,qualidade,nome,urletitulo[0][0])
                                 except: pass
                 #---------------------------------------------------------------
                 i = i + 1
@@ -209,7 +212,7 @@ def TFC_Menu_Filmes_Top_10(artfolder):
 
 def TFC_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.tuga-filmes.info/'
-        html_categorias_source = TFC_abrir_url(url_categorias)
+        html_categorias_source = abrir_url(url_categorias)
 	html_items_categorias = re.findall("<div id=\'nav-cat\'>(.*?)</div>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
@@ -240,7 +243,7 @@ def TFC_encontrar_fontes_filmes(url):
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
 	try:
-		html_source = TFC_abrir_url(url)
+		html_source = abrir_url(url)
 	except: html_source = ''
 	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
 	if items != []:
@@ -379,7 +382,7 @@ def TFC_encontrar_fontes_filmes(url):
                         if thumb == '': thumb = '---'
                         if qualidade == '': qualidade = '---'
 			try:
-				if 'ASSISTIR O FILME' in item: addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,qualidade)
+				if 'ASSISTIR O FILME' in item: addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,qualidade,nome_pesquisa,urletitulo[0][0])
 			except: pass
 			#---------------------------------------------------------------
                         i = i + 1
@@ -402,13 +405,13 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_i
 		try:
                         if 'hashkey' in url:
                                 try:
-                                        urlvideomega = TFC_abrir_url(vidv)
+                                        urlvideomega = abrir_url(vidv)
                                 except: urlvideomega = ''
                                 if urlvideomega != '':
                                         urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
                                         if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
                         fonte_id = '(Videomega)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
+			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
         if "vidto.me" in url:
 		try:
@@ -420,33 +423,35 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_i
 		try:
                         if '/video/' in url: url = url.replace('/video/','/embed/')
                         fonte_id = '(DropVideo)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,70,iconimage,'',fanart)
+			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,70,iconimage,'',fanart)
 		except:pass
 	if "streamin.to" in url:
                 try:
 			print url
 			fonte_id = '(Streamin)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,70,iconimage,'',fanart)
+			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,70,iconimage,'',fanart)
                 except:pass                        
         if "putlocker" in url:
                 try:
                         print url
                         fonte_id = '(Putlocker)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,70,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,70,iconimage,'',fanart)
     		except:pass
     	if "nowvideo" in url:
                 try:
                         print url
                         fonte_id = '(Nowvideo)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,70,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,70,iconimage,'',fanart)
     		except:pass
     	if "videowood" in url:
                 try:
                         if '/video/' in url: url = url.replace('/video/','/embed/')
                         print url
                         fonte_id = '(VideoWood)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'',fanart)
     		except:pass
+    	if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url:# and 'iiiiiiiiii' in url:
+                Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id+'[/COLOR][/B]',iconimage,'',fanart)
     	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -523,7 +528,7 @@ def TFC_encontrar_videos_filmes(name,url):
                         else:
                                 nome_p = nome_p + '+' + q_a_q_a
                 url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-                html_imdbcode = TFC_abrir_url(url_imdb)
+                html_imdbcode = abrir_url(url_imdb)
                 filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
                 imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
                 imdbcode = imdbc[0]
@@ -537,19 +542,24 @@ def TFC_encontrar_videos_filmes(name,url):
         conta_id_video = 0
 	addDir1(name,'url',1003,iconimage,False,fanart)
         try:
-                fonte = TFC_abrir_url(url)
+                fonte = abrir_url(url)
         except: fonte = ''
         items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", fonte, re.DOTALL)
+        if not items: items = re.findall("<div id='postagem'>(.*?)<div class='postmeta'>", fonte, re.DOTALL)
 	if items != []:
-                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
                 if imdb: imdbcode = imdb[0]
                 else: imdbcode = ''
         assist = re.findall(">ASSISTIR.+?", fonte, re.DOTALL)
         fontes = re.findall("Ver Aqui.+?", fonte, re.DOTALL)
         numero_de_fontes = len(fontes)
+       # addLink(str(len(assist)),'','','')
+        #fonte = 
+        #return
 	if fonte:
                 if len(assist) > 1:
                         #addDir1('1','url',1003,artfolder,False,'')
+                        #return
                         assistir_fontes = re.findall('>ASSISTIR(.*?)------------------------------', fonte, re.DOTALL)
                         if assistir_fontes:
                                 for ass_fon in assistir_fontes:
@@ -637,12 +647,15 @@ def TFC_encontrar_videos_filmes(name,url):
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                 else:
-                        match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
-                        for url in match:                                
+                        match = re.compile('www.videowood(.+?)" target="_blank">.+?[(]Online').findall(fonte)
+                        if not match: match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
+                        for url in match:
+                                url = 'http://www.videowood'+url
                                 id_video = ''
                                 conta_id_video = conta_id_video + 1
                                 TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                 conta_os_items = conta_os_items + 1
+                        #return
                         match = re.compile('<iframe .+? src="(.+?)"').findall(fonte)
                         if match:
                                 conta_video = len(match)
@@ -697,16 +710,18 @@ def TFC_links(name,url,iconimage,fanart):
         conta_os_items = conta_os_items + 1
         conta_id_video = 0
         try:
-                fonte = TFC_abrir_url(url)
+                fonte = abrir_url(url)
         except: fonte = ''
         items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", fonte, re.DOTALL)
+        if not items: items = re.findall("<div id='postagem'>(.*?)<div class='postmeta'>", fonte, re.DOTALL)
 	if items != []:
-                imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
                 if imdb: imdbcode = imdb[0]
                 else: imdbcode = ''
         assist = re.findall(">ASSISTIR.+?", fonte, re.DOTALL)
         fontes = re.findall("Ver Aqui.+?", fonte, re.DOTALL)
         numero_de_fontes = len(fontes)
+        #addLink(str(len(assist)),'','','')
 	if fonte:
                 if len(assist) > 1:
                         assistir_fontes = re.findall('>ASSISTIR(.*?)------------------------------', fonte, re.DOTALL)
@@ -796,8 +811,10 @@ def TFC_links(name,url,iconimage,fanart):
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                 else:
-                        match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
-                        for url in match:                                
+                        match = re.compile('www.videowood(.+?)" target="_blank">.+?[(]Online').findall(fonte)
+                        if not match: match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
+                        for url in match:
+                                url = 'http://www.videowood'+url                                
                                 id_video = ''
                                 conta_id_video = conta_id_video + 1
                                 TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
@@ -835,104 +852,13 @@ def TFC_links(name,url,iconimage,fanart):
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-
-	
-def TFC_abrir_url(url):
-	req = urllib2.Request(url)
-	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
-	return link
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-              
-def TFC_get_params():
-        param=[]
-        paramstring=sys.argv[2]
-        if len(paramstring)>=2:
-                params=sys.argv[2]
-                cleanedparams=params.replace('?','')
-                if (params[len(params)-1]=='/'):
-                        params=params[0:len(params)-2]
-                pairsofparams=cleanedparams.split('&')
-                param={}
-                for i in range(len(pairsofparams)):
-                        splitparams={}
-                        splitparams=pairsofparams[i].split('=')
-                        if (len(splitparams))==2:
-                                param[splitparams[0]]=splitparams[1]
-                                
-        return param
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-
-def addLink(name,url,iconimage):
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addLink1(name,url,iconimage):
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addLink2(name,url,iconimage,checker):
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addDir(name,url,mode,iconimage,plot,fanart):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'#iconimage
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)#artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
-
-def addDir1(name,url,mode,iconimage,folder,fanart):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'#iconimage
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)#artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
-        return ok
-
-def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        #text = checker
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&fanart="+urllib.quote_plus(fanart)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
-        #cm = []
-	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
-	#liz.addContextMenuItems(cm, replaceItems=True)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
-	
+#----------------------------------------------------------------------------------------------------------------------------------------------#	
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
           
-params=TFC_get_params()
+params=get_params()
 url=None
 name=None
 mode=None
@@ -942,43 +868,39 @@ fanart=None
 year=None
 plot=None
 genre=None
+episod=None
+air=None
+namet=None
+urltrailer=None
 
-try:
-        url=urllib.unquote_plus(params["url"])
-except:
-        pass
-try:
-        name=urllib.unquote_plus(params["name"])
-except:
-        pass
-try:
-        mode=int(params["mode"])
-except:
-        pass
-try:        
-        checker=urllib.unquote_plus(params["checker"])
-except:
-        pass
-try:        
-        iconimage=urllib.unquote_plus(params["iconimage"])
-except:
-        pass
-try:        
-        fanart=urllib.unquote_plus(params["fanart"])
-except:
-        pass
-try:        
-        plot=urllib.unquote_plus(params["plot"])
-except:
-        pass
-try:        
-        year=urllib.unquote_plus(params["year"])
-except:
-        pass
-try:        
-        genre=urllib.unquote_plus(params["genre"])
-except:
-        pass
+try: url=urllib.unquote_plus(params["url"])
+except: pass
+try: urltrailer=urllib.unquote_plus(params["urltrailer"])
+except: pass
+try: name=urllib.unquote_plus(params["name"])
+except: pass
+try: namet=urllib.unquote_plus(params["namet"])
+except: pass
+try: nome=urllib.unquote_plus(params["nome"])
+except: pass
+try: mode=int(params["mode"])
+except: pass
+try: checker=urllib.unquote_plus(params["checker"])
+except: pass
+try: iconimage=urllib.unquote_plus(params["iconimage"])
+except: pass
+try: fanart=urllib.unquote_plus(params["fanart"])
+except: pass
+try: plot=urllib.unquote_plus(params["plot"])
+except: pass
+try: year=urllib.unquote_plus(params["year"])
+except: pass
+try: genre=urllib.unquote_plus(params["genre"])
+except: pass
+try: episod=urllib.unquote_plus(params["episod"])
+except: pass
+try: air=urllib.unquote_plus(params["air"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -989,3 +911,6 @@ print "Plot: "+str(plot)
 print "Year: "+str(year)
 print "Genre: "+str(genre)
 print "Fanart: "+str(fanart)
+print "Episode: "+str(episod)
+print "Namet: "+str(namet)
+print "Urltrailer: "+str(urltrailer)

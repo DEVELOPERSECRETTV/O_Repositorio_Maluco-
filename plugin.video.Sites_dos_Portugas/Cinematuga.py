@@ -21,8 +21,11 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,FilmesAnima
-from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv,themoviedb_api_IMDB
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,FilmesAnima,Play
+from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
+from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
+from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
+from Funcoes import get_params,abrir_url
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -44,11 +47,12 @@ def CMT_MenuPrincipal(artfolder):
         fanart = artfolder + 'FAN3.jpg'
         addDir('- Procurar','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1004,artfolder + 'CMT1.png',False,fanart)
-	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tugafilmes.org/search/label/Filmes',702,artfolder + 'FT.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tugafilmes.org/search/label/Anima%C3%A7%C3%A3o',702,artfolder + 'FA.png','nao',fanart)
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.cinematuga.net/search/label/Filmes',702,artfolder + 'FT.png','nao','')#'http://www.tugafilmes.org/search/label/Filmes'
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o',702,artfolder + 'FA.png','nao',fanart)
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',709,artfolder + 'ANO.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',708,artfolder + 'CT.png','nao','')
-	addDir('[COLOR yellow]- Top Semanal[/COLOR]','url',718,artfolder + 'TPSE.png','nao','')
+	#addDir('[COLOR yellow]- Top Semanal[/COLOR]','url',718,artfolder + 'TPSE.png','nao','')
+	addDir('[COLOR yellow]- Qualidade[/COLOR]','url',719,artfolder,'nao','')
 
 def CMT_Menu_Filmes_Top_5(artfolder):
         i = 1
@@ -56,8 +60,8 @@ def CMT_Menu_Filmes_Top_5(artfolder):
         message = ''
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
-        url_top_5 = 'http://www.tugafilmes.org'
-        top_5_source = CMT_abrir_url(url_top_5)
+        url_top_5 = 'http://www.cinematuga.net'#'http://www.tugafilmes.org'
+        top_5_source = abrir_url(url_top_5)
                 
         html_top5 = re.findall("<div class='item-thumbnail'>(.*?)<div style='clear: both;'>", top_5_source, re.DOTALL)
 	for item in html_top5:
@@ -69,9 +73,9 @@ def CMT_Menu_Filmes_Top_5(artfolder):
                         break
                 urletitulo = re.compile("<div class='item-title'><a href='(.+?)'>(.+?)</a></div>").findall(item)
                 try:
-                        html_source = CMT_abrir_url(urletitulo[0][0])
+                        html_source = abrir_url(urletitulo[0][0])
                 except: html_source = ''
-                items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+                items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
                 for item in items:
                         thumb = ''
                         fanart = ''
@@ -166,15 +170,15 @@ def CMT_Menu_Filmes_Top_5(artfolder):
                                         num_mode = 712
                                 else:
                                         num_mode = 703
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano_filme.replace(' ',''),genre)
+                                addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano_filme.replace(' ',''),genre,nome,urletitulo[0][0])
                         except: pass
                 i = i + 1
 
 def CMT_Menu_Filmes_Por_Ano(artfolder):
         i = 0
-        url_ano = 'http://www.tugafilmes.org'
-        html_categorias_source = CMT_abrir_url(url_ano)
-	html_items_categorias = re.findall("<h2>FILMES POR ANO</h2>(.*?)<div class=\'clear\'>", html_categorias_source, re.DOTALL)
+        url_ano = 'http://www.cinematuga.net'#'http://www.tugafilmes.org'
+        html_categorias_source = abrir_url(url_ano)
+	html_items_categorias = re.findall("<h2>Anos de La(.*?)<div class=\'clear\'>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<option value='(.+?)'>Filmes (\d+)\n</option>").findall(item_categorias)
@@ -191,9 +195,20 @@ def CMT_Menu_Filmes_Por_Ano(artfolder):
                                 addDir('[COLOR yellow]' + A[0][0].replace('  ','').replace(' ','') + '[/COLOR]',A[0][1],702,artfolder + 'CMT1.png','nao','')
 
 def CMT_Menu_Filmes_Por_Categorias(artfolder):
-        url_categorias = 'http://www.tugafilmes.org'
-        html_categorias_source = CMT_abrir_url(url_categorias)
-	html_items_categorias = re.findall("<h2>CATEGORIAS</h2>(.*?)<div class=\'clear\'>", html_categorias_source, re.DOTALL)
+        url_categorias = 'http://www.cinematuga.net'#'http://www.tugafilmes.org'
+        html_categorias_source = abrir_url(url_categorias)
+	html_items_categorias = re.findall("<h2>Menu Filmes</h2>(.*?)<div class=\'clear\'>", html_categorias_source, re.DOTALL)
+        print len(html_items_categorias)
+        for item_categorias in html_items_categorias:
+                filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n</option>").findall(item_categorias)
+                if not filmes_por_categoria: filmes_por_categoria = re.compile("<a dir='ltr' href='(.+?)'>(.+?)</a>").findall(item_categorias)
+                for endereco_categoria,nome_categoria in filmes_por_categoria:
+                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria,702,artfolder + 'CMT1.png','nao','')
+
+def CMT_Menu_Filmes_Por_Qualidade(artfolder):
+        url_categorias = 'http://www.cinematuga.net'#'http://www.tugafilmes.org'
+        html_categorias_source = abrir_url(url_categorias)
+	html_items_categorias = re.findall("<h2>Formatos</h2>(.*?)<div class=\'clear\'>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n</option>").findall(item_categorias)
@@ -214,9 +229,10 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
 	try:
-		html_source = CMT_abrir_url(url)
+		html_source = abrir_url(url)
 	except: html_source = ''
-	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+	#items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+	items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
 	conta_items = 0
 	if items != []:
 		print len(items)
@@ -234,6 +250,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                         audio_filme = ''
                         imdbcode = ''
                         ano_filme = ''
+                        qualidade = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
@@ -256,7 +273,8 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         nome_original = titulooriginal[0]
                                 else: nome_original = ''
                                 #addDir1(nome_original,'','','',False,'')
-                        urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+                        ################urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+                        urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         if not qualidade: qualidade = re.compile("Ass.+?tir online .+?[(](.+?)[)]").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
@@ -307,10 +325,24 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme.replace(' ',''))
                                 except: pass
 
-                        if qualidade:
-                                qualidade = qualidade[0].replace('<b>','').replace('</b>','')
-                        else:
-                                qualidade = ''
+                        if qualidade: qualidade = qualidade[0].replace('<b>','').replace('</b>','')
+                        else: qualidade = ''
+                        #else:
+##                        lur = urletitulo[0][0]
+##                        addLink(str(lur),'','','')
+##                        try:
+##                                htm = abrir_url(lur)
+##                        except: htm = ''
+##                        if htm != '':
+##                                quq = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", htm, re.DOTALL)
+##                                if quq != '':
+##                                        qualidade = re.compile('<b>Assitir online(.+?)</b>').findall(quq[0])
+##                                        if qualidade:
+##                                                qualidade = qualidade[0].replace('Legendado','')
+##                                                qualidade = qualidade.replace('(','')
+##                                                qualidade = qualidade.replace(')','')
+##                                                qualidade = qualidade.replace(' ','')
+##                                        else: qualidade = ''
                         if genre == '': genre = '---'
                         if sinopse == '': sinopse = '---'
                         if fanart == '---': fanart = ''
@@ -321,21 +353,12 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                         num_mode = 712
                                 else:
                                         num_mode = 703
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano_filme.replace(' ',''),genre)
+                                addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano_filme.replace(' ',''),genre,nome,urletitulo[0][0])
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
                         #---------------------------------------------------------------
-	else:
-		items = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(html_source)
-		for endereco,nome in items:
-                        try:
-                                if "Temporada" in nome:
-                                        num_mode = 712
-                                else:
-                                        num_mode = 703
-                                addDir(nome,endereco,num_mode,'','','')
-                        except:pass
+	else: return
 	proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
 	if proxima[0] != '':
                 try:
@@ -389,7 +412,7 @@ def CMT_encontrar_videos_filmes(name,url):
 
 	if imdbcode == '' or imdbcode == '---':
                 try:
-                        link2=CMT_abrir_url(url)
+                        link2=abrir_url(url)
                 except: link2 = ''
                 if imdbcode == '':
                         items = re.findall("<div class='video-item'>(.+?)<div class='clear'>", link2, re.DOTALL)
@@ -406,7 +429,7 @@ def CMT_encontrar_videos_filmes(name,url):
         addDir1(name,'url',1004,iconimage,False,fanart)
         
         try:
-                link2=CMT_abrir_url(url)
+                link2=abrir_url(url)
         except: link2 = ''
 	nao = 0
         matchvid = re.findall("Assitir online(.+?)</iframe>", link2, re.DOTALL)
@@ -448,7 +471,7 @@ def CMT_links(name,url,iconimage,fanart):
         conta_id_video = 0
         conta_os_items = 0    
 	try:
-		link2=CMT_abrir_url(url)
+		link2=abrir_url(url)
 	except: link2 = ''
 	if imdbcode == '':
                 items = re.findall("<div class='video-item'>(.+?)<div class='clear'>", link2, re.DOTALL)
@@ -476,7 +499,7 @@ def CMT_links(name,url,iconimage,fanart):
                         if "videomega" in url:
                                 try:
                                         fonte_id = '(Videomega)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except: pass
                         if "vidto.me" in url:
                                 try:
@@ -491,7 +514,7 @@ def CMT_links(name,url,iconimage,fanart):
                                 try:
                                         url = url.replace('/video/','/embed/')
                                         fonte_id = '(DropVideo)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         if "vidzi.tv" in url:
                                 try:
@@ -501,27 +524,27 @@ def CMT_links(name,url,iconimage,fanart):
                         if "vodlocker" in url:
                                 try:
                                         fonte_id = '(Vodlocker)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vodlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vodlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         if "played.to" in url:
                                 try:
                                         fonte_id = '(Played.to)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Played.to)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Played.to)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         if "cloudzilla" in url:
                                 try:
                                         fonte_id = '(Cloudzilla)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         if "divxstage" in url:
                                 try:
                                         fonte_id = '(Divxstage)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Divxstage)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Divxstage)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         if "vidzen" in url:
                                 try:
                                         fonte_id = '(Vidzen)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzen)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzen)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         if "streamin.to" in url:
                                 try:
@@ -536,34 +559,34 @@ def CMT_links(name,url,iconimage,fanart):
                         if "primeshare" in url:
                                 try:
                                         fonte_id = '(Primeshare)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Primeshare.tv)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Primeshare.tv)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         if "videoslasher" in url:
                                 try:
                                         fonte_id = '(VideoSlasher)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoSlasher)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoSlasher)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         if "sockshare" in url:
                                 try:
                                         fonte_id = '(Sockshare)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Sockshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Sockshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         if "putlocker" in url:
                                 try:
                                         url = url.replace('putlocker.com/embed/','firedrive.com/file/')
                                         fonte_id = '(Firedrive)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         else:
                                 if "firedrive" in url:
                                         try:
                                                 fonte_id = '(Firedrive)'
-                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                               # addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                         except:pass
                         if "movshare" in url:
                                 try:
                                         fonte_id = '(Movshare)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Movshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Movshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         if "video.tt" in url:
                                 try:
@@ -575,15 +598,17 @@ def CMT_links(name,url,iconimage,fanart):
                                         url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
                                         url = url + '///' + nomeescolha
                                         fonte_id = '(Video.tt)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         if "videowood" in url:
                                 try:
                                         if '/video/' in url: url = url.replace('/video/','/embed/')
                                         print url
                                         fonte_id = '(VideoWood)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
+                        if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url and 'nowvideo' not in url:# and 'iiiiiiiiii' in url:
+                                Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id+'[/COLOR][/B]',iconimage,'',fanart)
                 except: pass
 
 
@@ -597,7 +622,7 @@ def CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
         if "videomega" in url:
 		try:
                         fonte_id = '(Videomega)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
+			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
         if "vidto.me" in url:
 		try:
@@ -612,7 +637,7 @@ def CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
 		try:
                         url = url.replace('/video/','/embed/')
                         fonte_id = '(DropVideo)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
+			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except:pass
 	if "vidzi.tv" in url:
                 try:
@@ -622,32 +647,32 @@ def CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
         if "vodlocker" in url:
 		try:
                         fonte_id = '(Vodlocker)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vodlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
+			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vodlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except:pass
 	if "played.to" in url:
                 try:
                         fonte_id = '(Played.to)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Played.to)[/COLOR][/B]',url,30,iconimage,'',fanart)
+			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Played.to)[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except:pass
         if "cloudzilla" in url:
                 try:
                         fonte_id = '(Cloudzilla)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                       # addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "divxstage" in url:
                 try:
                         fonte_id = '(Divxstage)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Divxstage)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                       # addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Divxstage)[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "vidzen" in url:
                 try:
                         fonte_id = '(Vidzen)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzen)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                       # addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzen)[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
 	if "streamin.to" in url:
                 try:
                         fonte_id = '(Streamin)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,30,iconimage,'',fanart)
+			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except:pass                        
     	if "nowvideo" in url:
                 try:
@@ -657,34 +682,34 @@ def CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
     	if "primeshare" in url:
                 try:
                         fonte_id = '(Primeshare)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Primeshare.tv)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Primeshare.tv)[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "videoslasher" in url:
                 try:
                         fonte_id = '(VideoSlasher)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoSlasher)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoSlasher)[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "sockshare" in url:
                 try:
                         fonte_id = '(Sockshare)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Sockshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Sockshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "putlocker" in url:
                 try:
                         url = url.replace('putlocker.com/embed/','firedrive.com/file/')
                         fonte_id = '(Firedrive)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	else:
                 if "firedrive" in url:
                         try:
                                 fonte_id = '(Firedrive)'
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
                         except:pass
     	if "movshare" in url:
                 try:
                         fonte_id = '(Movshare)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Movshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Movshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
         if "video.tt" in url:
                 try:
@@ -696,120 +721,26 @@ def CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
                         url = url + '///' + nomeescolha
                         fonte_id = '(Video.tt)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "videowood" in url:
                 try:
                         if '/video/' in url: url = url.replace('/video/','/embed/')
                         print url
                         fonte_id = '(VideoWood)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
+    	if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url and 'nowvideo' not in url:# and 'iiiiiiiiii' in url:
+                Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id+'[/COLOR][/B]',iconimage,'',fanart)
     	return
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
-
-
-	
-def CMT_abrir_url(url):
-	req = urllib2.Request(url)
-	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
-	return link
-
 #----------------------------------------------------------------------------------------------------------------------------------------------#
-              
-def CMT_get_params():
-        param=[]
-        paramstring=sys.argv[2]
-        if len(paramstring)>=2:
-                params=sys.argv[2]
-                cleanedparams=params.replace('?','')
-                if (params[len(params)-1]=='/'):
-                        params=params[0:len(params)-2]
-                pairsofparams=cleanedparams.split('&')
-                param={}
-                for i in range(len(pairsofparams)):
-                        splitparams={}
-                        splitparams=pairsofparams[i].split('=')
-                        if (len(splitparams))==2:
-                                param[splitparams[0]]=splitparams[1]
-                                
-        return param
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-
-def addLink(name,url,iconimage):
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addLink1(name,url,iconimage):
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addDir(name,url,mode,iconimage,checker,fanart):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        #text = checker
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&fanart="+urllib.quote_plus(fanart)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
-        #cm = []
-	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
-	#liz.addContextMenuItems(cm, replaceItems=True)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
-
-def addDir1(name,url,mode,iconimage,folder,fanart):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
-        return ok
-
-def addDir_vazio(name,url,mode,iconimage):
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	#liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False)
-        return ok
-
-def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        #text = checker
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
-        #cm = []
-	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
-	#liz.addContextMenuItems(cm, replaceItems=True)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
-
-
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
-params=CMT_get_params()
+params=get_params()
 url=None
 name=None
 mode=None
@@ -819,43 +750,39 @@ fanart=None
 year=None
 plot=None
 genre=None
+episod=None
+air=None
+namet=None
+urltrailer=None
 
-try:
-        url=urllib.unquote_plus(params["url"])
-except:
-        pass
-try:
-        name=urllib.unquote_plus(params["name"])
-except:
-        pass
-try:
-        mode=int(params["mode"])
-except:
-        pass
-try:        
-        checker=urllib.unquote_plus(params["checker"])
-except:
-        pass
-try:        
-        iconimage=urllib.unquote_plus(params["iconimage"])
-except:
-        pass
-try:        
-        fanart=urllib.unquote_plus(params["fanart"])
-except:
-        pass
-try:        
-        plot=urllib.unquote_plus(params["plot"])
-except:
-        pass
-try:        
-        year=urllib.unquote_plus(params["year"])
-except:
-        pass
-try:        
-        genre=urllib.unquote_plus(params["genre"])
-except:
-        pass
+try: url=urllib.unquote_plus(params["url"])
+except: pass
+try: urltrailer=urllib.unquote_plus(params["urltrailer"])
+except: pass
+try: name=urllib.unquote_plus(params["name"])
+except: pass
+try: namet=urllib.unquote_plus(params["namet"])
+except: pass
+try: nome=urllib.unquote_plus(params["nome"])
+except: pass
+try: mode=int(params["mode"])
+except: pass
+try: checker=urllib.unquote_plus(params["checker"])
+except: pass
+try: iconimage=urllib.unquote_plus(params["iconimage"])
+except: pass
+try: fanart=urllib.unquote_plus(params["fanart"])
+except: pass
+try: plot=urllib.unquote_plus(params["plot"])
+except: pass
+try: year=urllib.unquote_plus(params["year"])
+except: pass
+try: genre=urllib.unquote_plus(params["genre"])
+except: pass
+try: episod=urllib.unquote_plus(params["episod"])
+except: pass
+try: air=urllib.unquote_plus(params["air"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -866,5 +793,6 @@ print "Plot: "+str(plot)
 print "Year: "+str(year)
 print "Genre: "+str(genre)
 print "Fanart: "+str(fanart)
-
-
+print "Episode: "+str(episod)
+print "Namet: "+str(namet)
+print "Urltrailer: "+str(urltrailer)

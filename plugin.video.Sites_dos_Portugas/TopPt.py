@@ -21,11 +21,15 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,FilmesAnima,Mashup
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,FilmesAnima,Mashup,Funcoes,Play
 from array import array
 from string import capwords
-from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv,theomapi_api,themoviedb_api_IMDB,themoviedb_api_IMDB_episodios
-from Mashup import thetvdb_api_tvdbid,thetvdb_api_episodes,themoviedb_api_search_imdbcode
+from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
+from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
+from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
+from Funcoes import get_params,abrir_url
+
+
 arr_series = ['' for i in range(500)]
 arrai_series = ['' for i in range(500)]
 _series_ = []
@@ -48,7 +52,7 @@ progress = xbmcgui.DialogProgress()
 def TPT_MenuPrincipal(artfolder):
         try:
                 url_toppt = 'http://toppt.net/'
-                toppt_source = TPT_abrir_url(url_toppt)
+                toppt_source = abrir_url(url_toppt)
                 saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
                 saber_url_M18 = re.compile('<a href="(.+?)">m18</a></li>').findall(toppt_source)
                 saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
@@ -62,36 +66,12 @@ def TPT_MenuPrincipal(artfolder):
                 addDir('[COLOR yellow]- Categorias[/COLOR]','url',238,artfolder + 'CT.png','nao','')
                 addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://toppt.net/',258,artfolder + 'TPF.png','nao','')
                 if selfAddon.getSetting('hide-porno') == "false":
-                                addDir('[B][COLOR red]M+18[/B][/COLOR]',saber_url_M18[0],232,artfolder + 'TPT1.png','nao','')		
+                        addDir('[B][COLOR red]M+18[/B][/COLOR]',saber_url_M18[0],232,artfolder + 'TPT1.png','nao','')		
                 addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'TPT1.png',False,'')
                 addDir('[COLOR yellow]- A a Z[/COLOR]','urlTPT',241,artfolder + 'SAZ1.png','nao','')#241
                 addDir('[COLOR yellow]- Últimos Episódios[/COLOR]',saber_url_series[0]+'ULTIMOS',232,artfolder + 'UE.png','nao','')
                 addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',259,artfolder + 'TPS.png','nao','')
         except:pass
-
-def TPT_Menu_Posts_Recentes(artfolder):
-        url_recentes = 'http://toppt.net/'
-        recentes_source = TPT_abrir_url(url_recentes)
-        posts_recentes = re.compile('<a href="(.+?)">.+?</a>\n</li>\n<li>\n').findall(recentes_source)
-        for endereco_recentes in posts_recentes:                
-                try:
-                        nome = nome.replace('&#8217;',"'")
-                        nome = nome.replace('&#8211;',"-")
-                        nome = nome.replace('(PT-PT)',"")
-                        nome = nome.replace('(PT/PT)',"")
-                        nome = nome.replace('[PT-PT]',"")
-                        nome = nome.replace('[PT/PT]',"")
-                        addDir('[B][COLOR green]' + nome + '[/COLOR][/B]',endereco_recentes,233,'','','')
-                except: pass
-
-def antiga_TPT_Menu_Filmes_Por_Ano(artfolder): #antiga
-        url_ano = 'http://toppt.net/'
-        ano_source = TPT_abrir_url(url_ano)
-        filmes_por_ano = re.compile('<option class="level-0" value="(.+?)">(.+?)</option>').findall(ano_source)
-	for num_cat,nome_ano in filmes_por_ano:
-                endereco_ano = 'http://toppt.net/?cat=' + str(num_cat)
-		addDir('[COLOR yellow]' + nome_ano + '[/COLOR] ',endereco_ano,232,artfolder + 'TPT1.png','nao','')
-		if str(nome_ano) == '2014': break
 
 def TPT_Menu_Filmes_Por_Ano(artfolder):
         ano = 2014
@@ -99,6 +79,23 @@ def TPT_Menu_Filmes_Por_Ano(artfolder):
                 categoria_endereco = 'http://toppt.net/category/' + str(ano) + '/'
                 addDir('[COLOR yellow]' + str(ano) + '[/COLOR]',categoria_endereco,232,artfolder + 'TPT1.png','nao','')
                 ano = ano - 1
+
+def TPT_Menu_Filmes_Por_Categorias(artfolder):
+        conta_os_items = 0
+        url_categorias = 'http://toppt.net/'
+        html_categorias_source = abrir_url(url_categorias)
+	html_items_categorias = re.findall('id="menu-item-15291"(.*?)id="menu-item-15290"', html_categorias_source, re.DOTALL)
+        print len(html_items_categorias)
+        for item_categorias in html_items_categorias:
+                filmes_por_categoria = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_categorias)
+                for endereco_categoria,nome_categoria in filmes_por_categoria:
+                        if nome_categoria != 'm18' and nome_categoria != 'FILMES':
+                                nome_categoria = nome_categoria.replace('filmes ','')
+                                nome_categoria = nome_categoria.lower()
+                                nome_categoria = nome_categoria.title()
+                                conta_os_items = conta_os_items + 1
+                                addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ',endereco_categoria,232,artfolder + 'TPT1.png','nao','')
+
 
 def TPT_Menu_Top_Filmes(artfolder):
         i = 1
@@ -108,7 +105,7 @@ def TPT_Menu_Top_Filmes(artfolder):
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
         url_ano = 'http://toppt.net/'
-        top_source = TPT_abrir_url(url_ano)
+        top_source = abrir_url(url_ano)
         filmes_por_ano = re.findall('<h3 class="widgettitle">TOP FILMES</h3>(.+?)<ul class="widget-container">', top_source, re.DOTALL)
 	for tp_filmes in filmes_por_ano:
                 endereco_tf = re.compile('<a href="(.+?)".+?<img.+?src="(.+?)"').findall(tp_filmes)
@@ -121,7 +118,7 @@ def TPT_Menu_Top_Filmes(artfolder):
                         if progress.iscanceled():
                                 break
                         try:
-                                html_source = TPT_abrir_url(tpe)
+                                html_source = abrir_url(tpe)
                         except: html_source = ''
                         items = re.findall('<div id="content">(.*?)<span id="more', html_source, re.DOTALL)
                         if items != []:
@@ -191,7 +188,7 @@ def TPT_Menu_Top_Filmes(artfolder):
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
                                 if tph == '': tph = '---'
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',tpe+'IMDB'+imdbcode+'IMDB',233,tph,sinopse,fanart,ano_filme,genero)
+                                addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',tpe+'IMDB'+imdbcode+'IMDB',233,tph,sinopse,fanart,ano_filme,genero,nome,tpe)
                                 #addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',tpe+'IMDB'+imdbcode+'IMDB',233,tph,'nao','')
 
                         except: pass        
@@ -206,7 +203,7 @@ def TPT_Menu_Top_Series(artfolder):
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
         url_ano = 'http://toppt.net/'
-        top_source = TPT_abrir_url(url_ano)
+        top_source = abrir_url(url_ano)
         filmes_por_ano = re.findall('<h3 class="widgettitle">TOP SÉRIES</h3>(.+?)<ul class="widget-container">', top_source, re.DOTALL)
 	for tp_filmes in filmes_por_ano:
                 endereco_tf = re.compile('<a href="(.+?)".+?<img.+?src="(.+?)"').findall(tp_filmes)
@@ -218,7 +215,7 @@ def TPT_Menu_Top_Series(artfolder):
                         if progress.iscanceled():
                                 break
                         try:
-                                html_source = TPT_abrir_url(tpe)
+                                html_source = abrir_url(tpe)
                         except: html_source = ''
                         items = re.findall('<div id="content">(.*?)<span id="more', html_source, re.DOTALL)
                         if items != []:
@@ -277,28 +274,12 @@ def TPT_Menu_Top_Series(artfolder):
                                 if fanart == '---': fanart = ''
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',tpe+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
-
-                                #addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',tpe,233,tph,sinopse,fanart)
+                                addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',tpe+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,tpe)
                         except: pass
                         i = i + 1
         progress.close()
 
-def TPT_Menu_Filmes_Por_Categorias(artfolder):
-        conta_os_items = 0
-        url_categorias = 'http://toppt.net/'
-        html_categorias_source = TPT_abrir_url(url_categorias)
-	html_items_categorias = re.findall('id="menu-item-15291"(.*?)id="menu-item-15290"', html_categorias_source, re.DOTALL)
-        print len(html_items_categorias)
-        for item_categorias in html_items_categorias:
-                filmes_por_categoria = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_categorias)
-                for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        if nome_categoria != 'm18' and nome_categoria != 'FILMES':
-                                nome_categoria = nome_categoria.replace('filmes ','')
-                                nome_categoria = nome_categoria.lower()
-                                nome_categoria = nome_categoria.title()
-                                conta_os_items = conta_os_items + 1
-                                addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ',endereco_categoria,232,artfolder + 'TPT1.png','nao','')
+
 
 def TPT_Menu_Series_A_a_Z(artfolder,url):
         conta_os_items = 0
@@ -337,7 +318,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
         urltpt = 'http://toppt.net/'
         
         try:
-                html_series_source = TPT_abrir_url(urltpt)
+                html_series_source = abrir_url(urltpt)
         except: html_series_source = ''
 	html_items_series = re.findall('<a href="http://toppt.net/category/series/">SÈRIES NOVAS</a>(.*?)<div class="clearfix">', html_series_source, re.DOTALL)
         print len(html_items_series)
@@ -377,7 +358,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
         url = 'http://toppt.net/'
         site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
         try:
-                html_series_source = TPT_abrir_url(url)
+                html_series_source = abrir_url(url)
         except: html_series_source = ''
 	html_items_series = re.findall('<a href="http://toppt.net/category/series/">SÈRIES NOVAS</a>(.*?)<div class="clearfix">', html_series_source, re.DOTALL)
         print len(html_items_series)
@@ -498,7 +479,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                         arr_series[i] = nome_series
                         else:
                                 try:
-                                        html_source = TPT_abrir_url(endereco_series)
+                                        html_source = abrir_url(endereco_series)
                                 except: html_source = ''
                                 items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
                                 genero = ''
@@ -790,7 +771,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                                         arr_series[i] = nome_series
                         else:
                                 try:
-                                        html_source = TPT_abrir_url(endereco_series)
+                                        html_source = abrir_url(endereco_series)
                                 except: html_source = ''
                                 items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
                                 genero = ''
@@ -994,8 +975,13 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                 si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(arrai_series[x])
                                 if si: sinopse = si[0][0] + ' ' + si[0][1]
                                 else: sinopse = '---'
-                        if fanart == '---': fanart = ''                                                                     #3007
-                        addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',imdbcode,3006,thumb,sinopse,fanart,ano,genero)
+                        urltrailer = re.compile('IMDB.+?IMDB[|](.+?)[|].+?').findall(imdbcode)
+                        if urltrailer: urltrailer = urltrailer[0]
+                        else:
+                                urltrailer = re.compile('IMDB.+?IMDB[|](.+?)').findall(imdbcode)
+                                if urltrailer: urltrailer = urltrailer[0]
+                        if fanart == '---': fanart = ''                                                              #imdbcode#3007
+                        addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',imdbcode,3006,thumb,sinopse,fanart,ano,genero,nome,urltrailer)
         SeriesFile = open(folder + 'seriesTPT.txt', 'w')
         for x in range(len(arrai_series)):
                 if arrai_series[x] != '': SeriesFile.write(arrai_series[x]+'\n')
@@ -1029,7 +1015,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
         n_name = n_name.replace('[/COLOR]','')
         series = 0
 	try:
-		html_source = TPT_abrir_url(url)
+		html_source = abrir_url(url)
 	except: html_source = ''
 	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
 	if items != []:
@@ -1164,14 +1150,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                         ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                         if ftart:
                                                 fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
-        ##                                        for nt in range(20):
-        ##                                                try:
-        ##                                                        thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-'+str(nt)+'.jpg'
-        ##                                                        f = urllib2.urlopen(urllib2.Request(thumb))
-        ##                                                        deadLinkFound = False
-        ##                                                except: deadLinkFound = True
-        ##                                                if deadLinkFound == False: break                                        
+                                                if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'                                       
                                         snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
                                         if snpse: sinopse = snpse[0]
                                 except: pass
@@ -1186,14 +1165,6 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
 ##                                fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
                                         if thumb == '': thumb = poster
                                 except: pass
-##                                if imdbcode != '': sinopse = theomapi_api().sinopse(imdbcode)
-
-##                                try:
-##                                        pl=MASH_abrir_url('http://api.themoviedb.org/3/movie/'+tmdb_id+'?api_key=' + self.api_key + '&language=pt')
-##                                except: pl =''
-##                                if pl != '': plot=re.compile('"overview":"(.+?)"').findall(pl)
-##                                addLink(str(id_tmdb),'','')
-##                                if plot: addLink(plot[0],'','') 
                         #################################
 
                         ano_filme = '('+ano_filme+')'
@@ -1227,7 +1198,8 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 if fanart == '---': fanart = ''
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
-                                addDir_teste('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
+                                
+                                addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0])
                                 #addDir_teste('[B][COLOR green]' + n1 + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]'+'[COLOR nnn]'+n2+'[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
                         except: pass
                         if ULTIMOS == 'ULTIMOS':
@@ -1259,8 +1231,6 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                 
 def TPT_encontrar_videos_filmes(name,url,iconimage):
 
-        #addLink(url,'','')
-        #return
         if 'Season' in name or 'Temporada' in name or 'Mini-Série' in name or 'Mini-Serie' in name:
                 n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(name)
                 if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(name)
@@ -1333,6 +1303,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
+        urltrailer = url
         if 'TPT' not in name: name = '[COLOR orange]TPT | [/COLOR]' + name
         if 'TPT' not in nomeescolha: nomeescolha = '[COLOR orange]TPT | [/COLOR]' + nomeescolha
         conta_os_items = 0
@@ -1383,10 +1354,10 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
        
         if 'Season' not in name and 'Temporada' not in name and 'Mini-Série' not in name and 'Mini-Serie' not in name:
                 addDir(name,'url',9999,iconimage,'',fanart)
-
+        #addDir(name+url,'url',9999,iconimage,'',fanart)
         l= 0
 	try:
-		link2=TPT_abrir_url(url)
+		link2=abrir_url(url)
 	except: link2 = ''
 	if link2:
                 if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and imdbcode == '':
@@ -1429,7 +1400,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                 qq_aa = a_q.findall(episodio)
                                                 for q_a_q_a in qq_aa:
                                                         if len(q_a_q_a) == 1:
-                                                                episodiot = '0'+episodio
+                                                                episodiot = '%02d' % int(episodio)#'0'+episodio
                                         except: pass
                                         
                                                 
@@ -1464,7 +1435,9 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                         
                                                         if progress.iscanceled():
                                                                 break
-                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                #episod = episodiot
+                                                #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
+                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                         except:
                                                 if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                 if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -1475,7 +1448,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                         
                                                         if progress.iscanceled():
                                                                 break
-                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
 
                                         f_id = ''
                                         i = i + 1
@@ -1515,7 +1488,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                         except: pass
                                         
                                         conta_id_video = 0
-                                        #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air)
+                                        #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                         match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
                                         for url in match:
                                                 if "videomega" in url or "vidto.me" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
@@ -1541,7 +1514,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                         
                                                         if progress.iscanceled():
                                                                 break
-                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                         except:
                                                 if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                 if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -1552,7 +1525,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                         
                                                         if progress.iscanceled():
                                                                 break
-                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
                                         f_id = ''
                                         i = i + 1
 			linksseccaopartes = re.findall('.+?PARTE',newmatch[0],re.DOTALL)
@@ -1684,7 +1657,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                         epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
                                                         iconimage = th
                                                 except: pass
-                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air)					
+                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)					
 						match = re.compile('<iframe.+?src="(.+?)"').findall(parte2)
                                                 if not match: match = re.compile("<iframe.+?src='(.+?)'").findall(parte2)	
 						for url in match:
@@ -1719,7 +1692,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                 
                                                                 if progress.iscanceled():
                                                                         break
-                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                 except:
                                                         if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                         if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -1730,7 +1703,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                 
                                                                 if progress.iscanceled():
                                                                         break
-                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
                                                 f_id = ''
                                                 #return
 				else:
@@ -1757,7 +1730,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                 epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
                                                                 iconimage = th
                                                         except: pass
-                                                        #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air)						
+                                                        #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)						
                                                         match = re.compile('<iframe.+?src="(.+?)"').findall(parte2)
                                                         if not match: match = re.compile("<iframe.+?src='(.+?)'").findall(parte2)	
                                                         for url in match:
@@ -1792,7 +1765,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                         
                                                                         if progress.iscanceled():
                                                                                 break
-                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                         except:
                                                                 if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                                 if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -1803,7 +1776,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                         
                                                                         if progress.iscanceled():
                                                                                 break
-                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
                                                         f_id = ''
                                                         #return
                                         else:
@@ -1833,7 +1806,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                 epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
                                                                                 iconimage = th
                                                                         except: pass
-                                                                        #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air)						
+                                                                        #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)						
                                                                         match = re.compile('<iframe src="(.+?)"').findall(parte2)	
                                                                         for url in match:
                                                                                 conta_id_video = conta_id_video + 1
@@ -1867,7 +1840,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                         
                                                                                         if progress.iscanceled():
                                                                                                 break
-                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                                         except:
                                                                                 if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                                                 if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -1878,7 +1851,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                         
                                                                                         if progress.iscanceled():
                                                                                                 break
-                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
                                                                         f_id = ''
                                                                         #return
                                                 else:
@@ -1956,7 +1929,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                                 
                                                                                                 if progress.iscanceled():
                                                                                                         break
-                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                                                 except:
                                                                                         if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                                                         if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -1967,7 +1940,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                                 
                                                                                                 if progress.iscanceled():
                                                                                                         break
-                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
                               
                                                                         f_id = ''       
                                                                         i = i + 1
@@ -1999,7 +1972,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                         epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
                                                                                         iconimage = th
                                                                                 except: pass
-                                                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air)
+                                                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                                                 match = re.compile('<iframe.+?src="(.+?)"').findall(parte2)
                                                                                 if not match: match = re.compile("<iframe.+?src='(.+?)'").findall(parte2)	
                                                                                 for url in match:
@@ -2034,7 +2007,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                                 
                                                                                                 if progress.iscanceled():
                                                                                                         break
-                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                                                 except:
                                                                                         if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                                                         if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -2045,7 +2018,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                                 
                                                                                                 if progress.iscanceled():
                                                                                                         break
-                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
                                                                                 f_id = ''
                                                                                 i = i + 1
                                                                 conta_id_video = 0
@@ -2076,7 +2049,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                         epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
                                                                                         iconimage = th
                                                                                 except: pass
-                                                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air)
+                                                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                                         match = re.compile('<iframe.+?src="(.+?)"').findall(linksseccao[0])
                                                                         if not match: match = re.compile("<iframe.+?src='(.+?)'").findall(linksseccao[0])	
                                                                         for url in match:
@@ -2111,7 +2084,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                         
                                                                                         #if progress.iscanceled():
                                                                                                 #break
-                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                                         except:
                                                                                 if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                                                 if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -2122,7 +2095,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                         
                                                                                         #if progress.iscanceled():
                                                                                                 #break
-                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
                                                                         f_id = ''
                                                                 ####################################################################
                                                         else:
@@ -2149,7 +2122,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                         epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
                                                                                         iconimage = th
                                                                                 except: pass
-                                                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air)					
+                                                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)					
                                                                                 match = re.compile('<iframe src="(.+?)"').findall(parte2)	
                                                                                 for url in match:
                                                                                         conta_id_video = conta_id_video + 1
@@ -2183,7 +2156,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                                 
                                                                                                 if progress.iscanceled():
                                                                                                         break
-                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                                                 except:
                                                                                         if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                                                         if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -2194,7 +2167,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                                 
                                                                                                 if progress.iscanceled():
                                                                                                         break
-                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
                                                                                 f_id = ''
                                                                                 i = i + 1
                                                                         conta_id_video = 0
@@ -2222,7 +2195,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                         epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
                                                                                         iconimage = th
                                                                                 except: pass
-                                                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air)					
+                                                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)					
                                                                                 match = re.compile('<iframe src="(.+?)"').findall(parte2)	
                                                                                 for url in match:
                                                                                         conta_id_video = conta_id_video + 1
@@ -2256,7 +2229,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                                 
                                                                                                 if progress.iscanceled():
                                                                                                         break
-                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                                                 except:
                                                                                         if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                                                         if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -2267,7 +2240,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                                 
                                                                                                 if progress.iscanceled():
                                                                                                         break
-                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                                                        addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
                                                                                 f_id = ''
                                                                                 i = i + 1
                                                                         if i != int(num):
@@ -2296,7 +2269,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                                 epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
                                                                                                 iconimage = th
                                                                                         except:pass
-                                                                                        #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air)					
+                                                                                        #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)					
                                                                                         match = re.compile('<iframe src="(.+?)"').findall(parte2)	
                                                                                         for url in match:
                                                                                                 conta_id_video = conta_id_video + 1
@@ -2330,7 +2303,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                                         
                                                                                                         if progress.iscanceled():
                                                                                                                 break
-                                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                                                         except:
                                                                                                 if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                                                                 if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -2341,7 +2314,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                                                         
                                                                                                         if progress.iscanceled():
                                                                                                                 break
-                                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
                                                                                         f_id = ''
                                                                                         i = i + 1
                                                                 else:
@@ -2415,7 +2388,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                         epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
                                                                         iconimage = th
                                                                 except:pass
-                                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air)
+                                                                #addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]','','',iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
 							ultima_parte = parte1
 							match = re.compile('<iframe src="(.+?)"').findall(parte2)	
 							for url in match:
@@ -2451,7 +2424,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                         
                                                                         if progress.iscanceled():
                                                                                 break
-                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air)
+                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
                                                         except:
                                                                 if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
                                                                 if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-Serie' in nometitulo:
@@ -2462,7 +2435,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                                                                         
                                                                         if progress.iscanceled():
                                                                                 break
-                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'')
+                                                                addDir_episode('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
                                                         f_id = ''
 					else:
 						match = re.compile('<iframe src="(.+?)"').findall(newmatch[0])	
@@ -2520,8 +2493,8 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
         if "videomega" in url:
 		try:
                         fonte_id = '(Videomega)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
         if "vidto.me" in url:
 		try:
@@ -2533,6 +2506,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
 				url = 'http://vidto.me/' + id_video + '.html' + '///' + nomeescolha
 			else: fonte_id = '(Vidto.me)'+url
 			fonte_id1 = '(Vidto.me)'+url
+			#fonte_id = '(Vidto.me)'+url
 			if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id1.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
@@ -2540,8 +2514,8 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
 		try:
                         url = url.replace('/video/','/embed/')
                         fonte_id = '(DropVideo)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except:pass
 	if "vidzi.tv" in url:
                 try:
@@ -2552,38 +2526,38 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
         if "vodlocker" in url:
 		try:
                         fonte_id = '(Vodlocker)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except:pass
 	if "played.to" in url:
                 try:
                         fonte_id = '(Played.to)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except:pass
         if "cloudzilla" in url:
                 try:
                         fonte_id = '(Cloudzilla)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "divxstage" in url:
                 try:
                         fonte_id = '(Divxstage)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "vidzen" in url:
                 try:
                         fonte_id = '(Vidzen)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
 	if "streamin.to" in url:
                 try:
                         fonte_id = '(Streamin)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except:pass                        
     	if "nowvideo" in url:
                 try:
@@ -2594,14 +2568,14 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
     	if "primeshare" in url:
                 try:
                         fonte_id = '(Primeshare)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "videoslasher" in url:
                 try:
                         fonte_id = '(VideoSlasher)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "sockshare" in url:
                 try:
@@ -2649,8 +2623,8 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         if '/video/' in url: url = url.replace('/video/','/embed/')
                         print url
                         fonte_id = '(VideoWood)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "thevideo.me" in url:
                 try:
@@ -2660,7 +2634,10 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
-    	
+    	#addLink(url,'','','')
+        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url and 'sockshare' not in url and 'firedrive' not in url and 'movshare' not in url and 'nowvideo' not in url and 'putlocker' not in url:# and 'iiiiiiiiii' in url:
+                        Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',iconimage,'',fanart)
     	return fonte_id
    
 	
@@ -2683,7 +2660,7 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
         conta_id_video = 0
         contaultimo = 0
 	try:
-		link2=TPT_abrir_url(url)
+		link2=abrir_url(url)
 	except: link2 = ''
 	if link2:
                 if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and imdbcode == '':
@@ -3224,127 +3201,13 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
 
 
-		
+
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#	
-def TPT_abrir_url(url):
-	req = urllib2.Request(url)
-	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
-	return link
-
 #----------------------------------------------------------------------------------------------------------------------------------------------#
-              
-def TPT_get_params():
-        param=[]
-        paramstring=sys.argv[2]
-        if len(paramstring)>=2:
-                params=sys.argv[2]
-                cleanedparams=params.replace('?','')
-                if (params[len(params)-1]=='/'):
-                        params=params[0:len(params)-2]
-                pairsofparams=cleanedparams.split('&')
-                param={}
-                for i in range(len(pairsofparams)):
-                        splitparams={}
-                        splitparams=pairsofparams[i].split('=')
-                        if (len(splitparams))==2:
-                                param[splitparams[0]]=splitparams[1]
-                                
-        return param
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-
-def addLink(name,url,iconimage):
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addLink1(name,url,iconimage):
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addDir(name,url,mode,iconimage,checker,fanart):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        #text = 'nnnnnn'
-        text = ''
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&fanart="+urllib.quote_plus(fanart)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
-        #cm = []
-	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
-	#liz.addContextMenuItems(cm, replaceItems=True)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
-
-def addDir_episode(name,url,mode,iconimage,checker,fanart,episod,air):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        #text = 'nnnnnn'
-        text = ''
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&air="+urllib.quote_plus(air)+"&episod="+urllib.quote_plus(episod)+"&fanart="+urllib.quote_plus(fanart)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker, "Episode": episod, "Premiered": air } )
-        #cm = []
-	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
-	#liz.addContextMenuItems(cm, replaceItems=True)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
-
-def addDir2(nome,url,mode,iconimage,checker,fanart):
-        #text = 'nnnnnn'
-        text = ''
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&nome="+urllib.quote_plus(nome)+"&checker="+urllib.quote_plus(checker)+"&fanart="+urllib.quote_plus(fanart)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(nome, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": nome, "Plot": text } )
-        #cm = []
-	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
-	#liz.addContextMenuItems(cm, replaceItems=True)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
-
-def addDir1(name,url,mode,iconimage,folder,fanart):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
-        return ok
-
-def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        #text = plot
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        #liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
-        #cm = []
-	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
-	#liz.addContextMenuItems(cm, replaceItems=True)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
-
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
-params=TPT_get_params()
+params=get_params()
 url=None
 name=None
 mode=None
@@ -3356,54 +3219,37 @@ plot=None
 genre=None
 episod=None
 air=None
-try:
-        url=urllib.unquote_plus(params["url"])
-except:
-        pass
-try:
-        name=urllib.unquote_plus(params["name"])
-except:
-        pass
-try:
-        nome=urllib.unquote_plus(params["nome"])
-except:
-        pass
-try:
-        mode=int(params["mode"])
-except:
-        pass
-try:        
-        checker=urllib.unquote_plus(params["checker"])
-except:
-        pass
-try:        
-        iconimage=urllib.unquote_plus(params["iconimage"])
-except:
-        pass
-try:        
-        fanart=urllib.unquote_plus(params["fanart"])
-except:
-        pass
-try:        
-        plot=urllib.unquote_plus(params["plot"])
-except:
-        pass
-try:        
-        year=urllib.unquote_plus(params["year"])
-except:
-        pass
-try:        
-        genre=urllib.unquote_plus(params["genre"])
-except:
-        pass
-try:        
-        episod=urllib.unquote_plus(params["episod"])
-except:
-        pass
-try:        
-        air=urllib.unquote_plus(params["air"])
-except:
-        pass
+namet=None
+urltrailer=None
+
+try: url=urllib.unquote_plus(params["url"])
+except: pass
+try: urltrailer=urllib.unquote_plus(params["urltrailer"])
+except: pass
+try: name=urllib.unquote_plus(params["name"])
+except: pass
+try: namet=urllib.unquote_plus(params["namet"])
+except: pass
+try: nome=urllib.unquote_plus(params["nome"])
+except: pass
+try: mode=int(params["mode"])
+except: pass
+try: checker=urllib.unquote_plus(params["checker"])
+except: pass
+try: iconimage=urllib.unquote_plus(params["iconimage"])
+except: pass
+try: fanart=urllib.unquote_plus(params["fanart"])
+except: pass
+try: plot=urllib.unquote_plus(params["plot"])
+except: pass
+try: year=urllib.unquote_plus(params["year"])
+except: pass
+try: genre=urllib.unquote_plus(params["genre"])
+except: pass
+try: episod=urllib.unquote_plus(params["episod"])
+except: pass
+try: air=urllib.unquote_plus(params["air"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -3415,4 +3261,6 @@ print "Year: "+str(year)
 print "Genre: "+str(genre)
 print "Fanart: "+str(fanart)
 print "Episode: "+str(episod)
+print "Namet: "+str(namet)
+print "Urltrailer: "+str(urltrailer)
 

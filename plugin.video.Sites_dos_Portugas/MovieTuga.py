@@ -22,8 +22,11 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,FilmesAnima
-from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv,themoviedb_api_search_imdbcode
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,FilmesAnima,Play
+from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
+from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
+from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
+from Funcoes import get_params,abrir_url
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -46,7 +49,7 @@ def MVT_MenuPrincipal(artfolder):
 
 def MVT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.movie-tuga.blogspot.pt/'
-        html_categorias_source = MVT_abrir_url(url_categorias)
+        html_categorias_source = abrir_url(url_categorias)
 	html_items_categorias = re.findall("<div id=\'menu-categorias\'>(.*?)</div>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
@@ -69,7 +72,7 @@ def MVT_encontrar_fontes_filmes(url):
         progress.create('Progresso', 'A Pesquisar:')
         progress.update( percent, "", message, "" )
         try:
-		html_source = MVT_abrir_url(url)
+		html_source = abrir_url(url)
 	except: html_source = ''
 	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
 	if items != []:
@@ -171,7 +174,7 @@ def MVT_encontrar_fontes_filmes(url):
                         if thumb == '': thumb = '---'
 
                         try:
-                                addDir_teste('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0].replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumb.replace(' ','%20'),sinopse,fanart,ano_filme,genero)
+                                addDir_trailer('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0].replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumb.replace(' ','%20'),sinopse,fanart,ano_filme,genero,nome,url[0])
                         except: pass
                         #---------------------------------------------------------------
                         i = i + 1
@@ -254,7 +257,7 @@ def MVT_encontrar_videos_filmes(name,url):
                         else:
                                 nome_p = nome_p + '+' + q_a_q_a
                 url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-                html_imdbcode = MVT_abrir_url(url_imdb)
+                html_imdbcode = abrir_url(url_imdb)
                 filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
                 imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
                 imdbcode = imdbc[0]
@@ -268,7 +271,7 @@ def MVT_encontrar_videos_filmes(name,url):
         addDir1(name,'url',1002,iconimage,False,fanart)
         conta_id_video = 0
         try:
-                fonte_video = MVT_abrir_url(url)
+                fonte_video = abrir_url(url)
         except: fonte_video = ''
         
         fontes_video = re.findall("<body>(.+?)</body>", fonte_video, re.DOTALL)
@@ -300,7 +303,7 @@ def MVT_encontrar_videos_filmes(name,url):
                                 else:
                                         url_video = url_video_url_id
                                 try:
-                                        fonte = MVT_abrir_url(url_video)
+                                        fonte = abrir_url(url_video)
                                 except: fonte = ''
                                 fontes = re.findall("<body>(.+?)</body>", fonte, re.DOTALL)
                                 for fonte_id in fontes:
@@ -310,7 +313,9 @@ def MVT_encontrar_videos_filmes(name,url):
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
+                                                        fonte_serv = '(Videomega)'
+                                                        Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
+                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
                                         if 'vidto' in fonte_id:
                                                 try:
@@ -330,7 +335,9 @@ def MVT_encontrar_videos_filmes(name,url):
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
+                                                        fonte_serv = '(Videomega)'
+                                                        Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
+                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
                                         if 'vidto' in fonte_id:
                                                 try:
@@ -364,7 +371,7 @@ def MVT_links(name,url,iconimage,fanart):
         colecao = 'nao'
         conta_id_video = 0
         try:
-                fonte_video = MVT_abrir_url(url)
+                fonte_video = abrir_url(url)
         except: fonte_video = ''
         
         fontes_video = re.findall("<body>(.+?)</body>", fonte_video, re.DOTALL)
@@ -396,7 +403,7 @@ def MVT_links(name,url,iconimage,fanart):
                                 else:
                                         url_video = url_video_url_id
                                 try:
-                                        fonte = MVT_abrir_url(url_video)
+                                        fonte = abrir_url(url_video)
                                 except: fonte = ''
                                 fontes = re.findall("<body>(.+?)</body>", fonte, re.DOTALL)
                                 for fonte_id in fontes:
@@ -406,7 +413,9 @@ def MVT_links(name,url,iconimage,fanart):
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
+                                                        fonte_serv = '(Videomega)'
+                                                        Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
+                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
                                         if 'vidto' in fonte_id:
                                                 try:
@@ -426,7 +435,9 @@ def MVT_links(name,url,iconimage,fanart):
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
+                                                        fonte_serv = '(Videomega)'
+                                                        Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
+                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
                                         if 'vidto' in fonte_id:
                                                 try:
@@ -443,97 +454,11 @@ def MVT_links(name,url,iconimage,fanart):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
-
-
-	
-def MVT_abrir_url(url):
-	req = urllib2.Request(url)
-	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
-	return link
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-              
-def MVT_get_params():
-        param=[]
-        paramstring=sys.argv[2]
-        if len(paramstring)>=2:
-                params=sys.argv[2]
-                cleanedparams=params.replace('?','')
-                if (params[len(params)-1]=='/'):
-                        params=params[0:len(params)-2]
-                pairsofparams=cleanedparams.split('&')
-                param={}
-                for i in range(len(pairsofparams)):
-                        splitparams={}
-                        splitparams=pairsofparams[i].split('=')
-                        if (len(splitparams))==2:
-                                param[splitparams[0]]=splitparams[1]
-                                
-        return param
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-
-def addLink(name,url,iconimage):
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addLink1(name,url,iconimage):
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addDir(name,url,mode,iconimage,checker,fanart):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
-
-def addDir1(name,url,mode,iconimage,folder,fanart):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
-        return ok
-
-def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        #text = checker
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
-        #cm = []
-	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
-	#liz.addContextMenuItems(cm, replaceItems=True)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
-        
-
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
           
-params=MVT_get_params()
+params=get_params()
 url=None
 name=None
 mode=None
@@ -543,43 +468,39 @@ fanart=None
 year=None
 plot=None
 genre=None
+episod=None
+air=None
+namet=None
+urltrailer=None
 
-try:
-        url=urllib.unquote_plus(params["url"])
-except:
-        pass
-try:
-        name=urllib.unquote_plus(params["name"])
-except:
-        pass
-try:
-        mode=int(params["mode"])
-except:
-        pass
-try:        
-        checker=urllib.unquote_plus(params["checker"])
-except:
-        pass
-try:        
-        iconimage=urllib.unquote_plus(params["iconimage"])
-except:
-        pass
-try:        
-        fanart=urllib.unquote_plus(params["fanart"])
-except:
-        pass
-try:        
-        plot=urllib.unquote_plus(params["plot"])
-except:
-        pass
-try:        
-        year=urllib.unquote_plus(params["year"])
-except:
-        pass
-try:        
-        genre=urllib.unquote_plus(params["genre"])
-except:
-        pass
+try: url=urllib.unquote_plus(params["url"])
+except: pass
+try: urltrailer=urllib.unquote_plus(params["urltrailer"])
+except: pass
+try: name=urllib.unquote_plus(params["name"])
+except: pass
+try: namet=urllib.unquote_plus(params["namet"])
+except: pass
+try: nome=urllib.unquote_plus(params["nome"])
+except: pass
+try: mode=int(params["mode"])
+except: pass
+try: checker=urllib.unquote_plus(params["checker"])
+except: pass
+try: iconimage=urllib.unquote_plus(params["iconimage"])
+except: pass
+try: fanart=urllib.unquote_plus(params["fanart"])
+except: pass
+try: plot=urllib.unquote_plus(params["plot"])
+except: pass
+try: year=urllib.unquote_plus(params["year"])
+except: pass
+try: genre=urllib.unquote_plus(params["genre"])
+except: pass
+try: episod=urllib.unquote_plus(params["episod"])
+except: pass
+try: air=urllib.unquote_plus(params["air"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -590,5 +511,8 @@ print "Plot: "+str(plot)
 print "Year: "+str(year)
 print "Genre: "+str(genre)
 print "Fanart: "+str(fanart)
+print "Episode: "+str(episod)
+print "Namet: "+str(namet)
+print "Urltrailer: "+str(urltrailer)
 
 
