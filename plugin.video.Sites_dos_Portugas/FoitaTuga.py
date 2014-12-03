@@ -246,19 +246,7 @@ def FTT_encontrar_fontes_filmes(url):
                         else:
                                 urlvideo = ''
                                 nome = ''
-
-                        try:
-                                fonte_video = abrir_url(urlvideo)
-                        except: fonte_video = ''
-                        fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
-                        if fontes_video != []:
-                                qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
-                                if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')
-                                else:
-                                        qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
-                                        if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')
-
-                                
+    
                         snpse = re.compile('Sinopse.png"></a></div>\n(.+?)\n').findall(item)
                         if not snpse: snpse = re.compile('Sinopse.png" /></a></div>\n(.+?)\n').findall(item)
                         if snpse: sinopse = snpse[0]
@@ -375,13 +363,25 @@ def FTT_encontrar_fontes_filmes(url):
                         nome = nome.replace(' --',"")
                         nome = nome.replace('--',"")
 
-                        if audio_filme != '': qualidade_filme = qualidade_filme# + ' - ' + audio_filme
+                        if audio_filme!= '': audio_filme = ': '+audio_filme
 
                         nome = nome.replace('((','(')
                         nome = nome.replace('))',')')
                         nome = nome.replace('()','(')
                         nome = nome.replace('  ','')
                         nome = nome.replace(' - []','')
+                        nome = nome.replace('[]','')
+
+                        try:
+                                fonte_video = abrir_url(urlvideo)
+                        except: fonte_video = ''
+                        fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+                        if fontes_video != []:
+                                qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
+                                if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')+audio_filme
+                                else:
+                                        qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
+                                        if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')+audio_filme
                         
                         nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                         if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
@@ -394,7 +394,7 @@ def FTT_encontrar_fontes_filmes(url):
                         if imdbcode != '':
                                 try:
                                         fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),anofilme)
-                                        if sinopse == '': sinopse = sin
+                                        if sinopse == '' or '<div class="separator" style="clear: both; text-align: center;">' in sinopse: sinopse = sin
                                         if fanart == '': fanart,tmb,pter = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
                                         if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
                                 except:pass

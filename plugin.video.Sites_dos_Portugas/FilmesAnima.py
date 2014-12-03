@@ -17,8 +17,9 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,TopPt,TugaFilmesTV,TugaFilmesCom,MovieTuga,FoitaTuga,Cinematuga,CinematugaEu
-import CinemaEmCasa
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,threading
+import TopPt,TugaFilmesTV,TugaFilmesCom,MovieTuga,FoitaTuga,Cinematuga,CinematugaEu,CinemaEmCasa
+
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
 from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
@@ -43,7 +44,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         pp = nome_pesquisa
         progress = xbmcgui.DialogProgress()
         percent = 0
-        message = ''
+        message = 'Por favor aguarde'
         site = ''
         progress.create('Progresso', 'A Procurar')
         progress.update( percent, 'A Procurar...'+site, message, "" )
@@ -90,30 +91,39 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         nome_pesquisa = nome_pesquisa.lower()
         nome_pesquisa = nome_pesquisa.replace('  ','')
         encode=urllib.quote(nome_pesquisa)
+ 
         a = 0
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
         percent = int( ( a / 8.0 ) * 100)
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-	url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
+	url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'TFV': FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
+##                TFV = threading.Thread(name='TFV', target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV , args=(url_pesquisa,pesquisou,))
+##                TFV.start()
+
 	a= 1
 	site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
 	percent = int( ( a / 8.0 ) * 100)
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-	url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
+	url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'TFC': FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url_pesquisa,pesquisou)
+##                TFC = threading.Thread(name='TFC', target=FILMES_ANIMACAO_encontrar_fontes_filmes_TFC , args=(url_pesquisa,pesquisou,))
+##                TFC.start()
+                
 	a = 2
 	site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
 	percent = int( ( a / 8.0 ) * 100)
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-	url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
+	url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'MVT': FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url_pesquisa)
+##                MVT = threading.Thread(name='TPT', target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT , args=(url_pesquisa,))
+##                MVT.start()
 	
 	a = 3
 	site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
@@ -121,8 +131,10 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-	url_pesquisa = 'http://toppt.net/?s=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
+	url_pesquisa = 'http://toppt.net/?s=' + str(encode) + 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'TPT': FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou)
+##                TPT = threading.Thread(name='TPT', target=FILMES_ANIMACAO_encontrar_fontes_filmes_TPT , args=(url_pesquisa,pesquisou,))
+##                TPT.start()
 
 	a = 4
 	site = '[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]'
@@ -130,8 +142,10 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-	url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar' + 'IMDB'+imdbcode+'IMDB'
+	url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar' + 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'FTT': FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url_pesquisa)
+##                FTT = threading.Thread(name='FTT', target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT , args=(url_pesquisa,))
+##                FTT.start()
 
 	a = 5
 	site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B]'
@@ -139,8 +153,10 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-	url_pesquisa = 'http://www.cinematuga.net/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
+	url_pesquisa = 'http://www.cinematuga.net/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'CMT': FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url_pesquisa,pesquisou)
+##                CMT = threading.Thread(name='CMT', target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT , args=(url_pesquisa,pesquisou,))
+##                CMT.start()
 
 	a = 6
 	site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B]'
@@ -150,7 +166,9 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         print str(a) + " de " + str(int(a))
 	url_pesquisa = 'http://www.cinematuga.eu/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'CME': FILMES_ANIMACAO_encontrar_fontes_filmes_CME(url_pesquisa,pesquisou)
-
+##                CME = threading.Thread(name='CME', target=FILMES_ANIMACAO_encontrar_fontes_filmes_CME , args=(url_pesquisa,pesquisou,))
+##                CME.start()
+                
 	a = 7
 	site = '[B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B]'
 	percent = int( ( a / 8.0 ) * 100)
@@ -159,6 +177,8 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         print str(a) + " de " + str(int(a))
 	url_pesquisa = 'http://www.cinemaemcasa.pt/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'CMC': FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(url_pesquisa,pesquisou)
+##                CMC = threading.Thread(name='CMC', target=FILMES_ANIMACAO_encontrar_fontes_filmes_CMC , args=(url_pesquisa,pesquisou,))
+##                CMC.start()
 	
         a = 8
 	site = '[B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B]'
@@ -166,6 +186,36 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
+
+##        try: TFV.join()
+##        except: pass
+##
+##        try: TFC.join()
+##        except: pass
+##
+##        try: MVT.join()
+##        except: pass
+##
+##        try: TPT.join()
+##        except: pass
+##
+##        try: FTT.join()
+##        except: pass
+##        
+##        try: CMT.join()
+##        except: pass
+##
+##        try: CME.join()
+##        except: pass
+##
+##        try: CMC.join()
+##        except: pass
+##
+##        #xbmc.sleep(1000)
+##        for a in range(100):
+##                percent = int( ( a / 100.0 ) * 100)
+##                progress.update( percent, 'A Procurar Filmes...', message, "" )
+##                xbmc.sleep(5)
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(502)")
@@ -667,16 +717,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                         urlvideo = ''
                                         nome = ''
                                         
-                                try:
-                                        fonte_video = abrir_url(urlvideo)
-                                except: fonte_video = ''
-                                fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
-                                if fontes_video != []:
-                                        qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
-                                        if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')
-                                        else:
-                                                qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
-                                                if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')
+                                
 
                                 snpse = re.compile('Sinopse.png"></a></div>\n(.+?)\n').findall(item)
                                 if snpse: sinopse = snpse[0]
@@ -792,13 +833,25 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                 nome = nome.replace(' --',"")
                                 nome = nome.replace('--',"")
 
-                                if audio_filme != '': qualidade_filme = qualidade_filme# + ' - ' + audio_filme
+                                if audio_filme!= '': audio_filme = ': '+audio_filme
 
                                 nome = nome.replace('((','(')
                                 nome = nome.replace('))',')')
                                 nome = nome.replace('()','(')
                                 nome = nome.replace('  ','')
                                 nome = nome.replace(' - []','')
+                                nome = nome.replace('[]','')
+
+                                try:
+                                        fonte_video = abrir_url(urlvideo)
+                                except: fonte_video = ''
+                                fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+                                if fontes_video != []:
+                                        qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
+                                        if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')+audio_filme
+                                        else:
+                                                qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
+                                                if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')+audio_filme
 
                                 if imdbcode == '':
                                         conta = 0
@@ -845,7 +898,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                                         if imdbcode != '':
                                                                 try:
                                                                         fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),anofilme)
-                                                                        if sinopse == '': sinopse = sin
+                                                                        if sinopse == '' or '<div class="separator" style="clear: both; text-align: center;">' in sinopse: sinopse = sin
                                                                         if fanart == '': fanart,tmb,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
                                                                         if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
                                                                 except:pass
@@ -870,7 +923,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url):
                                                 if imdbcode != '':
                                                         try:
                                                                 fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),anofilme)
-                                                                if sinopse == '': sinopse = sin
+                                                                if sinopse == '' or '<div class="separator" style="clear: both; text-align: center;">' in sinopse: sinopse = sin
                                                                 if fanart == '': fanart,tmb,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
                                                                 if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
                                                         except:pass

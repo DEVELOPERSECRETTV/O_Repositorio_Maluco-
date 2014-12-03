@@ -18,7 +18,7 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,time,os
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,time,os,threading
 import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TopPt,FilmesAnima,Mashup,Armagedom,FoitaTuga,Cinematuga,CinematugaEu,CinemaEmCasa,Funcoes
 from array import array
 from string import capwords
@@ -31,6 +31,9 @@ addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
+perfil = xbmc.translatePath(selfAddon.getAddonInfo('profile'))
+
+progress = xbmcgui.DialogProgress()
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
@@ -147,8 +150,9 @@ def FILMES_MENU():
         if saber_url_todos: url_TPT = saber_url_todos[0]
         else: url_TPT = 'http://toppt.net/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "fim": 'fim',"xpto":'xpto'}
-        url_filmes_filmes = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,507,artfolder + 'FT.png','nao','')
+        url_filmes_filmes = urllib.urlencode(parameters)                                                     #507
+        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,10001,artfolder + 'FT.png','nao','')
+        #----------------------------
         url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
         url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
         url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
@@ -159,12 +163,176 @@ def FILMES_MENU():
         if saber_url_animacao: url_TPT = saber_url_animacao[0]
         else: url_TPT = 'http://toppt.net/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "fim": 'fim',"xpto":'xpto'}
-        url_filmes_animacao = urllib.urlencode(parameters)                                                          #6
-        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,507,artfolder + 'FA.png','nao','')
+        url_filmes_animacao = urllib.urlencode(parameters)                                                          #6 #507
+        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,10001,artfolder + 'FA.png','nao','')
+        #----------------------------
         addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (TMDB)','1',3002,artfolder + 'NC.png','nao','')
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (TMDB)','1',3001,artfolder + 'FMV.png','nao','')
         addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (TMDB)','1',3000,artfolder + 'MP.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+
+def dirtodos(url):
+        urlss = urllib.unquote(url)
+        print urlss
+        urls=re.compile('url_TFC=(.+?)&url_CMT=(.+?)&url_FTT=(.+?)&url_TFV=(.+?)&url_MVT=(.+?)&xpto=xpto&url_CME=(.+?)&url_TPT=(.+?)&fim=fim').findall(urlss)
+        url_TFV = urls[0][3]
+        url_TFC = urls[0][0]
+        url_MVT = urls[0][4]
+        url_TPT = urls[0][6]
+        url_FTT = urls[0][2]
+        url_CMT = urls[0][1]
+        url_CME = urls[0][5]
+        
+        percent = 0
+        message = 'Por favor aguarde.'
+        progress.create('Progresso', 'A Procurar')
+        progress.update( percent, 'A Procurar Filmes...', message, "" )
+
+        threads = []
+
+        TPT = threading.Thread(name='TPT', target=Mashup.TPTMASHUP , args=(url_TPT,))
+        threads.append(TPT)
+        #TPT.start()
+
+        CME = threading.Thread(name='CME', target=Mashup.CMEMASHUP , args=(url_CME,))
+        threads.append(CME)
+        #CME.start()
+
+        TFC = threading.Thread(name='TFC', target=Mashup.TFCMASHUP , args=(url_TFC,))
+        threads.append(TFC)
+        #TFC.start()
+        
+        FTT = threading.Thread(name='FTT', target=Mashup.FTTMASHUP , args=(url_FTT,))
+        threads.append(FTT)
+        #FTT.start()
+        
+        TFV = threading.Thread(name='TFV', target=Mashup.TFVMASHUP , args=(url_TFV,))
+        threads.append(TFV)
+        #TFV.start()
+        
+        MVT = threading.Thread(name='TPT', target=Mashup.MVTMASHUP , args=(url_MVT,))
+        threads.append(MVT)
+        #MVT.start()
+        
+        CMT = threading.Thread(name='CMT', target=Mashup.CMTMASHUP , args=(url_CMT,))
+        threads.append(CMT)
+        #CMT.start()
+
+        CMC = threading.Thread(name='CMC', target=Mashup.CMCMASHUP , args=('http:',))
+        threads.append(CMC)
+        #CMC.start()
+
+        [i.start() for i in threads]
+        
+        try: TPT.join()
+        except: pass
+
+        try: CME.join()
+        except: pass
+
+        try: TFC.join()
+        except: pass
+
+        try: FTT.join()
+        except: pass
+        
+        try: TFV.join()
+        except: pass
+
+        try: MVT.join()
+        except: pass
+        
+        try: CMT.join()
+        except: pass
+
+        try: CMC.join()
+        except: pass
+        
+        #######################################################################################
+        
+        _sites_ = ['filmesTPT.txt','filmesCME.txt','filmesFTT.txt','filmesTFC.txt','filmesMVT.txt','filmesCMTnet.txt','filmesTFV.txt']
+        folder = perfil
+        
+        for site in _sites_:
+                _filmes_ = []
+                Filmes_Fi = open(folder + site, 'r')
+                read_Filmes_File = ''
+                for line in Filmes_Fi:
+                        read_Filmes_File = read_Filmes_File + line
+                        if line!='':_filmes_.append(line)
+
+                for x in range(len(_filmes_)):
+                        _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
+                        if _n: nome = _n[0]
+                        else: nome = '---'
+                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_filmes_[x])
+                        if _i: imdbcode = _i[0]
+                        else: imdbcode = '---'
+                        urltrailer = re.compile('(.+?)IMDB.+?MDB').findall(imdbcode)
+                        if urltrailer: urltrailer = urltrailer[0]
+                        else: urltrailer = '---'
+                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_filmes_[x])
+                        if _t: thumb = _t[0]
+                        else: thumb = '---'
+                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_filmes_[x])
+                        if _a: ano_filme = _a[0]
+                        else: ano_filme = '---'
+                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
+                        if _f: fanart = _f[0]
+                        else: fanart = '---'
+                        _g = re.compile('[|]GENERO[|](.+?)[|]ONOME[|]').findall(_filmes_[x])
+                        if _g: genero = _g[0]
+                        else: genero = '---'
+                        _o = re.compile('[|]ONOME[|](.+?)[|]SINOPSE[|]').findall(_filmes_[x])
+                        if _o: O_Nome = _o[0]
+                        else: O_Nome = '---'
+                        _p = re.compile('PAGINA[|](.+?)[|]PAGINA').findall(_filmes_[x])
+                        if _p: P_url = _p[0]
+                        else: P_url = '---'
+                        _s = re.compile('[|]SINOPSE[|](.*)').findall(_filmes_[x])
+                        if _s: s = _s[0]
+                        if '|END|' in s: sinopse = s.replace('|END|','')
+                        else:
+                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
+                                if si: sinopse = si[0][0] + ' ' + si[0][1]
+                                else: sinopse = '---'
+                        if 'toppt.net'         in imdbcode: num_mode = 233
+                        if 'tuga-filmes.info'  in imdbcode: num_mode = 73
+                        if 'tuga-filmes.us'    in imdbcode: num_mode = 33
+                        if 'cinematuga.eu'     in imdbcode: num_mode = 803
+                        if 'cinematuga.net'    in imdbcode: num_mode = 703
+                        if 'foitatuga'         in imdbcode: num_mode = 603
+                        if 'cinemaemcasa.pt'   in imdbcode: num_mode = 903
+                        if 'movie-tuga'        in imdbcode: num_mode = 103
+                        if nome != '---': addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
+                        else:
+                                if 'toppt.net'         in P_url: url_TPT = P_url
+                                if 'tuga-filmes.info'  in P_url: url_TFC = P_url
+                                if 'tuga-filmes.us'    in P_url: url_TFV = P_url
+                                if 'cinematuga.eu'     in P_url: url_CME = P_url
+                                if 'cinematuga.net'    in P_url: url_CMT = P_url
+                                if 'foitatuga'         in P_url: url_FTT = P_url
+                                if 'cinemaemcasa.pt'   in P_url: url_CMC = P_url
+                                if 'movie-tuga'        in P_url: url_MVT = P_url
+                Filmes_Fi.close()
+
+        #################################################################################
+
+        for a in range(100):
+                percent = int( ( a / 100.0 ) * 100)
+                progress.update( percent, 'A Procurar Filmes...', message, "" )
+                xbmc.sleep(2)
+                
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "fim": 'fim',"xpto":'xpto'}
+        url_filmes_filmes = urllib.urlencode(parameters)
+        progress.close()
+        addDir('[B]Página Seguinte >>[/B]',url_filmes_filmes,10001,artfolder + 'PAGS1.png','','')
+        
+        #addLink(str(CME)+str(threading.active_count()),'','','')
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
 
 def SERIES_MENU():
         addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]AS[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')
@@ -1586,7 +1754,8 @@ elif mode == 10000:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-
+elif mode == 10001:
+        dirtodos(url)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
