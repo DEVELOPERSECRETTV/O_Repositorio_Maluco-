@@ -21,19 +21,23 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,FilmesAnima,Play
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,os,FilmesAnima,Play,threading
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
 from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
 from Funcoes import get_params,abrir_url
+from array import array
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
+perfil = xbmc.translatePath(selfAddon.getAddonInfo('profile'))
+
+progress = xbmcgui.DialogProgress()
 
 Anos = ['' for i in range(100)]
+filmes = []
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENUS    -----------------------------------------------------------------#
@@ -46,8 +50,8 @@ def FTT_MenuPrincipal(artfolder):
 	addDir('[COLOR yellow]- Todos[/COLOR]','http://foitatugacinemaonline.blogspot.pt/',602,artfolder + 'FT.png','nao','')
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O',602,artfolder + 'FA.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',606,artfolder + 'CT.png','nao','')
-	addDir('[COLOR yellow]- Por Ano[/COLOR]','url',606,artfolder + 'ANO.png','nao','')
-	addDir('[COLOR yellow]- Top 10 + Vistos[/COLOR]','url',608,artfolder + 'T10V.png','nao','')
+	addDir('[COLOR yellow]- Por Ano[/COLOR]','url',606,artfolder + 'ANO.png','nao','')          #608
+	addDir('[COLOR yellow]- Top 10 + Vistos[/COLOR]','http://foitatugacinemaonline.blogspot.pt/',602,artfolder + 'T10V.png','nao','')
 
 def FTT_Menu_Filmes_Por_Categorias(artfolder):
         i = 0
@@ -89,25 +93,10 @@ def FTT_Menu_Filmes_Por_Categorias(artfolder):
 ##                                        addDir('[COLOR yellow]' + A[0][0] + '[/COLOR] ('+A[0][2]+')',A[0][1],602,artfolder + 'FTT1.png','nao','')
 
 
-def FTT_Top_Vistos(artfolder):
-        progress = xbmcgui.DialogProgress()
-        i = 1
-        percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
-        url_categorias = 'http://foitatugacinemaonline.blogspot.pt/'
-        html_categorias_source = abrir_url(url_categorias)
-        html_items_categorias = re.findall("<div class='widget-content popular-posts'>(.*?)<div class='clear'>", html_categorias_source, re.DOTALL)
-        html_items_categorias = re.findall("<div class='item-thumbnail'>(.*?)<div style='clear: both;'>", html_items_categorias[0], re.DOTALL)
-        num = len(html_items_categorias) + 0.0
-        for item_categorias in html_items_categorias:
-                percent = int( ( i / num ) * 100)
-                message = str(i) + " de " + str(int(num))
-                progress.update( percent, "", message, "" )
-                print str(i) + " de " + str(int(num))
-                if progress.iscanceled():
-                        break
+def FTT_Top_Vistos(item_categorias):
+
+        if item_categorias != '':
+                
                 anofilme = ''
                 imdbcode = ''
                 fanart = ''
@@ -191,40 +180,122 @@ def FTT_Top_Vistos(artfolder):
                 try:
                         if 'Temporada' not in nome_f and 'temporada' not in nome_f:
                                 addDir_trailer('[B][COLOR green]' + nome_f + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',url_titulo[0][0]+'IMDB'+imdbcode+'IMDB',603,thumb.replace('s72-c','s320'),sinopse,fanart,anofilme,genero,nome_f,url_titulo[0][0])
-                except: pass
-                #addDir('[B][COLOR green]' + nome_f + '[/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',url_titulo[0][0]+'IMDB'+imdbcode+'IMDB',603,thumb_f[0].replace('s72-c','s320'),sinopse,fanart)
-                i = i + 1
-        progress.close()                
-
+                except: pass       
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #-------------------------------------------------------------------  Filmes  -----------------------------------------------------------------#
-
-		
-
+        
 def FTT_encontrar_fontes_filmes(url):
-        progress = xbmcgui.DialogProgress()
-        i = 1
+        
         percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
+        message = 'Por favor aguarde.'
+        progress.create('Progresso', 'A Procurar')
+        progress.update( percent, 'A Procurar Filmes ...', message, "" )
+        
         try:
 		html_source = abrir_url(url)
 	except: html_source = ''
-	items = re.findall("<a class='comment-link'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-	if items != []:
-		print len(items)
-		num = len(items) + 0.0
-		for item in items:
-                        percent = int( ( i / num ) * 100)
-                        message = str(i) + " de " + str(len(items))
-                        progress.update( percent, "", message, "" )
-                        print str(i) + " de " + str(len(items))
-                        if progress.iscanceled():
-                                break
-                        
+	if name != '[COLOR yellow]- Top 10 + Vistos[/COLOR]':#'[COLOR yellow]- Todos[/COLOR]' or name == "[B]Página Seguinte >>[/B]":
+                items = re.findall("<a class='comment-link'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+        if name == '[COLOR yellow]- Top 10 + Vistos[/COLOR]':
+                html_items_categorias = re.findall("<div class='widget-content popular-posts'>(.*?)<div class='clear'>", html_source, re.DOTALL)
+                items = re.findall("<div class='item-thumbnail'>(.*?)<div style='clear: both;'>", html_items_categorias[0], re.DOTALL)
+
+        threads = []
+        i = 0
+        for item in items:
+                if name != '[COLOR yellow]- Top 10 + Vistos[/COLOR]':
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        Filmes_FTT = threading.Thread(name='Filmes_FTT'+str(i), target=Fontes_Filmes_FTT , args=('FILME'+str(a)+'FILME'+item,))
+                if name == '[COLOR yellow]- Top 10 + Vistos[/COLOR]':
+                        Filmes_FTT = threading.Thread(name='Filmes_FTT'+str(i), target=FTT_Top_Vistos , args=(item,))
+                threads.append(Filmes_FTT)
+
+        [i.start() for i in threads]
+
+        [i.join() for i in threads]
+
+        if name != '[COLOR yellow]- Top 10 + Vistos[/COLOR]':
+                _sites_ = ['filmesFTT.txt']
+                folder = perfil
+                num_filmes = 0
+                
+                for site in _sites_:
+                        _filmes_ = []
+                        Filmes_Fi = open(folder + site, 'r')
+                        read_Filmes_File = ''
+                        for line in Filmes_Fi:
+                                read_Filmes_File = read_Filmes_File + line
+                                if line!='':_filmes_.append(line)
+
+                        for x in range(len(_filmes_)):
+                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
+                                if _n: nome = _n[0]
+                                else: nome = '---'
+                                _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_filmes_[x])
+                                if _i: imdbcode = _i[0]
+                                else: imdbcode = '---'
+                                urltrailer = re.compile('(.+?)IMDB.+?MDB').findall(imdbcode)
+                                if urltrailer: urltrailer = urltrailer[0]
+                                else: urltrailer = '---'
+                                _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_filmes_[x])
+                                if _t: thumb = _t[0]
+                                else: thumb = '---'
+                                _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_filmes_[x])
+                                if _a: ano_filme = _a[0]
+                                else: ano_filme = '---'
+                                _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
+                                if _f: fanart = _f[0]
+                                else: fanart = '---'
+                                _g = re.compile('[|]GENERO[|](.+?)[|]ONOME[|]').findall(_filmes_[x])
+                                if _g: genero = _g[0]
+                                else: genero = '---'
+                                _o = re.compile('[|]ONOME[|](.+?)[|]SINOPSE[|]').findall(_filmes_[x])
+                                if _o: O_Nome = _o[0]
+                                else: O_Nome = '---'
+                                _p = re.compile('PAGINA[|](.+?)[|]PAGINA').findall(_filmes_[x])
+                                if _p: P_url = _p[0]
+                                else: P_url = '---'
+                                _s = re.compile('[|]SINOPSE[|](.*)').findall(_filmes_[x])
+                                if _s: s = _s[0]
+                                if '|END|' in s: sinopse = s.replace('|END|','')
+                                else:
+                                        si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
+                                        if si: sinopse = si[0][0] + ' ' + si[0][1]
+                                        else: sinopse = '---'
+                                if 'foitatuga'         in imdbcode: num_mode = 603
+                                if nome != '---':
+                                        num_filmes = num_filmes + 1
+                                        addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
+
+                        Filmes_Fi.close()
+
+                num_total = num_filmes + 0.0
+                for a in range(num_filmes):
+                        percent = int( ( a / num_total ) * 100)
+                        message = str(a+1) + " de " + str(num_filmes)
+                        progress.update( percent, 'A Finalizar ...', message, "" )
+                        xbmc.sleep(20)
+
+                proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)	
+                try:
+                        proxima_p = proxima[0]#.replace('%3A',':').replace('%2B','+')
+                        addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),602,artfolder + 'PAGS1.png','','')
+                except: pass
+	progress.close()
+
+def Fontes_Filmes_FTT(item):
+        
+        folder = perfil
+        Filmes_File = open(folder + 'filmesFTT.txt', 'w')
+        
+        if item != '':
+                try:
+                        FILMEN = re.compile('FILME(.+?)FILME').findall(item)
+                        FILMEN = FILMEN[0]
                         thumb = ''
                         genero = ''
                         sinopse = ''
@@ -297,8 +368,6 @@ def FTT_encontrar_fontes_filmes(url):
                         if 'container' in thumb:
                                 thumbnail = re.compile('url=(.+?)blogspot(.+?)&amp;container').findall(thumb)
                                 if thumbnail: thumb = thumbnail[0][0].replace('%3A',':').replace('%2F','/')+'blogspot'+thumbnail[0][1].replace('%3A',':').replace('%2F','/')
-               
-                                
 
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
@@ -403,8 +472,7 @@ def FTT_encontrar_fontes_filmes(url):
                                         fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
                                         if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
                                 except: pass
-                        
-                        
+                                                
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
                         if fanart == '---': fanart = ''
@@ -412,22 +480,27 @@ def FTT_encontrar_fontes_filmes(url):
                         if thumb == '': thumb = '---'
                         try:
                                 if 'Temporada' not in nome and 'temporada' not in nome:
-                                        addDir_trailer('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,sinopse,fanart,anofilme,genero,nome,urlvideo)
+                                        nome_final = '[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]'
+                                        filmes.append(FILMEN+'NOME|'+str(nome_final.replace('  ',' '))+'|IMDBCODE|'+str(urlvideo)+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb)+'|ANO|'+str(anofilme)+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|ONOME|'+str(nome_pesquisa)+'|SINOPSE|'+str(sinopse)+'|END|\n')
                         except: pass
-                        #---------------------------------------------------------------
-                        i = i + 1
-                        #---------------------------------------------------------------
-	proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)	
-	try:
-                proxima_p = proxima[0]#.replace('%3A',':').replace('%2B','+')
-		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),602,artfolder + 'PAGS1.png','','')
-	except: pass
+                except: pass	
+        else: pass
+        filmes.sort()
+        for x in range(len(filmes)):
+                Filmes_File.write(str(filmes[x]))
+	Filmes_File.close()
+
 
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FTT_encontrar_videos_filmes(name,url):
+        site = '[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]'
+        message = 'Por favor aguarde.'
+        percent = 0
+        progress.create('Progresso', 'A Procurar...')
+        progress.update(percent, 'A Procurar em '+site, message, "")
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''

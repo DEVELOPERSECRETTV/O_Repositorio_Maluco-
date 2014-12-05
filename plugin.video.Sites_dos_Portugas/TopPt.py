@@ -21,14 +21,14 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,FilmesAnima,Mashup,Funcoes,Play
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,threading,FilmesAnima,Mashup,Funcoes,Play
 from array import array
 from string import capwords
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
 from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
 from Funcoes import get_params,abrir_url
-
+from array import array
 
 arr_series = ['' for i in range(500)]
 arrai_series = ['' for i in range(500)]
@@ -37,6 +37,7 @@ _seriesALL_ = []
 _series = []
 _s_ = []
 sri = []
+filmes = []
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -1230,7 +1231,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
                 
 def TPT_encontrar_videos_filmes(name,url,iconimage):
-
+        
         if 'Season' in name or 'Temporada' in name or 'Mini-Série' in name or 'Mini-Serie' in name:
                 n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(name)
                 if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(name)
@@ -1315,6 +1316,12 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                 message = ''
                 progress.create('Progresso', 'A Procurar episódios...')
                 progress.update( percent, "", message, "" )
+        else:
+                site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
+                message = 'Por favor aguarde.'
+                percent = 0
+                progress.create('Progresso', 'A Procurar...')
+                progress.update(percent, 'A Procurar em '+site, message, "")
         i = 1
         conta_id_video = 0
         contaultimo = 0
@@ -2611,12 +2618,11 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
                         url = url.replace('http://www.video.tt/embed/','http://video.tt/e/')
                         url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
-                        
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:                     
+                                url = url + '///' + nomeescolha
                         fonte_id = '(Video.tt)'+url
-                        url = url + '///' + nomeescolha
-                        fonte_id1 = '(Video.tt)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id1.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('1[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "videowood" in url:
                 try:

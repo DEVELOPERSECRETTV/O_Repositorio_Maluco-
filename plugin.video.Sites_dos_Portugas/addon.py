@@ -35,6 +35,15 @@ perfil = xbmc.translatePath(selfAddon.getAddonInfo('profile'))
 
 progress = xbmcgui.DialogProgress()
 
+TPT_ONOFF = []
+TFV_ONOFF = []
+TFC_ONOFF = []
+MVT_ONOFF = []
+FTT_ONOFF = []
+CMC_ONOFF = []
+CME_ONOFF = []
+CMT_ONOFF = []
+
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
@@ -53,7 +62,6 @@ def MAIN_MENU():
         addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDB.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
         addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF1.png','nao','')#'ze-icon3.png'
-
                 
 def SITESdosPORTUGAS():
         #####################################
@@ -65,65 +73,104 @@ def SITESdosPORTUGAS():
         url_CMT = 'http://www.cinematuga.net/'#'http://www.tugafilmes.org'#'http://www.cinematuga.net/'
         url_CME = 'http://www.cinematuga.eu/'
         url_CMC = 'http://www.cinemaemcasa.pt/'
+
+        threads = []
+
+        TPT = threading.Thread(name='TPT', target=TPTONOFF , args=(url_TPT,))
+        threads.append(TPT)
+
+        CME = threading.Thread(name='CME', target=CMEONOFF , args=(url_CME,))
+        threads.append(CME)
+
+        TFC = threading.Thread(name='TFC', target=TFCONOFF , args=(url_TFC,))
+        threads.append(TFC)
+        
+        FTT = threading.Thread(name='FTT', target=FTTONOFF , args=(url_FTT,))
+        threads.append(FTT)
+        
+        TFV = threading.Thread(name='TFV', target=TFVONOFF , args=(url_TFV,))
+        threads.append(TFV)
+        
+        MVT = threading.Thread(name='MVT', target=MVTONOFF , args=(url_MVT,))
+        threads.append(MVT)
+        
+        CMT = threading.Thread(name='CMT', target=CMTONOFF , args=(url_CMT,))
+        threads.append(CMT)
+
+        CMC = threading.Thread(name='CMC', target=CMCONOFF , args=(url_CMC,))
+        threads.append(CMC)
+
+        [i.start() for i in threads]
+        [i.join() for i in threads]
+
+        addDir('[COLOR orange]FTT | [/COLOR][B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)'+FTT_ONOFF[0],'http://direct',601,artfolder + 'FTT1.png','nao','')
+        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B] (Filmes/Séries)'+TPT_ONOFF[0],'http://direct',231,artfolder + 'TPT1.png','nao','')
+        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]MOV[/COLOR][COLOR yellow]I[/COLOR][COLOR red]ETUGA[/COLOR][/B] (Filmes)'+MVT_ONOFF[0],'http://direct',101,artfolder + 'MVT1.png','nao','')
+        addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B] (Filmes)'+CMT_ONOFF[0],'http://direct',701,artfolder + 'CMT1.png','nao','')
+        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)'+TFV_ONOFF[0],'http://direct',31,artfolder + 'TFV1.png','nao','')
+        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)'+TFC_ONOFF[0],'http://direct',71,artfolder + 'TFC1.png','nao','')
+        addDir('[COLOR orange]CME | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B] (Filmes)'+CME_ONOFF[0],'http://direct',801,artfolder + 'CME1.png','nao','')
+        addDir('[COLOR orange]CMC | [/COLOR][B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B] (Filmes)'+CMC_ONOFF[0],'http://direct',901,artfolder + 'CMC1.png','nao','')
+
+
+def TFVONOFF(url_TFV):
         try:
 		html_source = abrir_url(url_TFV)
 	except: html_source = ''
 	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
-	if items != []: TFV_ONOFF = '[COLOR green] | UP[/COLOR]'
-	else: TFV_ONOFF = '[COLOR red] | DOWN[/COLOR]'
+	if items != []: TFV_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: TFV_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def TFCONOFF(url_TFC):	
 	try:
 		html_source = abrir_url(url_TFC)
 	except: html_source = ''
 	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
-	if items != []: TFC_ONOFF = '[COLOR green] | UP[/COLOR]'
-	else: TFC_ONOFF = '[COLOR red] | DOWN[/COLOR]'
+	if items != []: TFC_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: TFC_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def MVTONOFF(url_MVT):
 	try:
 		html_source = abrir_url(url_MVT)
 	except: html_source = ''
 	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
-	if items != []: MVT_ONOFF = '[COLOR green] | UP[/COLOR]'
-	else: MVT_ONOFF = '[COLOR red] | DOWN[/COLOR]'
+	if items != []: MVT_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: MVT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def TPTONOFF(url_TPT):
 	try:
 		html_source = abrir_url(url_TPT)
 	except: html_source = ''
 	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
-	if items != []: TPT_ONOFF = '[COLOR green] | UP[/COLOR]'
-	else: TPT_ONOFF = '[COLOR red] | DOWN[/COLOR]'
+	if items != []: TPT_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: TPT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def FTTONOFF(url_FTT):
 	try:
 		html_source = abrir_url(url_FTT)
 	except: html_source = ''
 	items = re.findall("<div class='post-body entry-content'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-	if items != []: FTT_ONOFF = '[COLOR green] | UP[/COLOR]'
-	else: FTT_ONOFF = '[COLOR red] | DOWN[/COLOR]'
+	if items != []: FTT_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: FTT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def CMTONOFF(url_CMT):
 	try:
 		html_source = abrir_url(url_CMT)
 	except: html_source = ''
 	items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
-	if items != []: CMT_ONOFF = '[COLOR green] | UP[/COLOR]'
-	else: CMT_ONOFF = '[COLOR red] | DOWN[/COLOR]'
+	if items != []: CMT_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: CMT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def CMEONOFF(url_CME):
 	try:
 		html_source = abrir_url(url_CME)
 	except: html_source = ''
 	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-	if items != []: CME_ONOFF = '[COLOR green] | UP[/COLOR]'
-	else: CME_ONOFF = '[COLOR red] | DOWN[/COLOR]'
+	if items != []: CME_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: CME_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def CMCONOFF(url_CMC):
 	try:
 		html_source = abrir_url(url_CMC)
 	except: html_source = ''
 	items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-	if items != []: CMC_ONOFF = '[COLOR green] | UP[/COLOR]'
-	else: CMC_ONOFF = '[COLOR red] | DOWN[/COLOR]'
+	if items != []: CMC_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: CMC_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 	#########################################
         
-        addDir('[COLOR orange]FTT | [/COLOR][B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)'+FTT_ONOFF,'http://direct',601,artfolder + 'FTT1.png','nao','')
-        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B] (Filmes/Séries)'+TPT_ONOFF,'http://direct',231,artfolder + 'TPT1.png','nao','')
-        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]MOV[/COLOR][COLOR yellow]I[/COLOR][COLOR red]ETUGA[/COLOR][/B] (Filmes)'+MVT_ONOFF,'http://direct',101,artfolder + 'MVT1.png','nao','')
-        addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B] (Filmes)'+CMT_ONOFF,'http://direct',701,artfolder + 'CMT1.png','nao','')
-        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)'+TFV_ONOFF,'http://direct',31,artfolder + 'TFV1.png','nao','')
-        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)'+TFC_ONOFF,'http://direct',71,artfolder + 'TFC1.png','nao','')
-        addDir('[COLOR orange]CME | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B] (Filmes)'+CME_ONOFF,'http://direct',801,artfolder + 'CME1.png','nao','')
-        addDir('[COLOR orange]CMC | [/COLOR][B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B] (Filmes)'+CMC_ONOFF,'http://direct',901,artfolder + 'CMC1.png','nao','')
-
 class AvisoFanart(xbmcgui.WindowXMLDialog):
 
     def __init__( self, *args, **kwargs ):
@@ -143,13 +190,14 @@ def FILMES_MENU():
         url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
         url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
         url_CME = 'http://www.cinematuga.eu/search/label/Filmes'
+        url_CMC = 'http://www.cinemaemcasa.pt/'
         try:
                 toppt_source = abrir_url(url_toppt)
         except: toppt_source = ''
         saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
         if saber_url_todos: url_TPT = saber_url_todos[0]
         else: url_TPT = 'http://toppt.net/'
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "fim": 'fim',"xpto":'xpto'}
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)                                                     #507
         addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,10001,artfolder + 'FT.png','nao','')
         #----------------------------
@@ -159,10 +207,11 @@ def FILMES_MENU():
         url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
         url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'
         url_CME = 'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
+        url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
         saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
         if saber_url_animacao: url_TPT = saber_url_animacao[0]
         else: url_TPT = 'http://toppt.net/'
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "fim": 'fim',"xpto":'xpto'}
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
         url_filmes_animacao = urllib.urlencode(parameters)                                                          #6 #507
         addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,10001,artfolder + 'FA.png','nao','')
         #----------------------------
@@ -174,14 +223,17 @@ def FILMES_MENU():
 def dirtodos(url):
         urlss = urllib.unquote(url)
         print urlss
-        urls=re.compile('url_TFC=(.+?)&url_CMT=(.+?)&url_FTT=(.+?)&url_TFV=(.+?)&url_MVT=(.+?)&xpto=xpto&url_CME=(.+?)&url_TPT=(.+?)&fim=fim').findall(urlss)
+        #addLink(urlss,'','','')
+        #return
+        urls=re.compile('url_TFC=(.+?)&url_CMT=(.+?)&url_FTT=(.+?)&url_TFV=(.+?)&url_CMC=(.+?)&url_MVT=(.+?)&xpto=xpto&url_CME=(.+?)&url_TPT=(.+?)&fim=fim').findall(urlss)
         url_TFV = urls[0][3]
         url_TFC = urls[0][0]
-        url_MVT = urls[0][4]
-        url_TPT = urls[0][6]
+        url_MVT = urls[0][5]
+        url_TPT = urls[0][7]
         url_FTT = urls[0][2]
         url_CMT = urls[0][1]
-        url_CME = urls[0][5]
+        url_CME = urls[0][6]
+        url_CMC = urls[0][4]
         
         percent = 0
         message = 'Por favor aguarde.'
@@ -210,7 +262,7 @@ def dirtodos(url):
         threads.append(TFV)
         #TFV.start()
         
-        MVT = threading.Thread(name='TPT', target=Mashup.MVTMASHUP , args=(url_MVT,))
+        MVT = threading.Thread(name='MVT', target=Mashup.MVTMASHUP , args=(url_MVT,))
         threads.append(MVT)
         #MVT.start()
         
@@ -218,7 +270,7 @@ def dirtodos(url):
         threads.append(CMT)
         #CMT.start()
 
-        CMC = threading.Thread(name='CMC', target=Mashup.CMCMASHUP , args=('http:',))
+        CMC = threading.Thread(name='CMC', target=Mashup.CMCMASHUP , args=(url_CMC,))
         threads.append(CMC)
         #CMC.start()
 
@@ -250,8 +302,9 @@ def dirtodos(url):
         
         #######################################################################################
         
-        _sites_ = ['filmesTPT.txt','filmesCME.txt','filmesFTT.txt','filmesTFC.txt','filmesMVT.txt','filmesCMTnet.txt','filmesTFV.txt']
+        _sites_ = ['filmesTPT.txt','filmesCME.txt','filmesFTT.txt','filmesTFC.txt','filmesMVT.txt','filmesCMTnet.txt','filmesCMC.txt','filmesTFV.txt']
         folder = perfil
+        num_filmes = 0
         
         for site in _sites_:
                 _filmes_ = []
@@ -303,8 +356,10 @@ def dirtodos(url):
                         if 'cinematuga.net'    in imdbcode: num_mode = 703
                         if 'foitatuga'         in imdbcode: num_mode = 603
                         if 'cinemaemcasa.pt'   in imdbcode: num_mode = 903
-                        if 'movie-tuga'        in imdbcode: num_mode = 103
-                        if nome != '---': addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
+                        if 'movietuga'         in imdbcode: num_mode = 103
+                        if nome != '---':
+                                num_filmes = num_filmes + 1
+                                addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
                         else:
                                 if 'toppt.net'         in P_url: url_TPT = P_url
                                 if 'tuga-filmes.info'  in P_url: url_TFC = P_url
@@ -318,12 +373,14 @@ def dirtodos(url):
 
         #################################################################################
 
-        for a in range(100):
-                percent = int( ( a / 100.0 ) * 100)
-                progress.update( percent, 'A Procurar Filmes...', message, "" )
-                xbmc.sleep(2)
+        num_total = num_filmes + 0.0
+        for a in range(num_filmes):
+                percent = int( ( a / num_total ) * 100)
+                message = str(a+1) + " de " + str(num_filmes)
+                progress.update( percent, 'A Finalizar ...', message, "" )
+                xbmc.sleep(12)
                 
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "fim": 'fim',"xpto":'xpto'}
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
         progress.close()
         addDir('[B]Página Seguinte >>[/B]',url_filmes_filmes,10001,artfolder + 'PAGS1.png','','')
@@ -515,16 +572,6 @@ def EMEXIBICAO():
         conta = 0
         num_mode = 3007
         if num_mode == 3007: emexibicao = themoviedb_api_pagina().fanart_and_id('tv','3007','on_the_air',str(num_pag))
-##                fanart,tmdb_id,thumb = themoviedb_api().fanart_and_id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
-##                sinopse = theomapi_api_nome().sinopse(nome_ano[0][1])
-##        if num_mode == 3007:
-##                thetvdb_id = thetvdb_api()._id(nome_ano[0][1],nome_ano[0][2].replace('(','').replace(')',''))
-##                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-##                if ftart:
-##                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-##                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'                                       
-##                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-##                if snpse: sinopse = snpse[0]
         npag = urllib.quote(url)
         numpag = '('+str(npag)+'/22)'
         npseg = int(npag) + 1

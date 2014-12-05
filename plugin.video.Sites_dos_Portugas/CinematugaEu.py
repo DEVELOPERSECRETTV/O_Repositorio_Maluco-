@@ -22,18 +22,23 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,FilmesAnima,Play
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,os,threading,FilmesAnima,Play
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
 from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
 from Funcoes import get_params,abrir_url
+from array import array
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
+perfil = xbmc.translatePath(selfAddon.getAddonInfo('profile'))
+
+progress = xbmcgui.DialogProgress()
 
 Anos = ['' for i in range(100)]
+filmes = []
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENUS    -----------------------------------------------------------------#
@@ -95,27 +100,129 @@ def CME_Menu_Filmes_Por_Categorias(artfolder):
 		
 
 def CME_encontrar_fontes_filmes(url):
-        progress = xbmcgui.DialogProgress()
-        i = 1
         percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
+        message = 'Por favor aguarde.'
+        progress.create('Progresso', 'A Procurar')
+        progress.update( percent, 'A Procurar Filmes ...', message, "" )
+        
         try:
 		html_source = abrir_url(url)
 	except: html_source = ''
-	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-	if items != []:
-		print len(items)
-		num = len(items) + 0.0
-		for item in items:
-                        percent = int( ( i / num ) * 100)
-                        message = str(i) + " de " + str(len(items))
-                        progress.update( percent, "", message, "" )
-                        print str(i) + " de " + str(len(items))
-                        if progress.iscanceled():
-                                break
-                        
+	if name != '':
+                items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+
+        threads = []
+        i = 0
+        for item in items:
+                if name != '':
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        Filmes_CME = threading.Thread(name='Filmes_CME'+str(i), target=Fontes_Filmes_CME , args=('FILME'+str(a)+'FILME'+item,))
+                threads.append(Filmes_CME)
+
+        [i.start() for i in threads]
+
+        [i.join() for i in threads]
+
+        if name != '':
+                _sites_ = ['filmesCME.txt']
+                folder = perfil
+                num_filmes = 0
+                
+                for site in _sites_:
+                        _filmes_ = []
+                        Filmes_Fi = open(folder + site, 'r')
+                        read_Filmes_File = ''
+                        for line in Filmes_Fi:
+                                read_Filmes_File = read_Filmes_File + line
+                                if line!='':_filmes_.append(line)
+
+                        for x in range(len(_filmes_)):
+                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
+                                if _n: nome = _n[0]
+                                else: nome = '---'
+                                _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_filmes_[x])
+                                if _i: imdbcode = _i[0]
+                                else: imdbcode = '---'
+                                urltrailer = re.compile('(.+?)IMDB.+?MDB').findall(imdbcode)
+                                if urltrailer: urltrailer = urltrailer[0]
+                                else: urltrailer = '---'
+                                _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_filmes_[x])
+                                if _t: thumb = _t[0]
+                                else: thumb = '---'
+                                _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_filmes_[x])
+                                if _a: ano_filme = _a[0]
+                                else: ano_filme = '---'
+                                _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
+                                if _f: fanart = _f[0]
+                                else: fanart = '---'
+                                _g = re.compile('[|]GENERO[|](.+?)[|]ONOME[|]').findall(_filmes_[x])
+                                if _g: genero = _g[0]
+                                else: genero = '---'
+                                _o = re.compile('[|]ONOME[|](.+?)[|]SINOPSE[|]').findall(_filmes_[x])
+                                if _o: O_Nome = _o[0]
+                                else: O_Nome = '---'
+                                _p = re.compile('PAGINA[|](.+?)[|]PAGINA').findall(_filmes_[x])
+                                if _p: P_url = _p[0]
+                                else: P_url = '---'
+                                _s = re.compile('[|]SINOPSE[|](.*)').findall(_filmes_[x])
+                                if _s: s = _s[0]
+                                if '|END|' in s: sinopse = s.replace('|END|','')
+                                else:
+                                        si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
+                                        if si: sinopse = si[0][0] + ' ' + si[0][1]
+                                        else: sinopse = '---'
+                                        
+                                if 'cinematuga.eu'     in imdbcode: num_mode = 803
+                                
+                                if nome != '---':
+                                        num_filmes = num_filmes + 1
+                                        addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
+
+                        Filmes_Fi.close()
+
+                num_total = num_filmes + 0.0
+                for a in range(num_filmes):
+                        percent = int( ( a / num_total ) * 100)
+                        message = str(a+1) + " de " + str(num_filmes)
+                        progress.update( percent, 'A Finalizar ...', message, "" )
+                        xbmc.sleep(20)
+
+                proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)	
+                try:
+                        proxima_p = proxima[0]#.replace('%3A',':').replace('%2B','+')
+                        addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),802,artfolder + 'PAGS1.png','','')
+                except: pass
+
+def Fontes_Filmes_CME(item):
+##        progress = xbmcgui.DialogProgress()
+##        i = 1
+##        percent = 0
+##        message = ''
+##        progress.create('Progresso', 'A Pesquisar:')
+##        progress.update( percent, "", message, "" )
+##        try:
+##		html_source = abrir_url(url)
+##	except: html_source = ''
+##	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+##	if items != []:
+##		print len(items)
+##		num = len(items) + 0.0
+##		for item in items:
+##                        percent = int( ( i / num ) * 100)
+##                        message = str(i) + " de " + str(len(items))
+##                        progress.update( percent, "", message, "" )
+##                        print str(i) + " de " + str(len(items))
+##                        if progress.iscanceled():
+##                                break
+        folder = perfil
+        Filmes_File = open(folder + 'filmesCME.txt', 'w')
+        
+        if item != '':
+                try:
+                        FILMEN = re.compile('FILME(.+?)FILME').findall(item)
+                        FILMEN = FILMEN[0]
                         thumb = ''
                         genero = ''
                         sinopse = ''
@@ -231,22 +338,28 @@ def CME_encontrar_fontes_filmes(url):
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
                         try:
-                                addDir_trailer('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',803,thumb,sinopse,fanart,anofilme,genero,nome,urlvideo)
+                                nome_final = '[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]'
+                                filmes.append(FILMEN+'NOME|'+str(nome_final)+'|IMDBCODE|'+urlvideo+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb)+'|ANO|'+str(anofilme)+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|ONOME|'+str(nome)+'|SINOPSE|'+str(sinopse)+'|END|\n')
+                                #addDir_trailer('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',803,thumb,sinopse,fanart,anofilme,genero,nome,urlvideo)
                         except: pass
-                        #---------------------------------------------------------------
-                        i = i + 1
-                        #---------------------------------------------------------------
-	proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)	
-	try:
-                proxima_p = proxima[0]#.replace('%3A',':').replace('%2B','+')
-		addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),802,artfolder + 'PAGS1.png','','')
-	except: pass
+                except: pass	
+        else: pass
+        filmes.sort()
+        for x in range(len(filmes)):
+                Filmes_File.write(str(filmes[x]))
+	Filmes_File.close()
+	
 
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def CME_encontrar_videos_filmes(name,url):
+        site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B]'
+        message = 'Por favor aguarde.'
+        percent = 0
+        progress.create('Progresso', 'A Procurar...')
+        progress.update(percent, 'A Procurar em '+site, message, "")
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''

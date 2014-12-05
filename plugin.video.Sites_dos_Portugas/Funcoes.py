@@ -195,6 +195,11 @@ class thetvdb_api:
 		self.sin = ''
 		self.idserie = ''
 		self.anne = ''
+		yea = re.compile('(.+?)[|](.*)').findall(year)
+		if yea:
+                        year = yea[0][0]
+                        imdb = yea[0][1]
+                else: imdb = ''
 		if series_name == "24 hours": series_name = "24"
 		try:
 			url = 'http://thetvdb.com/api/GetSeries.php?seriesname=' + urllib.quote(series_name)+'&language=pt'
@@ -202,18 +207,29 @@ class thetvdb_api:
 		except: html_source = ''
 		balisa = re.findall('<Series>(.+?)</Series>', html_source, re.DOTALL)
 		#addLink(str(len(balisa))+series_name,'','')
-		if balisa:
+		if balisa:# and len(balisa) > 1:
                         for balisas in balisa:
                                 sid = re.compile('<seriesid>(.+?)</seriesid>').findall(balisas)
                                 overview = re.compile('<Overview>(.+?)</Overview>').findall(balisas)
+                                imdbcode = re.compile('<IMDB_ID>(.+?)</IMDB_ID>').findall(balisas)
                                 aired = re.compile('<FirstAired>(.+?)-.+?-.+?</FirstAired>').findall(balisas)
-                                if aired:
+                                if imdbcode and imdb != '':
+                                        self.imdbc = imdbcode[0]
+                                        #addLink(self.imdbc+imdb+urllib.quote(series_name),'','','')
+                                        if self.imdbc == imdb and self.idserie == '':
+                                                if overview: self.sin = overview[0]
+                                                else: self.sin = '---'
+                                                if sid: self.idserie = sid[0]
+                                                else: self.idserie = ''
+                                elif aired:
+                                        #addLink(self.anne,'','','')
                                         self.anne = aired[0]
                                         if self.anne == year and self.idserie == '':
                                                 if overview: self.sin = overview[0]
                                                 else: self.sin = '---'
                                                 if sid: self.idserie = sid[0]
                                                 else: self.idserie = ''
+                                                
                 if self.idserie != '': return self.idserie+'|'+self.sin                                          
                 else:
                         id_and_year = re.findall('<seriesid>(.+?)</seriesid>.*?<Overview>(.+?)</Overview>.+?<FirstAired>(.+?)-.+?-.+?</FirstAired>', html_source, re.DOTALL)
@@ -242,6 +258,29 @@ class thetvdb_api:
 ####		else: pass
 ##		return fanart_image
 
+class thetvdb_api_IMDB:
+        
+	def _id(self,series_name,imdb):
+                
+		self.sin = ''
+		self.idserie = ''
+
+		try:
+			url = 'http://thetvdb.com/api/GetSeriesByRemoteID.php?imdbid=' + urllib.quote(imdb)+'&language=pt'
+			html_source = abrir_url(url)
+		except: html_source = ''
+		
+                sid = re.compile('<seriesid>(.+?)</seriesid>').findall(html_source)
+                overview = re.compile('<Overview>(.+?)</Overview>').findall(html_source)
+                imdbcode = re.compile('<IMDB_ID>(.+?)</IMDB_ID>').findall(html_source)
+                aired = re.compile('<FirstAired>(.+?)-.+?-.+?</FirstAired>').findall(html_source)
+
+                if overview: self.sin = overview[0]
+                else: self.sin = '---'
+                if sid: self.idserie = sid[0]
+                else: self.idserie = ''
+                                                
+                return self.idserie, self.sin                                          
 
 class themoviedb_api_IMDB1:
         api_key = '3e7807c4a01f18298f64662b257d7059'

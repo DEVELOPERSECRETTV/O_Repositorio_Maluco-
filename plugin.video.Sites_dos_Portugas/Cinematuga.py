@@ -370,6 +370,11 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
 
 
 def CMT_encontrar_videos_filmes(name,url):
+        site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B]'
+        message = 'Por favor aguarde.'
+        percent = 0
+        progress.create('Progresso', 'A Procurar...')
+        progress.update(percent, 'A Procurar em '+site, message, "")
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''

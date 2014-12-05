@@ -93,17 +93,17 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         encode=urllib.quote(nome_pesquisa)
  
         a = 0
-        site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
-        percent = int( ( a / 8.0 ) * 100)
+        site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
+	percent = int( ( a / 8.0 ) * 100)
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-	url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'	
-	if nomesite != 'TFV': FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
-##                TFV = threading.Thread(name='TFV', target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV , args=(url_pesquisa,pesquisou,))
-##                TFV.start()
+	url_pesquisa = 'http://toppt.net/?s=' + str(encode) + 'IMDB'+imdbcode+'IMDB'	
+	if nomesite != 'TPT': FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou)
+##                TPT = threading.Thread(name='TPT', target=FILMES_ANIMACAO_encontrar_fontes_filmes_TPT , args=(url_pesquisa,pesquisou,))
+##                TPT.start()
 
-	a= 1
+	a = 1
 	site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
 	percent = int( ( a / 8.0 ) * 100)
         message = ''
@@ -115,26 +115,26 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
 ##                TFC.start()
                 
 	a = 2
-	site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
-	percent = int( ( a / 8.0 ) * 100)
+	site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
+        percent = int( ( a / 8.0 ) * 100)
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-	url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'	
-	if nomesite != 'MVT': FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url_pesquisa)
-##                MVT = threading.Thread(name='TPT', target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT , args=(url_pesquisa,))
-##                MVT.start()
+	url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'	
+	if nomesite != 'TFV': FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
+##                TFV = threading.Thread(name='TFV', target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV , args=(url_pesquisa,pesquisou,))
+##                TFV.start()
 	
 	a = 3
-	site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
+	site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B]'
 	percent = int( ( a / 8.0 ) * 100)
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-	url_pesquisa = 'http://toppt.net/?s=' + str(encode) + 'IMDB'+imdbcode+'IMDB'	
-	if nomesite != 'TPT': FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou)
-##                TPT = threading.Thread(name='TPT', target=FILMES_ANIMACAO_encontrar_fontes_filmes_TPT , args=(url_pesquisa,pesquisou,))
-##                TPT.start()
+	url_pesquisa = 'http://www.cinematuga.eu/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
+	if nomesite != 'CME': FILMES_ANIMACAO_encontrar_fontes_filmes_CME(url_pesquisa,pesquisou)
+##                CME = threading.Thread(name='CME', target=FILMES_ANIMACAO_encontrar_fontes_filmes_CME , args=(url_pesquisa,pesquisou,))
+##                CME.start()
 
 	a = 4
 	site = '[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]'
@@ -159,15 +159,15 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
 ##                CMT.start()
 
 	a = 6
-	site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B]'
+	site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
 	percent = int( ( a / 8.0 ) * 100)
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
-	url_pesquisa = 'http://www.cinematuga.eu/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'
-	if nomesite != 'CME': FILMES_ANIMACAO_encontrar_fontes_filmes_CME(url_pesquisa,pesquisou)
-##                CME = threading.Thread(name='CME', target=FILMES_ANIMACAO_encontrar_fontes_filmes_CME , args=(url_pesquisa,pesquisou,))
-##                CME.start()
+	url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode) + 'IMDB'+imdbcode+'IMDB'	
+	if nomesite != 'MVT': FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url_pesquisa)
+##                MVT = threading.Thread(name='MVT', target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT , args=(url_pesquisa,))
+##                MVT.start()
                 
 	a = 7
 	site = '[B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B]'
@@ -187,30 +187,30 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
 
-##        try: TFV.join()
-##        except: pass
-##
-##        try: TFC.join()
-##        except: pass
-##
-##        try: MVT.join()
-##        except: pass
-##
-##        try: TPT.join()
-##        except: pass
-##
-##        try: FTT.join()
-##        except: pass
-##        
-##        try: CMT.join()
-##        except: pass
-##
-##        try: CME.join()
-##        except: pass
-##
-##        try: CMC.join()
-##        except: pass
-##
+        try: TFV.join()
+        except: pass
+
+        try: TFC.join()
+        except: pass
+
+        try: MVT.join()
+        except: pass
+
+        try: TPT.join()
+        except: pass
+
+        try: FTT.join()
+        except: pass
+        
+        try: CMT.join()
+        except: pass
+
+        try: CME.join()
+        except: pass
+
+        try: CMC.join()
+        except: pass
+
 ##        #xbmc.sleep(1000)
 ##        for a in range(100):
 ##                percent = int( ( a / 100.0 ) * 100)

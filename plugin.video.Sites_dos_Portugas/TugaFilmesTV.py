@@ -715,6 +715,11 @@ def TFV_encontrar_fontes_filmes(url,artfolder):
 
 
 def TFV_encontrar_videos_filmes(name,url):
+        site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
+        message = 'Por favor aguarde.'
+        percent = 0
+        progress.create('Progresso', 'A Procurar...')
+        progress.update(percent, 'A Procurar em '+site, message, "")
         nomeescolha = name
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
@@ -819,6 +824,7 @@ def TFV_encontrar_videos_filmes(name,url):
                                                         if "dv" in servidor: url = 'dropvideo'
                                                         if "vt" in servidor: url = 'vidto.me'
                                                         if "nv" in servidor: url = 'nowvideo'
+                                                        #addLink(url+id_video,'','','')
                                                         TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
                                         except:pass
                 else:
@@ -960,42 +966,42 @@ def TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
                         url = 'http://videomega.tv/iframe.php?ref=' + id_video# + '///' + name
                         print url
                         fonte_id = '(Videomega)'
-                        #addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except: pass
         if "vidto.me" in url:
                 try:
                         url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                         print url
                         fonte_id = '(Vidto.me)'
-                        addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except: pass
         if "dropvideo" in url:
                 try:
                         url = 'http://dropvideo.com/embed/' + id_video #+ '///' + name
                         print url
                         fonte_id = '(Dropvideo)'
-                        #addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except:pass
         if "streamin.to" in url:
                 try:
                         url = 'http://streamin.to/embed-' + id_video + '.html' #+ '///' + name
                         print url
                         fonte_id = '(Streamin)'
-                        #addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'',fanart)
                 except:pass                        
         if "putlocker" in url:
                 try:
                         url = 'http://www.putlocker.com/embed/' + id_video# + '///' + name
                         print url
                         fonte_id = '(Putlocker)'
-                        #addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Putlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except:pass
         if "nowvideo" in url:
                 try:
                         url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video #+ '///' + name
                         print url
                         fonte_id = '(Nowvideo)'
-                        #addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except:pass
         if "videowood" in url:
                 try:
@@ -1003,7 +1009,7 @@ def TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
                         url = 'http://www.videowood.tv/embed/' + id_video #+ '///' + name
                         print url
                         fonte_id = '(Videowood)'
-                        #addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except:pass
         if "firedrive" in url:
                 try:

@@ -33,6 +33,8 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
 
+progress = xbmcgui.DialogProgress()
+
 Anos = ['' for i in range(100)]
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENUS    -----------------------------------------------------------------#
@@ -341,6 +343,11 @@ def CMC_encontrar_fontes_filmes(url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def CMC_encontrar_videos_filmes(name,url):
+        site = '[B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B]'
+        message = 'Por favor aguarde.'
+        percent = 0
+        progress.create('Progresso', 'A Procurar...')
+        progress.update(percent, 'A Procurar em '+site, message, "")
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
