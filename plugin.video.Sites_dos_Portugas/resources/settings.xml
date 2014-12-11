@@ -4,13 +4,13 @@
    <!--   <setting label="[COLOR yellow]Definições Gerais:[/COLOR]" type="lsep" />  -->
       <setting label="[COLOR yellow]M18:[/COLOR]" type="lsep" />
       <setting id="hide-porno" type="bool" label="Esconder menu M18" default="true"/>
-      <setting label="[COLOR yellow]Fanart:[/COLOR]" type="lsep" />
+<!--      <setting label="[COLOR yellow]Fanart:[/COLOR]" type="lsep" />
       <setting id="Fanart" type="bool" label="Procurar Fanart Filmes/Séries (Mashup)" default="false"/>
       <setting label="[COLOR red]AVISO:[/COLOR][COLOR white] Se optar por procurar fanart no Mashup de Filmes e Séries, o addon[/COLOR]" type="lsep" />
       <setting label="[COLOR white]torna-se um pouco mais lento na pesquisa dos filmes e séries. No entanto só[/COLOR]" type="lsep" />
       <setting label="[COLOR white]será mais lento quando pesquisar pela 1ª vez e/ou quando o filme/série ainda[/COLOR]" type="lsep" />
       <setting label="[COLOR white]não estiver guardado nos respetivos ficheiros (filmes.txt/series.txt) que serão[/COLOR]" type="lsep" />
-      <setting label="[COLOR white]criados automáticamente na pasta do addon.[/COLOR]" type="lsep" />
+      <setting label="[COLOR white]criados automáticamente na pasta do addon.[/COLOR]" type="lsep" />   -->
       <setting id="AvisoFanart" type="bool" label="AvisoFanart" default="true" visible="false"/>
    <!--   <setting id="hide-thumb" type="bool" label="Pesquisar thumbs de séries" default="false"/>  -->
    </category>

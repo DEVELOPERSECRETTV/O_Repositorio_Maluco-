@@ -56,6 +56,33 @@ def MAIN_MENU():
                 selfAddon.setSetting('AvisoFanart',value='false')
         addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://direct',3003,artfolder + 'SERIES1.png','nao','')
         addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://direct',3004,artfolder + 'FILMES1.png','nao','')
+        #----------------------------------
+        url_toppt = 'http://toppt.net/'
+        url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
+        url_TFC = 'http://www.tuga-filmes.info/'
+        url_MVT = 'http://www.movie-tuga.blogspot.pt'
+        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
+        url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
+        url_CME = 'http://www.cinematuga.eu/search/label/Filmes'
+        url_CMC = 'http://www.cinemaemcasa.pt/'
+        try:
+                toppt_source = abrir_url(url_toppt)
+        except: toppt_source = ''
+        saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
+        if saber_url_todos: url_TPT = saber_url_todos[0]
+        else: url_TPT = 'http://toppt.net/'
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
+        url_filmes_filmes = urllib.urlencode(parameters)                                                     #507
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]',url_filmes_filmes,10001,artfolder + 'UF.png','nao','')
+        #----------------------------
+        url_TFC = 'http://www.tuga-filmes.info/'
+        url_MVT = 'http://www.movie-tuga.blogspot.pt'
+        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
+        url_TPT = 'http://toppt.net/category/series/'
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+        url_ultimos_episodios = urllib.urlencode(parameters)
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
+        #----------------------------
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
         addDir('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B] (Filmes/Séries)','url',10000,artfolder + 'SDPI.png','nao','')
@@ -241,64 +268,172 @@ def dirtodos(url):
         progress.update( percent, 'A Procurar Filmes...', message, "" )
 
         threads = []
+        i = 0
+        try:
+                try:
+                        html_source = abrir_url(url_TPT)
+                except: html_source = ''
+                itemsTPT = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                if itemsTPT != []:
+                        proxima_TPT = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
+                        try:
+                                url_TPT = proxima_TPT[0].replace('#038;','').replace('&amp;','&')
+                        except: pass
+                else: url_TPT = 'http:'
 
-        TPT = threading.Thread(name='TPT', target=Mashup.TPTMASHUP , args=(url_TPT,))
-        threads.append(TPT)
-        #TPT.start()
+                for item in itemsTPT:
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        TPT = threading.Thread(name='TPT'+str(i), target=Mashup.TPTMASHUP , args=('FILME'+str(a)+'FILME'+item,))
+                        threads.append(TPT)
+        except: pass
+        i = 0
+        try:
+                try:
+                        html_source = abrir_url(url_TFV)
+                except: html_source = ''
+                itemsTFV = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+                if itemsTFV != []:
+                        try:
+                                proxima_TFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
+                                url_TFV = proxima_TFV[0].replace('&amp;','&')
+                        except: pass
+                else: url_TFV = 'http:'
 
-        CME = threading.Thread(name='CME', target=Mashup.CMEMASHUP , args=(url_CME,))
-        threads.append(CME)
-        #CME.start()
+                for item in itemsTFV:
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        TFV = threading.Thread(name='TFV'+str(i), target=Mashup.TFVMASHUP , args=('FILME'+str(a)+'FILME'+item,))
+                        threads.append(TFV)
+        except: pass
+        i = 0
+        try:
+                try:
+                        html_source = abrir_url(url_CME)
+                except: html_source = ''
+                itemsCME = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+                if itemsCME != []:
+                        proxima_CME = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)	
+                        try:
+                                url_CME = proxima_CME[0].replace('&amp;','&')
+                        except: pass
+                else: url_CME = 'http:'
 
-        TFC = threading.Thread(name='TFC', target=Mashup.TFCMASHUP , args=(url_TFC,))
-        threads.append(TFC)
-        #TFC.start()
-        
-        FTT = threading.Thread(name='FTT', target=Mashup.FTTMASHUP , args=(url_FTT,))
-        threads.append(FTT)
-        #FTT.start()
-        
-        TFV = threading.Thread(name='TFV', target=Mashup.TFVMASHUP , args=(url_TFV,))
-        threads.append(TFV)
-        #TFV.start()
-        
-        MVT = threading.Thread(name='MVT', target=Mashup.MVTMASHUP , args=(url_MVT,))
-        threads.append(MVT)
-        #MVT.start()
-        
-        CMT = threading.Thread(name='CMT', target=Mashup.CMTMASHUP , args=(url_CMT,))
-        threads.append(CMT)
-        #CMT.start()
+                for item in itemsCME:
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        CME = threading.Thread(name='CME'+str(i), target=Mashup.CMEMASHUP , args=('FILME'+str(a)+'FILME'+item,))
+                        threads.append(CME)
+        except: pass
+        i = 0
+        try:
+                try:
+                        html_source = abrir_url(url_TFC)
+                except: html_source = ''
+                itemsTFC = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
+                if itemsTFC != []:
+                        try:
+                                proxima_TFC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
+                                url_TFC = proxima_TFC[0].replace('&amp;','&')
+                        except: pass
+                else: url_TFC = 'http:'
 
-        CMC = threading.Thread(name='CMC', target=Mashup.CMCMASHUP , args=(url_CMC,))
-        threads.append(CMC)
-        #CMC.start()
+                for item in itemsTFC:
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        TFC = threading.Thread(name='TFC'+str(i), target=Mashup.TFCMASHUP , args=('FILME'+str(a)+'FILME'+item,))
+                        threads.append(TFC)
+        except: pass
+        i = 0
+        try:
+                try:
+                        html_source = abrir_url(url_MVT)
+                except: html_source = ''
+                itemsMVT = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
+                if itemsMVT != []:
+                        proxima_MVT = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
+                        try:
+                                url_MVT = proxima_MVT[0].replace('%3A',':')
+                                url_MVT = proxima_MVT[0].replace('&amp;','&')
+                        except: pass
+                else: url_MVT = 'http:'
+
+                for item in itemsMVT:
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        MVT = threading.Thread(name='MVT'+str(i), target=Mashup.MVTMASHUP , args=('FILME'+str(a)+'FILME'+item,))
+                        threads.append(MVT)
+        except: pass
+        i = 0
+        try:
+                try:
+                        html_source = abrir_url(url_FTT)
+                except: html_source = ''
+                itemsFTT = re.findall("<a class='comment-link'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+                if itemsFTT != []:
+                        try:
+                                proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)
+                                proxima_p = proxima[0]
+                                url_FTT = proxima_p.replace('&amp;','&')
+                        except: pass
+                else: url_FTT = 'http:'
+
+                for item in itemsFTT:
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        FTT = threading.Thread(name='FTT'+str(i), target=Mashup.FTTMASHUP , args=('FILME'+str(a)+'FILME'+item,))
+                        threads.append(FTT)
+        except: pass
+        i = 0
+        try:
+                try:
+                        html_source = abrir_url(url_CMT)
+                except: html_source = ''
+                itemsCMT = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
+                if itemsCMT != []:
+                        try:
+                                proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
+                                url_CMT = proxima[0].replace('&amp;','&')
+                        except: pass
+                else: url_CMT = 'http:'
+
+                for item in itemsCMT:
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        CMT = threading.Thread(name='CMT'+str(i), target=Mashup.CMTMASHUP , args=('FILME'+str(a)+'FILME'+item,))
+                        threads.append(CMT)
+        except: pass
+        i = 0
+        try:
+                try:
+                        html_source = abrir_url(url_CMC)
+                except: html_source = ''
+                itemsCMC = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                if itemsCMC != []:
+                        proxima_CMC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
+                        try:
+                                url_CMC = proxima_CMC[0].replace('&amp;','&').replace('%3A',':')
+                        except: pass
+                else: url_CMC = 'http:'
+
+                for item in itemsCMC:
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        CMC = threading.Thread(name='CMC'+str(i), target=Mashup.CMCMASHUP , args=('FILME'+str(a)+'FILME'+item,))
+                        threads.append(CMC)
+        except: pass
 
         [i.start() for i in threads]
-        
-        try: TPT.join()
-        except: pass
 
-        try: CME.join()
-        except: pass
-
-        try: TFC.join()
-        except: pass
-
-        try: FTT.join()
-        except: pass
-        
-        try: TFV.join()
-        except: pass
-
-        try: MVT.join()
-        except: pass
-        
-        try: CMT.join()
-        except: pass
-
-        try: CMC.join()
-        except: pass
+        [i.join() for i in threads]
         
         #######################################################################################
         
@@ -332,7 +467,8 @@ def dirtodos(url):
                         else: ano_filme = '---'
                         _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
                         if _f: fanart = _f[0]
-                        else: fanart = '---'
+                        else: fanart = ''
+                        if fanart == '---': fanart = ''
                         _g = re.compile('[|]GENERO[|](.+?)[|]ONOME[|]').findall(_filmes_[x])
                         if _g: genero = _g[0]
                         else: genero = '---'
@@ -1339,7 +1475,7 @@ elif mode == 31:
         xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 32:
-        TugaFilmesTV.TFV_encontrar_fontes_filmes(url,artfolder)
+        TugaFilmesTV.TFV_encontrar_fontes_filmes(url)
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
@@ -1398,6 +1534,11 @@ elif mode == 54: M18.M18_TFV_pesquisar_M18()
 elif mode == 55: M18.M18_TFV_encontrar_fontes_pesquisa_M18(url,pesquisou)
 elif mode == 56: TextBoxes.TBOX_TextBoxes_ChangeLog(url)
 elif mode == 57: TextBoxes.TBOX_TextBoxes_Sinopse(url)
+elif mode == 58:
+        TugaFilmesTV.ultimos_episodios_TFV_ultimos(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+        xbmc.executebuiltin("Container.SetViewMode(504)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 #----------------------------------------------  Tuga-Filmes.com  --------------------------------------------------
 elif mode == 70: print "", Play.PLAY_movie(url,name,iconimage,checker,fanart)
@@ -1463,7 +1604,7 @@ elif mode == 231:
         xbmc.executebuiltin("Container.SetViewMode(502)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 232:
-        TopPt.TPT_encontrar_fontes_filmes(url,artfolder)
+        TopPt.TPT_encontrar_fontes_filmes(url)
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
@@ -1506,6 +1647,11 @@ elif mode == 259:
         TopPt.TPT_Menu_Top_Series(artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 260:
+        TopPt.ultimos_episodios_TPT_ultimos(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+        xbmc.executebuiltin("Container.SetViewMode(504)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 #----------------------------------------------------------------ARMAGEDOM--------------------------------------------------------------------#
 elif mode == 331: Armagedom.ARM_MenuPrincipal()
@@ -1565,8 +1711,11 @@ elif mode == 507:
 elif mode == 508:
         Mashup.ultimos_episodios(url)
         #setViewMode_filmes()
-        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
-        xbmc.executebuiltin("Container.SetViewMode(560)")#503
+##        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+##        xbmc.executebuiltin("Container.SetViewMode(560)")#503
+##        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+        xbmc.executebuiltin("Container.SetViewMode(504)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 #----------------------------------------------  FOITATUGA  -------------------------------------------------------
 elif mode == 600: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)

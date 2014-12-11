@@ -24,11 +24,10 @@
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,threading,FilmesAnima,Mashup,Funcoes,Play
 from array import array
 from string import capwords
-from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
+from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB, thetvdb_api_IMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
 from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
 from Funcoes import get_params,abrir_url
-from array import array
 
 arr_series = ['' for i in range(500)]
 arrai_series = ['' for i in range(500)]
@@ -38,6 +37,7 @@ _series = []
 _s_ = []
 sri = []
 filmes = []
+filmesTPT = []
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -65,13 +65,13 @@ def TPT_MenuPrincipal(artfolder):
                 addDir('[COLOR yellow]- Animação[/COLOR]',saber_url_animacao[0],232,artfolder + 'FA.png','nao','')
                 addDir('[COLOR yellow]- Por Ano[/COLOR]','url',239,artfolder + 'ANO.png','nao','')
                 addDir('[COLOR yellow]- Categorias[/COLOR]','url',238,artfolder + 'CT.png','nao','')
-                addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://toppt.net/',258,artfolder + 'TPF.png','nao','')
+                addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://toppt.net/',232,artfolder + 'TPF.png','nao','')#258
                 if selfAddon.getSetting('hide-porno') == "false":
                         addDir('[B][COLOR red]M+18[/B][/COLOR]',saber_url_M18[0],232,artfolder + 'TPT1.png','nao','')		
                 addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'TPT1.png',False,'')
                 addDir('[COLOR yellow]- A a Z[/COLOR]','urlTPT',241,artfolder + 'SAZ1.png','nao','')#241
-                addDir('[COLOR yellow]- Últimos Episódios[/COLOR]',saber_url_series[0]+'ULTIMOS',232,artfolder + 'UE.png','nao','')
-                addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',259,artfolder + 'TPS.png','nao','')
+                addDir('[COLOR yellow]- Últimos Episódios[/COLOR]',saber_url_series[0],260,artfolder + 'UE.png','nao','')#232
+                addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',232,artfolder + 'TPS.png','nao','')#259
         except:pass
 
 def TPT_Menu_Filmes_Por_Ano(artfolder):
@@ -98,28 +98,13 @@ def TPT_Menu_Filmes_Por_Categorias(artfolder):
                                 addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ',endereco_categoria,232,artfolder + 'TPT1.png','nao','')
 
 
-def TPT_Menu_Top_Filmes(artfolder):
-        i = 1
-        num = 22.0
-        percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
-        url_ano = 'http://toppt.net/'
-        top_source = abrir_url(url_ano)
-        filmes_por_ano = re.findall('<h3 class="widgettitle">TOP FILMES</h3>(.+?)<ul class="widget-container">', top_source, re.DOTALL)
-	for tp_filmes in filmes_por_ano:
-                endereco_tf = re.compile('<a href="(.+?)".+?<img.+?src="(.+?)"').findall(tp_filmes)
-                for tpe,tph in endereco_tf:
-                        #addLink(tpe,'','')
-                        percent = int( ( i / num ) * 100)
-                        message = str(i) + " de " + str(int(num))
-                        progress.update( percent, "", message, "" )
-                        print str(i) + " de " + str(int(num))
-                        if progress.iscanceled():
-                                break
+def TPT_Menu_Top_Filmes(item):
+
+        if item != '':
+
+                try:
                         try:
-                                html_source = abrir_url(tpe)
+                                html_source = abrir_url(item)
                         except: html_source = ''
                         items = re.findall('<div id="content">(.*?)<span id="more', html_source, re.DOTALL)
                         if items != []:
@@ -155,6 +140,9 @@ def TPT_Menu_Top_Filmes(artfolder):
                                 imdbcode = ''
                                 anofilme = ''
 
+                                thumbnail = re.compile('src="(.+?)"').findall(items[0])
+                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
+
                                 imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
@@ -166,8 +154,6 @@ def TPT_Menu_Top_Filmes(artfolder):
                                                 if len(q_a_q_a) == 4:
                                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                                         nome = nome.replace(tirar_ano,'')
-
-                                                        
                         
                                 nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
                                 if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
@@ -175,7 +161,7 @@ def TPT_Menu_Top_Filmes(artfolder):
                                 if nnnn: nome_pesquisa = nnnn[0]
                                 else: nome_pesquisa = nome
                                 try:
-                                        fanart,tmdb_id,thumb = themoviedb_api().fanart_and_id(nome_pesquisa,'')
+                                        fanart,tmdb_id,thu = themoviedb_api().fanart_and_id(nome_pesquisa,'')
                                         if imdbcode != '': sinopse = theomapi_api().sinopse(imdbcode)
                                 except: pass
 
@@ -188,35 +174,21 @@ def TPT_Menu_Top_Filmes(artfolder):
                                 if fanart == '---': fanart = ''
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
-                                if tph == '': tph = '---'
-                                addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',tpe+'IMDB'+imdbcode+'IMDB',233,tph,sinopse,fanart,ano_filme,genero,nome,tpe)
+                                #if tph == '': tph = '---'
+                                addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',item+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme,genero,nome,item)
                                 #addDir('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',tpe+'IMDB'+imdbcode+'IMDB',233,tph,'nao','')
 
-                        except: pass        
-                        i = i + 1
-        progress.close()
+                        except: pass
+                except: pass
 
-def TPT_Menu_Top_Series(artfolder):
-        i = 1
-        num = 10.0
-        percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
-        url_ano = 'http://toppt.net/'
-        top_source = abrir_url(url_ano)
-        filmes_por_ano = re.findall('<h3 class="widgettitle">TOP SÉRIES</h3>(.+?)<ul class="widget-container">', top_source, re.DOTALL)
-	for tp_filmes in filmes_por_ano:
-                endereco_tf = re.compile('<a href="(.+?)".+?<img.+?src="(.+?)"').findall(tp_filmes)
-                for tpe,tph in endereco_tf:
-                        percent = int( ( i / num ) * 100)
-                        message = str(i) + " de " + str(int(num))
-                        progress.update( percent, "", message, "" )
-                        print str(i) + " de " + str(int(num))
-                        if progress.iscanceled():
-                                break
+
+def TPT_Menu_Top_Series(item):
+
+        if item != '':
+
+                try:
                         try:
-                                html_source = abrir_url(tpe)
+                                html_source = abrir_url(item)
                         except: html_source = ''
                         items = re.findall('<div id="content">(.*?)<span id="more', html_source, re.DOTALL)
                         if items != []:
@@ -226,6 +198,8 @@ def TPT_Menu_Top_Series(artfolder):
                                 urletitulo = re.compile('class="title">(.+?)<').findall(items[0])
                                 ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(items[0])
                                 if ano: ano_filme = ano[0].replace(' ','')
+                                thumbnail = re.compile('src="(.+?)"').findall(items[0])
+                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
                         try:
                                 genero = ''
                                 sinopse = ''
@@ -275,754 +249,389 @@ def TPT_Menu_Top_Series(artfolder):
                                 if fanart == '---': fanart = ''
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
-                                addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',tpe+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,tpe)
+                                addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',item+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,item)
                         except: pass
-                        i = i + 1
-        progress.close()
+                except: pass
 
 
 
 def TPT_Menu_Series_A_a_Z(artfolder,url):
-        conta_os_items = 0
-        i = 1
-        s = 0
-        num = 0
-        conta = 0
-        conta_items = 1
         
         percent = 0
-        message = ''
-        progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
+        message = 'Por favor aguarde.'
+        progress.create('Progresso', 'A Procurar')
+        progress.update( percent, 'A Procurar Séries (A/Z) ...', message, "" )
+				
+        num = 0
+        i = 0
+        thr = 0
+        
+        threads = []
 
-##        try:
-##                Series_Fi = open(folder + 'series.txt', 'r')
-##                Series_Fi.close()
-##                Mashup.Series_Series(url)
-##        except: pass
-                
-
-        folder = perfil
-        Series_File = open(folder + 'seriesTPT.txt', 'a')
-        Series_Fi = open(folder + 'seriesTPT.txt', 'r')
-        read_Series_File = ''
-        for line in Series_Fi:
-                read_Series_File = read_Series_File + line
-                if line!='':_series_.append(line)
-
-        Series_File_ALL = open(folder + 'series.txt', 'r')
-        read_Series_File_ALL = ''
-        for linha in Series_File_ALL:
-                read_Series_File_ALL = read_Series_File_ALL + linha
-                if linha!='':_seriesALL_.append(linha)
-                
-        urltpt = 'http://toppt.net/'
+        for i in range(len(filmes)):
+                filmes[i] = ''
         
         try:
-                html_series_source = abrir_url(urltpt)
-        except: html_series_source = ''
-	html_items_series = re.findall('<a href="http://toppt.net/category/series/">SÈRIES NOVAS</a>(.*?)<div class="clearfix">', html_series_source, re.DOTALL)
-        print len(html_items_series)
-        for item_series in html_items_series:
-                series = re.compile('<a href=".+?">(.+?)</a>').findall(item_series)
-                for nome_series in series:
-                        nome_series = nome_series.replace('&amp;','&')
-                        nome_series = nome_series.replace('&#39;',"'")
-                        nome_series = nome_series.replace('&#8217;',"'")
-                        nome_series = nome_series.replace('&#8230;',"...")
-                        nome_series = nome_series.replace('&#8211;',"-")
-                        nome_series = nome_series.replace('Da Vincis Demons',"Da Vinci'S Demons")
-                        nome_series = nome_series.lower()
-                        nome_series = nome_series.title()
-                        if nome_series not in _series:
-                                _series.append(nome_series)
-				s = s + 1
-	html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main">', html_series_source, re.DOTALL)
-        print len(html_items_series)
-        for item_series in html_items_series:
-                series = re.compile('<a href=".+?">(.+?)</a>').findall(item_series)
-                for nome_series in series:
-                        nome_series = nome_series.replace('&amp;','&')
-                        nome_series = nome_series.replace('&#39;',"'")
-                        nome_series = nome_series.replace('&#8217;',"'")
-                        nome_series = nome_series.replace('&#8230;',"...")
-                        nome_series = nome_series.replace('&#8211;',"-")
-                        nome_series = nome_series.replace('Da Vincis Demons',"Da Vinci'S Demons")
-                        nome_series = nome_series.lower()
-                        nome_series = nome_series.title()
-                        if nome_series not in _series:
-                                _series.append(nome_series)
-				s = s + 1
-	#------------------------------------------------------------------------------
-	#return
-        num = s + 0.0
-        url = 'http://toppt.net/'
-        site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
+                folder = perfil
+                
+                try: Filmes_Fi = open(folder + 'SeriesTPT1.txt', 'r')
+                except:
+                        Filmes_File = open(folder + 'SeriesTPT1.txt', 'a')
+                        Filmes_File.close()
+                        Filmes_Fi = open(folder + 'SeriesTPT1.txt', 'r')
+                read_Filmes_File = ''
+                for line in Filmes_Fi:
+                        read_Filmes_File = read_Filmes_File + line
+                        if line!='':filmes.append(line)
+                try:
+                        html_source = abrir_url('http://toppt.net/')
+                except: html_source = ''
+                html_items_series = re.findall('<a href="http://toppt.net/category/series/">SÈRIES NOVAS</a>(.*?)<div class="clearfix">', html_source, re.DOTALL)
+                for item_series in html_items_series:
+                        series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
+                        for endereco_series,nome_series in series:
+                                if endereco_series not in read_Filmes_File:
+                                        nome_series = nome_series.replace('&amp;','&')
+                                        nome_series = nome_series.replace('&#39;',"'")
+                                        nome_series = nome_series.replace('&#8217;',"'")
+                                        nome_series = nome_series.replace('&#8230;',"...")
+                                        nome_series = nome_series.replace('&#8211;',"-")
+                                        nome_series = nome_series.replace('Da Vincis Demons',"Da Vinci'S Demons")
+                                        nome_series = nome_series.replace('NCIS Los Angeles',"NCIS: Los Angeles")
+                                        nome_series = nome_series.lower()
+                                        nome_series = nome_series.title()
+                                        _series.append(endereco_series)
+                                        i = i + 1
+                                        a = str(i)
+                                        if i < 10: a = '00'+a
+                                        if i < 100 and i > 9: a = '0'+a
+                                        TPT = threading.Thread(name='TPT'+str(i), target=Series_TPT, args=('FILME'+str(a)+'FILME',endereco_series,nome_series,))
+                                        threads.append(TPT)
+                html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main">', html_source, re.DOTALL)
+                for item_series in html_items_series:
+                        series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
+                        for endereco_series,nome_series in series:
+                                if endereco_series not in read_Filmes_File and endereco_series not in _series:
+                                        nome_series = nome_series.replace('&amp;','&')
+                                        nome_series = nome_series.replace('&#39;',"'")
+                                        nome_series = nome_series.replace('&#8217;',"'")
+                                        nome_series = nome_series.replace('&#8230;',"...")
+                                        nome_series = nome_series.replace('&#8211;',"-")
+                                        nome_series = nome_series.replace('Da Vincis Demons',"Da Vinci'S Demons")
+                                        nome_series = nome_series.replace('NCIS Los Angeles',"NCIS: Los Angeles")
+                                        nome_series = nome_series.lower()
+                                        nome_series = nome_series.title()
+                                        _series.append(endereco_series)
+                                        i = i + 1
+                                        a = str(i)
+                                        if i < 10: a = '00'+a
+                                        if i < 100 and i > 9: a = '0'+a
+                                        TPT = threading.Thread(name='TPT'+str(i), target=Series_TPT, args=('FILME'+str(a)+'FILME',endereco_series,nome_series,))
+                                        threads.append(TPT)
+                Filmes_Fi.close()
+        except: pass
+
+        for i in range(int(len(threads)/3)):
+                threads[i].start()
+        for i in range(int(len(threads)/3)):
+                threads[i].join()
+
+        for i in range(int(len(threads)/3),int(2*(len(threads)/3))):
+                threads[i].start()
+        for i in range(int(len(threads)/3),int(2*(len(threads)/3))):
+                threads[i].join()
+
+        for i in range(int(2*(len(threads)/3)),len(threads)):
+                threads[i].start()
+        for i in range(int(2*(len(threads)/3)),len(threads)):
+                threads[i].join()
+
+##        [i.start() for i in threads]
+##
+##        [i.join() for i in threads]
+
+        filmes.sort()
+        
+        folder = perfil 
+        Filmes_File = open(folder + 'SeriesTPT1.txt', 'w')
+        for x in range(len(filmes)):
+                if filmes[x] != '':
+                        Filmes_File.write(str(filmes[x]))
+        Filmes_File.close()
+
         try:
-                html_series_source = abrir_url(url)
-        except: html_series_source = ''
-	html_items_series = re.findall('<a href="http://toppt.net/category/series/">SÈRIES NOVAS</a>(.*?)<div class="clearfix">', html_series_source, re.DOTALL)
-        print len(html_items_series)
-        for item_series in html_items_series:
-                series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
-                for endereco_series,nome_series in series:
-                        nome_series = nome_series.replace('&amp;','&')
-                        nome_series = nome_series.replace('&#39;',"'")
-                        nome_series = nome_series.replace('&#8217;',"'")
-                        nome_series = nome_series.replace('&#8230;',"...")
-                        nome_series = nome_series.replace('&#8211;',"-")
-                        nome_series = nome_series.replace('NCIS ',"NCIS:")
-                        nome_series = nome_series.replace('Da Vincis Demons',"Da Vinci'S Demons")
-                        nome_series = nome_series.lower()
-                        nome_series = nome_series.title()
-                        ##########################################################
-                        if nome_series in read_Series_File:
-                                percent = int( ( i / num ) * 100)
-                                message = str(i) + " de " + str(int(num))
-                                progress.update( percent, 'A Procurar Séries em '+site, message, "" )
-                                print str(i) + " de " + str(int(num))
-                                if progress.iscanceled():
-                                        break
-                                for x in range(len(_series_)):
-                                        if nome_series in _series_[x]:
-                                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_series_[x])
-                                                if _n: nome = _n[0]
-                                                else: nome = '---'
-                                                if nome_series in nome:
-                                                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_series_[x])
-                                                        if _i: imdbcode = _i[0]
-                                                        else: imdbcode = '---'
-                                                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_series_[x])
-                                                        if _t: thumb = _t[0]
-                                                        else: thumb = '---'
-                                                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_series_[x])
-                                                        if _a: ano_filme = _a[0]
-                                                        else: ano_filme = '---'
-                                                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_series_[x])
-                                                        if _f: fanart = _f[0]
-                                                        else: fanart = '---'
-                                                        _g = re.compile('[|]GENERO[|](.+?)[|]SINOPSE[|]').findall(_series_[x])
-                                                        if _g: genero = _g[0]
-                                                        else: genero = '---'
-                                                        _s = re.compile('[|]SINOPSE[|](.*)').findall(_series_[x])
-                                                        if _s: s = _s[0]
-                                                        if '|END|' in s: sinopse = s.replace('|END|','')
-                                                        else:
-                                                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_series_[x])
-                                                                if si: sinopse = si[0][0] + ' ' + si[0][1]
-                                                                else: sinopse = '---'
-                                                        if fanart == '' or fanart == '---':
-                                                                if selfAddon.getSetting('Fanart') == "true":
-                                                                        nome_pesquisa = nome_series
-                                                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                                                        if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                                        if sinopse == '---':
-                                                                                if snpse: sinopse = snpse[0]
-                                                        if sinopse == '' or sinopse == '---':
-                                                                nome_pesquisa = nome_series
-                                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                                if snpse: sinopse = snpse[0]
-                                                        arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
-                                                        arr_series[i] = nome_series
-                        elif nome_series in read_Series_File_ALL:
-                                percent = int( ( i / num ) * 100)
-                                message = str(i) + " de " + str(int(num))
-                                progress.update( percent, 'A Procurar Séries em '+site, message, "" )
-                                print str(i) + " de " + str(int(num))
-                                if progress.iscanceled():
-                                        break
-                                for x in range(len(_seriesALL_)):
-                                        if nome_series in _seriesALL_[x]:
-                                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_seriesALL_[x])
-                                                if _n: nome = _n[0]
-                                                else: nome = '---'
-                                                if nome_series in nome:
-                                                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_seriesALL_[x])
-                                                        if _i: imdbcode = _i[0]
-                                                        else: imdbcode = '---'
-                                                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_seriesALL_[x])
-                                                        if _t: thumb = _t[0]
-                                                        else: thumb = '---'
-                                                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_seriesALL_[x])
-                                                        if _a: ano_filme = _a[0]
-                                                        else: ano_filme = '---'
-                                                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_seriesALL_[x])
-                                                        if _f: fanart = _f[0]
-                                                        else: fanart = '---'
-                                                        _g = re.compile('[|]GENERO[|](.+?)[|]SINOPSE[|]').findall(_seriesALL_[x])
-                                                        if _g: genero = _g[0]
-                                                        else: genero = '---'
-                                                        _s = re.compile('[|]SINOPSE[|](.*)').findall(_seriesALL_[x])
-                                                        if _s: s = _s[0]
-                                                        if '|END|' in s: sinopse = s.replace('|END|','')
-                                                        else:
-                                                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_seriesALL_[x])
-                                                                if si: sinopse = si[0][0] + ' ' + si[0][1]
-                                                                else: sinopse = '---'
-                                                        if fanart == '' or fanart == '---':
-                                                                if selfAddon.getSetting('Fanart') == "true":
-                                                                        nome_pesquisa = nome_series
-                                                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                                                        if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                                        if sinopse == '---':
-                                                                                if snpse: sinopse = snpse[0]
-                                                        if sinopse == '' or sinopse == '---':
-                                                                nome_pesquisa = nome_series
-                                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                                if snpse: sinopse = snpse[0]
-                                                        arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
-                                                        arr_series[i] = nome_series
-                        else:
-                                try:
-                                        html_source = abrir_url(endereco_series)
-                                except: html_source = ''
-                                items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
-                                genero = ''
-                                sinopse = ''
-                                fanart = ''
-                                thumb = ''
-                                qualidade = ''
-                                imdbcode = ''
-                                audio_filme = ''
+                _sites_ = ['SeriesTPT1.txt']
+                folder = perfil
+                num_filmes = 0
+                
+                for site in _sites_:
+                        _filmes_ = []
+                        Filmes_Fi = open(folder + site, 'r')
+                        read_Filmes_File = ''
+                        for line in Filmes_Fi:
+                                read_Filmes_File = read_Filmes_File + line
+                                if line!='':_filmes_.append(line)
 
-                                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
-                                if imdb: imdbcode = imdb[0]
-                                else: imdbcode = ''
-
-                                try:
-                                        urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(items[0])
-                                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(items[0])
-                                        
-                                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(items[0])
-                                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(items[0])
-                                        if qualid:
-                                                qualidade = qualid[0]
-                                                qualidade = qualidade.replace('[',' - ')
-                                                qualidade = qualidade.replace(']','')
-                                        else:
-                                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(items[0])
-                                                if qualid:
-                                                        qualidade = qualid[0]
-                                                        qualidade = qualidade.replace('[',' - ')
-                                                        qualidade = qualidade.replace(']','')
-                                                else:
-                                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(items[0])
-                                                        if qualid:
-                                                                qualidade = qualid[0]
-                                                                qualidade = qualidade.replace('[',' - ')
-                                                                qualidade = qualidade.replace(']','')
-                                                        else:
-                                                                qualidade = ''
-
-                                        genr = re.compile("NERO:.+?/b>(.+?)<br/>").findall(items[0])
-                                        if genr: genero = genr[0]
-                                        
-                                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(items[0])
-                                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(items[0])
-                                        thumbnail = re.compile('src="(.+?)"').findall(items[0])
-                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
-                                        print urletitulo,thumbnail
-                                        nome = urletitulo[0][1]
-                                        nome = nome.replace('&#8217;',"'")
-                                        nome = nome.replace('&#8211;',"-")
-                                        nome = nome.replace('&#038;',"&")
-                                        nome = nome.replace('&#39;',"'")
-                                        nome = nome.replace('&amp;','&')
-                                        nome = nome.replace('(PT-PT)',"")
-                                        nome = nome.replace('(PT/PT)',"")
-                                        nome = nome.replace('[PT-PT]',"")
-                                        nome = nome.replace('[PT/PT]',"")
-                                        nome = nome.replace('[PT-BR]',"")
-                                        nome = nome.replace('[PT/BR]',"")
-                                        nome = nome.replace(' (PT-PT)',"")
-                                        nome = nome.replace(' (PT/PT)',"")
-                                        nome = nome.replace(' [PT-PT]',"")
-                                        nome = nome.replace(' [PT/PT]',"")
-                                        nome = nome.replace(' [PT-BR]',"")
-                                        nome = nome.replace(' [PT/BR]',"")
-                                        nome = nome.replace('  '," ")
-                                        if audio:
-                                                if len(audio[0]) > 15:
-                                                        audio = re.compile('<b>AUDIO: </b>(.+?)<span style="color: red;"><b>(.+?)</b></span><br/>').findall(items[0])
-                                                        if audio:
-                                                                audio_filme = ': ' + audio[0][0] + audio[0][1]
-                                                        else:
-                                                                audio = re.compile('<b>AUDIO: </b> <b><span style="color: red;">(.+?)</span> <span style="color: #38761d;">(.+?)</span></b><br/>').findall(items[0])
-                                                                if audio:
-                                                                        audio_filme = audio[0][0] + audio[0][1]
-                                                                        if 'Portug' or 'PORTUG' in audio_filme:
-                                                                                audio_filme = ': PT-PT'
-                                                                else:
-                                                                        audio = re.compile('<b>AUDIO:.+?<strong>(.+?)</strong>').findall(items[0])
-                                                                        if audio:
-                                                                                audio_filme = audio[0][0] + audio[0][1]
-                                                                                if 'Portug' or 'PORTUG' in audio_filme:
-                                                                                        audio_filme = ': PT-PT'
-                                                else:
-                                                        audio_filme = ': ' + audio[0]
-                                        if not audio:
-                                                audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br/>").findall(items[0])
-                                                if audio:
-                                                        audio_filme = ': ' + audio[0]
-                                                else:
-                                                        audio_filme = ''
-                                        if not ano:
-                                                ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(items[0])
-                                                if ano:
-                                                        ano_filme = ': ' + ano[0].replace(' ','')
-                                                else:
-                                                        ano_filme = ''     
-                                        if ano:
-                                                ano_filme = ano[0].replace(' ','')
-                                                a_q = re.compile('\d+')
-                                                qq_aa = a_q.findall(nome)
-                                                for q_a_q_a in qq_aa:
-                                                        if len(q_a_q_a) == 4:
-                                                                tirar_ano = '(' + str(q_a_q_a) + ')'
-                                                                nome = nome.replace(tirar_ano,'')
-                                        
-                                        a_q = re.compile('\d+')
-                                        qq_aa = a_q.findall(nome)
-                                        for q_a_q_a in qq_aa:
-                                                if len(q_a_q_a) == 4:
-                                                        tirar_ano = '(' + str(q_a_q_a) + ')'
-                                                        nome = nome.replace(tirar_ano,'')
-                                                        
-                                        if selfAddon.getSetting('Fanart') == "true":
-                                                nome_pesquisa = nome_series
-                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                                if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                if sinopse == '---':
-                                                        if snpse: sinopse = snpse[0]
-                                        if sinopse == '' or sinopse == '---':
-                                                nome_pesquisa = nome_series
-                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                if snpse: sinopse = snpse[0]
-                                                
-                                        ano_filme = '('+ano_filme+')'
-                                        qualidade = '('+qualidade
-                                        audio_filme = audio_filme+')'
-                                        if genero == '': genero = '---'
-                                        if sinopse == '': sinopse = '---'
-                                        if fanart == '': fanart = '---'
-                                        if imdbcode == '': imdbcode = '---'
-                                        if thumb == '': thumb = '---'
-                                        #Series_File.write('NOME|'+nome_series+'|SINOPSE|'+sinopse+'|END|\n')
-                                        Series_File.write('NOME|'+nome_series+'|IMDBCODE|'+'IMDB'+imdbcode+'IMDB'+'|'+endereco_series+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|\n')
-                                except: pass
-                        if nome_series in arr_series:
-                                _imdb = re.compile('[|]IMDBCODE[|](.+?)[|](.+?)[|](.+?)[|]THUMB[|]').findall(arrai_series[arr_series.index(nome_series)])
-                                if not _imdb:
-                                        _imdb = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(arrai_series[arr_series.index(nome_series)])
-                                        if _imdb:
-                                                if 'toppt' not in _imdb[0]:
-                                                        imdb = _imdb[0]
-                                                        arrai_series[arr_series.index(nome_series)]=arrai_series[arr_series.index(nome_series)].replace(imdb,imdb+'|'+endereco_series)
-                        if nome_series not in arr_series:
-                                percent = int( ( i / num ) * 100)
-                                message = str(i) + " de " + str(int(num))
-                                progress.update( percent, 'A Procurar Séries em '+site, message, "" )
-                                print str(i) + " de " + str(int(num))
-                                if progress.iscanceled():
-                                        break
-                                if fanart == '' or fanart == '---':
-                                        if selfAddon.getSetting('Fanart') == "true":
-                                                nome_pesquisa = nome_series
-                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                                if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                if sinopse == '---':
-                                                        if snpse: sinopse = snpse[0]
-                                if sinopse == '' or sinopse == '---':
-                                        nome_pesquisa = nome_series
-                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                        if snpse: sinopse = snpse[0]
-                                arr_series[i] = nome_series
-                                if 'IMDB' in imdbcode:
-                                        arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|'+endereco_series+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
-                                else:
-                                        arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+'IMDB'+imdbcode+'IMDB'+'|'+endereco_series+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
-                        i = i + 1
-        html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main">', html_series_source, re.DOTALL)
-        print len(html_items_series)
-        for item_series in html_items_series:
-                series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
-                for endereco_series,nome_series in series:
-                        nome_series = nome_series.replace('&amp;','&')
-                        nome_series = nome_series.replace('&#39;',"'")
-                        nome_series = nome_series.replace('&#8217;',"'")
-                        nome_series = nome_series.replace('&#8230;',"...")
-                        nome_series = nome_series.replace('&#8211;',"-")
-                        nome_series = nome_series.replace('NCIS ',"NCIS:")
-                        nome_series = nome_series.replace('Da Vincis Demons',"Da Vinci'S Demons")
-                        nome_series = nome_series.lower()
-                        nome_series = nome_series.title()
-                        if nome_series in read_Series_File:
-                                percent = int( ( i / num ) * 100)
-                                message = str(i) + " de " + str(int(num))
-                                progress.update( percent, 'A Procurar Séries em '+site, message, "" )
-                                print str(i) + " de " + str(int(num))
-                                if progress.iscanceled():
-                                        break
-                                for x in range(len(_series_)):
-                                        if nome_series in _series_[x]:
-                                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_series_[x])
-                                                if _n: nome = _n[0]
-                                                else: nome = '---'
-                                                if nome_series in nome:
-                                                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_series_[x])
-                                                        if _i: imdbcode = _i[0]
-                                                        else: imdbcode = '---'
-                                                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_series_[x])
-                                                        if _t: thumb = _t[0]
-                                                        else: thumb = '---'
-                                                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_series_[x])
-                                                        if _a: ano_filme = _a[0]
-                                                        else: ano_filme = '---'
-                                                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_series_[x])
-                                                        if _f: fanart = _f[0]
-                                                        else: fanart = '---'
-                                                        _g = re.compile('[|]GENERO[|](.+?)[|]SINOPSE[|]').findall(_series_[x])
-                                                        if _g: genero = _g[0]
-                                                        else: genero = '---'
-                                                        _s = re.compile('[|]SINOPSE[|](.*)').findall(_series_[x])
-                                                        if _s: s = _s[0]
-                                                        if '|END|' in s: sinopse = s.replace('|END|','')
-                                                        else:
-                                                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(arrai_series[x])
-                                                                if si: sinopse = si[0][0] + ' ' + si[0][1]
-                                                                else: sinopse = '---'
-                                                        if fanart == '' or fanart == '---':
-                                                                if selfAddon.getSetting('Fanart') == "true":
-                                                                        nome_pesquisa = nome_series
-                                                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                                                        if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                                        if sinopse == '---':
-                                                                                if snpse: sinopse = snpse[0]
-                                                        if sinopse == '' or sinopse == '---':
-                                                                nome_pesquisa = nome_series
-                                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                                if snpse: sinopse = snpse[0]
-                                                        arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
-                                                        arr_series[i] = nome_series
-                        elif nome_series in read_Series_File_ALL:
-                                percent = int( ( i / num ) * 100)
-                                message = str(i) + " de " + str(int(num))
-                                progress.update( percent, 'A Procurar Séries em '+site, message, "" )
-                                print str(i) + " de " + str(int(num))
-                                if progress.iscanceled():
-                                        break
-                                for x in range(len(_seriesALL_)):
-                                        if nome_series in _seriesALL_[x]:
-                                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_seriesALL_[x])
-                                                if _n: nome = _n[0]
-                                                else: nome = '---'
-                                                if nome_series in nome:
-                                                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_seriesALL_[x])
-                                                        if _i: imdbcode = _i[0]
-                                                        else: imdbcode = '---'
-                                                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_seriesALL_[x])
-                                                        if _t: thumb = _t[0]
-                                                        else: thumb = '---'
-                                                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_seriesALL_[x])
-                                                        if _a: ano_filme = _a[0]
-                                                        else: ano_filme = '---'
-                                                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_seriesALL_[x])
-                                                        if _f: fanart = _f[0]
-                                                        else: fanart = '---'
-                                                        _g = re.compile('[|]GENERO[|](.+?)[|]SINOPSE[|]').findall(_seriesALL_[x])
-                                                        if _g: genero = _g[0]
-                                                        else: genero = '---'
-                                                        _s = re.compile('[|]SINOPSE[|](.*)').findall(_seriesALL_[x])
-                                                        if _s: s = _s[0]
-                                                        if '|END|' in s: sinopse = s.replace('|END|','')
-                                                        else:
-                                                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_seriesALL_[x])
-                                                                if si: sinopse = si[0][0] + ' ' + si[0][1]
-                                                                else: sinopse = '---'
-                                                        if fanart == '' or fanart == '---':
-                                                                if selfAddon.getSetting('Fanart') == "true":
-                                                                        nome_pesquisa = nome_series
-                                                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                                                        if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                                        if sinopse == '---':
-                                                                                if snpse: sinopse = snpse[0]
-                                                        if sinopse == '' or sinopse == '---':
-                                                                nome_pesquisa = nome_series
-                                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                                if snpse: sinopse = snpse[0]
-                                                        arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
-                                                        arr_series[i] = nome_series
-                        else:
-                                try:
-                                        html_source = abrir_url(endereco_series)
-                                except: html_source = ''
-                                items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
-                                genero = ''
-                                sinopse = ''
-                                fanart = ''
-                                thumb = ''
-                                qualidade = ''
-                                imdbcode = ''
-                                audio_filme = ''
-
-                                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
-                                if imdb: imdbcode = imdb[0]
-                                else: imdbcode = ''
-
-                                try:
-                                        urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(items[0])
-                                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(items[0])
-                                        
-                                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(items[0])
-                                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(items[0])
-                                        if qualid:
-                                                qualidade = qualid[0]
-                                                qualidade = qualidade.replace('[',' - ')
-                                                qualidade = qualidade.replace(']','')
-                                        else:
-                                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(items[0])
-                                                if qualid:
-                                                        qualidade = qualid[0]
-                                                        qualidade = qualidade.replace('[',' - ')
-                                                        qualidade = qualidade.replace(']','')
-                                                else:
-                                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(items[0])
-                                                        if qualid:
-                                                                qualidade = qualid[0]
-                                                                qualidade = qualidade.replace('[',' - ')
-                                                                qualidade = qualidade.replace(']','')
-                                                        else:
-                                                                qualidade = ''
-
-                                        genr = re.compile("NERO:.+?/b>(.+?)<br/>").findall(items[0])
-                                        if genr: genero = genr[0]
-                                        
-                                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(items[0])
-                                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(items[0])
-                                        thumbnail = re.compile('src="(.+?)"').findall(items[0])
-                                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
-                                        print urletitulo,thumbnail
-                                        nome = urletitulo[0][1]
-                                        nome = nome.replace('&#8217;',"'")
-                                        nome = nome.replace('&#8211;',"-")
-                                        nome = nome.replace('&#038;',"&")
-                                        nome = nome.replace('&#39;',"'")
-                                        nome = nome.replace('&amp;','&')
-                                        nome = nome.replace('(PT-PT)',"")
-                                        nome = nome.replace('(PT/PT)',"")
-                                        nome = nome.replace('[PT-PT]',"")
-                                        nome = nome.replace('[PT/PT]',"")
-                                        nome = nome.replace('[PT-BR]',"")
-                                        nome = nome.replace('[PT/BR]',"")
-                                        nome = nome.replace(' (PT-PT)',"")
-                                        nome = nome.replace(' (PT/PT)',"")
-                                        nome = nome.replace(' [PT-PT]',"")
-                                        nome = nome.replace(' [PT/PT]',"")
-                                        nome = nome.replace(' [PT-BR]',"")
-                                        nome = nome.replace(' [PT/BR]',"")
-                                        nome = nome.replace('  '," ")
-                                        if audio:
-                                                if len(audio[0]) > 15:
-                                                        audio = re.compile('<b>AUDIO: </b>(.+?)<span style="color: red;"><b>(.+?)</b></span><br/>').findall(items[0])
-                                                        if audio:
-                                                                audio_filme = ': ' + audio[0][0] + audio[0][1]
-                                                        else:
-                                                                audio = re.compile('<b>AUDIO: </b> <b><span style="color: red;">(.+?)</span> <span style="color: #38761d;">(.+?)</span></b><br/>').findall(items[0])
-                                                                if audio:
-                                                                        audio_filme = audio[0][0] + audio[0][1]
-                                                                        if 'Portug' or 'PORTUG' in audio_filme:
-                                                                                audio_filme = ': PT-PT'
-                                                                else:
-                                                                        audio = re.compile('<b>AUDIO:.+?<strong>(.+?)</strong>').findall(items[0])
-                                                                        if audio:
-                                                                                audio_filme = audio[0][0] + audio[0][1]
-                                                                                if 'Portug' or 'PORTUG' in audio_filme:
-                                                                                        audio_filme = ': PT-PT'
-                                                else:
-                                                        audio_filme = ': ' + audio[0]
-                                        if not audio:
-                                                audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br/>").findall(items[0])
-                                                if audio:
-                                                        audio_filme = ': ' + audio[0]
-                                                else:
-                                                        audio_filme = ''
-                                        if not ano:
-                                                ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(items[0])
-                                                if ano:
-                                                        ano_filme = ': ' + ano[0].replace(' ','')
-                                                else:
-                                                        ano_filme = ''     
-                                        if ano:
-                                                ano_filme = ano[0].replace(' ','')
-                                                a_q = re.compile('\d+')
-                                                qq_aa = a_q.findall(nome)
-                                                for q_a_q_a in qq_aa:
-                                                        if len(q_a_q_a) == 4:
-                                                                tirar_ano = '(' + str(q_a_q_a) + ')'
-                                                                nome = nome.replace(tirar_ano,'')
-                                        
-                                        a_q = re.compile('\d+')
-                                        qq_aa = a_q.findall(nome)
-                                        for q_a_q_a in qq_aa:
-                                                if len(q_a_q_a) == 4:
-                                                        tirar_ano = '(' + str(q_a_q_a) + ')'
-                                                        nome = nome.replace(tirar_ano,'')
-                                                        
-                                        if selfAddon.getSetting('Fanart') == "true":
-                                                nome_pesquisa = nome_series
-                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                                if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                if sinopse == '---':
-                                                        if snpse: sinopse = snpse[0]
-
-                                        if sinopse == '' or sinopse == '---':
-                                                nome_pesquisa = nome_series
-                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                if snpse: sinopse = snpse[0]
-                                                
-                                        ano_filme = '('+ano_filme+')'
-                                        qualidade = '('+qualidade
-                                        audio_filme = audio_filme+')'
-                                        if genero == '': genero = '---'
-                                        if sinopse == '': sinopse = '---'
-                                        if fanart == '': fanart = '---'
-                                        if imdbcode == '': imdbcode = '---'
-                                        if thumb == '': thumb = '---'
-                                        #Series_File.write('NOME|'+nome_series+'|SINOPSE|'+sinopse+'|END|\n')
-                                        Series_File.write('NOME|'+nome_series+'|IMDBCODE|'+'IMDB'+imdbcode+'IMDB'+'|'+endereco_series+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|\n')
-                                except:pass
-                        if nome_series in arr_series:
-                                _imdb = re.compile('[|]IMDBCODE[|](.+?)[|](.+?)[|](.+?)[|]THUMB[|]').findall(arrai_series[arr_series.index(nome_series)])
-                                if not _imdb:
-                                        _imdb = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(arrai_series[arr_series.index(nome_series)])
-                                        if _imdb:
-                                                if 'toppt' not in _imdb[0]:
-                                                        imdb = _imdb[0]
-                                                        arrai_series[arr_series.index(nome_series)]=arrai_series[arr_series.index(nome_series)].replace(imdb,imdb+'|'+endereco_series)
-                        if nome_series not in arr_series:
-                                percent = int( ( i / num ) * 100)
-                                message = str(i) + " de " + str(int(num))
-                                progress.update( percent, 'A Procurar Séries em '+site, message, "" )
-                                print str(i) + " de " + str(int(num))
-                                if progress.iscanceled():
-                                        break
-                                if fanart == '' or fanart == '---':
-                                        if selfAddon.getSetting('Fanart') == "true":
-                                                nome_pesquisa = nome_series
-                                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                                if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                                if sinopse == '---':
-                                                        if snpse: sinopse = snpse[0]
-                                if sinopse == '' or sinopse == '---':
-                                        nome_pesquisa = nome_series
-                                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
-                                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                        if snpse: sinopse = snpse[0]
-                                arr_series[i] = nome_series
-                                if 'IMDB' in imdbcode:
-                                        arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+imdbcode+'|'+endereco_series+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
-                                else:
-                                        arrai_series[i] = 'NOME|'+nome_series+'|IMDBCODE|'+'IMDB'+imdbcode+'IMDB'+'|'+endereco_series+'|THUMB|'+thumb+'|ANO|'+ano_filme.replace('(','').replace(')','')+'|FANART|'+fanart+'|GENERO|'+genero+'|SINOPSE|'+sinopse+'|END|'
-                        i = i + 1
-        arrai_series.sort()
-        a = 1
-        for x in range(len(arrai_series)):
-                if arrai_series[x] != '':
-                        _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(arrai_series[x])
-                        if _n: nome = _n[0]
-                        else: nome = '---'
-                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(arrai_series[x])
-                        if _i: imdbcode = _i[0]
-                        else: imdbcode = '---'
-                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(arrai_series[x])
-                        if _t: thumb = _t[0]
-                        else: thumb = '---'
-                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(arrai_series[x])
-                        if _a: ano = _a[0]
-                        else: ano = '---'
-                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(arrai_series[x])
-                        if _f: fanart = _f[0]
-                        else: fanart = '---'
-                        _g = re.compile('[|]GENERO[|](.+?)[|]SINOPSE[|]').findall(arrai_series[x])
-                        if _g: genero = _g[0]
-                        else: genero = '---'
-                        _s = re.compile('[|]SINOPSE[|](.*)').findall(arrai_series[x])
-                        if _s: s = _s[0]
-                        if '|END|' in s: sinopse = s.replace('|END|','')
-                        else:
-                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(arrai_series[x])
-                                if si: sinopse = si[0][0] + ' ' + si[0][1]
-                                else: sinopse = '---'
-                        urltrailer = re.compile('IMDB.+?IMDB[|](.+?)[|].+?').findall(imdbcode)
-                        if urltrailer: urltrailer = urltrailer[0]
-                        else:
-                                urltrailer = re.compile('IMDB.+?IMDB[|](.+?)').findall(imdbcode)
+                        for x in range(len(_filmes_)):
+                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
+                                if _n: nome = _n[0]
+                                else: nome = '---'
+                                _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_filmes_[x])
+                                if _i: imdbcode = _i[0]
+                                else: imdbcode = '---'
+                                urltrailer = re.compile('IMDB.+?MDB[|](.+?)[|]THUMB[|]').findall(imdbcode)
                                 if urltrailer: urltrailer = urltrailer[0]
-                        if fanart == '---': fanart = ''                                                              #imdbcode#3007
-                        addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',imdbcode,3006,thumb,sinopse,fanart,ano,genero,nome,urltrailer)
-        SeriesFile = open(folder + 'seriesTPT.txt', 'w')
-        for x in range(len(arrai_series)):
-                if arrai_series[x] != '': SeriesFile.write(arrai_series[x]+'\n')
-        Series_Fi.close()
-        Series_Fi.close()
-        Series_File.close()
-        Series_File_ALL.close()
+                                else: urltrailer = '---'
+                                _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_filmes_[x])
+                                if _t: thumb = _t[0]
+                                else: thumb = '---'
+                                _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_filmes_[x])
+                                if _a: ano_filme = _a[0]
+                                else: ano_filme = '---'
+                                _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
+                                if _f: fanart = _f[0]
+                                else: fanart = ''
+                                if fanart == '---': fanart = ''
+                                _g = re.compile('[|]GENERO[|](.+?)[|]ONOME[|]').findall(_filmes_[x])
+                                if _g: genero = _g[0]
+                                else: genero = '---'
+                                _o = re.compile('[|]ONOME[|](.+?)[|]SINOPSE[|]').findall(_filmes_[x])
+                                if _o: O_Nome = _o[0]
+                                else: O_Nome = '---'
+                                _p = re.compile('PAGINA[|](.+?)[|]PAGINA').findall(_filmes_[x])
+                                if _p: P_url = _p[0]
+                                else: P_url = '---'
+                                _s = re.compile('[|]SINOPSE[|](.*)').findall(_filmes_[x])
+                                if _s: s = _s[0]
+                                if '|END|' in s: sinopse = s.replace('|END|','')
+                                else:
+                                        si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
+                                        if si: sinopse = si[0][0] + ' ' + si[0][1]
+                                        else: sinopse = '---'
+                                        
+                                num_mode = 3006
+                                
+                                if nome != '---':
+                                        num_filmes = num_filmes + 1
+                                        addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
+
+                        Filmes_Fi.close()
+
+                num_total = num_filmes + 0.0
+                for a in range(num_filmes):
+                        percent = int( ( a / num_total ) * 100)
+                        message = str(a+1) + " de " + str(num_filmes)
+                        progress.update( percent, 'A Finalizar ...', message, "" )
+                        xbmc.sleep(12)
+        except: pass
+
         progress.close()
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
+def Series_TPT(FILMN,endereco_series,nome_series):
+        try:
+                html_source = abrir_url(endereco_series)
+        except: html_source = ''
+        items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+        if items != '':
+                try:
+                        FILMEN = re.compile('FILME(.+?)FILME').findall(FILMN)
+                        FILMEN = FILMEN[0]
+                        genero = ''
+                        sinopse = ''
+                        fanart = ''
+                        thumb = ''
+                        qualidade = ''
+                        imdbcode = ''
+                        audio_filme = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+
+                        genr = re.compile("NERO:.+?/b>(.+?)<br/>").findall(items[0])
+                        if genr: genero = genr[0]
+                        else: genero = ''
+                                        
+                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(items[0])
+                        if ano: ano_filme = ano[0].replace(' ','')
+                        else: ano_filme = ''
+
+                        thumbnail = re.compile('src="(.+?)"').findall(items[0])
+                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
+                        else: thumb = ''
+
+                        nome_pesquisa = nome_series
+                        tv_id, sinopse = thetvdb_api_IMDB()._id(nome_pesquisa,imdbcode)
+                        if tv_id != '':
+                                fanart = 'http://thetvdb.com/banners/fanart/original/' + tv_id + '-1.jpg'
+                                try:
+                                        urllib2.urlopen(fanart)
+                                except urllib2.HTTPError, e:
+                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + tv_id + '-2.jpg'
+                                if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + tv_id + '-1.jpg'
+                        else:
+                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme+'|'+imdbcode)
+                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                if ftart:  
+                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                if snpse and sinopse == '': sinopse = snpse[0]
+                        if sinopse == '' or sinopse == '---':
+                                nome_pesquisa = nome_series
+                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
+                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                if snpse: sinopse = snpse[0]
+                                                
+                        ano_filme = '('+ano_filme+')'
+                        if genero == '': genero = '---'
+                        if sinopse == '': sinopse = '---'
+                        if fanart == '': fanart = '---'
+                        if imdbcode == '': imdbcode = '---'
+                        if thumb == '': thumb = '---'
+
+                        try:
+                                nome_final = '[B][COLOR green]' + nome_series+ '[/COLOR][/B][COLOR yellow] ' +ano_filme + '[/COLOR]'
+                                filmes.append('NOME|'+str(nome_final)+'|IMDBCODE|'+'IMDB'+str(imdbcode)+'IMDB'+'|'+str(endereco_series)+'|THUMB|'+str(thumb)+'|ANO|'+str(ano_filme.replace('(','').replace(')',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|ONOME|'+str(nome_series)+'|SINOPSE|'+str(sinopse)+'|END|\n')
+                        except: pass
+                except: pass	
+        else: pass
+        filmes.sort()
+
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #-------------------------------------------------------------------  Filmes  -----------------------------------------------------------------#
 
-def TPT_encontrar_fontes_filmes(url,artfolder):
+def TPT_encontrar_fontes_filmes(url):
+        
         percent = 0
-        message = ''
-        if 'ULTIMOS' in url:
-                url = re.compile('(.+?)ULTIMOS').findall(url)
-                if url: url = url[0]
-                ULTIMOS = 'ULTIMOS'
-                progress.create( 'Progresso', 'A Procurar Últimos Episódios...' )
-        else:
-                ULTIMOS = ''
-                progress.create('Progresso', 'A Pesquisar:')
-        progress.update( percent, "", message, "" )
-        i = 1
-        n_name = name.replace('[COLOR yellow]','')
-        n_name = n_name.replace('[/COLOR]','')
-        series = 0
-	try:
+        message = 'Por favor aguarde.'
+        progress.create('Progresso', 'A Procurar')
+        if name == '[COLOR yellow]- Top Séries[/COLOR]' or name == '[COLOR yellow]- Top Filmes[/COLOR]':
+                progress.update( percent, 'A Procurar ...', message, "" )
+        if name == '[COLOR yellow]- Últimos Episódios[/COLOR]' or name == '[B]Página Seguinte>>[/B]':
+                progress.update( percent, 'A Procurar Últimos Episódios ...', message, "" )
+        if name != '[COLOR yellow]- Top Séries[/COLOR]' and name != '[COLOR yellow]- Top Filmes[/COLOR]' and name != '[COLOR yellow]- Últimos Episódios[/COLOR]' and name != '[B]Página Seguinte>>[/B]':
+                progress.update( percent, 'A Procurar Filmes ...', message, "" )
+        
+        try:
 		html_source = abrir_url(url)
 	except: html_source = ''
-	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
-	if items != []:
-		print len(items)
-		num = len(items) + 0.0
-		for item in items:
+	if name != '[COLOR yellow]- Top Séries[/COLOR]' and name != '[COLOR yellow]- Top Filmes[/COLOR]':
+                items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+        if name == '[COLOR yellow]- Top Séries[/COLOR]':
+                tp_series = re.findall('<h3 class="widgettitle">TOP SÉRIES</h3>(.+?)<ul class="widget-container">', html_source, re.DOTALL)
+                items = re.compile('<a href="(.+?)".+?<img.+?src=".+?"').findall(tp_series[0])
+        if name == '[COLOR yellow]- Top Filmes[/COLOR]':
+                tp_filmes = re.findall('<h3 class="widgettitle">TOP FILMES</h3>(.+?)<ul class="widget-container">', html_source, re.DOTALL)
+                items = re.compile('<a href="(.+?)".+?<img.+?src=".+?"').findall(tp_filmes[0])
+
+        threads = []
+        i = 0
+        for item in items:
+                if name != '[COLOR yellow]- Top Séries[/COLOR]' and name != '[COLOR yellow]- Top Filmes[/COLOR]':
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        Filmes_TPT = threading.Thread(name='Filmes_TPT'+str(i), target=Fontes_Filmes_TPT , args=('FILME'+str(a)+'FILME'+item,))
+                if name == '[COLOR yellow]- Top Séries[/COLOR]':
+                        Filmes_TPT = threading.Thread(name='Filmes_TPT'+str(i), target=TPT_Menu_Top_Series , args=(item,))
+                if name == '[COLOR yellow]- Top Filmes[/COLOR]':
+                        Filmes_TPT = threading.Thread(name='Filmes_TPT'+str(i), target=TPT_Menu_Top_Filmes , args=(item,))
+                threads.append(Filmes_TPT)
+
+        [i.start() for i in threads]
+
+        [i.join() for i in threads]
+
+        if name != '[COLOR yellow]- Top Séries[/COLOR]' and name != '[COLOR yellow]- Top Filmes[/COLOR]':
+                _sites_ = ['filmesTPT.txt']
+                folder = perfil
+                num_filmes = 0
+                
+                for site in _sites_:
+                        _filmes_ = []
+                        Filmes_Fi = open(folder + site, 'r')
+                        read_Filmes_File = ''
+                        for line in Filmes_Fi:
+                                read_Filmes_File = read_Filmes_File + line
+                                if line!='':_filmes_.append(line)
+
+                        for x in range(len(_filmes_)):
+                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
+                                if _n: nome = _n[0]
+                                else: nome = '---'
+                                _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_filmes_[x])
+                                if _i: imdbcode = _i[0]
+                                else: imdbcode = '---'
+                                urltrailer = re.compile('(.+?)IMDB.+?MDB').findall(imdbcode)
+                                if urltrailer: urltrailer = urltrailer[0]
+                                else: urltrailer = '---'
+                                _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_filmes_[x])
+                                if _t: thumb = _t[0]
+                                else: thumb = '---'
+                                _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_filmes_[x])
+                                if _a: ano_filme = _a[0]
+                                else: ano_filme = '---'
+                                _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
+                                if _f: fanart = _f[0]
+                                else: fanart = ''
+                                if fanart == '---': fanart = ''
+                                _g = re.compile('[|]GENERO[|](.+?)[|]ONOME[|]').findall(_filmes_[x])
+                                if _g: genero = _g[0]
+                                else: genero = '---'
+                                _o = re.compile('[|]ONOME[|](.+?)[|]SINOPSE[|]').findall(_filmes_[x])
+                                if _o: O_Nome = _o[0]
+                                else: O_Nome = '---'
+                                _p = re.compile('PAGINA[|](.+?)[|]PAGINA').findall(_filmes_[x])
+                                if _p: P_url = _p[0]
+                                else: P_url = '---'
+                                _s = re.compile('[|]SINOPSE[|](.*)').findall(_filmes_[x])
+                                if _s: s = _s[0]
+                                if '|END|' in s: sinopse = s.replace('|END|','')
+                                else:
+                                        si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
+                                        if si: sinopse = si[0][0] + ' ' + si[0][1]
+                                        else: sinopse = '---'
+                                        
+                                if 'toppt.net'         in imdbcode: num_mode = 233
+                                
+                                if nome != '---':
+                                        num_filmes = num_filmes + 1
+                                        addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
+
+                        Filmes_Fi.close()
+
+                num_total = num_filmes + 0.0
+                for a in range(num_filmes):
+                        percent = int( ( a / num_total ) * 100)
+                        message = str(a+1) + " de " + str(num_filmes)
+                        progress.update( percent, 'A Finalizar ...', message, "" )
+                        xbmc.sleep(20)
+
+                proxima = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
+                try:
+                        if name == '[COLOR yellow]- Últimos Episódios[/COLOR]' or name == '[B]Página Seguinte>>[/B]':
+                                addDir("Página Seguinte>>",proxima[0].replace('#038;','').replace('&amp;','&'),232,artfolder + 'PAGS1.png','','')
+                        else:
+                                addDir("Página Seguinte >>",proxima[0].replace('#038;','').replace('&amp;','&'),232,artfolder + 'PAGS1.png','','')
+                except:pass
+
+	progress.close()
+
+def Fontes_Filmes_TPT(item):
+
+        series = 0
+        folder = perfil
+        Filmes_File = open(folder + 'filmesTPT.txt', 'w')
+        
+        if item != '':
+                try:
+                        FILMEN = re.compile('FILME(.+?)FILME').findall(item)
+                        FILMEN = FILMEN[0]
                         sinopse = ''
                         fanart = ''
                         thumb = ''
@@ -1030,14 +639,6 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                         qualidade = ''
                         audio_filme = ''
                         imdbcode = ''
-                
-                        if ULTIMOS == '':
-                                percent = int( ( i / num ) * 100)
-                                message = str(i) + " de " + str(len(items))
-                                progress.update( percent, "", message, "" )
-                                print str(i) + " de " + str(len(items))
-                                if progress.iscanceled():
-                                        break
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
@@ -1188,7 +789,7 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 qualidade = ''
                                 ano_filme = ''
                                 audio_filme = ''
-                                
+                        #addLink(nome,'','','')        
                         try:
                                 if genero == '':
                                         genre = '---'
@@ -1199,33 +800,18 @@ def TPT_encontrar_fontes_filmes(url,artfolder):
                                 if fanart == '---': fanart = ''
                                 if imdbcode == '': imdbcode = '---'
                                 if thumb == '': thumb = '---'
-                                
-                                addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0])
+                                nome_final = '[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' +ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]'
+                                filmes.append(FILMEN+'NOME|'+str(nome_final)+'|IMDBCODE|'+str(urletitulo[0][0])+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb)+'|ANO|'+str(ano_filme.replace('(','').replace(')',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|ONOME|'+str(nome_pesquisa)+'|SINOPSE|'+str(sinopse)+'|END|\n')
+##                                addDir_trailer('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0])
                                 #addDir_teste('[B][COLOR green]' + n1 + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]'+'[COLOR nnn]'+n2+'[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
                         except: pass
-                        if ULTIMOS == 'ULTIMOS':
-                                percent = int( ( i / num ) * 100)
-                                message = nome
-                                progress.update( percent, "", message, "" )
-                                print str(i) + " de " + str(len(items))
-                                if progress.iscanceled():
-                                        break
-                        i = i + 1
-                        
-	else:
-		items = re.compile('<h1 class="entry-title"><a href="(.+?)" .+?>(.+?)</a>').findall(html_source)
-		for endereco,nome in items:
-                        try:
-                                addDir(nome,endereco,233,'','','')
-                        except:pass
-	proxima = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
-	try:
-                if ULTIMOS == 'ULTIMOS':
-                        addDir("Página Seguinte >>",proxima[0].replace('#038;','').replace('&amp;','&')+'ULTIMOS',232,artfolder + 'PAGS1.png','','')
-                else:
-                        addDir("Página Seguinte >>",proxima[0].replace('#038;','').replace('&amp;','&'),232,artfolder + 'PAGS1.png','','')
-        except:pass
-        progress.close()
+                except: pass	
+        else: pass
+        filmes.sort()
+        for x in range(len(filmes)):
+                Filmes_File.write(str(filmes[x]))
+	Filmes_File.close()
+
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -2493,7 +2079,6 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
 
 def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart):
         
-        
         if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                 url = url + '///' + nomeescolha
         
@@ -3207,6 +2792,470 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                         TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
 
 
+def ultimos_episodios_TPT_ultimos(url):
+        
+        percent = 0
+        message = 'Por favor aguarde.'
+        progress.create('Progresso', 'A Procurar')
+        progress.update( percent, 'A Procurar Últimos Episódios...', message, "" )
+
+        #----------------------------------------------------------------------------------------------------
+        threads = []
+        
+        i = 0
+        try:
+                try:
+                        html_source = abrir_url(url)
+                except: html_source = ''
+                itemsTPT = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                if itemsTPT != []:
+                        proxima_TPT = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
+                        try:
+                                url_TPT = proxima_TPT[0].replace('#038;','').replace('&amp;','&')
+                        except: pass
+                else: url_TPT = 'http:'
+
+                for item in itemsTPT:
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        TPT = threading.Thread(name='TPT'+str(i), target=ultimos_ep_TPT , args=('FILME'+str(a)+'FILME'+item,))
+                        threads.append(TPT)
+        except: pass
+
+        [i.start() for i in threads]
+
+        [i.join() for i in threads]
+        
+##        _sites_ = ['filmesTPT.txt','filmesTFV.txt']
+##        folder = perfil
+##        num_filmes = 0
+##        
+##        for site in _sites_:
+##                _filmes_ = []
+##                Filmes_Fi = open(folder + site, 'r')
+##                read_Filmes_File = ''
+##                for line in Filmes_Fi:
+##                        read_Filmes_File = read_Filmes_File + line
+##                        if line!='':_filmes_.append(line)
+##
+##                for x in range(len(_filmes_)):
+##                        _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
+##                        if _n: nome = _n[0]
+##                        else: nome = '---'
+##                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_filmes_[x])
+##                        if _i: imdbcode = _i[0]
+##                        else: imdbcode = '---'
+##                        urltrailer = re.compile('(.+?)IMDB.+?MDB').findall(imdbcode)
+##                        if urltrailer: urltrailer = urltrailer[0]
+##                        else: urltrailer = '---'
+##                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_filmes_[x])
+##                        if _t: thumb = _t[0]
+##                        else: thumb = '---'
+##                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_filmes_[x])
+##                        if _a: ano_filme = _a[0]
+##                        else: ano_filme = '---'
+##                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
+##                        if _f: fanart = _f[0]
+##                        else: fanart = ''
+##                        if fanart == '---': fanart = ''
+##                        _g = re.compile('[|]GENERO[|](.+?)[|]ONOME[|]').findall(_filmes_[x])
+##                        if _g: genero = _g[0]
+##                        else: genero = '---'
+##                        _o = re.compile('[|]ONOME[|](.+?)[|]SINOPSE[|]').findall(_filmes_[x])
+##                        if _o: O_Nome = _o[0]
+##                        else: O_Nome = '---'
+##                        _p = re.compile('PAGINA[|](.+?)[|]PAGINA').findall(_filmes_[x])
+##                        if _p: P_url = _p[0]
+##                        else: P_url = '---'
+##                        _s = re.compile('[|]SINOPSE[|](.*)').findall(_filmes_[x])
+##                        if _s: s = _s[0]
+##                        if '|END|' in s: sinopse = s.replace('|END|','')
+##                        else:
+##                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
+##                                if si: sinopse = si[0][0] + ' ' + si[0][1]
+##                                else: sinopse = '---'
+##                        if 'toppt.net'         in imdbcode: num_mode = 233
+##                        if 'tuga-filmes.us'    in imdbcode: num_mode = 42
+##                        if nome != '---':
+##                                num_filmes = num_filmes + 1
+##                                addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
+##                        else:
+##                                if 'toppt.net'         in P_url: url_TPT = P_url
+##                                if 'tuga-filmes.us'    in P_url: url_TFV = P_url
+##
+##                Filmes_Fi.close()
+##
+        _sites_ = ['filmesTPT.txt']
+        folder = perfil
+        num_filmes = 0
+        for site in _sites_:
+                _filmes_ = []
+                Filmes_Fi = open(folder + site, 'r')
+                read_Filmes_File = ''
+                for line in Filmes_Fi:
+                        read_Filmes_File = read_Filmes_File + line
+                        if line!='':_filmes_.append(line)
+
+                for x in range(len(_filmes_)):
+                        num_filmes = num_filmes + 1
+        Filmes_Fi.close()
+        num_total = num_filmes + 0.0
+        for a in range(num_filmes):
+                percent = int( ( a / num_total ) * 100)
+                message = str(a+1) + " de " + str(num_filmes)
+                progress.update( percent, 'A Finalizar ...', message, "" )
+                xbmc.sleep(12)
+
+        proxima = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
+        try:
+                addDir("Página Seguinte >>",proxima[0].replace('#038;','').replace('&amp;','&'),260,artfolder + 'PAGS1.png','','')
+        except:pass
+
+        progress.close()
+
+        
+def ultimos_ep_TPT(item):
+
+        folder = perfil
+        Filmes_File = open(folder + 'filmesTPT.txt', 'w')
+        
+        if item != '':
+                try:
+                        FILMEN = re.compile('FILME(.+?)FILME').findall(item)
+                        FILMEN = FILMEN[0]
+                        sinopse = ''
+                        fanart = ''
+                        thumb = ''
+                        qualidade = ''
+                        urltrailer = ''
+                        audio_filme = ''
+                        imdbcode = ''
+
+                        urltr = re.compile('"https://www.youtube.com/(.+?)"').findall(item)
+                        if urltr: urltrailer = 'https://www.youtube.com/'+urltr[0]
+                        
+                        urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
+                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
+                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
+                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        if qualid:
+                                qualidade = qualid[0]
+                                qualidade = qualidade.replace('[',' - ')
+                                qualidade = qualidade.replace(']','')
+                        else:
+                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                if qualid:
+                                        qualidade = qualid[0]
+                                        qualidade = qualidade.replace('[',' - ')
+                                        qualidade = qualidade.replace(']','')
+                                else:
+                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(item)
+                                        if qualid:
+                                                qualidade = qualid[0]
+                                                qualidade = qualidade.replace('[',' - ')
+                                                qualidade = qualidade.replace(']','')
+                                        else:
+                                                qualidade = ''
+
+                        genr = re.compile("NERO:.+?/b>(.+?)<br/>").findall(item)
+                        if genr: genero = genr[0]
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
+                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
+                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)
+                        thumbnail = re.compile('src="(.+?)"').findall(item)
+                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
+                        print urletitulo,thumbnail
+                        nome = urletitulo[0][1]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#038;',"&")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        nome = nome.replace('(PT-PT)',"")
+                        nome = nome.replace('(PT/PT)',"")
+                        nome = nome.replace('[PT-PT]',"")
+                        nome = nome.replace('[PT/PT]',"")
+                        nome = nome.replace('[PT-BR]',"")
+                        nome = nome.replace('[PT/BR]',"")
+                        nome = nome.replace(' (PT-PT)',"")
+                        nome = nome.replace(' (PT/PT)',"")
+                        nome = nome.replace(' [PT-PT]',"")
+                        nome = nome.replace(' [PT/PT]',"")
+                        nome = nome.replace(' [PT-BR]',"")
+                        nome = nome.replace(' [PT/BR]',"")
+                        nome = nome.replace('  '," ")
+                        if audio:
+                                if len(audio[0]) > 15:
+                                        audio = re.compile('<b>AUDIO: </b>(.+?)<span style="color: red;"><b>(.+?)</b></span><br/>').findall(item)
+                                        if audio:
+                                                audio_filme = ': ' + audio[0][0] + audio[0][1]
+                                        else:
+                                                audio = re.compile('<b>AUDIO: </b> <b><span style="color: red;">(.+?)</span> <span style="color: #38761d;">(.+?)</span></b><br/>').findall(item)
+                                                if audio:
+                                                        audio_filme = audio[0][0] + audio[0][1]
+                                                        if 'Portug' or 'PORTUG' in audio_filme:
+                                                                audio_filme = ': PT-PT'
+                                                else:
+                                                        audio = re.compile('<b>AUDIO:.+?<strong>(.+?)</strong>').findall(item)
+                                                        if audio:
+                                                                audio_filme = audio[0][0] + audio[0][1]
+                                                                if 'Portug' or 'PORTUG' in audio_filme:
+                                                                        audio_filme = ': PT-PT'
+                                else:
+                                        audio_filme = ': ' + audio[0]
+                        if not audio:
+                                audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br/>").findall(item)
+                                if audio:
+                                        audio_filme = ': ' + audio[0]
+                                else:
+                                        audio_filme = ''
+                        if not ano:
+                                ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
+                                if ano:
+                                        ano_filme = ': ' + ano[0].replace(' ','')
+                                else:
+                                        ano_filme = ''     
+                        if ano:
+                                ano_filme = ano[0].replace(' ','')
+                                a_q = re.compile('\d+')
+                                qq_aa = a_q.findall(nome)
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) == 4:
+                                                tirar_ano = '(' + str(q_a_q_a) + ')'
+                                                nome = nome.replace(tirar_ano,'')
+
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+
+                        n = re.compile('(.+?)[[].+?[]]').findall(nome)
+                        if n: nome_pesquisa = n[0]
+                        tv_id, sinopse = thetvdb_api_IMDB()._id(nome_pesquisa,imdbcode)
+                        if tv_id != '':
+                                fanart = 'http://thetvdb.com/banners/fanart/original/' + tv_id + '-1.jpg'
+                                try:
+                                        urllib2.urlopen(fanart)
+                                except urllib2.HTTPError, e:
+                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + tv_id + '-2.jpg'
+                                if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + tv_id + '-1.jpg'
+                        else:
+                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme+'|'+imdbcode)
+                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                if ftart:  
+                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                if snpse and sinopse == '': sinopse = snpse[0]
+      
+                        ano_filme = '('+ano_filme+')'
+                        qualidade = '('+qualidade
+                        audio_filme = audio_filme+')'
+                        try:
+                                #addLink(nome,'','','')
+                                nome_fi = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome+ '[/COLOR][/B][COLOR yellow] ' +ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]'
+                                nome_final = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome+ '[/COLOR][/B][COLOR yellow] ' +ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]'
+                                filmesTPT.append(FILMEN+'NOME|'+str(nome_final)+'|IMDBCODE|'+str(urletitulo[0][0])+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb)+'|ANO|'+str(ano_filme.replace('(','').replace(')',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|ONOME|'+str(nome_pesquisa)+'|SINOPSE|'+str(sinopse)+'|END|\n')
+                                TPT_Ultimos(nome_fi,urletitulo[0][0]+'IMDB'+str(imdbcode)+'IMDB',thumb,fanart,item)
+                        except: pass
+                except: pass
+        else: pass
+        
+        filmesTPT.sort()
+        for x in range(len(filmesTPT)):
+                Filmes_File.write(str(filmesTPT[x]))
+        #Filmes_File.write('PAGINA|'+url_TPT+'|PAGINA')
+        Filmes_File.close()
+
+        #----------------------------------------------------------------------------------------------------
+
+def TPT_Ultimos(name,url,iconimage,fanart,item):
+        #addLink(name,'',iconimage,fanart)
+        if 'Season' in name or 'Temporada' in name or 'Mini-Série' in name or 'Mini-Serie' in name:
+                n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(name)
+                if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(name)
+                if n: nome = n[0][0]+' - '+n[0][1]
+                else:
+                        n = re.compile('[(](.+?)[)][(](.+?)[)]').findall(name)
+                        if not n: n = re.compile('[(](.+?)[)] [(](.+?)[)]').findall(name)
+                        if n: nome = n[0][0]+' - '+n[0][1]
+                        else:
+                                n = re.compile('[[](.+?)[]]').findall(name)
+                                if n: nome = n[0]
+                                else:
+                                        n = re.compile('[(](.+?)[)]').findall(name)
+                                        if n: nome = n[0]
+
+                nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+                if nnn: nnnn = re.compile('(.+?)[[].+?[]].+?[]]').findall(nnn[0])
+                if nnnn : n_pesquisa = nnnn[0]
+                else:
+                        nnn = re.compile('IMDB.+?IMDB(.*)').findall(url)
+                        if nnn: n_pesquisa = nnn[0]
+                        else: n_pesquisa = ''
+
+                namet = n_pesquisa
+
+                season = re.compile('[[](.+?)[]].+?[]]').findall(nnn[0])
+                if season: season = season[0]
+                else:
+                        season = re.compile('[[](.+?)[]]').findall(nnn[0])
+                        if season: season = season[0]
+                        else:
+                                season = re.compile('(.+?)[-].+?').findall(name)
+                                if season: season = season[0]
+                                else: season = ''
+                temporada = re.compile('(\d+)').findall(season)
+                if temporada:
+                        temporada = temporada[0]
+                        temporadat = temporada[0]
+                else:
+                        temporada = ''
+                        temporadat = ''
+                a_q = re.compile('\d+')
+                qq_aa = a_q.findall(temporada)
+                for q_a_q_a in qq_aa:
+                        if len(q_a_q_a) == 1:
+                                temporadat = '0'+temporada
+                        else: temporadat = temporada
+
+                nnn = re.compile('[[]COLOR yellow[]](.+?)[[]/COLOR[]]').findall(name)
+                if nnn and '(' not in nnn[0]: anne = nnn[0].replace(' ','')
+                else:
+                        if nnn: nnnn = re.compile('[(](.+?)[)]').findall(nnn[0])
+                        if nnn: anne = nnnn[0]
+                        else: anne = ''
+
+                imdb = re.compile('IMDB(.+?)IMDB').findall(url)
+                if imdb: imdbcode = imdb[0]
+                else: imdbcode = ''
+
+                tvdbid = thetvdb_api_tvdbid()._id(n_pesquisa,anne)
+                #addLink(temporadat+'-'+anne+'-'+n_pesquisa,'','','')
+                #return
+        episodiot = ''
+        episodio = ''
+        tmdbcode = ''
+        f_id = ''
+        iconimage = iconimage
+        nomeescolha = name
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
+        urltrailer = url
+        if 'TPT' not in name: name = '[COLOR orange]TPT | [/COLOR]' + name
+        if 'TPT' not in nomeescolha: nomeescolha = '[COLOR orange]TPT | [/COLOR]' + nomeescolha
+        conta_os_items = 0
+        nometitulo = nomeescolha
+        i = 1
+        conta_id_video = 0
+        contaultimo = 0
+        l= 0
+	try:
+		link2=abrir_url(url)
+	except: link2 = ''
+	#addLink(url,'','','')
+        episodioanterior = ''
+	nome_antes = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + namet + '[/COLOR][/B] | '
+	if link2:
+                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-Serie' not in nometitulo:
+                        newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
+                        l=1
+                else:
+                        #newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
+                        newmatch1 = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
+                        newmatch = re.findall('<img style="height: 90px; width: 200px;".+?DOWNLOAD',link2,re.DOTALL)
+                        l=5
+                if not newmatch:
+                        newmatch = re.findall('<span id=.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
+                        l=2
+                if not newmatch:
+                        newmatch = re.findall('<span id=.+?<br/>\n<img',link2,re.DOTALL)
+                        l=3
+                if not newmatch:
+                        newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
+                        l=4
+                if not newmatch:
+                        newmatch = re.findall('EM PT/PT:.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
+                        
+                linkseries = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div>',link2,re.DOTALL)
+                if not linkseries: linkseries = re.findall('<span style="color:.+?">(.+?)</span><br.+?>(.+?)Ver Aqui</a></p>',link2,re.DOTALL)
+                if not linkseries: linkseries = re.findall('<span style="color:.+?"><strong>(.+?)</strong></span><br.+?>(.+?)Ver Aqui</a></p>',link2,re.DOTALL)
+                if not linkseries: linkseries = re.findall('ODIO (.+?)<.+?>(.+?)<img',newmatch[0],re.DOTALL)
+                if not linkseries: linkseries = re.findall('ODIO (.+?)<.+?>\n(.+?)EPIS',newmatch[0],re.DOTALL)
+                if not linkseries: linkseries = re.findall('<p>(.+?)EPISODIO<br/>(.+?)</iframe>',newmatch[0],re.DOTALL)
+                if not linkseries: linkseries = re.findall('EPISODIO (.+?)<br.+?\n(.+?)</p>',newmatch[0],re.DOTALL)
+                                                        #linksseccaoultimo = re.findall('ODIO (.+?)<.+?>\n(.+?)</p>',newmatch[0],re.DOTALL)
+                if '<h2 class="title">Sleepy Hollow[Season 1][Completa]</h2>' in link2:
+                        linkseries = re.findall('<p>(.+?)<br/>(.+?)</p>',newmatch[0],re.DOTALL)
+                #for parte1,parte2 in linkseries:
+                if linkseries:
+                        parte1 = linkseries[0][0]
+                        try:
+                                episodio = re.compile('(\d+)').findall(linkseries[0][0])
+                                if episodio:
+                                        episodiot = episodio[0]
+                                        episodio = episodio[0]
+                                a_q = re.compile('\d+')
+                                qq_aa = a_q.findall(episodio)
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) == 1:
+                                                episodiot = '%02d' % int(episodio)#'0'+episodio
+                        except: pass                        
+                        #addLink(parte1+'-'+namet,'','','')              
+                        try:
+                                try:
+                                        epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
+                                        iconimage = th
+                                except: pass
+                                conta_id_video = 0
+                                                
+                                match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(linkseries[0][1])
+                                for url in match:
+                                        if "videomega" in url or "vidto.me" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                conta_id_video = conta_id_video + 1
+                                                conta_os_items = conta_os_items + 1
+                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                if f_id == '': f_id = fonte_id
+                                                else: f_id = f_id + '|' + fonte_id
+                                match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(linkseries[0][1])
+                                for url in match:
+                                        if "videomega" in url or "vidto.me" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                conta_id_video = conta_id_video + 1
+                                                conta_os_items = conta_os_items + 1
+                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                if f_id == '': f_id = fonte_id
+                                                else: f_id = f_id + '|' + fonte_id
+                                match = re.compile('"window.open(.+?)"').findall(linkseries[0][1])
+                                for url in match:
+                                        if "videomega" in url or "vidto.me" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                conta_id_video = conta_id_video + 1
+                                                url = url.replace("'","").replace("(","").replace(")","")
+                                                conta_os_items = conta_os_items + 1
+                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                if f_id == '': f_id = fonte_id
+                                                else: f_id = f_id + '|' + fonte_id
+                                try:
+
+                                        #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
+                                        addDir_episode(nome_antes+'[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
+                                except:
+                                        if 'EPI' not in linkseries[0][0] and 'Epi' not in linkseries[0][0]: parte1 = linkseries[0][0]+'º EPISÓDIO'
+                                        addDir_episode(nome_antes+'[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
+
+                                f_id = ''
+                                i = i + 1
+                        except: pass
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#	

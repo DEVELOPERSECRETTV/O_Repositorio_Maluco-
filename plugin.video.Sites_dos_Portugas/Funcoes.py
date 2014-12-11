@@ -21,7 +21,7 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,threading
 import json
 from array import array
 from string import capwords
@@ -48,10 +48,12 @@ class themoviedb_api_pagina:
         def fanart_and_id(self,movie_tv,num_mode,items,pagina):
                 a = 1
                 i = 0
+                threads = []
                 percent = 0
-                message = ''
+                message = 'Por favor aguarde.'
                 progress.create('Progresso', 'A Procurar')
-                progress.update( percent, 'A Procurar ...', message, "" )
+                if urllib.quote(movie_tv) == 'movie': progress.update( percent, 'A Procurar Filmes...', message, "" )
+                if urllib.quote(movie_tv) == 'tv': progress.update( percent, 'A Procurar Séries...', message, "" )
                 url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(items) + '?api_key=' + self.api_key + '&language=en&page=' + urllib.quote(pagina)
                 try:datass = abrir_url(url_tmdb)
                 except: datass = ''
@@ -59,16 +61,18 @@ class themoviedb_api_pagina:
                 except: data = ''
                 if urllib.quote(movie_tv) == 'movie': n = re.findall('"title":"(.+?)"', datass, re.DOTALL)
                 if urllib.quote(movie_tv) == 'tv': n = re.findall('"name":"(.+?)"', datass, re.DOTALL)
-                numero = len(n)
-                num = numero + 0.0
+##                numero = len(n)
+##                num = numero + 0.0
                 for nn in n:
-                        percent = int( ( a / num ) * 100)
-                        message = str(a) + " de " + str(int(num))
-                        if urllib.quote(movie_tv) == 'movie': progress.update( percent, 'A Procurar Filmes...', message, "" )
-                        if urllib.quote(movie_tv) == 'tv': progress.update( percent, 'A Procurar Séries...', message, "" )
-                        print str(a) + " de " + str(int(num))
-                        if progress.iscanceled():
-                                break
+##                        percent = int( ( a / num ) * 100)
+##                        message = str(a) + " de " + str(int(num))
+                        #message = '[COLOR green]'+nn+'[/COLOR]'
+##                        if urllib.quote(movie_tv) == 'movie': progress.update( percent, 'A Procurar Filmes...', message, "" )
+##                        if urllib.quote(movie_tv) == 'tv': progress.update( percent, 'A Procurar Séries...', message, "" )
+##                        print str(a) + " de " + str(int(num))
+##                        if progress.iscanceled():
+##                                break
+        
                         try:
                                 name=nn
                         except: name = ''
@@ -90,8 +94,24 @@ class themoviedb_api_pagina:
                                         y = re.compile('(.+?)[-].+?[-]').findall(year)
                                         if y: year = y[0]
                                 except: year = ''
+
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        adddirtodos = threading.Thread(name='adddirtodos'+str(i), target=adddirt , args=(name,movie_tv,self.api_key,tmdb_id,num_mode,thumb,fanart,year,))
+
+                        threads.append(adddirtodos)
+
+                [i.start() for i in threads]
+
+                [i.join() for i in threads]
+                
+
+def adddirt(name,movie_tv,api_key,tmdb_id,num_mode,thumb,fanart,year):
+        if name != '':
+                try:
                         try:
-                                url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(tmdb_id)+'?language=pt&api_key=' + self.api_key
+                                url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(tmdb_id)+'?language=pt&api_key=' + api_key
                                 try: datas = abrir_url(url_tmdb)
                                 except: datas = ''
                                 imdb = re.compile('"imdb_id":"(.+?)"').findall(datas)
@@ -99,7 +119,7 @@ class themoviedb_api_pagina:
                                 else: imdbcode = ''
                                 sin = re.compile('"overview":"(.+?)"[,]"popularity').findall(datas)
                                 if sin: sinopse = sin[0].replace('\\"','"')
-                                else: sinopse = ''
+                                else: sinopse = '---'
                                 gen = re.findall('"genres":[[][{]"id":(.+?)[}][]]', datas, re.DOTALL)
                                 if gen:
                                         gen = re.compile('"name":"(.+?)"').findall(gen[0])
@@ -112,9 +132,9 @@ class themoviedb_api_pagina:
                                                         else: genero = genero + ', ' + gene    
                                 else: genero = ''
                         except: pass
-                        if sinopse == '' or sinopse == '",':
+                        if sinopse == '---' or sinopse == '",' or not sin:
                                 try:
-                                        url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(tmdb_id)+'?language=en&api_key=' + self.api_key
+                                        url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(tmdb_id)+'?language=en&api_key=' + api_key
                                         try: datas = abrir_url(url_tmdb)
                                         except: datas = ''
                                         imdb = re.compile('"imdb_id":"(.+?)"').findall(datas)
@@ -136,9 +156,11 @@ class themoviedb_api_pagina:
                                 except: pass
 
                         addDir_trailer('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]','IMDB'+imdbcode+'IMDB',urllib.quote(num_mode),thumb,sinopse,fanart,year,genero,name,'http://thetvdb.com/?tab=series&id='+urllib.quote(tmdb_id))
-                        a = a + 1
-                        i = i + 1
-
+##                        a = a + 1
+##                        i = i + 1
+                except: pass
+                
+######################################################################################################################################3
 
 class thetvdb_api_tvdbid:
 	def _id(self,series_name,year):

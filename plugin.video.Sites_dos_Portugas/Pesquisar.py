@@ -17,11 +17,30 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,threading
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
 from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
 from Funcoes import get_params,abrir_url
+
+num_f = 0
+num_s = 0
+num_f_TFV = []
+num_s_TFV = []
+num_f_TFC = []
+num_s_TFC = []
+num_f_MVT = []
+num_s_MVT = []
+num_f_TPT = []
+num_s_TPT = []
+num_f_FTT = []
+num_s_FTT = []
+num_f_CMT = []
+num_s_CMT = []
+num_f_CME = []
+num_s_CME = []
+num_f_CMC = []
+num_s_CMC = []
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -63,116 +82,188 @@ def pesquisar():
                 message = ''
                 site = ''
                 progress.create('Progresso', 'A Procurar')
-                progress.update( percent, 'A Procurar...'+site, message, "" )
+                progress.update( percent, 'A Procurar...', 'Por favor aguarde.', "" )
 
                 addDir1('[COLOR yellow]PROCUROU POR:[/COLOR] '+str(encode).replace('%2B',' '),'url',1004,artfolder + 'SDPI.png',False,'')
-                num_f = 0
-                num_s = 0
+           
                 if FS == 'FS' or FS == 'F':
+                        
+                        threads = []
+                        
                         addDir1('[B][COLOR blue]Filmes:[/COLOR][/B]','url',1004,artfolder + 'FILMES1.png',False,'')
                         FSS = 'F'
-                        a = 0
-                        site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
-                        percent = int( ( a / 8.0 ) * 100)
-                        message = ''
-                        progress.update(percent, 'A Procurar em '+site, message, "")
-                        print str(a) + " de " + str(int(a))
 
                         url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
-                        num_f_TFV,num_s_TFV = encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou,FSS)
-                        a= 1
-                        site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
-                        percent = int( ( a / 8.0 ) * 100)
-                        message = ''
-                        progress.update(percent, 'A Procurar em '+site, message, "")
-                        print str(a) + " de " + str(int(a))
-
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+                        for item in items:
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                TFV = threading.Thread(name='TFV'+str(i), target=encontrar_fontes_pesquisa_TFV , args=(url_pesquisa,pesquisou,FSS,item,))
+                                threads.append(TFV)
+                        #num_f_TFV,num_s_TFV = encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou,FSS)
+                        
                         url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode)
-                        num_f_TFC,num_s_TFC = encontrar_fontes_filmes_TFC(url_pesquisa,pesquisou,FSS)
-                        a = 2
-                        site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
-                        percent = int( ( a / 8.0 ) * 100)
-                        message = ''
-                        progress.update(percent, 'A Procurar em '+site, message, "")
-                        print str(a) + " de " + str(int(a))
-
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
+                        for item in items:
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                TFC = threading.Thread(name='TFC'+str(i), target=encontrar_fontes_filmes_TFC , args=(url_pesquisa,pesquisou,FSS,item,))
+                                threads.append(TFC)
+                        #num_f_TFC,num_s_TFC = encontrar_fontes_filmes_TFC(url_pesquisa,pesquisou,FSS)
+                        
                         url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode)
-                        num_f_MVT,num_s_MVT = encontrar_fontes_pesquisa_MVT(url_pesquisa,pesquisou,FSS)
-                        a = 3
-                        site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
-                        percent = int( ( a / 8.0 ) * 100)
-                        message = ''
-                        progress.update(percent, 'A Procurar em '+site, message, "")
-                        print str(a) + " de " + str(int(a))
-
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
+                        for item in items:
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                MVT = threading.Thread(name='MVT'+str(i), target=encontrar_fontes_pesquisa_MVT , args=(url_pesquisa,pesquisou,FSS,item,))
+                                threads.append(MVT)
+                        #num_f_MVT,num_s_MVT = encontrar_fontes_pesquisa_MVT(url_pesquisa,pesquisou,FSS)
+                        
                         url_pesquisa = 'http://toppt.net/?s=' + str(encode)
-                        num_f_TPT,num_s_TPT = encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou,FSS)
-
-                        a = 4
-                        site = '[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]'
-                        percent = int( ( a / 8.0 ) * 100)
-                        message = ''
-                        progress.update(percent, 'A Procurar em '+site, message, "")
-                        print str(a) + " de " + str(int(a))
-
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                        for item in items:
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                TPT = threading.Thread(name='TPT'+str(i), target=encontrar_fontes_filmes_TPT , args=(url_pesquisa,pesquisou,FSS,item,))
+                                threads.append(TPT)
+                        #num_f_TPT,num_s_TPT = encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou,FSS)
+                        
                         url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar'
-                        num_f_FTT,num_s_FTT = encontrar_fontes_pesquisa_FTT(url_pesquisa,pesquisou,FSS)
-
-                        a = 5
-                        site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B]'
-                        percent = int( ( a / 8.0 ) * 100)
-                        message = ''
-                        progress.update(percent, 'A Procurar em '+site, message, "")
-                        print str(a) + " de " + str(int(a))
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall("<a class='comment-link'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                        for item in items:
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                FTT = threading.Thread(name='FTT'+str(i), target=encontrar_fontes_pesquisa_FTT , args=(url_pesquisa,pesquisou,FSS,item,))
+                                threads.append(FTT)
+                        #num_f_FTT,num_s_FTT = encontrar_fontes_pesquisa_FTT(url_pesquisa,pesquisou,FSS)
 
                         url_pesquisa = 'http://www.cinematuga.net/search?q=' + str(encode)
-                        num_f_CMT,num_s_CMT = encontrar_fontes_pesquisa_CMT(url_pesquisa,pesquisou,FSS)
-
-                        a = 6
-                        site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B]'
-                        percent = int( ( a / 8.0 ) * 100)
-                        message = ''
-                        progress.update(percent, 'A Procurar em '+site, message, "")
-                        print str(a) + " de " + str(int(a))
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
+                        for item in items:
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                CMT = threading.Thread(name='CMT'+str(i), target=encontrar_fontes_pesquisa_CMT , args=(url_pesquisa,pesquisou,FSS,item,))
+                                threads.append(CMT)
+                        #num_f_CMT,num_s_CMT = encontrar_fontes_pesquisa_CMT(url_pesquisa,pesquisou,FSS)
 
                         url_pesquisa = 'http://www.cinematuga.eu/search?q=' + str(encode)
-                        num_f_CME,num_s_CME = encontrar_fontes_pesquisa_CME(url_pesquisa,pesquisou,FSS)
-
-                        a = 7
-                        site = '[B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B]'
-                        percent = int( ( a / 8.0 ) * 100)
-                        message = ''
-                        progress.update(percent, 'A Procurar em '+site, message, "")
-                        print str(a) + " de " + str(int(a))
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i = 0
+                        items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                        for item in items:
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                CME = threading.Thread(name='CME'+str(i), target=encontrar_fontes_pesquisa_CME , args=(url_pesquisa,pesquisou,FSS,item,))
+                                threads.append(CME)
+                        #num_f_CME,num_s_CME = encontrar_fontes_pesquisa_CME(url_pesquisa,pesquisou,FSS)
 
                         url_pesquisa = 'http://www.cinemaemcasa.pt/search?q=' + str(encode)
-                        num_f_CMC,num_s_CMC = encontrar_fontes_pesquisa_CMC(url_pesquisa,pesquisou,FSS)
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i = 0
+                        items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                        for item in items:
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                CMC = threading.Thread(name='CMC'+str(i), target=encontrar_fontes_pesquisa_CMC , args=(url_pesquisa,pesquisou,FSS,item,))
+                                threads.append(CMC)
+                        #num_f_CMC,num_s_CMC = encontrar_fontes_pesquisa_CMC(url_pesquisa,pesquisou,FSS)
 
-                        num_f = num_f_TFV + num_f_TPT + num_f_TFC + num_f_FTT + num_f_MVT + num_f_CMT + num_f_CME + num_f_CMC
-                        if num_f == 0: addDir1('-----','url',1004,artfolder,False,'')
-                        #if FS == 'FS': addDir1('','url',1004,artfolder,False,'')
+                        [i.start() for i in threads]
+
+                        [i.join() for i in threads]
                         
+                        if num_f_TFV == []: num_f_TFV.append(0)
+                        if num_f_TFC == []: num_f_TFC.append(0)
+                        if num_f_TPT == []: num_f_TPT.append(0)
+                        if num_f_MVT == []: num_f_MVT.append(0)
+                        if num_f_CME == []: num_f_CME.append(0)
+                        if num_f_FTT == []: num_f_FTT.append(0)
+                        if num_f_CMT == []: num_f_CMT.append(0)
+                        if num_f_CMC == []: num_f_CMC.append(0)
+                        num_f = num_f_TFV[0] + num_f_TPT[0] + num_f_TFC[0] + num_f_FTT[0] + num_f_MVT[0] + num_f_CMT[0] + num_f_CME[0] + num_f_CMC[0]
+                        if num_f == 0: addDir1('-----','url',1004,artfolder,False,'')
+       
                 if FS == 'FS' or FS == 'S':
+                        threads = []
                         addDir1('[B][COLOR blue]Séries:[/COLOR][/B]','url',1004,artfolder + 'SERIES1.png',False,'')
                         FSS = 'S'
 
                         url_pesquisa = 'http://toppt.net/?s=' + str(encode)
-                        num_f_TPT,num_s_TPT = encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou,FSS)
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                        for item in items:
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                TPT = threading.Thread(name='TPT'+str(i), target=encontrar_fontes_filmes_TPT , args=(url_pesquisa,pesquisou,FSS,item,))
+                                threads.append(TPT)
+                        #num_f_TPT,num_s_TPT = encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou,FSS)
 
                         url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)
-                        num_f_TFV,num_s_TFV = encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou,FSS)
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+                        for item in items:
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                TFV = threading.Thread(name='TFV'+str(i), target=encontrar_fontes_pesquisa_TFV , args=(url_pesquisa,pesquisou,FSS,item,))
+                                threads.append(TFV)
+                        #num_f_TFV,num_s_TFV = encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou,FSS)
 
-                        a = 6
-                        site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA[/COLOR][/B]'
-                        percent = int( ( a / 6.0 ) * 100)
-                        message = ''
-                        progress.update(percent, 'A Procurar em '+site, message, "")
-                        print str(a) + " de " + str(int(a))
+                        [i.start() for i in threads]
 
-                        num_s = num_s_TFV + num_s_TPT
+                        [i.join() for i in threads]
+
+                        if num_s_TFV == []: num_s_TFV.append(0)
+                        if num_s_TPT == []: num_s_TPT.append(0)
+                        num_s = num_s_TFV[0] + num_s_TPT[0]
                         if num_s == 0: addDir1('-----','url',1004,artfolder,False,'')
 
-
+                progress.close()
+                
                 xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
                 xbmc.executebuiltin("Container.SetViewMode(560)")#502
                 xbmcplugin.endOfDirectory(int(sys.argv[1]))
@@ -181,16 +272,10 @@ def pesquisar():
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_pesquisa_TFV(url,pesquisou,FS):
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	num_f_TFV = 0
-	num_s_TFV = 0
-	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
-	if items != []:
-		print len(items)
-		for item in items:
+def encontrar_fontes_pesquisa_TFV(url,pesquisou,FS,item):
+
+        if item != '':
+                try:
                         thumb = ''
                         fanart = ''
                         versao = ''
@@ -334,32 +419,25 @@ def encontrar_fontes_pesquisa_TFV(url,pesquisou,FS):
                                 if anofilme != '---' and sinopse != '---' and imdbcode != '---' and genre != '---':
                                         if ("Temporada" not in urletitulo[0][1] and FS == 'FS') or ("Temporada" not in urletitulo[0][1] and FS == 'F'):
                                                 addDir_trailer('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + anofilme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,anofilme,genre,nome_pesquisa,urletitulo[0][0])
-                                                num_f_TFV = 1
+                                                num_f_TFV.append(1)
                                         if ("Temporada" in urletitulo[0][1] and FS == 'FS') or ("Temporada" in urletitulo[0][1] and FS == 'S'):
                                                 addDir_trailer('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nometitulo.replace(tirar_ano,'') + '[/COLOR][/B][COLOR yellow](' + anofilme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,anofilme,genre,nome_pesquisa,urletitulo[0][0])
-                                                num_s_TFV = 1
+                                                num_s_TFV.append(1)
                         except: pass
                                         #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')
                                         #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0] + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumbnail[0].replace('s72-c','s320'),'','')				
-
-        else: return num_f_TFV,num_s_TFV
-	return num_f_TFV,num_s_TFV
+                except: pass
+        else: return #num_f_TFV,num_s_TFV
+	return# num_f_TFV,num_s_TFV
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_filmes_TFC(url,pesquisou,FS):
+def encontrar_fontes_filmes_TFC(url,pesquisou,FS,item):
         pt_en = 0
-        num_f_TFC = 0
-	num_s_TFC = 0
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
-	if items != []:
-                num_f = 0
-		print len(items)
-		for item in items:
+
+        if item != '':
+                try:
                         fanart = ''
                         thumb = ''
                         versao = ''
@@ -494,28 +572,21 @@ def encontrar_fontes_filmes_TFC(url,pesquisou,FS):
                                 if 'BREVEMENTE' not in item:
                                         if 'ASSISTIR O FILME' in item:
                                                 addDir_trailer('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumb.replace('s1600','s320').replace('.gif','.jpg'),sinopse,fanart,ano,qualidade,nome,urletitulo[0][0])
-                                                num_f_TFC = 1
+                                                num_f_TFC.append(1)
                                         #addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',73,thumbnail[0].replace('s1600','s320').replace('.gif','.jpg'),'','')
                                         
                         except: pass
-
-        else: return num_f_TFC,num_s_TFC
-	return num_f_TFC,num_s_TFC
+                except: pass
+        else: return #num_f_TFC,num_s_TFC
+	return# num_f_TFC,num_s_TFC
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_pesquisa_MVT(url,pesquisou,FS):
-        num_f_MVT = 0
-	num_s_MVT = 0
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
-	if items != []:
-                num_f = 0
-		print len(items)
-		for item in items:
+def encontrar_fontes_pesquisa_MVT(url,pesquisou,FS,item):
+
+        if item != '':
+                try:
                         thumb = ''
                         fanart = ''
                         sinopse = ''
@@ -595,28 +666,22 @@ def encontrar_fontes_pesquisa_MVT(url,pesquisou,FS):
 
                         try:
                                 addDir_trailer('[COLOR orange]MVT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',url[0].replace(' ','%20')+'IMDB'+imdbcode+'IMDB',103,thumb.replace(' ','%20'),sinopse,fanart,ano_filme,genero,nome,url[0].replace(' ','%20'))
-                                num_f_MVT = 1
+                                num_f_MVT.append(1)
                         except: pass
-        else: return num_f_MVT,num_s_MVT
-	return num_f_MVT,num_s_MVT
+                except: pass
+        else: return# num_f_MVT,num_s_MVT
+	return #num_f_MVT,num_s_MVT
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-def encontrar_fontes_filmes_TPT(url,pesquisou,FS):
-        num_f_TPT = 0
-	num_s_TPT = 0
+def encontrar_fontes_filmes_TPT(url,pesquisou,FS,item):
+        
         series = 0
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	if '<div class="postmeta-primary">' in html_source: items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
-	else: return num_f_TPT,num_s_TPT
-	if items != []:
-                num_f = 0
-		print len(items)
-		for item in items:
+
+        if item != '':
+                try:
                         sinopse = ''
                         fanart = ''
                         thumb = ''
@@ -792,28 +857,23 @@ def encontrar_fontes_filmes_TPT(url,pesquisou,FS):
                                 if ano and genr and audio:
                                         if (("Season" in nome or 'Mini-Série' in nome or 'Mini-Serie' in nome) and FS == 'FS') or (("Season" in nome or 'Mini-Série' in nome or 'Mini-Serie' in nome) and FS == 'S'):
                                                 addDir_trailer('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0])
-                                                num_s_TPT = 1
+                                                num_s_TPT.append(1)
                                         if ("Season" not in nome and 'Mini-Série' not in nome and 'Mini-Serie' not in nome and FS == 'FS') or ("Season" not in nome and 'Mini-Série' not in nome and 'Mini-Serie' not in nome and FS == 'F'):
                                                 addDir_trailer('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0])
-                                                num_f_TPT = 1
+                                                num_f_TPT.append(1)
                         except: pass
-        else: return num_f_TPT,num_s_TPT
-	return num_f_TPT,num_s_TPT
+                except: pass
+        else: return #num_f_TPT,num_s_TPT
+	return# num_f_TPT,num_s_TPT
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_pesquisa_FTT(url,pesquisou,FS):
-        num_f_FTT = 0
-	num_s_FTT = 0
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	items = re.findall("<a class='comment-link'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-	if items != []:
-		print len(items)
-		num_f = 0
-		for item in items:
+def encontrar_fontes_pesquisa_FTT(url,pesquisou,FS,item):
+        
+
+        if item != '':
+                try:
                         thumb = ''
                         genero = ''
                         sinopse = ''
@@ -996,26 +1056,20 @@ def encontrar_fontes_pesquisa_FTT(url,pesquisou,FS):
                         if thumb == '': thumb = '---'
                         try:
                                 addDir_trailer('[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',603,thumb,sinopse,fanart,anofilme,genero,nome,urlvideo)
-                                num_f_FTT = 1
+                                num_f_FTT.append(1)
                         except: pass
-        else: return num_f_FTT,num_s_FTT
-	return num_f_FTT,num_s_FTT
+                except: pass
+        else: return #num_f_FTT,num_s_FTT
+	return #num_f_FTT,num_s_FTT
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_pesquisa_CMT(url,pesquisou,FS):
-        num_f_CMT = 0
-	num_s_CMT = 0
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
-	conta_items = 0
-	if items != []:
-		print len(items)
-		num_f = 0
-		for item in items:
+def encontrar_fontes_pesquisa_CMT(url,pesquisou,FS,item):
+        
+
+        if item != '':
+                try:
                         thumb = ''
                         fanart = ''
                         versao = ''
@@ -1117,26 +1171,20 @@ def encontrar_fontes_pesquisa_CMT(url,pesquisou,FS):
                                 if ("Temporada" not in urletitulo[0][1] and FS == 'FS') or ("Temporada" not in urletitulo[0][1] and FS == 'F'):
                                         num_mode = 703
                                         addDir_trailer('[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',num_mode,thumb.replace('s72-c','s320'),sinopse,fanart,ano_filme.replace(' ',''),genre,nome,urletitulo[0][0])
-                                        num_f_CMT = 1
+                                        num_f_CMT.append(1)
                         except: pass
-
-        else: return num_f_CMT,num_s_CMT
-	return num_f_CMT,num_s_CMT
+                except: pass
+        else: return# num_f_CMT,num_s_CMT
+	return #num_f_CMT,num_s_CMT
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_pesquisa_CME(url,pesquisou,FS):
-        num_f_CME = 0
-	num_s_CME = 0
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-	if items != []:
-		print len(items)
-		num = len(items) + 0.0
-		for item in items:
+def encontrar_fontes_pesquisa_CME(url,pesquisou,FS,item):
+        
+
+        if item != '':
+                try:
                         
                         thumb = ''
                         genero = ''
@@ -1242,24 +1290,18 @@ def encontrar_fontes_pesquisa_CME(url,pesquisou,FS):
                         if thumb == '': thumb = '---'
                         try:
                                 addDir_trailer('[COLOR orange]CME | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',803,thumb,sinopse,fanart,anofilme,genero,nome,urlvideo)
-                                num_f_CME = 1
+                                num_f_CME.append(1)
                         except: pass
-
-	else: return num_f_CME,num_s_CME
-	return num_f_CME,num_s_CME
+                except: pass
+	else: return #num_f_CME,num_s_CME
+	return #num_f_CME,num_s_CME
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def encontrar_fontes_pesquisa_CMC(url,pesquisou,FS):
-	try:
-		html_source = abrir_url(url)
-	except: html_source = ''
-	num_f_CMC = 0
-	num_s_CMC = 0
-        items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-        #addLink(str(len(items)),'','','')
-	if items != []:
-		for item in items:
+def encontrar_fontes_pesquisa_CMC(url,pesquisou,FS,item):
+
+        if item != '':
+                try:
                         
                         thumb = ''
                         fanart = ''
@@ -1351,11 +1393,11 @@ def encontrar_fontes_pesquisa_CMC(url,pesquisou,FS):
                         try:
                                 if 'Temporada' not in nome:                                            
                                         addDir_trailer('[COLOR orange]CMC | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlfilme.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',903,thumb.replace(' ','%20'),sinopse,fanart,ano_filme,genero,nome,urlfilme)
-                                        num_f_CMC = 1
+                                        num_f_CMC.append(1)
                         except: pass
-
-	else: return num_f_CMC,num_s_CMC
-	return num_f_CMC,num_s_CMC
+                except: pass
+	else: return #num_f_CMC,num_s_CMC
+	return #num_f_CMC,num_s_CMC
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#        
 #----------------------------------------------------------------------------------------------------------------------------------------------#

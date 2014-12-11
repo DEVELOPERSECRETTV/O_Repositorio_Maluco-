@@ -22,6 +22,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket
+from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
 from array import array
 from string import capwords
 from Mashup import thetvdb_api,themoviedb_api,themoviedb_api_tv
@@ -52,11 +53,11 @@ def ARM_MenuPrincipal():
         #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].tv','http://megafilmeshd.tv',356,artfolder + 'SDB.png','nao','')
         #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]FILMESHD[/COLOR][/B].net','url',337,artfolder + 'SDB.png','nao','')
         #addDir('[B][COLOR green]MEGA[/COLOR][COLOR yellow]SÉRIESONLINEHD[/COLOR][/B].com','url',358,artfolder + 'SDB.png','nao','')
-	addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','url',337,artfolder + 'SDB.png','nao','')
+	addDir('[COLOR blue]Filmes - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/',338,artfolder + 'SDB.png','nao','')
 	addDir('[COLOR blue]Séries - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=21',332,artfolder + 'SDB.png','nao','')	
 	addDir('[COLOR blue]Animação - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=3228',332,artfolder + 'SDB.png','nao','')
 	addDir('[COLOR blue]Animes/Desenhos - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?cat=36',332,artfolder + 'SDB.png','nao','')
-        addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/',338,artfolder + 'SDB.png','nao','')
+        #addDir('[COLOR blue]Categorias - [/COLOR][B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/',338,artfolder + 'SDB.png','nao','')
         addDir('Pesquisar - [B][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.armagedomfilmes.biz/?s=',334,artfolder + 'P2.png','nao','')
         #if selfAddon.getSetting('hide-porno') == "false":
 			#addDir('[B][COLOR red]M+18 - [/COLOR][COLOR yellow]ARMAGEDOM[/COLOR][COLOR green]FILMES[/COLOR][/B]','http://www.megavideoporno.org/porno/filmes',350,artfolder + 'SDB.png','nao','')
@@ -122,6 +123,7 @@ def ARM_Menu_Filmes_Por_Categorias():
         addDir1('','url',1005,artfolder,False,'')
         html_categorias_source = ARM_abrir_url(url)
 	html_items_categorias = re.findall('<h2 class="widgettitle">Categorias</h2>(.*?)<div class="clear"></div>', html_categorias_source, re.DOTALL)
+	if not html_items_categorias: html_items_categorias = re.findall('<div class="bi-cat">(.*?)</div>', html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 #filmes_por_categoria = re.compile('href="(.+?)"><b><span style="color: .+?">(.+?)</span>').findall(item_categorias)
@@ -241,6 +243,7 @@ def ARM_encontrar_fontes_filmes(url):
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
 	items = re.findall('<div class="titulo-post-us">(.*?)<div class="div-us">', html_source, re.DOTALL)
+	if not items: items = re.findall('<div class="bic-miniatura">(.+?)<div class="bicm-infos">', html_source, re.DOTALL)
 	#addDir1(str(len(items)),'','',iconimage,False,'')
 	duble = ''
 	if items != []:
@@ -277,7 +280,8 @@ def ARM_encontrar_fontes_filmes(url):
                         try:
                                 addDir('[B][COLOR yellow]' + nome + '[/COLOR][COLOR blue][/B]' + ano + '[/COLOR][COLOR green]' + dubleg + '[/COLOR]',urlfilme,333,thumb,'nao','')
                         except: pass
-	proxima = re.compile('<link rel="next" href="(.+?)"/>').findall(html_source)		
+	proxima = re.compile('<link rel="next" href="(.+?)"/>').findall(html_source)
+	if not proxima: proxima = re.compile("span class='current'>.+?</span><a href='(.+?)' class='page larger'>").findall(html_source)
 	try:
                 #addDir1('','url',1005,artfolder + 'SDB.png',False,'')
 		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),332,artfolder + 'PAGS2.png','nao','')
@@ -342,6 +346,7 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
                 items = re.findall('<h2 class="titulo">(.*?)width="190" height="294"/>', html_source, re.DOTALL)
 	if not items: items = re.findall('<li class="create-tooltip"(.*?)</li>', html_source, re.DOTALL)
 	if not items: items = re.findall('class="link-tumb">(.*?)<!--capa-thumb -->', html_source, re.DOTALL)
+	if not items: items = re.findall('class="link-tumb">(.*?)<div class="mega-tarja">', html_source, re.DOTALL)
 	#addDir1(str(len(items)),'','',iconimage,False,'')
 	dubleg = ''
 	if items != []:
@@ -358,6 +363,7 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
                                 urlfilme = urldofilme[0]
                         else:
                                 urlfilme = ''
+                        #addLink(urlfilme,'','','')
                         thumbnail = re.compile('src="(.+?)&amp;h=259&amp;w=177"').findall(item)
                         if not thumbnail: thumbnail = re.compile('src="(.+?)"').findall(item)
                         if thumbnail:
@@ -592,6 +598,7 @@ def ARM_encontrar_videos_filmes(name,url):
 	if link2:
                 if 'ASSISTIR: LEGENDADO' in link2: addDir1('[COLOR orange]Dublado:[/COLOR]','','',iconimage,False,'')
                 urls_video = re.findall('<div id="ver-filme-user">(.*?)<div id="box-embed"', link2, re.DOTALL)
+                if not urls_video: urls_video = re.findall('<ul class="bp-videos">(.*?)</ul>', link2, re.DOTALL)
                 if urls_video:
                         urlss_video = re.compile('src="(.+?)"').findall(urls_video[0])
                         if urlss_video:
@@ -656,6 +663,7 @@ def ARM_encontrar_videos_filmes(name,url):
                         num_fonte = 0
                         addDir1('[COLOR orange]Legendado:[/COLOR]','','',iconimage,False,'')
                         matchvideo = re.findall('<p style="text-align: center;">(.*?)<center><a href="https://twitter.com/share"', link2, re.DOTALL)
+                        if not matchvideo: matchvideo = re.findall('<strong>ASSISTIR: LEGENDADO</strong>(.*?)</div>', link2, re.DOTALL)
                         if matchvideo:
                                 for match in matchvideo:
                                         urls_video = re.compile('href="(.+?)"').findall(match)
@@ -719,6 +727,7 @@ def ARM_encontrar_videos_filmes(name,url):
                         num_epi = ''
                         matchvideo = re.findall('<div id="HOTWordsTxt" name="HOTWordsTxt">(.+?)<a href="https://twitter.com/share"',link2,re.DOTALL)
                         if not matchvideo: matchvideo = re.findall('<div id="HOTWordsTxt" name="HOTWordsTxt">(.+?)<div class="geral-extra">',link2,re.DOTALL)
+                        if not matchvideo: matchvideo = re.findall('<div class="conteudo">(.+?)<a href="https://twitter.com/share"',link2,re.DOTALL)
                         if matchvideo:
                                 #addDir('ca estou eu','',342,iconimage,'','')
                                 #return
@@ -1823,47 +1832,6 @@ def ARM_get_params():
         return param
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
-
-def addLink(name,url,iconimage):
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addLink1(name,url,iconimage):
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addDir(name,url,mode,iconimage,checker,fanart):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        text = 'nnnnnn'
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&checker="+urllib.quote_plus(checker)+"&fanart="+urllib.quote_plus(fanart)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
-        #cm = []
-	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
-	#liz.addContextMenuItems(cm, replaceItems=True)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
-
-def addDir1(name,url,mode,iconimage,folder,fanart):
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',artfolder + 'FAN3.jpg')
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker } )
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder)
-        return ok
-
-
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
 params=ARM_get_params()

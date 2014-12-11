@@ -306,7 +306,8 @@ def TFC_encontrar_fontes_filmes(url):
                                 else: ano_filme = '---'
                                 _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
                                 if _f: fanart = _f[0]
-                                else: fanart = '---'
+                                else: fanart = ''
+                                if fanart == '---': fanart = ''
                                 _g = re.compile('[|]GENERO[|](.+?)[|]ONOME[|]').findall(_filmes_[x])
                                 if _g: genero = _g[0]
                                 else: genero = '---'
