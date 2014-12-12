@@ -42,8 +42,12 @@ _seriesALL_ = []
 Anos = ['' for i in range(100)]
 filmes = []
 filmesTFV = []
+fanfan = []
+fanfan1 = []
+
 
 progress = xbmcgui.DialogProgress()
+
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENUS    -----------------------------------------------------------------#
@@ -460,16 +464,31 @@ def Series_TFV(FILMN,endereco,nome_series):
 
 
 def TFV_encontrar_fontes_filmes(url):
+
+
+        #try: xbmcgui.Dialog().notification('Movie Trailers', 'Finding Nemo download finished.', self.addonArt('icon.png'), 5000, sound=False)
+        #except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('sim', '77', self.addonArt('icon.png')))
+        #msg = ' (%s)' % timeout_msg if timeout_msg else ''
+        
         
         percent = 0
-        message = 'Por favor aguarde.'
-        progress.create('Progresso', 'A Procurar')
+##        message = 'Por favor aguarde.'
+##        progress.create('Progresso', 'A Procurar')
+        
         if name == '[COLOR yellow]- Top Semanal[/COLOR]' or name == '[COLOR yellow]- Últimos[/COLOR] (Filmes/Séries)' or name == '[B]Página Seguinte>>>[/B]':
-                progress.update( percent, 'A Procurar ...', message, "" )
+                #progress.update( percent, 'A Procurar ...', message, "" )
+                builtin = 'XBMC.Notification(%s,%s, 3000, %s)'
+                log = xbmc.executebuiltin(builtin % ('A Procurar.', 'Por favor aguarde...',artfolder + 'TFV1.png'))
+                
         if name == '[COLOR yellow]- Últimos Episódios[/COLOR]' or name == '[B]Página Seguinte>>[/B]':
-                progress.update( percent, 'A Procurar Últimos Episódios ...', message, "" )
+                #progress.update( percent, 'A Procurar Últimos Episódios ...', message, "" )
+                builtin = 'XBMC.Notification(%s,%s, 3000, %s)'
+                log = xbmc.executebuiltin(builtin % ('A Procurar Últimos Episódios.', 'Por favor aguarde...',artfolder + 'TFV1.png'))
+                
         if name != '[COLOR yellow]- Top Semanal[/COLOR]' and name != '[COLOR yellow]- Últimos Episódios[/COLOR]' and name != '[B]Página Seguinte>>[/B]' and name != '[COLOR yellow]- Últimos[/COLOR] (Filmes/Séries)' and name != '[B]Página Seguinte>>>[/B]':
-                progress.update( percent, 'A Procurar Filmes ...', message, "" )
+                #progress.update( percent, 'A Procurar Filmes ...', message, "" )
+                builtin = 'XBMC.Notification(%s,%s, 3000, %s)'
+                log = xbmc.executebuiltin(builtin % ('A Procurar Filmes.', 'Por favor aguarde...',artfolder + 'TFV1.png'))
         
         try:
 		html_source = abrir_url(url)
@@ -557,6 +576,7 @@ def TFV_encontrar_fontes_filmes(url):
                         Filmes_Fi.close()
 
                 num_total = num_filmes + 0.0
+                progress.create('Progresso', '')
                 for a in range(num_filmes):
                         percent = int( ( a / num_total ) * 100)
                         message = str(a+1) + " de " + str(num_filmes)
@@ -573,6 +593,9 @@ def TFV_encontrar_fontes_filmes(url):
                                 addDir("[B]Página Seguinte >>[/B]",proxima[0].replace('&amp;','&'),32,artfolder + 'PAGS1.png','','')
                 except:pass
 	progress.close()
+	#log.close()
+	
+
 
 
 def Fontes_Filmes_TFV(item):        
@@ -1633,7 +1656,9 @@ def TFV_encontrar_videos_series(name,url):
 #----------------------------------------------------------------------------------------------------------------------------------------------#                     
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def TFV_Ultimos(fanart,name,url,item):
+def TFV_Ultimos(fanart,name,url,item,tvdbid):
+        FILMEN = re.compile('FILME(.+?)FILME').findall(item)
+        FILMEN = FILMEN[0]
 
         ####################
         nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
@@ -1667,8 +1692,7 @@ def TFV_Ultimos(fanart,name,url,item):
                                 season = re.compile('[(](.+?)[)]').findall(name)
                                 if season: season = season[0]
                                 else: season = ''
-                        
-                        
+
         temporada = re.compile('(\d+)').findall(season)
         if temporada:
                 temporada = temporada[0]
@@ -1683,7 +1707,7 @@ def TFV_Ultimos(fanart,name,url,item):
                         temporadat = '0'+temporada
                 else: temporadat = temporada
 
-        tvdbid = thetvdb_api_tvdbid()._id(n_pesquisa,anne)
+        #tvdbid = thetvdb_api_tvdbid()._id(n_pesquisa,anne)
         #addLink(season+'-'+imdbcode+'-'+tvdbid+'-'+temporadat+'-'+anne+'-'+n_pesquisa+'-'+name,'','','')
         #return
         #######################
@@ -1693,33 +1717,20 @@ def TFV_Ultimos(fanart,name,url,item):
         else: url = urlseries[0]
 
         urltrailer = url
-
+        #addLink(imdbcode+'-'+tvdbid+'-'+temporadat+'-'+anne+'-'+n_pesquisa+'-'+name,'','','')
         episodioanterior = ''
         episodio = ''
         episodiot = ''
-
+        #return
         f_id = ''
         i = 0
-##        percent = 0
-##        message = ''
-##        progress.create('Progresso', 'A Procurar Episódios...')
-##        progress.update( percent, "", message, "" )
         conta_id_video = 0
-
-##	try:
-##		link_series=abrir_url(url)
-##	except: link_series = ''
-        #addDir1(url+name,'url',1004,iconimage,False,fanart)
-        #return
-
+        
 	nome_antes = '[B][COLOR green]' + namet + '[/COLOR][/B] | '
-##	if link_series:
+
         if item != '':
 
                 try:
-##                        items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", link_series, re.DOTALL)
-##                        items_series = re.findall("<div class='id(.+?)</a>", items[0], re.DOTALL)
-##                        if not items_series: items_series = re.findall("<div class='id(.+?)</p>", items[0], re.DOTALL)
                         items_series = re.findall("<div class='id(.+?)</a>", item, re.DOTALL)
                         if not items_series: items_series = re.findall("<div class='id(.+?)</p>", item, re.DOTALL)
                         n_items = len(items_series)
@@ -1742,7 +1753,7 @@ def TFV_Ultimos(fanart,name,url,item):
                                 nomecada = not_vi[0]
                                 e = re.compile('(\d+) [-] ').findall(nomecada)
                                 if e: e = e[0]
-                                #addLink(e+'-'+e1,'','','')
+                                #addLink(namet+'-'+e+'-'+e1,'','','')
 
                                 #addLink(item_vid_series,'','','')
                                 not_videomeganome = re.compile('>(.+?)</div></h3>').findall(item_vid_series)
@@ -1755,18 +1766,8 @@ def TFV_Ultimos(fanart,name,url,item):
                                 if e == e1:
                                         #addLink(e1+'sim'+e,'','','')
                                         try:
-        ##                                        if 'div class=' in item_vid_series:
-        ##                                                ivs = re.compile('class=.+?>(.*)').findall(item_vid_series)
-        ##                                                if ivs: item_vid_series = ivs[0]
-                                                
-                                                #addLink(episodio+'-'+episodioanterior+'-'+item_vid_series+'-'+str(i)+'-'+str(n_items)+'-'+temporadat,'','','')                                        
-                 
                                                 if 'videomega' in item_vid_series:
                                                         try:
-        ##                                                        videomega_video_nome = re.compile('>(.+?)</div></h3>').findall(item_vid_series)
-        ##                                                        if not videomega_video_nome: videomega_video_nome = re.compile('>(.+?)</div></h3><p>').findall(item_vid_series)
-        ##                                                        if not videomega_video_nome: videomega_video_nome = re.compile('>(.+?)</div></h3><a').findall(item_vid_series)
-        ##                                                        if 'div class=' in videomega_video_nome[0]: videomega_video_nome = re.compile('>(.*)').findall(videomega_video_nome[0])
                                                                 videomega_video_url = re.compile('<iframe .+? src="(.+?)"').findall(item_vid_series)
                                                                 nome = videomega_video_nome[0]
                                                                 nome = nome.replace('&#8217;',"'")
@@ -1779,11 +1780,6 @@ def TFV_Ultimos(fanart,name,url,item):
                                                 if 'ep' and 'src' and 'iframe' in item_vid_series:
                                                         try:
                                                                 not_videomega_video_url = re.compile('<iframe .+? src="(.+?)"').findall(item_vid_series)
-        ##                                                        not_videomega_video_nome = re.compile('>(.+?)</div></h3>').findall(item_vid_series)
-        ##                                                        if not not_videomega_video_nome: not_videomega_video_nome = re.compile('>(.+?)</div></h3><p>').findall(item_vid_series)
-        ##                                                        if not not_videomega_video_nome: not_videomega_video_nome = re.compile('>(.+?)</div></h3><a').findall(item_vid_series)
-        ##                                                        if 'div class=' in not_videomega_video_nome[0]: not_videomega_video_nome = re.compile('>(.*)').findall(not_videomega_video_nome[0])
-        ##                                                        nome_cada_episodio = not_videomega_video_nome[0]
                                                                 nome_cada_episodio = nomecadaepisodio
                                                                 url = not_videomega_video_url[0]
                                                                 identifica_video = re.compile('=(.*)').findall(not_videomega_video_url[0])                                                        
@@ -1822,11 +1818,6 @@ def TFV_Ultimos(fanart,name,url,item):
                                                                 if "vt" in item_vid_series: url = 'vidto.me'
                                                                 if "nv" in item_vid_series: url = 'nowvideo'
 
-        ##                                                        not_videomega_video_nome = re.compile('>(.+?)</div></h3>').findall(item_vid_series)
-        ##                                                        if not not_videomega_video_nome: not_videomega_video_nome = re.compile('>(.+?)</div></h3>').findall(item_vid_series)
-        ##                                                        if 'div class=' in not_videomega_video_nome[0]: not_videomega_video_nome = re.compile('>(.*)').findall(not_videomega_video_nome[0])
-        ##                                                        if not_videomega_video_nome: nome_cada_episodio = not_videomega_video_nome[0]
-        ##                                                        else: nome_cada_episodio = ''
                                                                 nome_cada_episodio = nomecadaepisodio
                                                                 
                                                                 nome_cada_episodio = nome_cada_episodio.replace('&#8217;',"'")
@@ -1841,103 +1832,101 @@ def TFV_Ultimos(fanart,name,url,item):
                                                                 except: pass
                                                         except:pass
                                                                                         
-                                        except:pass                                        
-                                        
-                                        try:
-                                                epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
-
-                                                if episodioanterior != episodio and episodio != '':
-                                                        try:
-                                                                addDir_episode(nome_antes+' [COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
-                                                                f_id = ''
-                                                        except: pass
-                                        except:
-                                                nomeepisodio = re.compile(' [-] (.*)').findall(nomecadaepisodio)
-                                                if nomeepisodio: nomeepisodio = nomeepisodio[0]
-                                                else: nomeepisodio = nomecadaepisodio
-                                                
-                                                #addLink(episodio+'-'+episodioanterior,'','')
-                                                if episodioanterior != episodio and episodio != '':
-                                                        addDir_episode(nome_antes+' [COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodioanterior+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodioanterior+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
-                                                        f_id = ''
-                                                else: nomeepisodioanterior = nomeepisodio
-
-                                        episodio = re.compile('(\d+) [-] ').findall(nomecadaepisodio)
-                                        if episodio:
-                                                episodiot = episodio[0]
-                                                episodio = episodio[0]
-                                        a_q = re.compile('\d+')
-                                        qq_aa = a_q.findall(episodio)
-                                        for q_a_q_a in qq_aa:
-                                                if len(q_a_q_a) == 1:
-                                                        episodiot = '0'+episodio
+                                        except:pass
 
                                         if f_id == '': f_id = fonte_id
                                         else: f_id = f_id + '|' + fonte_id
 
-                                        
-                                        if i == int(divide):
-                                                try:
-                                                        epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
-                                                        
-                                                        if (episodioanterior == episodio and episodio != '') or 'calendar_title' in item_vid_series:
-                                                                try:
-                                                                        addDir_episode(nome_antes+' [COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
-                                                                        f_id = ''
-                                                                except: pass
-                                                except:                                     
-                                                        nomeepisodio = re.compile(' [-] (.*)').findall(nomecadaepisodio)
-                                                        if nomeepisodio: nomeepisodio = nomeepisodio[0]
-                                                        else: nomeepisodio = nomecadaepisodio
-                                                        
-                                                        #addLink(episodio+'-'+episodioanterior,'','','')
-                                                        if episodioanterior == episodio and episodio != '':
-                                                                addDir_episode(nome_antes+' [COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
-                                                                f_id = ''
-                                                                
-                                if i != int(divide): i = i + 1
+                        episodio = re.compile('(\d+) [-] ').findall(nomecadaepisodio)
+                        if episodio:
+                                episodiot = episodio[0]
+                                episodio = episodio[0]
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(episodio)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 1:
+                                        episodiot = '0'+episodio
+
+                        try:
+                                epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
+
+                                try:
+                                        addDir_episode(nome_antes+' [COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+namet,urltrailer)
+                                        f_id = ''
+                                except: pass
+                        except:                                     
+                                nomeepisodio = re.compile(' [-] (.*)').findall(nomecadaepisodio)
+                                if nomeepisodio: nomeepisodio = nomeepisodio[0]
+                                else: nomeepisodio = nomecadaepisodio
+
+                                addDir_episode(nome_antes+' [COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+namet,urltrailer)
+                                f_id = ''
                                 
                 except:pass
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def ultimos_ep_TFV(item):
 
-        folder = perfil
-        Filmes_File = open(folder + 'filmesTFV.txt', 'w')
+def ultimos_ep_TFV(item,passaurlimdbcode,nome_pesquisa,nome_fi,imdbcode,tv_id):
         
         if item != '':
 
                 try:
                         FILMEN = re.compile('FILME(.+?)FILME').findall(item)
                         FILMEN = FILMEN[0]
+                        item = 'FILME'+FILMEN+'FILME'+item
+                        url = 'http://thetvdb.com/api/23B3F3D91B980C9F/series/'+str(tv_id)+'/pt.xml'
+                        try: html_source = abrir_url(url)
+                        except: html_source = ''
+                        fan = re.compile('<fanart>(.+?)</fanart>').findall(html_source)#(fanart,name,url,item,tvdbid)
+                        try: fanart = 'http://thetvdb.com/banners/'+fan[0]
+                        except: fanart = ''
+                        #addLink(tv_id+passaurlimdbcode+nome_pesquisa+nome_fi+imdbcode,'','',fanart)
+                        TFV3 = threading.Thread(name='TFV3'+FILMEN, target=TFV_Ultimos , args=(fanart,nome_fi,passaurlimdbcode,item,tv_id,))
+                        fanfan1.append(TFV3)
+
+		except: pass
+        else: pass
+
+def busca_tvid(item,passaurlimdbcode,nome_pesquisa,nome_fi,imdbcode):
+        FILMEN = re.compile('FILME(.+?)FILME').findall(item)
+        FILMEN = FILMEN[0]
+        item = 'FILME'+FILMEN+'FILME'+item
+        tv_id, sinopse = thetvdb_api_IMDB()._id(nome_pesquisa,imdbcode)
+        #addLink(tv_id+passaurlimdbcode+nome_pesquisa+nome_fi+imdbcode,'','','')
+        TFV2 = threading.Thread(name='TFV2'+FILMEN, target=ultimos_ep_TFV , args=(item,passaurlimdbcode,nome_pesquisa,nome_fi,imdbcode,tv_id,))
+        fanfan.append(TFV2)
+
+        
+#----------------------------------------------------------------------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------------------------------#
+
+def ultimos_episodios_TFV_ultimos(url):
+
+        builtin = 'XBMC.Notification(%s,%s, 6000, %s)'
+        log = xbmc.executebuiltin(builtin % ('A Procurar Últimos Episódios.', 'Por favor aguarde...',artfolder + 'TFV1.png'))
+
+        #----------------------------------------------------------------------------------------------------
+        threads = []
+
+        i = 0
+        try:
+                try:
+                        html_source = abrir_url(url)
+                except: html_source = ''
+                itemsTFV = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
+                
+                for item in itemsTFV:
                         thumb = ''
                         fanart = ''
                         genero = ''
                         sinopse = ''
                         imdbcode = ''
-
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
-                        
-                        gene = re.compile("nero</b>:(.+?)<br />").findall(item)
-                        if gene: genero = gene[0]
-                        else: genero = ''
-                        
-                        resumo = re.compile("<b>Resumo</b>:(.+?)<br />").findall(item)
-                        if resumo: sinopse = resumo[0]
-                        else: sinopse = ''
-                        sinopse = sinopse.replace('&#8220;',"'")
-                        sinopse = sinopse.replace('&#8221;',"'")
-                        sinopse = sinopse.replace('&#8216;',"'")
-                        sinopse = sinopse.replace('&#8217;',"'")
-                        sinopse = sinopse.replace('&#8211;',"-")
-                        sinopse = sinopse.replace('&#39;',"'")
-                        sinopse = sinopse.replace('&amp;','&')
-                        
-			urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+                        urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
 			ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
 			if ano: ano = '('+ano[0]+')'
 			qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
@@ -1961,155 +1950,46 @@ def ultimos_ep_TFV(item):
                         n = re.compile('(.+?)[(].+?[)]').findall(nome)
                         if n: nome_original = n[0]
                         else: nome_original = nome
-
                         nome_pesquisa = nome_original
+                        passaurlimdbcode = urletitulo[0][0]+'IMDB'+imdbcode+'IMDB'
                         
-                        tv_id, sinopse = thetvdb_api_IMDB()._id(nome_pesquisa,imdbcode)
-                        if tv_id != '':
-                                fanart = 'http://thetvdb.com/banners/fanart/original/' + tv_id + '-1.jpg'
-                                try:
-                                        urllib2.urlopen(fanart)
-                                except urllib2.HTTPError, e:
-                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + tv_id + '-2.jpg'
-                                if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + tv_id + '-1.jpg'
-                        else:
-                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano.replace('(','').replace(')','')+'|'+imdbcode)
-                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
-                                if ftart:
-                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
-                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
-                                if snpse and sinopse == '': sinopse = snpse[0]
-
-			try:
-                                nome_fi = '[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano.replace(' ','') + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR] '
-                                nome_final = '[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano.replace(' ','') + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR] '
-                                filmesTFV.append(FILMEN+'NOME|'+str(nome_final)+'|IMDBCODE|'+urletitulo[0][0]+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace('s72-c','s320'))+'|ANO|'+str(ano.replace(' ',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genre)+'|ONOME|'+str(nome_pesquisa)+'|SINOPSE|'+str(sinopse)+'|END|\n')
-##                                TFVU = threading.Thread(name='TFVU'+FILMEN, target=TFV_Ultimos , args=(item,nome_fi,urletitulo[0][0]+'IMDB'+str(imdbcode)+'IMDB',))
-##                                TFVU.start()
-##                                TFVU.join()
-                                TFV_Ultimos(fanart,nome_fi,urletitulo[0][0]+'IMDB'+str(imdbcode)+'IMDB',item)
-			except: pass
-		except: pass
-        else: pass
-        
-        filmesTFV.sort()
-        for x in range(len(filmesTFV)):
-                Filmes_File.write(str(filmesTFV[x]))
-        #Filmes_File.write('PAGINA|'+url_TFV+'|PAGINA')
-        Filmes_File.close()
-
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-#----------------------------------------------------------------------------------------------------------------------------------------------#
-
-def ultimos_episodios_TFV_ultimos(url):
-        
-        percent = 0
-        message = 'Por favor aguarde.'
-        progress.create('Progresso', 'A Procurar')
-        progress.update( percent, 'A Procurar Últimos Episódios...', message, "" )
-
-        #----------------------------------------------------------------------------------------------------
-        threads = []
-
-        i = 0
-        try:
-                try:
-                        html_source = abrir_url(url)
-                except: html_source = ''
-                itemsTFV = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
-
-                for item in itemsTFV:
+                        nome_fi = '[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano.replace(' ','') + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR] '
                         i = i + 1
                         a = str(i)
                         if i < 10: a = '0'+a
-                        TFV = threading.Thread(name='TFV'+str(i), target=ultimos_ep_TFV , args=('FILME'+str(a)+'FILME'+item,))
-                        threads.append(TFV)
+                        item = 'FILME'+str(a)+'FILME'+item
+                        #TFV = threading.Thread(name='TFV'+str(i), target=ultimos_ep_TFV , args=('FILME'+str(a)+'FILME'+item,))
+                        TFV1 = threading.Thread(name='TFV1'+str(i), target=busca_tvid , args=(item,passaurlimdbcode,nome_pesquisa,nome_fi,imdbcode,))
+                        #TFV2 = threading.Thread(name='TFV2'+str(i), target=ultimos_ep_TFV , args=('FILME'+str(a)+'FILME'+item,nome_pesquisa,imdbcode,tv_id,))
+                        threads.append(TFV1)
+
         except: pass
 
         [i.start() for i in threads]
 
         [i.join() for i in threads]
-        
-##        _sites_ = ['filmesTPT.txt','filmesTFV.txt']
-##        folder = perfil
-##        num_filmes = 0
-##        
-##        for site in _sites_:
-##                _filmes_ = []
-##                Filmes_Fi = open(folder + site, 'r')
-##                read_Filmes_File = ''
-##                for line in Filmes_Fi:
-##                        read_Filmes_File = read_Filmes_File + line
-##                        if line!='':_filmes_.append(line)
-##
-##                for x in range(len(_filmes_)):
-##                        _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
-##                        if _n: nome = _n[0]
-##                        else: nome = '---'
-##                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_filmes_[x])
-##                        if _i: imdbcode = _i[0]
-##                        else: imdbcode = '---'
-##                        urltrailer = re.compile('(.+?)IMDB.+?MDB').findall(imdbcode)
-##                        if urltrailer: urltrailer = urltrailer[0]
-##                        else: urltrailer = '---'
-##                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_filmes_[x])
-##                        if _t: thumb = _t[0]
-##                        else: thumb = '---'
-##                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_filmes_[x])
-##                        if _a: ano_filme = _a[0]
-##                        else: ano_filme = '---'
-##                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
-##                        if _f: fanart = _f[0]
-##                        else: fanart = ''
-##                        if fanart == '---': fanart = ''
-##                        _g = re.compile('[|]GENERO[|](.+?)[|]ONOME[|]').findall(_filmes_[x])
-##                        if _g: genero = _g[0]
-##                        else: genero = '---'
-##                        _o = re.compile('[|]ONOME[|](.+?)[|]SINOPSE[|]').findall(_filmes_[x])
-##                        if _o: O_Nome = _o[0]
-##                        else: O_Nome = '---'
-##                        _p = re.compile('PAGINA[|](.+?)[|]PAGINA').findall(_filmes_[x])
-##                        if _p: P_url = _p[0]
-##                        else: P_url = '---'
-##                        _s = re.compile('[|]SINOPSE[|](.*)').findall(_filmes_[x])
-##                        if _s: s = _s[0]
-##                        if '|END|' in s: sinopse = s.replace('|END|','')
-##                        else:
-##                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
-##                                if si: sinopse = si[0][0] + ' ' + si[0][1]
-##                                else: sinopse = '---'
-##                        if 'toppt.net'         in imdbcode: num_mode = 233
-##                        if 'tuga-filmes.us'    in imdbcode: num_mode = 42
-##                        if nome != '---':
-##                                num_filmes = num_filmes + 1
-##                                addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
-##                        else:
-##                                if 'toppt.net'         in P_url: url_TPT = P_url
-##                                if 'tuga-filmes.us'    in P_url: url_TFV = P_url
-##
-##                Filmes_Fi.close()
-##
-        _sites_ = ['filmesTFV.txt']
-        folder = perfil
-        num_filmes = 0
-        for site in _sites_:
-                _filmes_ = []
-                Filmes_Fi = open(folder + site, 'r')
-                read_Filmes_File = ''
-                for line in Filmes_Fi:
-                        read_Filmes_File = read_Filmes_File + line
-                        if line!='':_filmes_.append(line)
 
-                for x in range(len(_filmes_)):
-                        num_filmes = num_filmes + 1
-        Filmes_Fi.close()
+        [i.start() for i in fanfan]
+
+        [i.join() for i in fanfan]
+
+        [i.start() for i in fanfan1]
+
+        [i.join() for i in fanfan1]
+
+        num_filmes = 0
+
+        for x in range(len(threads)):
+                num_filmes = num_filmes + 1
+
         num_total = num_filmes + 0.0
+        percent = 0
+        progress.create('[B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B]', '')
         for a in range(num_filmes):
                 percent = int( ( a / num_total ) * 100)
                 message = str(a+1) + " de " + str(num_filmes)
                 progress.update( percent, 'A Finalizar ...', message, "" )
-                xbmc.sleep(12)
+                xbmc.sleep(20)
 
         proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
         try:

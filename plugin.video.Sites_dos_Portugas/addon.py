@@ -263,9 +263,11 @@ def dirtodos(url):
         url_CMC = urls[0][4]
         
         percent = 0
-        message = 'Por favor aguarde.'
-        progress.create('Progresso', 'A Procurar')
-        progress.update( percent, 'A Procurar Filmes...', message, "" )
+##        message = 'Por favor aguarde.'
+##        progress.create('Progresso', 'A Procurar')
+##        progress.update( percent, 'A Procurar Filmes...', message, "" )
+        builtin = 'XBMC.Notification(%s,%s, 10000, %s)'
+        log = xbmc.executebuiltin(builtin % ('A Procurar Filmes.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
 
         threads = []
         i = 0
@@ -510,6 +512,7 @@ def dirtodos(url):
         #################################################################################
 
         num_total = num_filmes + 0.0
+        progress.create('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', '')
         for a in range(num_filmes):
                 percent = int( ( a / num_total ) * 100)
                 message = str(a+1) + " de " + str(num_filmes)
@@ -518,7 +521,7 @@ def dirtodos(url):
                 
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
-        progress.close()
+        #progress.close()
         addDir('[B]Página Seguinte >>[/B]',url_filmes_filmes,10001,artfolder + 'PAGS1.png','','')
         
         #addLink(str(CME)+str(threading.active_count()),'','','')

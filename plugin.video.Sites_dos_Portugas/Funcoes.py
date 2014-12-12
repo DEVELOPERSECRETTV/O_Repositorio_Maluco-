@@ -49,11 +49,19 @@ class themoviedb_api_pagina:
                 a = 1
                 i = 0
                 threads = []
-                percent = 0
-                message = 'Por favor aguarde.'
-                progress.create('Progresso', 'A Procurar')
-                if urllib.quote(movie_tv) == 'movie': progress.update( percent, 'A Procurar Filmes...', message, "" )
-                if urllib.quote(movie_tv) == 'tv': progress.update( percent, 'A Procurar Séries...', message, "" )
+##                percent = 0
+##                message = 'Por favor aguarde.'
+##                progress.create('Progresso', 'A Procurar')
+                if urllib.quote(movie_tv) == 'movie':
+                        #progress.update( percent, 'A Procurar Filmes...', message, "" )
+                        builtin = 'XBMC.Notification(%s,%s, 2000, %s)'
+                        log = xbmc.executebuiltin(builtin % ('A Procurar Filmes.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
+                        
+                if urllib.quote(movie_tv) == 'tv':
+                        #progress.update( percent, 'A Procurar Séries...', message, "" )
+                        builtin = 'XBMC.Notification(%s,%s, 2000, %s)'
+                        log = xbmc.executebuiltin(builtin % ('A Procurar Séries.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
+                        
                 url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(items) + '?api_key=' + self.api_key + '&language=en&page=' + urllib.quote(pagina)
                 try:datass = abrir_url(url_tmdb)
                 except: datass = ''
@@ -64,14 +72,6 @@ class themoviedb_api_pagina:
 ##                numero = len(n)
 ##                num = numero + 0.0
                 for nn in n:
-##                        percent = int( ( a / num ) * 100)
-##                        message = str(a) + " de " + str(int(num))
-                        #message = '[COLOR green]'+nn+'[/COLOR]'
-##                        if urllib.quote(movie_tv) == 'movie': progress.update( percent, 'A Procurar Filmes...', message, "" )
-##                        if urllib.quote(movie_tv) == 'tv': progress.update( percent, 'A Procurar Séries...', message, "" )
-##                        print str(a) + " de " + str(int(num))
-##                        if progress.iscanceled():
-##                                break
         
                         try:
                                 name=nn
@@ -176,6 +176,7 @@ class thetvdb_api_tvdbid:
 class thetvdb_api_episodes:
         
 	def _id(self,idtvdb,temporada,episodio):
+                
                 try:
                         url = 'http://thetvdb.com/api/23B3F3D91B980C9F/series/'+urllib.quote(idtvdb)+'/all/pt.xml'
                         html_source = abrir_url(url)

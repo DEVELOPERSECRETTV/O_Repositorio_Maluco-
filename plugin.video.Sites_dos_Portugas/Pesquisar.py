@@ -263,7 +263,9 @@ def pesquisar():
                         if num_s == 0: addDir1('-----','url',1004,artfolder,False,'')
 
                 progress.close()
-                
+                #msg = ' (%s)' % timeout_msg if timeout_msg else ''
+                #builtin = 'XBMC.Notification(%s,No Useable Sources Found%s, 5000, %s)'
+                #xbmc.executebuiltin(builtin % ('teste', 'testado', ''))
                 xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
                 xbmc.executebuiltin("Container.SetViewMode(560)")#502
                 xbmcplugin.endOfDirectory(int(sys.argv[1]))
