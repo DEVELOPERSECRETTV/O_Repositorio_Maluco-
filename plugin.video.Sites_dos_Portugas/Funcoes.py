@@ -54,13 +54,17 @@ class themoviedb_api_pagina:
 ##                progress.create('Progresso', 'A Procurar')
                 if urllib.quote(movie_tv) == 'movie':
                         #progress.update( percent, 'A Procurar Filmes...', message, "" )
-                        builtin = 'XBMC.Notification(%s,%s, 2000, %s)'
-                        log = xbmc.executebuiltin(builtin % ('A Procurar Filmes.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
+                        try: xbmcgui.Dialog().notification('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png', 2000, sound=False)
+                        except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+##                        builtin = 'XBMC.Notification(%s,%s, 2000, %s)'
+##                        log = xbmc.executebuiltin(builtin % ('A Procurar Filmes.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
                         
                 if urllib.quote(movie_tv) == 'tv':
                         #progress.update( percent, 'A Procurar Séries...', message, "" )
-                        builtin = 'XBMC.Notification(%s,%s, 2000, %s)'
-                        log = xbmc.executebuiltin(builtin % ('A Procurar Séries.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
+                        try: xbmcgui.Dialog().notification('A Procurar Séries.', 'Por favor aguarde...', artfolder + 'SDPI.png', 2000, sound=False)
+                        except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Séries.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+##                        builtin = 'XBMC.Notification(%s,%s, 2000, %s)'
+##                        log = xbmc.executebuiltin(builtin % ('A Procurar Séries.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
                         
                 url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(items) + '?api_key=' + self.api_key + '&language=en&page=' + urllib.quote(pagina)
                 try:datass = abrir_url(url_tmdb)
@@ -156,6 +160,7 @@ def adddirt(name,movie_tv,api_key,tmdb_id,num_mode,thumb,fanart,year):
                                 except: pass
 
                         addDir_trailer('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]','IMDB'+imdbcode+'IMDB',urllib.quote(num_mode),thumb,sinopse,fanart,year,genero,name,'http://thetvdb.com/?tab=series&id='+urllib.quote(tmdb_id))
+
 ##                        a = a + 1
 ##                        i = i + 1
                 except: pass
@@ -874,7 +879,7 @@ def addDir_episode(name,url,mode,iconimage,checker,fanart,episod,air,namet,urltr
         if fanart == '': fanart = artfolder + 'FAN3.jpg'
         #text = 'nnnnnn'
         text = ''
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&urltrailer="+urllib.quote_plus(urltrailer)+"&name="+urllib.quote_plus(name)+"&namet="+urllib.quote_plus(namet)+"&air="+urllib.quote_plus(air)+"&episod="+urllib.quote_plus(episod)+"&fanart="+urllib.quote_plus(fanart)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&namet="+urllib.quote_plus(namet)+"&urltrailer="+urllib.quote_plus(urltrailer)+"&name="+urllib.quote_plus(name)+"&namet="+urllib.quote_plus(namet)+"&air="+urllib.quote_plus(air)+"&episod="+urllib.quote_plus(episod)+"&fanart="+urllib.quote_plus(fanart)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',fanart)
@@ -931,7 +936,7 @@ def addDir_teste(name,url,mode,iconimage,plot,fanart,year,genre):
 def addDir_trailer(name,url,mode,iconimage,plot,fanart,year,genre,namet,urltrailer):
         if fanart == '': fanart = artfolder + 'FAN3.jpg'
         #text = plot
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&urltrailer="+urllib.quote_plus(urltrailer)+"&name="+urllib.quote_plus(name)+"&namet="+urllib.quote_plus(namet)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&namet="+urllib.quote_plus(namet)+"&urltrailer="+urllib.quote_plus(urltrailer)+"&name="+urllib.quote_plus(name)+"&namet="+urllib.quote_plus(namet)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',fanart)
@@ -944,6 +949,40 @@ def addDir_trailer(name,url,mode,iconimage,plot,fanart,year,genre,namet,urltrail
         liz.addContextMenuItems(cm, replaceItems=False)
         
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
+        return ok
+
+def addDir_trailer1(name,url,mode,iconimage,plot,fanart,year,genre,namet,urltrailer,mvoutv,ttitems):
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
+        #text = plot
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&namet="+urllib.quote_plus(namet)+"&urltrailer="+urllib.quote_plus(urltrailer)+"&mvoutv="+urllib.quote_plus(mvoutv)+"&name="+urllib.quote_plus(name)+"&namet="+urllib.quote_plus(namet)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)+"&year="+urllib.quote_plus(year)+"&genre="+urllib.quote_plus(genre)+"&iconimage="+urllib.quote_plus(iconimage)
+        ok=True
+        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+	liz.setProperty('fanart_image',fanart)
+        #liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
+        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
+        
+        cm = []
+  	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
+        cm.append(('Ver Trailer', 'RunPlugin(%s?mode=8000&url=%s&namet=%s)' % (sys.argv[0],urllib.quote_plus(urltrailer),namet)))
+        liz.addContextMenuItems(cm, replaceItems=False)
+        
+        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True,totalItems=ttitems)
+        return ok
+
+def addDir_episode1(name,url,mode,iconimage,checker,fanart,episod,air,namet,urltrailer,mvoutv,ttitems):
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
+        #text = 'nnnnnn'
+        text = ''
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&namet="+urllib.quote_plus(namet)+"&urltrailer="+urllib.quote_plus(urltrailer)+"&mvoutv="+urllib.quote_plus(mvoutv)+"&name="+urllib.quote_plus(name)+"&namet="+urllib.quote_plus(namet)+"&air="+urllib.quote_plus(air)+"&episod="+urllib.quote_plus(episod)+"&fanart="+urllib.quote_plus(fanart)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
+        ok=True
+        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+	liz.setProperty('fanart_image',fanart)
+        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker, "Episode": episod, "Premiered": air } )
+        cm = []
+  	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
+        cm.append(('Ver Trailer', 'RunPlugin(%s?mode=8000&url=%s&namet=%s)' % (sys.argv[0],urllib.quote_plus(urltrailer),namet)))
+        liz.addContextMenuItems(cm, replaceItems=False)
+        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True,totalItems=ttitems)
         return ok
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -962,6 +1001,7 @@ episod=None
 air=None
 namet=None
 urltrailer=None
+mvoutv=None
 
 try: url=urllib.unquote_plus(params["url"])
 except: pass
@@ -991,6 +1031,8 @@ try: episod=urllib.unquote_plus(params["episod"])
 except: pass
 try: air=urllib.unquote_plus(params["air"])
 except: pass
+try: mvoutv=urllib.unquote_plus(params["mvoutv"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -1004,4 +1046,5 @@ print "Fanart: "+str(fanart)
 print "Episode: "+str(episod)
 print "Namet: "+str(namet)
 print "Urltrailer: "+str(urltrailer)
+print "MvouTv: "+str(mvoutv)
 

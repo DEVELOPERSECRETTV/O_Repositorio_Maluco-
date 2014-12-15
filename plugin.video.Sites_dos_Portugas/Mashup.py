@@ -94,8 +94,10 @@ def ultimos_episodios(url):
 ##        progress.create('Progresso', 'A Procurar')
 ##        progress.update( percent, 'A Procurar Últimos Episódios...', message, "" )
 
-        builtin = 'XBMC.Notification(%s,%s, 8000, %s)'
-        log = xbmc.executebuiltin(builtin % ('A Procurar Últimos Episódios.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
+##        builtin = 'XBMC.Notification(%s,%s, 8000, %s)'
+##        log = xbmc.executebuiltin(builtin % ('A Procurar Últimos Episódios.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
+        try: xbmcgui.Dialog().notification('A Procurar Últimos Episódios.', 'Por favor aguarde...', artfolder + 'SDPI.png', 8000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 8000, %s)" % ('A Procurar Últimos Episódios.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
 
         #----------------------------------------------------------------------------------------------------
         threads = []
@@ -2212,7 +2214,7 @@ def PAGSEGUINTE():
 
 def Series_Series(url):
         
-        percent = 0
+##        percent = 0
 ##        message = 'Por favor aguarde.'
 ##        progress.create('Progresso', 'A Procurar')
 ##        progress.update( percent, 'A Procurar Séries (A/Z) ...', message, "" )
@@ -2240,11 +2242,15 @@ def Series_Series(url):
                         read_Filmes_File = read_Filmes_File + line
                         if line!='':filmes.append(line)
                 if read_Filmes_File != '':
-                        builtin = 'XBMC.Notification(%s,%s, 2000, %s)'
-                        log = xbmc.executebuiltin(builtin % ('A Procurar Séries (A/Z).', 'Por favor aguarde...',artfolder + 'SDPI.png'))
+                        try: xbmcgui.Dialog().notification('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'SDPI.png', 2000, sound=False)
+                        except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+##                        builtin = 'XBMC.Notification(%s,%s, 2000, %s)'
+##                        log = xbmc.executebuiltin(builtin % ('A Procurar Séries (A/Z).', 'Por favor aguarde...',artfolder + 'SDPI.png'))
                 else:
-                        builtin = 'XBMC.Notification(%s,%s, 12000, %s)'
-                        log = xbmc.executebuiltin(builtin % ('A Procurar Séries (A/Z).', 'Por favor aguarde...',artfolder + 'SDPI.png'))
+                        try: xbmcgui.Dialog().notification('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'SDPI.png', 12000, sound=False)
+                        except: xbmc.executebuiltin("Notification(%s,%s, 12000, %s)" % ('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+##                        builtin = 'XBMC.Notification(%s,%s, 12000, %s)'
+##                        log = xbmc.executebuiltin(builtin % ('A Procurar Séries (A/Z).', 'Por favor aguarde...',artfolder + 'SDPI.png'))
                 try:
                         html_source = abrir_url('http://www.tuga-filmes.us')
                 except: html_source = ''

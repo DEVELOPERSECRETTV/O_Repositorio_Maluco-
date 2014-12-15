@@ -266,8 +266,10 @@ def dirtodos(url):
 ##        message = 'Por favor aguarde.'
 ##        progress.create('Progresso', 'A Procurar')
 ##        progress.update( percent, 'A Procurar Filmes...', message, "" )
-        builtin = 'XBMC.Notification(%s,%s, 10000, %s)'
-        log = xbmc.executebuiltin(builtin % ('A Procurar Filmes.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
+        try: xbmcgui.Dialog().notification('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+##        builtin = 'XBMC.Notification(%s,%s, 10000, %s)'
+##        log = xbmc.executebuiltin(builtin % ('A Procurar Filmes.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
 
         threads = []
         i = 0
