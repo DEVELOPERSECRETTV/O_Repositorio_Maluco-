@@ -598,11 +598,12 @@ def TFC_encontrar_videos_filmes(name,url):
         ############################################
 
         if imdbcode == '' or '---' in imdbcode:
+                
                 conta = 0
                 ano_pp = re.compile('[[]COLOR yellow[]](.+?)[[]/COLOR[]]').findall(name)
-                if ano_pp: ano_pesquisa = ano_pp[0].replace('(','').replace(')','')
+                if ano_pp: ano_pesquisa = ano_pp[0].replace('(','').replace(')','').replace(' ','')
                 else: ano_pesquisa = ''
-                conta = 0
+                #addLink(imdbcode+'sim'+n1+'-'+ano_pesquisa,'','','')
                 nome_pesquisa = n1 + ' ' + ano_pesquisa
                 nome_pesquisa = nome_pesquisa.replace('é','e')
                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -631,7 +632,9 @@ def TFC_encontrar_videos_filmes(name,url):
                 html_imdbcode = abrir_url(url_imdb)
                 filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
                 imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                imdbcode = imdbc[0]
+                if imdbc: imdbcode = imdbc[0]
+                else: imdbcode = ''
+                #addLink(imdbcode+'sim'+n1+'-'+ano_pesquisa,'','','')
 
         if n1 != '' and n2 != '':
                 addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
@@ -646,10 +649,7 @@ def TFC_encontrar_videos_filmes(name,url):
         except: fonte = ''
         items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", fonte, re.DOTALL)
         if not items: items = re.findall("<div id='postagem'>(.*?)<div class='postmeta'>", fonte, re.DOTALL)
-	if items != []:
-                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
-                if imdb: imdbcode = imdb[0]
-                else: imdbcode = ''
+
         assist = re.findall(">ASSISTIR.+?", fonte, re.DOTALL)
         fontes = re.findall("Ver Aqui.+?", fonte, re.DOTALL)
         numero_de_fontes = len(fontes)

@@ -23,7 +23,7 @@
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,urlparse
 from array import array
-import TugaFilmesTV,TopPt,TugaFilmesCom,MovieTuga,FilmesAnima,Pesquisar,Mashup,Funcoes,CinematugaEu,Cinematuga,CinemaEmCasa
+import TugaFilmesTV,TopPt,TugaFilmesCom,MovieTuga,FilmesAnima,Pesquisar,Mashup,Funcoes,CinematugaEu,Cinematuga,CinemaEmCasa,PesquisaExterna
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
 from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode

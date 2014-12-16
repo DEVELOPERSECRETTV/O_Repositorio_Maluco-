@@ -20,6 +20,7 @@
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,time,os,threading
 import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TopPt,FilmesAnima,Mashup,Armagedom,FoitaTuga,Cinematuga,CinematugaEu,CinemaEmCasa,Funcoes
+import PesquisaExterna
 from array import array
 from string import capwords
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
@@ -547,42 +548,96 @@ def SERIES_MENU():
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
      
 
-def passar_nome_pesquisa_animacao(name):
-        nome_pesquisa = str(name)
+def passar_nome_pesquisa_animacao(name,url):
+
+        imdbcode = re.compile('IMDB(.+?)IMDB').findall(url)
+        if imdbcode: imdbcode = imdbcode[0]
+        else: imdbcode = ''
+        
+        nome_pesquisa = str(name)       
         nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PROCURAR POR: [/COLOR]','')
         nome_pp = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]][[]COLOR yellow[]].+?[[]/COLOR[]]').findall(nome_pesquisa)
         if nome_pp: nome_pesquisa = nome_pp[0]
         conta = 0
-        nome_pesquisa = nome_pesquisa.replace('é','e')
-        nome_pesquisa = nome_pesquisa.replace('ê','e')
-        nome_pesquisa = nome_pesquisa.replace('á','a')
-        nome_pesquisa = nome_pesquisa.replace('à','a')
-        nome_pesquisa = nome_pesquisa.replace('ã','a')
-        nome_pesquisa = nome_pesquisa.replace('è','e')
-        nome_pesquisa = nome_pesquisa.replace('í','i')
-        nome_pesquisa = nome_pesquisa.replace('ó','o')
-        nome_pesquisa = nome_pesquisa.replace('ô','o')
-        nome_pesquisa = nome_pesquisa.replace('õ','o')
-        nome_pesquisa = nome_pesquisa.replace('ú','u')
-        nome_pesquisa = nome_pesquisa.replace('Ú','U')
-        nome_pesquisa = nome_pesquisa.replace('ç','c')
-        nome_pesquisa = nome_pesquisa.replace('ç','c')
-        a_q = re.compile('\w+')
-        qq_aa = a_q.findall(nome_pesquisa)
-        nome_p = ''
-        for q_a_q_a in qq_aa:
-                if conta == 0:
-                        nome_p = q_a_q_a
-                        conta = 1
-                else:
-                        nome_p = nome_p + '+' + q_a_q_a
-        url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-        html_imdbcode = abrir_url(url_imdb)
-        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-        if imdbc: imdbcode = imdbc[0]
+        
+        if imdbcode == '':
+                nome_pesquisa = nome_pesquisa.replace('é','e')
+                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                nome_pesquisa = nome_pesquisa.replace('á','a')
+                nome_pesquisa = nome_pesquisa.replace('à','a')
+                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                nome_pesquisa = nome_pesquisa.replace('è','e')
+                nome_pesquisa = nome_pesquisa.replace('í','i')
+                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                a_q = re.compile('\w+')
+                qq_aa = a_q.findall(nome_pesquisa)
+                nome_p = ''
+                for q_a_q_a in qq_aa:
+                        if conta == 0:
+                                nome_p = q_a_q_a
+                                conta = 1
+                        else:
+                                nome_p = nome_p + '+' + q_a_q_a
+                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                html_imdbcode = abrir_url(url_imdb)
+                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                if imdbc: imdbcode = imdbc[0]
+                
         url = 'IMDB'+imdbcode+'IMDB'
         FilmesAnima.FILMES_ANIMACAO_pesquisar(str(nome_pesquisa),'',url)
+        #PesquisaExterna.pesquisar(str(nome_pesquisa),'',url)
+
+def passar_nome_pesquisa_externa(name,url):
+
+        imdbcode = re.compile('IMDB(.+?)IMDB').findall(url)
+        if imdbcode: imdbcode = imdbcode[0]
+        else: imdbcode = ''
+        
+        nome_pesquisa = str(name)       
+        nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PROCURAR POR: [/COLOR]','')
+        nome_pp = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]][[]COLOR yellow[]].+?[[]/COLOR[]]').findall(nome_pesquisa)
+        if nome_pp: nome_pesquisa = nome_pp[0]
+        conta = 0
+        
+        if imdbcode == '':
+                nome_pesquisa = nome_pesquisa.replace('é','e')
+                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                nome_pesquisa = nome_pesquisa.replace('á','a')
+                nome_pesquisa = nome_pesquisa.replace('à','a')
+                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                nome_pesquisa = nome_pesquisa.replace('è','e')
+                nome_pesquisa = nome_pesquisa.replace('í','i')
+                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                a_q = re.compile('\w+')
+                qq_aa = a_q.findall(nome_pesquisa)
+                nome_p = ''
+                for q_a_q_a in qq_aa:
+                        if conta == 0:
+                                nome_p = q_a_q_a
+                                conta = 1
+                        else:
+                                nome_p = nome_p + '+' + q_a_q_a
+                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                html_imdbcode = abrir_url(url_imdb)
+                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                if imdbc: imdbcode = imdbc[0]
+                
+        url = 'IMDB'+imdbcode+'IMDB'
+        PesquisaExterna.pesquisar(str(nome_pesquisa),'',url)
 
 def passar_nome_pesquisa_filmes(name):
         nome_pesquisa = str(name)
@@ -1411,7 +1466,7 @@ elif mode ==  6:
         xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode ==  7:
-        passar_nome_pesquisa_animacao(name)
+        passar_nome_pesquisa_animacao(name,url)
 
 elif mode ==  8:
         passar_nome_pesquisa_filmes(name)
@@ -1949,6 +2004,12 @@ elif mode == 7000:
 elif mode == 8000:
         Funcoes.trailer(namet,url)
 
+elif mode == 9000:
+        PesquisaExterna.pesquisar(name,nomesite,url)
+elif mode == 9001:
+        passar_nome_pesquisa_externa(name,url)
+elif mode == 9002:
+        Funcoes.playparser(namet, url, year, urltrailer)
 
 elif mode == 10000:
         SITESdosPORTUGAS()

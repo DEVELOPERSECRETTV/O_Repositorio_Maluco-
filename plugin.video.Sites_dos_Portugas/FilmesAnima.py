@@ -37,9 +37,11 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         #antes_de = nome_pesquisa
         nome_pp = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]][[]COLOR yellow[]].+?[[]/COLOR[]]').findall(nome_pesquisa)
         if nome_pp: nome_pesquisa = nome_pp[0]
+        else: nome_pesquisa = nome_pesquisa
         imdb = re.compile('IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
+        #addLink(imdbcode,'','','')
         pesquisa_imdb = nome_pesquisa
         pp = nome_pesquisa
         progress = xbmcgui.DialogProgress()

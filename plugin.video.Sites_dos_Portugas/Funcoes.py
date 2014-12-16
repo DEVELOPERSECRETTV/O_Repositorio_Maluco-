@@ -886,6 +886,7 @@ def addDir_episode(name,url,mode,iconimage,checker,fanart,episod,air,namet,urltr
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker, "Episode": episod, "Premiered": air } )
         cm = []
   	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
+        cm.append(('Procurar no "Genesis"', 'RunPlugin(%s?mode=9002&namet=%s&url=%s&year=%s&urltrailer=%s)' % (sys.argv[0],namet,urllib.quote_plus(url),str(year),urllib.quote_plus(urltrailer))))
         cm.append(('Ver Trailer', 'RunPlugin(%s?mode=8000&url=%s&namet=%s)' % (sys.argv[0],urllib.quote_plus(urltrailer),namet)))
         liz.addContextMenuItems(cm, replaceItems=False)
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
@@ -945,7 +946,10 @@ def addDir_trailer(name,url,mode,iconimage,plot,fanart,year,genre,namet,urltrail
         
         cm = []
   	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
+        cm.append(('Procurar no "Genesis"', 'RunPlugin(%s?mode=9002&namet=%s&url=%s&year=%s&urltrailer=%s)' % (sys.argv[0],namet,urllib.quote_plus(url),str(year),urllib.quote_plus(urltrailer))))
+
         cm.append(('Ver Trailer', 'RunPlugin(%s?mode=8000&url=%s&namet=%s)' % (sys.argv[0],urllib.quote_plus(urltrailer),namet)))
+
         liz.addContextMenuItems(cm, replaceItems=False)
         
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
@@ -963,6 +967,7 @@ def addDir_trailer1(name,url,mode,iconimage,plot,fanart,year,genre,namet,urltrai
         
         cm = []
   	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
+        cm.append(('Procurar no "Genesis"', 'RunPlugin(%s?mode=9002&namet=%s&url=%s&year=%s&urltrailer=%s)' % (sys.argv[0],namet,urllib.quote_plus(url),str(year),urllib.quote_plus(urltrailer))))
         cm.append(('Ver Trailer', 'RunPlugin(%s?mode=8000&url=%s&namet=%s)' % (sys.argv[0],urllib.quote_plus(urltrailer),namet)))
         liz.addContextMenuItems(cm, replaceItems=False)
         
@@ -980,11 +985,19 @@ def addDir_episode1(name,url,mode,iconimage,checker,fanart,episod,air,namet,urlt
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker, "Episode": episod, "Premiered": air } )
         cm = []
   	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
+        cm.append(('Procurar no "Genesis"', 'RunPlugin(%s?mode=9002&namet=%s&url=%s&year=%s&urltrailer=%s)' % (sys.argv[0],namet,urllib.quote_plus(url),str(year),urllib.quote_plus(urltrailer))))
         cm.append(('Ver Trailer', 'RunPlugin(%s?mode=8000&url=%s&namet=%s)' % (sys.argv[0],urllib.quote_plus(urltrailer),namet)))
         liz.addContextMenuItems(cm, replaceItems=False)
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True,totalItems=ttitems)
         return ok
 
+def playparser(namet, url, year, urltrailer):
+        imdb_id = re.compile('IMDBtt(.+?)IMDB').findall(url)
+        if imdb_id: imdb_id = imdb_id[0]
+        else: imdb_id = ''
+        item = xbmcgui.ListItem(path=urltrailer)
+	item.setProperty("IsPlayable", "true")
+	xbmc.Player().play('plugin://plugin.video.genesis/?action=play&name='+namet+'&title='+namet+'&year='+year+'&imdb='+imdb_id+'&url='+urltrailer, item)
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
 params=get_params()

@@ -820,7 +820,7 @@ def TFV_encontrar_videos_filmes(name,url):
         conta_id_video = 0
 	addDir1(name,'url',1004,iconimage,False,fanart)
 
-        #addDir1('','url',1004,artfolder,False,'')     
+        #addDir1(url,'url',1004,artfolder,False,'')     
 	try:
 		link2=abrir_url(url)
 	except: link2 = ''
@@ -833,16 +833,25 @@ def TFV_encontrar_videos_filmes(name,url):
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
+        items = re.findall('<div class=\'video-item\'>(.*?)<div class=\'clear\'>', link2, re.DOTALL)
+        #addLink(str(len(items)),'','','')
         if 'Parte 1' and 'Parte 2' not in link2:
                 num_leg = 1
                 num_ptpt = 1
-                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", link2, re.DOTALL)
-                #addLink(str(len(matchvid)),'','')
+                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)Clique aqui para ver', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)\n</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)Clique aqui para ver', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)\n</p>', items[0], re.DOTALL)
+
+                #addLink(str(len(matchvid)),'','','')
                 if matchvid:
                         for servidor,matchsvids in matchvid:
                                 if 'Legendado' in matchsvids and num_leg == 1:
@@ -885,12 +894,18 @@ def TFV_encontrar_videos_filmes(name,url):
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'',fanart)
 
         if 'Parte 1' and 'Parte 2' in link2:
-                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", link2, re.DOTALL)
+                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)Clique aqui para ver', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)\n</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)Clique aqui para ver', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)\n</p>', items[0], re.DOTALL)
                 if matchvideo:
                         for servidor,parte in matchvideo:
                                 nome_video = re.compile('(.+?)</div></h3><p>').findall(parte)
@@ -1097,15 +1112,22 @@ def TFV_links(name,url,iconimage,fanart):
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
         #addDir1(name,'url',1001,iconimage,False,fanart)
+        items = re.findall('<div class=\'video-item\'>(.*?)<div class=\'clear\'>', link2, re.DOTALL)
         if 'Parte 1' and 'Parte 2' not in link2:
                 num_leg = 1
                 num_ptpt = 1
-                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", link2, re.DOTALL)
+                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)Clique aqui para ver', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)\n</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)Clique aqui para ver', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)\n</p>', items[0], re.DOTALL)
                 if matchvid:
                         for servidor,matchsvids in matchvid:
                                 if 'Legendado' in matchsvids and num_leg == 1:
@@ -1147,12 +1169,18 @@ def TFV_links(name,url,iconimage,fanart):
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'',fanart)
 
         if 'Parte 1' and 'Parte 2' in link2:
-                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", link2, re.DOTALL)
-                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", link2, re.DOTALL)
+                matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)\n</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)Clique aqui para ver", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall("<div class='id(.+?)'> Assistir(.+?)\n</p>", items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)Clique aqui para ver', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)">Assistir(.+?)\n</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)Clique aqui para ver', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)</p>', items[0], re.DOTALL)
+                if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)\n</p>', items[0], re.DOTALL)
                 if matchvideo:
                         for parte in matchvideo:
                                 nome_video = re.compile('(.+?)</div></h3><p>').findall(parte)
@@ -1487,6 +1515,8 @@ def TFV_encontrar_videos_series(name,url):
                         items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", link_series, re.DOTALL)
                         items_series = re.findall("<div class='id(.+?)</a>", items[0], re.DOTALL)
                         if not items_series: items_series = re.findall("<div class='id(.+?)</p>", items[0], re.DOTALL)
+                        if not items_series: items_series = re.findall('<div class="id(.+?)</a>', items[0], re.DOTALL)
+                        if not items_series: items_series = re.findall('<div class="id(.+?)</p>', items[0], re.DOTALL)
 
                         nomecadaantes = ''
                         n_items = 0
