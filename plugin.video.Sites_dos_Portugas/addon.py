@@ -25,7 +25,7 @@ from array import array
 from string import capwords
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
-from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
+from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode, addDir_trailer1, addDir_episode1
 from Funcoes import get_params,abrir_url
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
@@ -249,6 +249,9 @@ def FILMES_MENU():
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
 
 def dirtodos(url):
+        try: xbmcgui.Dialog().notification('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+
         urlss = urllib.unquote(url)
         print urlss
         #addLink(urlss,'','','')
@@ -263,14 +266,10 @@ def dirtodos(url):
         url_CME = urls[0][6]
         url_CMC = urls[0][4]
         
-        percent = 0
+##        percent = 0
 ##        message = 'Por favor aguarde.'
 ##        progress.create('Progresso', 'A Procurar')
 ##        progress.update( percent, 'A Procurar Filmes...', message, "" )
-        try: xbmcgui.Dialog().notification('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
-        except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
-##        builtin = 'XBMC.Notification(%s,%s, 10000, %s)'
-##        log = xbmc.executebuiltin(builtin % ('A Procurar Filmes.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
 
         threads = []
         i = 0
@@ -445,7 +444,7 @@ def dirtodos(url):
         _sites_ = ['filmesTPT.txt','filmesCME.txt','filmesFTT.txt','filmesTFC.txt','filmesMVT.txt','filmesCMTnet.txt','filmesCMC.txt','filmesTFV.txt']
         folder = perfil
         num_filmes = 0
-        
+        num_filmes = len(threads)
         for site in _sites_:
                 _filmes_ = []
                 Filmes_Fi = open(folder + site, 'r')
@@ -499,8 +498,8 @@ def dirtodos(url):
                         if 'cinemaemcasa.pt'   in imdbcode: num_mode = 903
                         if 'movietuga'         in imdbcode: num_mode = 103
                         if nome != '---':
-                                num_filmes = num_filmes + 1
-                                addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
+                                #num_filmes = num_filmes + 1
+                                addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
                         else:
                                 if 'toppt.net'         in P_url: url_TPT = P_url
                                 if 'tuga-filmes.info'  in P_url: url_TFC = P_url
@@ -510,17 +509,18 @@ def dirtodos(url):
                                 if 'foitatuga'         in P_url: url_FTT = P_url
                                 if 'cinemaemcasa.pt'   in P_url: url_CMC = P_url
                                 if 'movie-tuga'        in P_url: url_MVT = P_url
+                        xbmc.sleep(12)
                 Filmes_Fi.close()
 
         #################################################################################
 
-        num_total = num_filmes + 0.0
-        progress.create('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', '')
-        for a in range(num_filmes):
-                percent = int( ( a / num_total ) * 100)
-                message = str(a+1) + " de " + str(num_filmes)
-                progress.update( percent, 'A Finalizar ...', message, "" )
-                xbmc.sleep(12)
+##        num_total = num_filmes + 0.0
+##        progress.create('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', '')
+##        for a in range(num_filmes):
+##                percent = int( ( a / num_total ) * 100)
+##                message = str(a+1) + " de " + str(num_filmes)
+##                progress.update( percent, 'A Finalizar ...', message, "" )
+##                xbmc.sleep(12)
                 
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)

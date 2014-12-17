@@ -78,11 +78,13 @@ def pesquisar():
 		encode=urllib.quote(search)
 		progress = xbmcgui.DialogProgress()
 		a = 1
-                percent = 0
-                message = ''
-                site = ''
-                progress.create('Progresso', 'A Procurar')
-                progress.update( percent, 'A Procurar...', 'Por favor aguarde.', "" )
+##                percent = 0
+##                message = ''
+##                site = ''
+##                progress.create('Progresso', 'A Procurar')
+##                progress.update( percent, 'A Procurar...', 'Por favor aguarde.', "" )
+		try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
+                except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
 
                 addDir1('[COLOR yellow]PROCUROU POR:[/COLOR] '+str(encode).replace('%2B',' '),'url',1004,artfolder + 'SDPI.png',False,'')
            
@@ -262,7 +264,7 @@ def pesquisar():
                         num_s = num_s_TFV[0] + num_s_TPT[0]
                         if num_s == 0: addDir1('-----','url',1004,artfolder,False,'')
 
-                progress.close()
+##                progress.close()
                 #msg = ' (%s)' % timeout_msg if timeout_msg else ''
                 #builtin = 'XBMC.Notification(%s,No Useable Sources Found%s, 5000, %s)'
                 #xbmc.executebuiltin(builtin % ('teste', 'testado', ''))

@@ -25,7 +25,7 @@
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,threading#,TopPt,TugaFilmesTV
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB, thetvdb_api_IMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
-from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
+from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode, addDir_trailer1, addDir_episode1
 from Funcoes import get_params,abrir_url
 from TugaFilmesTV import TFV_resolve_not_videomega_series
 ##from TopPt import TPT_resolve_not_videomega_filmes
@@ -2371,7 +2371,8 @@ def Series_Series(url):
                 _sites_ = ['Series1.txt']
                 folder = perfil
                 num_filmes = 0
-                
+                num_filmes = len(filmes)
+
                 for site in _sites_:
                         _filmes_ = []
                         Filmes_Fi = open(folder + site, 'r')
@@ -2426,21 +2427,21 @@ def Series_Series(url):
                                                         for nm, ul in nn:
                                                                 if nm == O_Nome and ul != urltrailer:
                                                                         imdbcode = imdbcode + '|' + ul
-                                        num_filmes = num_filmes + 1
-                                        addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
-
+                                        #num_filmes = num_filmes + 1
+                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Tvshows',num_filmes)
+                                xbmc.sleep(12)
                         Filmes_Fi.close()
 
-                num_total = num_filmes + 0.0
-                progress.create('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', '')
-                for a in range(num_filmes):
-                        percent = int( ( a / num_total ) * 100)
-                        message = str(a+1) + " de " + str(num_filmes)
-                        progress.update( percent, 'A Finalizar ...', message, "" )
-                        xbmc.sleep(12)
+##                num_total = num_filmes + 0.0
+##                progress.create('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', '')
+##                for a in range(num_filmes):
+##                        percent = int( ( a / num_total ) * 100)
+##                        message = str(a+1) + " de " + str(num_filmes)
+##                        progress.update( percent, 'A Finalizar ...', message, "" )
+##                        xbmc.sleep(12)
         except: pass
 
-        #progress.close()
+##        progress.close()
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(515)")

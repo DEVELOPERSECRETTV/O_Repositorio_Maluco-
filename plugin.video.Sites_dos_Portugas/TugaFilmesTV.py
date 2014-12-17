@@ -222,10 +222,10 @@ def TFV_Menu_Filmes_Por_Categorias(artfolder):
 
 def TFV_Menu_Series_A_a_Z(artfolder,url):
 
-        percent = 0
-        message = 'Por favor aguarde.'
-        progress.create('Progresso', 'A Procurar')
-        progress.update( percent, 'A Procurar Séries (A/Z) ...', message, "" )
+##        percent = 0
+##        message = 'Por favor aguarde.'
+##        progress.create('Progresso', 'A Procurar')
+##        progress.update( percent, 'A Procurar Séries (A/Z) ...', message, "" )
                 
         num = 0
         i = 0
@@ -248,6 +248,14 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
                 for line in Filmes_Fi:
                         read_Filmes_File = read_Filmes_File + line
                         if line!='':filmes.append(line)
+
+                if read_Filmes_File != '':
+                        try: xbmcgui.Dialog().notification('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'TFV1.png', 2000, sound=False)
+                        except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'TFV1.png'))
+                else:
+                        try: xbmcgui.Dialog().notification('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'TFV1.png', 12000, sound=False)
+                        except: xbmc.executebuiltin("Notification(%s,%s, 12000, %s)" % ('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'TFV1.png'))
+
                 try:
                         html_source = abrir_url('http://www.tuga-filmes.us')
                 except: html_source = ''
@@ -321,7 +329,7 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
                         for line in Filmes_Fi:
                                 read_Filmes_File = read_Filmes_File + line
                                 if line!='':_filmes_.append(line)
-
+                        num_filmes = len(_filmes_)
                         for x in range(len(_filmes_)):
                                 _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
                                 if _n: nome = _n[0]
@@ -362,20 +370,20 @@ def TFV_Menu_Series_A_a_Z(artfolder,url):
                                 num_mode = 3006
                                 
                                 if nome != '---':
-                                        num_filmes = num_filmes + 1
-                                        addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
-
+                                        #num_filmes = num_filmes + 1
+                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'TVshows',num_filmes)
+                                xbmc.sleep(12)
                         Filmes_Fi.close()
 
-                num_total = num_filmes + 0.0
-                for a in range(num_filmes):
-                        percent = int( ( a / num_total ) * 100)
-                        message = str(a+1) + " de " + str(num_filmes)
-                        progress.update( percent, 'A Finalizar ...', message, "" )
-                        xbmc.sleep(12)
+##                num_total = num_filmes + 0.0
+##                for a in range(num_filmes):
+##                        percent = int( ( a / num_total ) * 100)
+##                        message = str(a+1) + " de " + str(num_filmes)
+##                        progress.update( percent, 'A Finalizar ...', message, "" )
+##                        xbmc.sleep(12)
         except: pass
 
-        progress.close()
+##        progress.close()
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(515)")
@@ -764,11 +772,13 @@ def Fontes_Filmes_TFV(item):
 
 
 def TFV_encontrar_videos_filmes(name,url):
+        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
-        message = 'Por favor aguarde.'
-        percent = 0
-        progress.create('Progresso', 'A Procurar...')
-        progress.update(percent, 'A Procurar em '+site, message, "")
+##        message = 'Por favor aguarde.'
+##        percent = 0
+##        progress.create('Progresso', 'A Procurar...')
+##        progress.update(percent, 'A Procurar em '+site, message, "")
         nomeescolha = name
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]

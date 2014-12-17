@@ -34,6 +34,11 @@ artfolder = addonfolder + '/resources/img/'
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
+        
+        if nomesite == '':
+                try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
+                except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+        
         #antes_de = nome_pesquisa
         nome_pp = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]][[]COLOR yellow[]].+?[[]/COLOR[]]').findall(nome_pesquisa)
         if nome_pp: nome_pesquisa = nome_pp[0]
@@ -44,12 +49,12 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         #addLink(imdbcode,'','','')
         pesquisa_imdb = nome_pesquisa
         pp = nome_pesquisa
-        progress = xbmcgui.DialogProgress()
-        percent = 0
-        message = 'Por favor aguarde'
-        site = ''
-        progress.create('Progresso', 'A Procurar')
-        progress.update( percent, 'A Procurar...'+site, message, "" )
+##        progress = xbmcgui.DialogProgress()
+##        percent = 0
+##        message = 'Por favor aguarde'
+##        site = ''
+##        progress.create('Progresso', 'A Procurar')
+##        progress.update( percent, 'A Procurar...'+site, message, "" )
         #n_pesquisa = re.compile('(.+?)[(].+?[)]').findall(nome_pesquisa)
         #if n_pesquisa: nome_pesquisa = n_pesquisa[0]
 ##        pesquisou = nome_pesquisa
@@ -206,6 +211,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
                 except: html_source = ''
                 i=0
                 items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                if not items: items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
                 for item in items:                        
                         i = i + 1
                         a = str(i)
@@ -217,7 +223,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
 ##        [i.start() for i in threads]
 ##        [i.join() for i in threads]
 
-        progress.close()
+##        progress.close()
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(502)")
@@ -1539,15 +1545,48 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(FILMEN,url,pesquisou,imdbc,item)
                         for q_a_q_a in qq_aa:
                                 if len(q_a_q_a) == 4:
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
-                                        nome = nome.replace(tirar_ano,'')                      
+                                        nome = nome.replace(tirar_ano,'')
+
+                        if imdbcode == '':
+                                nome_pesquisa = nome + ' ' + ano_filme
+                                nome_pesquisa = nome_pesquisa.replace('é','e')
+                                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                                nome_pesquisa = nome_pesquisa.replace('á','a')
+                                nome_pesquisa = nome_pesquisa.replace('à','a')
+                                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                                nome_pesquisa = nome_pesquisa.replace('è','e')
+                                nome_pesquisa = nome_pesquisa.replace('í','i')
+                                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                                a_q = re.compile('\w+')
+                                qq_aa = a_q.findall(nome_pesquisa)
+                                nome_p = ''
+                                conta = 0
+                                for q_a_q_a in qq_aa:
+                                        if conta == 0:
+                                                nome_p = q_a_q_a
+                                                conta = 1
+                                        else:
+                                                nome_p = nome_p + '+' + q_a_q_a
+                                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                                html_imdbcode = abrir_url(url_imdb)
+                                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                                imdb_c = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                if imdb_c: imdbcode = imdb_c[0]
                         
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
                         if fanart == '---': fanart = ''
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
-                        #addLink(imdbcode+imdbc,'','','')
-                        try:
+                        #addLink(nome+imdbcode+imdbc,'','','')
+                        #try:
+                        if item != '':
                                 if imdbc != '' and imdbcode != '':
                                         if imdbcode == imdbc:
                                                 if 'Temporada' not in nome:
@@ -1603,7 +1642,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(FILMEN,url,pesquisou,imdbc,item)
                                                 CinemaEmCasa.CMC_links('[COLOR orange]CMC | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlfilme.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage,fanart)                                              
 
                                         #addDir_trailer('[COLOR orange]CMC | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlfilme.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',903,thumb.replace(' ','%20'),sinopse,fanart,ano_filme,genero,nome,urlfilme)
-                        except: pass
+                        #except: pass
         else: return
         return
 

@@ -25,7 +25,7 @@
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,threading,FilmesAnima,Play
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
-from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
+from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode, addDir_trailer1, addDir_episode1
 from Funcoes import get_params,abrir_url
 from array import array
 
@@ -69,10 +69,13 @@ def MVT_Menu_Filmes_Por_Categorias(artfolder):
 
 def MVT_encontrar_fontes_filmes(url):
         
-        percent = 0
-        message = 'Por favor aguarde.'
-        progress.create('Progresso', 'A Procurar')
-        progress.update( percent, 'A Procurar Filmes ...', message, "" )
+        try: xbmcgui.Dialog().notification('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'MVT1.png', 3000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'MVT1.png'))
+        
+##        percent = 0
+##        message = 'Por favor aguarde.'
+##        progress.create('Progresso', 'A Procurar')
+##        progress.update( percent, 'A Procurar Filmes ...', message, "" )
         
         try:
 		html_source = abrir_url(url)
@@ -106,7 +109,7 @@ def MVT_encontrar_fontes_filmes(url):
                         for line in Filmes_Fi:
                                 read_Filmes_File = read_Filmes_File + line
                                 if line!='':_filmes_.append(line)
-
+                        num_filmes = len(threads)
                         for x in range(len(_filmes_)):
         ##                        _nfil = re.compile('(.+?)NOME[|]').findall(_filmes_[x])
         ##                        if _nfil: nfilme = _nfil[0]
@@ -150,24 +153,24 @@ def MVT_encontrar_fontes_filmes(url):
                                 if 'movietuga'         in imdbcode: num_mode = 103
                                 
                                 if nome != '---':
-                                        num_filmes = num_filmes + 1
-                                        addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
-
+                                        #num_filmes = num_filmes + 1
+                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
+                                xbmc.sleep(20)
                         Filmes_Fi.close()
 
-                num_total = num_filmes + 0.0
-                for a in range(num_filmes):
-                        percent = int( ( a / num_total ) * 100)
-                        message = str(a+1) + " de " + str(num_filmes)
-                        progress.update( percent, 'A Finalizar ...', message, "" )
-                        xbmc.sleep(20)
+##                num_total = num_filmes + 0.0
+##                for a in range(num_filmes):
+##                        percent = int( ( a / num_total ) * 100)
+##                        message = str(a+1) + " de " + str(num_filmes)
+##                        progress.update( percent, 'A Finalizar ...', message, "" )
+##                        xbmc.sleep(20)
 
                 proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
                 try:
                         proxima_p = proxima[0].replace('%3A',':')
                         addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),102,artfolder + 'PAGS1.png','','')
                 except: pass
-	progress.close()
+##	progress.close()
 
 def Fontes_Filmes_MVT(item):        
 ##        progress = xbmcgui.DialogProgress()
@@ -303,11 +306,13 @@ def Fontes_Filmes_MVT(item):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def MVT_encontrar_videos_filmes(name,url):
+        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
         site = '[B][COLOR green]MOVIE[/COLOR][COLOR yellow]-[/COLOR][COLOR red]TUGA[/COLOR][/B]'
-        message = 'Por favor aguarde.'
-        percent = 0
-        progress.create('Progresso', 'A Procurar...')
-        progress.update(percent, 'A Procurar em '+site, message, "")
+##        message = 'Por favor aguarde.'
+##        percent = 0
+##        progress.create('Progresso', 'A Procurar...')
+##        progress.update(percent, 'A Procurar em '+site, message, "")
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''

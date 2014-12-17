@@ -26,7 +26,7 @@ from array import array
 from string import capwords
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB, thetvdb_api_IMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
-from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode
+from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode, addDir_trailer1, addDir_episode1
 from Funcoes import get_params,abrir_url
 
 arr_series = ['' for i in range(500)]
@@ -257,10 +257,10 @@ def TPT_Menu_Top_Series(item):
 
 def TPT_Menu_Series_A_a_Z(artfolder,url):
         
-        percent = 0
-        message = 'Por favor aguarde.'
-        progress.create('Progresso', 'A Procurar')
-        progress.update( percent, 'A Procurar Séries (A/Z) ...', message, "" )
+##        percent = 0
+##        message = 'Por favor aguarde.'
+##        progress.create('Progresso', 'A Procurar')
+##        progress.update( percent, 'A Procurar Séries (A/Z) ...', message, "" )
 				
         num = 0
         i = 0
@@ -283,6 +283,14 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                 for line in Filmes_Fi:
                         read_Filmes_File = read_Filmes_File + line
                         if line!='':filmes.append(line)
+
+                if read_Filmes_File != '':
+                        try: xbmcgui.Dialog().notification('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'TPT1.png', 2000, sound=False)
+                        except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'TPT1.png'))
+                else:
+                        try: xbmcgui.Dialog().notification('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'TPT1.png', 12000, sound=False)
+                        except: xbmc.executebuiltin("Notification(%s,%s, 12000, %s)" % ('A Procurar Séries (A/Z).', 'Por favor aguarde...', artfolder + 'TPT1.png'))
+
                 try:
                         html_source = abrir_url('http://toppt.net/')
                 except: html_source = ''
@@ -371,7 +379,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                         for line in Filmes_Fi:
                                 read_Filmes_File = read_Filmes_File + line
                                 if line!='':_filmes_.append(line)
-
+                        num_filmes = len(_filmes_)
                         for x in range(len(_filmes_)):
                                 _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
                                 if _n: nome = _n[0]
@@ -412,20 +420,20 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                 num_mode = 3006
                                 
                                 if nome != '---':
-                                        num_filmes = num_filmes + 1
-                                        addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
-
+                                        #num_filmes = num_filmes + 1
+                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'TVshows',num_filmes)
+                                xbmc.sleep(20)
                         Filmes_Fi.close()
 
-                num_total = num_filmes + 0.0
-                for a in range(num_filmes):
-                        percent = int( ( a / num_total ) * 100)
-                        message = str(a+1) + " de " + str(num_filmes)
-                        progress.update( percent, 'A Finalizar ...', message, "" )
-                        xbmc.sleep(12)
+##                num_total = num_filmes + 0.0
+##                for a in range(num_filmes):
+##                        percent = int( ( a / num_total ) * 100)
+##                        message = str(a+1) + " de " + str(num_filmes)
+##                        progress.update( percent, 'A Finalizar ...', message, "" )
+##                        xbmc.sleep(12)
         except: pass
 
-        progress.close()
+##        progress.close()
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(515)")
@@ -507,15 +515,21 @@ def Series_TPT(FILMN,endereco_series,nome_series):
 
 def TPT_encontrar_fontes_filmes(url):
         
-        percent = 0
-        message = 'Por favor aguarde.'
-        progress.create('Progresso', 'A Procurar')
+##        percent = 0
+##        message = 'Por favor aguarde.'
+##        progress.create('Progresso', 'A Procurar')
         if name == '[COLOR yellow]- Top Séries[/COLOR]' or name == '[COLOR yellow]- Top Filmes[/COLOR]':
-                progress.update( percent, 'A Procurar ...', message, "" )
+                try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'TPT1.png', 2000, sound=False)
+                except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'TPT1.png'))
+##                progress.update( percent, 'A Procurar ...', message, "" )
         if name == '[COLOR yellow]- Últimos Episódios[/COLOR]' or name == '[B]Página Seguinte>>[/B]':
-                progress.update( percent, 'A Procurar Últimos Episódios ...', message, "" )
+                try: xbmcgui.Dialog().notification('A Procurar Últimos Episódios.', 'Por favor aguarde...', artfolder + 'TPT1.png', 2000, sound=False)
+                except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Últimos Episódios.', 'Por favor aguarde...', artfolder + 'TPT1.png'))
+##                progress.update( percent, 'A Procurar Últimos Episódios ...', message, "" )
         if name != '[COLOR yellow]- Top Séries[/COLOR]' and name != '[COLOR yellow]- Top Filmes[/COLOR]' and name != '[COLOR yellow]- Últimos Episódios[/COLOR]' and name != '[B]Página Seguinte>>[/B]':
-                progress.update( percent, 'A Procurar Filmes ...', message, "" )
+                try: xbmcgui.Dialog().notification('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'TPT1.png', 2000, sound=False)
+                except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'TPT1.png'))
+##                progress.update( percent, 'A Procurar Filmes ...', message, "" )
         
         try:
 		html_source = abrir_url(url)
@@ -551,7 +565,7 @@ def TPT_encontrar_fontes_filmes(url):
                 _sites_ = ['filmesTPT.txt']
                 folder = perfil
                 num_filmes = 0
-                
+                num_filmes = len(threads)
                 for site in _sites_:
                         _filmes_ = []
                         Filmes_Fi = open(folder + site, 'r')
@@ -600,17 +614,17 @@ def TPT_encontrar_fontes_filmes(url):
                                 if 'toppt.net'         in imdbcode: num_mode = 233
                                 
                                 if nome != '---':
-                                        num_filmes = num_filmes + 1
-                                        addDir_trailer(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer)
-
+                                        #num_filmes = num_filmes + 1
+                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
+                                xbmc.sleep(20)
                         Filmes_Fi.close()
 
-                num_total = num_filmes + 0.0
-                for a in range(num_filmes):
-                        percent = int( ( a / num_total ) * 100)
-                        message = str(a+1) + " de " + str(num_filmes)
-                        progress.update( percent, 'A Finalizar ...', message, "" )
-                        xbmc.sleep(20)
+##                num_total = num_filmes + 0.0
+##                for a in range(num_filmes):
+##                        percent = int( ( a / num_total ) * 100)
+##                        message = str(a+1) + " de " + str(num_filmes)
+##                        progress.update( percent, 'A Finalizar ...', message, "" )
+##                        xbmc.sleep(20)
 
                 proxima = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
                 try:
@@ -620,7 +634,7 @@ def TPT_encontrar_fontes_filmes(url):
                                 addDir("Página Seguinte >>",proxima[0].replace('#038;','').replace('&amp;','&'),232,artfolder + 'PAGS1.png','','')
                 except:pass
 
-	progress.close()
+##	progress.close()
 
 def Fontes_Filmes_TPT(item):
 
@@ -903,11 +917,13 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                 progress.create('Progresso', 'A Procurar episódios...')
                 progress.update( percent, "", message, "" )
         else:
-                site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
-                message = 'Por favor aguarde.'
-                percent = 0
-                progress.create('Progresso', 'A Procurar...')
-                progress.update(percent, 'A Procurar em '+site, message, "")
+                try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
+                except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+##                site = '[B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
+##                message = 'Por favor aguarde.'
+##                percent = 0
+##                progress.create('Progresso', 'A Procurar...')
+##                progress.update(percent, 'A Procurar em '+site, message, "")
         i = 1
         conta_id_video = 0
         contaultimo = 0
@@ -2793,11 +2809,15 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
 
 
 def ultimos_episodios_TPT_ultimos(url):
+
+        try: xbmcgui.Dialog().notification('A Procurar Últimos Episódios.', 'Por favor aguarde...', artfolder + 'TPT1.png', 2000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Últimos Episódios.', 'Por favor aguarde...', artfolder + 'TPT1.png'))
+
         
-        percent = 0
-        message = 'Por favor aguarde.'
-        progress.create('Progresso', 'A Procurar')
-        progress.update( percent, 'A Procurar Últimos Episódios...', message, "" )
+##        percent = 0
+##        message = 'Por favor aguarde.'
+##        progress.create('Progresso', 'A Procurar')
+##        progress.update( percent, 'A Procurar Últimos Episódios...', message, "" )
 
         #----------------------------------------------------------------------------------------------------
         threads = []
@@ -2901,11 +2921,13 @@ def ultimos_episodios_TPT_ultimos(url):
                         num_filmes = num_filmes + 1
         Filmes_Fi.close()
         num_total = num_filmes + 0.0
+        percent = 0
+        progress.create('Progresso', 'A Procurar')
         for a in range(num_filmes):
                 percent = int( ( a / num_total ) * 100)
                 message = str(a+1) + " de " + str(num_filmes)
                 progress.update( percent, 'A Finalizar ...', message, "" )
-                xbmc.sleep(12)
+                xbmc.sleep(20)
 
         proxima = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
         try:
