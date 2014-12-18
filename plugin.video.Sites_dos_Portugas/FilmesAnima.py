@@ -227,7 +227,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(502)")
-        xbmcplugin.endOfDirectory(int(sys.argv[1]), cacheToDisc=True)
+##        xbmcplugin.endOfDirectory(int(sys.argv[1]), cacheToDisc=True)
         
 
 

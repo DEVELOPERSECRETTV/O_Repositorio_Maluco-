@@ -592,7 +592,7 @@ def passar_nome_pesquisa_animacao(name,url):
                 
         url = 'IMDB'+imdbcode+'IMDB'
         FilmesAnima.FILMES_ANIMACAO_pesquisar(str(nome_pesquisa),'',url)
-        #PesquisaExterna.pesquisar(str(nome_pesquisa),'',url)
+        #PesquisaExterna.pesquisar(str(nome_pesquisa),url)
 
 def passar_nome_pesquisa_externa(name,url):
 
@@ -637,7 +637,7 @@ def passar_nome_pesquisa_externa(name,url):
                 if imdbc: imdbcode = imdbc[0]
                 
         url = 'IMDB'+imdbcode+'IMDB'
-        PesquisaExterna.pesquisar(str(nome_pesquisa),'',url)
+        PesquisaExterna.pesquisar(str(nome_pesquisa),url)
 
 def passar_nome_pesquisa_filmes(name):
         nome_pesquisa = str(name)
@@ -1364,10 +1364,10 @@ def INDEX():
                 _nomeservidor_.append('Fonte '+str(i)+': [COLOR yellow]'+n1+'[/COLOR]')
                 _linkservidor_.append(n2+'///'+nomeepisodio)
                 i = i + 1
-
-        index = xbmcgui.Dialog().select('Escolha o Stream', _nomeservidor_)
+        indexservidores = xbmcgui.Dialog().select
+        index = indexservidores('Escolha o Stream', _nomeservidor_)
         if index > -1: Play.PLAY_movie(_linkservidor_[index],_nomeservidor_[index],iconimage,'',fanart)
-        else: return
+
 
 
 
@@ -2005,7 +2005,7 @@ elif mode == 8000:
         Funcoes.trailer(namet,url)
 
 elif mode == 9000:
-        PesquisaExterna.pesquisar(name,nomesite,url)
+        PesquisaExterna.pesquisar(name,url)
 elif mode == 9001:
         passar_nome_pesquisa_externa(name,url)
 elif mode == 9002:
