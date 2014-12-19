@@ -580,7 +580,31 @@ def json_get(url):
         data = json.load(urllib2.urlopen(req))
         return data
 
+def playparser(namet, url, year, urltrailer):
+        imdb_id = re.compile('IMDBtt(.+?)IMDB').findall(url)
+        if imdb_id: imdb_id = imdb_id[0]
+        else: imdb_id = ''
+        item = xbmcgui.ListItem(path=urltrailer)
+	item.setProperty("IsPlayable", "true")
+	xbmc.Player().play('plugin://plugin.video.genesis/?action=play&name='+namet+'&title='+namet+'&year='+year+'&imdb='+imdb_id+'&url='+urltrailer, item)
 
+##def INDEX(url,name):
+##        #addLink(url,'','','')
+##        i = 1
+##        _nomeservidor_ = []
+##        _linkservidor_ = []
+##        #addLink(url,'','')
+##        nomeepi = re.compile('[[]COLOR grey[]](.*)').findall(url)
+##        if nomeepi: nomeepisodio = '[COLOR grey]'+nomeepi[0]
+##        
+##        n = re.compile('[(](.+?)[)](.+?)[|]').findall(url.replace('//[COLOR grey]','|[COLOR grey]'))
+##        for n1,n2 in n:
+##                _nomeservidor_.append('Fonte '+str(i)+': [COLOR yellow]'+n1+'[/COLOR]')
+##                _linkservidor_.append(n2+'///'+nomeepisodio)
+##                i = i + 1
+##        indexservidores = xbmcgui.Dialog().select
+##        index = indexservidores('Escolha o Stream', _nomeservidor_)
+##        if index > -1: Play.PLAY_movie(_linkservidor_[index],_nomeservidor_[index],iconimage,'',fanart)
 
 ######################################################
 #########   THANKS MAFARRICOS   ####################
@@ -875,22 +899,7 @@ def addDir(name,url,mode,iconimage,checker,fanart):
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
 
-def addDir_episode(name,url,mode,iconimage,checker,fanart,episod,air,namet,urltrailer):
-        if fanart == '': fanart = artfolder + 'FAN3.jpg'
-        #text = 'nnnnnn'
-        text = ''
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&namet="+urllib.quote_plus(namet)+"&urltrailer="+urllib.quote_plus(urltrailer)+"&name="+urllib.quote_plus(name)+"&namet="+urllib.quote_plus(namet)+"&air="+urllib.quote_plus(air)+"&episod="+urllib.quote_plus(episod)+"&fanart="+urllib.quote_plus(fanart)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',fanart)
-        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker, "Episode": episod, "Premiered": air } )
-        cm = []
-  	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
-        cm.append(('Procurar no "Genesis"', 'RunPlugin(%s?mode=9002&namet=%s&url=%s&year=%s&urltrailer=%s)' % (sys.argv[0],namet,urllib.quote_plus(url),str(year),urllib.quote_plus(urltrailer))))
-        cm.append(('Ver Trailer', 'RunPlugin(%s?mode=8000&url=%s&namet=%s)' % (sys.argv[0],urllib.quote_plus(urltrailer),namet)))
-        liz.addContextMenuItems(cm, replaceItems=False)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
+
 
 def addDir2(nome,url,mode,iconimage,checker,fanart):
         #text = 'nnnnnn'
@@ -974,6 +983,23 @@ def addDir_trailer1(name,url,mode,iconimage,plot,fanart,year,genre,namet,urltrai
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True,totalItems=ttitems)
         return ok
 
+def addDir_episode(name,url,mode,iconimage,checker,fanart,episod,air,namet,urltrailer):
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
+        #text = 'nnnnnn'
+        text = ''
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&namet="+urllib.quote_plus(namet)+"&urltrailer="+urllib.quote_plus(urltrailer)+"&name="+urllib.quote_plus(name)+"&namet="+urllib.quote_plus(namet)+"&air="+urllib.quote_plus(air)+"&episod="+urllib.quote_plus(episod)+"&fanart="+urllib.quote_plus(fanart)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
+        ok=True
+        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+	liz.setProperty('fanart_image',fanart)
+        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker, "Episode": episod, "Premiered": air } )
+        cm = []
+  	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
+        cm.append(('Procurar no "Genesis"', 'RunPlugin(%s?mode=9002&namet=%s&url=%s&year=%s&urltrailer=%s)' % (sys.argv[0],namet,urllib.quote_plus(url),str(year),urllib.quote_plus(urltrailer))))
+        cm.append(('Ver Trailer', 'RunPlugin(%s?mode=8000&url=%s&namet=%s)' % (sys.argv[0],urllib.quote_plus(urltrailer),namet)))
+        liz.addContextMenuItems(cm, replaceItems=False)
+        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
+        return ok
+
 def addDir_episode1(name,url,mode,iconimage,checker,fanart,episod,air,namet,urltrailer,mvoutv,ttitems):
         if fanart == '': fanart = artfolder + 'FAN3.jpg'
         #text = 'nnnnnn'
@@ -990,32 +1016,6 @@ def addDir_episode1(name,url,mode,iconimage,checker,fanart,episod,air,namet,urlt
         liz.addContextMenuItems(cm, replaceItems=False)
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True,totalItems=ttitems)
         return ok
-
-def playparser(namet, url, year, urltrailer):
-        imdb_id = re.compile('IMDBtt(.+?)IMDB').findall(url)
-        if imdb_id: imdb_id = imdb_id[0]
-        else: imdb_id = ''
-        item = xbmcgui.ListItem(path=urltrailer)
-	item.setProperty("IsPlayable", "true")
-	xbmc.Player().play('plugin://plugin.video.genesis/?action=play&name='+namet+'&title='+namet+'&year='+year+'&imdb='+imdb_id+'&url='+urltrailer, item)
-
-##def INDEX(url,name):
-##        #addLink(url,'','','')
-##        i = 1
-##        _nomeservidor_ = []
-##        _linkservidor_ = []
-##        #addLink(url,'','')
-##        nomeepi = re.compile('[[]COLOR grey[]](.*)').findall(url)
-##        if nomeepi: nomeepisodio = '[COLOR grey]'+nomeepi[0]
-##        
-##        n = re.compile('[(](.+?)[)](.+?)[|]').findall(url.replace('//[COLOR grey]','|[COLOR grey]'))
-##        for n1,n2 in n:
-##                _nomeservidor_.append('Fonte '+str(i)+': [COLOR yellow]'+n1+'[/COLOR]')
-##                _linkservidor_.append(n2+'///'+nomeepisodio)
-##                i = i + 1
-##        indexservidores = xbmcgui.Dialog().select
-##        index = indexservidores('Escolha o Stream', _nomeservidor_)
-##        if index > -1: Play.PLAY_movie(_linkservidor_[index],_nomeservidor_[index],iconimage,'',fanart)
         
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	

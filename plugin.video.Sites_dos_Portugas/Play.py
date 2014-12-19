@@ -115,7 +115,7 @@ def PLAY_movie_url(url,name,iconimage,checker,fanart):#,nomeAddon):
 			imagem = re.compile('<span id=.+?><img src="(.+?)"').findall(link3)
 			if imagem:
                                 iconimage = imagem[0]
-                                ip = re.compile('(.+?)/i/').findalliconimage
+                                ip = re.compile('(.+?)/i/').findall(iconimage)
                                 if ip: ip = ip[0]
 			todassources = re.compile('[|]sharing(.+?)sources[|]').findall(link3)
 			sourc = re.compile('.+?[|](.+?)0p[|]').findall(todassources[0])
@@ -126,34 +126,39 @@ def PLAY_movie_url(url,name,iconimage,checker,fanart):#,nomeAddon):
                                 sources = re.compile('[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|]').findall(todassources[0])
                                 for x in range(5):
                                         url = ip + '/' + sources[0][a] + '/v.' + mp4
-                                        a = a + 2                                        
-                                        addLink(sources[0][i]+' | '+name,url,iconimage,fanart)
+                                        a = a + 2
+                                        addLink(sources[0][i]+'0p | '+name,url,iconimage,fanart)
                                         i = a + 1
+        
                         if len(sourc) == 4:
-                                sources = re.compile('[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                sources = re.compile('[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|]').findall(todassources[0])
                                 for x in range(4):
                                         url = ip + '/' + sources[0][a] + '/v.' + mp4
-                                        a = a + 2                                        
-                                        addLink(sources[0][i]+' | '+name,url,iconimage,fanart)
+                                        a = a + 2
+                                        addLink(sources[0][i]+'0p | '+name,url,iconimage,fanart)
                                         i = a + 1
+        
 			if len(sourc) == 3:
-                                sources = re.compile('[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                sources = re.compile('[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|]').findall(todassources[0])
                                 for x in range(3):
                                         url = ip + '/' + sources[0][a] + '/v.' + mp4
-                                        a = a + 2                                        
-                                        addLink(sources[0][i]+' | '+name,url,iconimage,fanart)
+                                        a = a + 2
+                                        addLink(sources[0][i]+'0p | '+name,url,iconimage,fanart)
                                         i = a + 1
+ 
 			if len(sourc) == 2:
-                                sources = re.compile('[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                sources = re.compile('[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|]').findall(todassources[0])
                                 for x in range(2):
                                         url = ip + '/' + sources[0][a] + '/v.' + mp4
-                                        a = a + 2                                        
-                                        addLink(sources[0][i]+' | '+name,url,iconimage,fanart)
+                                        a = a + 2
+                                        addLink(sources[0][i]+'0p | '+name,url,iconimage,fanart)
                                         i = a + 1
+                                           
                         if len(sourc) == 1:
-                                sources = re.compile('[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                sources = re.compile('[|]mp4[|](.+?)[|](.+?)0p[|]').findall(todassources[0])
                                 url = ip + '/' + sources[0][0] + '/v.' + mp4
-                                addLink(sources[0][1]+' | '+name,url,iconimage,fanart)
+                                addLink(sources[0][1]+'0p | '+name,url,iconimage,fanart)
+
 		except: pass
 	if "vidzi.tv" in url:       
 		try:
@@ -763,45 +768,46 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                                         url = ip + '/' + sources[0][a] + '/v.' + mp4
                                         _linkservidor_.append(url)
                                         a = a + 2
-                                        _nomeservidor_.append(sources[0][i]+' | '+name)
-                                        addLink(sources[0][i]+' | '+name,url,iconimage,fanart)
+                                        _nomeservidor_.append(sources[0][i]+'0p | '+name)
+                                        addLink(sources[0][i]+'0p | '+name,url,iconimage,fanart)
                                         i = a + 1
         
                         if len(sourc) == 4:
-                                sources = re.compile('[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                sources = re.compile('[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|]').findall(todassources[0])
                                 for x in range(4):
                                         url = ip + '/' + sources[0][a] + '/v.' + mp4
                                         _linkservidor_.append(url)
                                         a = a + 2
-                                        _nomeservidor_.append(sources[0][i]+' | '+name)
-                                        addLink(sources[0][i]+' | '+name,url,iconimage,fanart)
+                                        _nomeservidor_.append(sources[0][i]+'0p | '+name)
+                                        addLink(sources[0][i]+'0p | '+name,url,iconimage,fanart)
                                         i = a + 1
         
 			if len(sourc) == 3:
-                                sources = re.compile('[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                sources = re.compile('[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|]').findall(todassources[0])
                                 for x in range(3):
                                         url = ip + '/' + sources[0][a] + '/v.' + mp4
                                         _linkservidor_.append(url)
                                         a = a + 2
-                                        _nomeservidor_.append(sources[0][i]+' | '+name)
-                                        addLink(sources[0][i]+' | '+name,url,iconimage,fanart)
+                                        _nomeservidor_.append(sources[0][i]+'0p | '+name)
+                                        addLink(sources[0][i]+'0p | '+name,url,iconimage,fanart)
                                         i = a + 1
  
 			if len(sourc) == 2:
-                                sources = re.compile('[|](.+?)[|](.+?)p[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                sources = re.compile('[|](.+?)[|](.+?)0p[|](.+?)[|](.+?)0p[|]').findall(todassources[0])
                                 for x in range(2):
                                         url = ip + '/' + sources[0][a] + '/v.' + mp4
                                         _linkservidor_.append(url)
                                         a = a + 2
-                                        _nomeservidor_.append(sources[0][i]+' | '+name)
-                                        addLink(sources[0][i]+' | '+name,url,iconimage,fanart)
+                                        _nomeservidor_.append(sources[0][i]+'0p | '+name)
+                                        addLink(sources[0][i]+'0p | '+name,url,iconimage,fanart)
                                         i = a + 1
                                            
                         if len(sourc) == 1:
-                                sources = re.compile('[|](.+?)[|](.+?)p[|]').findall(todassources[0])
+                                sources = re.compile('[|]mp4[|](.+?)[|](.+?)0p[|]').findall(todassources[0])
                                 url = ip + '/' + sources[0][0] + '/v.' + mp4
-                                addLink(sources[0][1]+' | '+name,url,iconimage,fanart)
-                                nm = sources[0][1]+' | '+name
+                                addLink(sources[0][1]+'0p | '+name,url,iconimage,fanart)
+                                #addLink(sources[0][0],'','','')
+                                nm = sources[0][1]+'0p | '+name
                                 _nomeservidor_.append(nm)
                                 _linkservidor_.append(url)
           
@@ -1319,9 +1325,18 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                 try:
                         #addLink(name,url,iconimage,fanart)
                         playlist = xbmc.PlayList(1)
-                        playlist.clear()             
-                        playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
+                        playlist.clear()
+
+                        liz=xbmcgui.ListItem(name, thumbnailImage=iconimage)
+                        xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                        playlist.add(url,liz)
+
                         MyPlayer(nome_addon=nome_addon,checker=checker).PlayStream(playlist)
+                        
+##                        playlist = xbmc.PlayList(1)
+##                        playlist.clear()             
+##                        playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
+##                        MyPlayer(nome_addon=nome_addon,checker=checker).PlayStream(playlist)
                 except: pass
         #return
                 
@@ -1347,9 +1362,11 @@ class MyPlayer(xbmc.Player):
                 progress.close()
                             
         def onPlayBackEnded(self):
+                self.Playable = 'Nao'
                 progress.close()
 
         def onPlayBackStopped(self):
+                self.Playable = 'Nao'
                 progress.close()
                 
 #----------------------------------------------------------------------------------------------------------------------------------------------#

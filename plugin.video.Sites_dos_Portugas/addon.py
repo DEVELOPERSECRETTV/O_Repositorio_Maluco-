@@ -593,9 +593,9 @@ def passar_nome_pesquisa_animacao(name,url):
         url = 'IMDB'+imdbcode+'IMDB'
         FilmesAnima.FILMES_ANIMACAO_pesquisar(str(nome_pesquisa),'',url)
         #PesquisaExterna.pesquisar(str(nome_pesquisa),url)
-        #item = xbmcgui.ListItem(path=url)
-	#item.setProperty("IsPlayable", "true")
-        #xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+url+'&mode=9000&name='+str(nome_pesquisa), item)
+##        item = xbmcgui.ListItem(path=url)
+##	item.setProperty("IsPlayable", "true")
+##        xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+url+'&mode=9000&name='+str(nome_pesquisa), item)
 
 def passar_nome_pesquisa_externa(name,url):
 

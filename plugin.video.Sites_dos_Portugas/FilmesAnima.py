@@ -149,6 +149,9 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
 
 	url_pesquisa = 'http://www.cinematuga.eu/search?q=' + str(encode)# + 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'CME': #FILMES_ANIMACAO_encontrar_fontes_filmes_CME(url_pesquisa,pesquisou)
+                try:
+                        html_source = abrir_url(url_pesquisa)
+                except: html_source = ''
                 i=0
                 items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
                 for item in items:                        
@@ -1410,6 +1413,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CME(FILMEN,url,pesquisou,imdbc,item)
                         if fanart == '---': fanart = ''
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
+                        #addLink(imdbc+'-'+imdbcode,'','','')
 
                         try:
                                 if imdbc != '' and imdbcode != '':
