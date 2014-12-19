@@ -998,6 +998,25 @@ def playparser(namet, url, year, urltrailer):
         item = xbmcgui.ListItem(path=urltrailer)
 	item.setProperty("IsPlayable", "true")
 	xbmc.Player().play('plugin://plugin.video.genesis/?action=play&name='+namet+'&title='+namet+'&year='+year+'&imdb='+imdb_id+'&url='+urltrailer, item)
+
+##def INDEX(url,name):
+##        #addLink(url,'','','')
+##        i = 1
+##        _nomeservidor_ = []
+##        _linkservidor_ = []
+##        #addLink(url,'','')
+##        nomeepi = re.compile('[[]COLOR grey[]](.*)').findall(url)
+##        if nomeepi: nomeepisodio = '[COLOR grey]'+nomeepi[0]
+##        
+##        n = re.compile('[(](.+?)[)](.+?)[|]').findall(url.replace('//[COLOR grey]','|[COLOR grey]'))
+##        for n1,n2 in n:
+##                _nomeservidor_.append('Fonte '+str(i)+': [COLOR yellow]'+n1+'[/COLOR]')
+##                _linkservidor_.append(n2+'///'+nomeepisodio)
+##                i = i + 1
+##        indexservidores = xbmcgui.Dialog().select
+##        index = indexservidores('Escolha o Stream', _nomeservidor_)
+##        if index > -1: Play.PLAY_movie(_linkservidor_[index],_nomeservidor_[index],iconimage,'',fanart)
+        
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
 params=get_params()

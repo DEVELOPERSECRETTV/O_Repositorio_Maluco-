@@ -593,6 +593,9 @@ def passar_nome_pesquisa_animacao(name,url):
         url = 'IMDB'+imdbcode+'IMDB'
         FilmesAnima.FILMES_ANIMACAO_pesquisar(str(nome_pesquisa),'',url)
         #PesquisaExterna.pesquisar(str(nome_pesquisa),url)
+        #item = xbmcgui.ListItem(path=url)
+	#item.setProperty("IsPlayable", "true")
+        #xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+url+'&mode=9000&name='+str(nome_pesquisa), item)
 
 def passar_nome_pesquisa_externa(name,url):
 
@@ -1351,14 +1354,15 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
         return
 
 
-def INDEX():
+def INDEX(url,name):
+        #addLink(url,'','','')
         i = 1
         _nomeservidor_ = []
         _linkservidor_ = []
         #addLink(url,'','')
         nomeepi = re.compile('[[]COLOR grey[]](.*)').findall(url)
         if nomeepi: nomeepisodio = '[COLOR grey]'+nomeepi[0]
-        
+        checker = ''
         n = re.compile('[(](.+?)[)](.+?)[|]').findall(url.replace('//[COLOR grey]','|[COLOR grey]'))
         for n1,n2 in n:
                 _nomeservidor_.append('Fonte '+str(i)+': [COLOR yellow]'+n1+'[/COLOR]')
@@ -1367,10 +1371,29 @@ def INDEX():
         indexservidores = xbmcgui.Dialog().select
         index = indexservidores('Escolha o Stream', _nomeservidor_)
         if index > -1: Play.PLAY_movie(_linkservidor_[index],_nomeservidor_[index],iconimage,'',fanart)
+                #item = xbmcgui.ListItem(path=url)
+                #item.setProperty("IsPlayable", "true")
+                #xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+_linkservidor_[index]+'&mode=30&name='+_nomeservidor_[index]+'&iconimage='+iconimage+'&checker='+checker+'&fanart='+fanart, item)
 
+def xbmcxbmc(url,name):
+##        addLink(url,'','','')
+##        addLink(name,'','','')
+        tt = 'tt2267998'
+        n = 'gone girl'
+        item = xbmcgui.ListItem(path=url)
+	item.setProperty("IsPlayable", "true")
+        #xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?mode=7000&url='+url, item)
+        xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url=IMDB'+tt+'IMDB&mode=9000&name='+n, item)
 
-
-
+def playper(name, url, imdb_id, year, addon):
+	item = xbmcgui.ListItem(path=url)
+	item.setProperty("IsPlayable", "true")
+	if 'genesis' in addon: xbmc.Player().play(links.link().genesis_play % (name,name,year,imdb_id,url), item)
+	elif 'rato' in addon: xbmc.Player().play(links.link().rato_play % (url,name), item)
+	#if 'portugas' in addon.lower():	xbmc.executebuiltin('activatewindow(video,'+links.link().sdp_search % (imdb_id,urllib.quote_plus(name.split("(")[0].strip()))+')')
+	
+	if 'portugas' in addon.lower():	xbmc.Player().play(links.link().sdp_search % (imdb_id,urllib.quote_plus(name.replace('('+year+')',''))), item)
+	
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -1999,7 +2022,15 @@ elif mode == 3010:
 
 
 elif mode == 7000:
-        INDEX()
+        INDEX(url,name)
+elif mode == 7001:
+        tt = 'tt2267998'
+        n = 'gone girl'
+        item = xbmcgui.ListItem(path=url)
+	item.setProperty("IsPlayable", "true")
+        #xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?mode=7000&url='+url, item)
+        xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+tt+'&mode=9000&name='+n, item)
+        #xbmcxbmc(url,name)
 
 elif mode == 8000:
         Funcoes.trailer(namet,url)
