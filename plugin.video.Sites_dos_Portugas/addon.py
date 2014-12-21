@@ -26,6 +26,7 @@ from string import capwords
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
 from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode, addDir_trailer1, addDir_episode1
+from Funcoes import addDir_trailer1_filmes, addDir_trailer_filmes
 from Funcoes import get_params,abrir_url
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
@@ -489,17 +490,33 @@ def dirtodos(url):
                                 si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
                                 if si: sinopse = si[0][0] + ' ' + si[0][1]
                                 else: sinopse = '---'
-                        if 'toppt.net'         in imdbcode: num_mode = 233
-                        if 'tuga-filmes.info'  in imdbcode: num_mode = 73
-                        if 'tuga-filmes.us'    in imdbcode: num_mode = 33
-                        if 'cinematuga.eu'     in imdbcode: num_mode = 803
-                        if 'cinematuga.net'    in imdbcode: num_mode = 703
-                        if 'foitatuga'         in imdbcode: num_mode = 603
-                        if 'cinemaemcasa.pt'   in imdbcode: num_mode = 903
-                        if 'movietuga'         in imdbcode: num_mode = 103
+                        if 'toppt.net'         in imdbcode:
+                                num_mode = 233
+                                site = 'TPT'
+                        if 'tuga-filmes.info'  in imdbcode:
+                                num_mode = 73
+                                site = 'TFC'
+                        if 'tuga-filmes.us'    in imdbcode:
+                                num_mode = 33
+                                site = 'TFV'
+                        if 'cinematuga.eu'     in imdbcode:
+                                num_mode = 803
+                                site = 'CME'
+                        if 'cinematuga.net'    in imdbcode:
+                                num_mode = 703
+                                site = 'CMT'
+                        if 'foitatuga'         in imdbcode:
+                                num_mode = 603
+                                site = 'FTT'
+                        if 'cinemaemcasa.pt'   in imdbcode:
+                                num_mode = 903
+                                site = 'CMC'
+                        if 'movietuga'         in imdbcode:
+                                num_mode = 103
+                                site = 'MVT'
                         if nome != '---':
-                                #num_filmes = num_filmes + 1
                                 addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
+                                #addDir_trailer1_filmes(nome,imdbcode,7,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
                         else:
                                 if 'toppt.net'         in P_url: url_TPT = P_url
                                 if 'tuga-filmes.info'  in P_url: url_TFC = P_url
@@ -548,8 +565,10 @@ def SERIES_MENU():
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
      
 
-def passar_nome_pesquisa_animacao(name,url):
-
+def passar_nome_pesquisa_animacao(name,url,year):
+        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+        
         imdbcode = re.compile('IMDB(.+?)IMDB').findall(url)
         if imdbcode: imdbcode = imdbcode[0]
         else: imdbcode = ''
@@ -558,9 +577,10 @@ def passar_nome_pesquisa_animacao(name,url):
         nome_pesquisa = nome_pesquisa.replace('[COLOR yellow]PROCURAR POR: [/COLOR]','')
         nome_pp = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]][[]COLOR yellow[]].+?[[]/COLOR[]]').findall(nome_pesquisa)
         if nome_pp: nome_pesquisa = nome_pp[0]
-        conta = 0
         
-        if imdbcode == '':
+        conta = 0        
+        if imdbcode == '' or imdbcode == '---':
+                nome_pesquisa = nome_pesquisa.replace(' 1 ','') + '+' + year
                 nome_pesquisa = nome_pesquisa.replace('é','e')
                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                 nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -585,12 +605,17 @@ def passar_nome_pesquisa_animacao(name,url):
                         else:
                                 nome_p = nome_p + '+' + q_a_q_a
                 url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-                html_imdbcode = abrir_url(url_imdb)
-                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                if imdbc: imdbcode = imdbc[0]
+                try: html_imdbcode = abrir_url(url_imdb)
+                except: html_imdbcode = ''
+                if html_imdbcode != '':
+                        filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                        if filmes_imdb:
+                                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                if imdbc: imdbcode = imdbc[0]
                 
         url = 'IMDB'+imdbcode+'IMDB'
+##        addLink(name+url+year,'','','')
+##        return
         FilmesAnima.FILMES_ANIMACAO_pesquisar(str(nome_pesquisa),'',url)
         #PesquisaExterna.pesquisar(str(nome_pesquisa),url)
 ##        item = xbmcgui.ListItem(path=url)
@@ -1355,13 +1380,17 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
 
 
 def INDEX(url,name):
-        #addLink(url,'','','')
+        
+        #nepi = re.compile('[[].+?[]].+?[[].+?[]][[].+?[]].+?[[].+?[]](.*)').findall(name)
+        #if nepi: name = nepi[0].replace('[/B] | ','').replace('[COLOR blue]','').replace('[COLOR grey]','').replace('[/COLOR]','')
+        #addLink(name,'','','')
         i = 1
         _nomeservidor_ = []
         _linkservidor_ = []
-        #addLink(url,'','')
+
         nomeepi = re.compile('[[]COLOR grey[]](.*)').findall(url)
         if nomeepi: nomeepisodio = '[COLOR grey]'+nomeepi[0]
+
         checker = ''
         n = re.compile('[(](.+?)[)](.+?)[|]').findall(url.replace('//[COLOR grey]','|[COLOR grey]'))
         for n1,n2 in n:
@@ -1370,10 +1399,10 @@ def INDEX(url,name):
                 i = i + 1
         indexservidores = xbmcgui.Dialog().select
         index = indexservidores('Escolha o Stream', _nomeservidor_)
-        if index > -1: Play.PLAY_movie(_linkservidor_[index],_nomeservidor_[index],iconimage,'',fanart)
-                #item = xbmcgui.ListItem(path=url)
-                #item.setProperty("IsPlayable", "true")
-                #xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+_linkservidor_[index]+'&mode=30&name='+_nomeservidor_[index]+'&iconimage='+iconimage+'&checker='+checker+'&fanart='+fanart, item)
+        if index > -1: Play.PLAY_episodes(_linkservidor_[index],name,iconimage,'',fanart)
+##                item = xbmcgui.ListItem(path=_linkservidor_[index])
+##                item.setProperty("IsPlayable", "true")
+##                xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+_linkservidor_[index]+'&mode=6000&name='+name+'&iconimage='+iconimage+'&checker='+checker+'&fanart='+fanart, item)
 
 def xbmcxbmc(url,name):
 ##        addLink(url,'','','')
@@ -1413,6 +1442,7 @@ episod=None
 air=None
 namet=None
 urltrailer=None
+mvoutv=None
 
 try: url=urllib.unquote_plus(params["url"])
 except: pass
@@ -1442,6 +1472,8 @@ try: episod=urllib.unquote_plus(params["episod"])
 except: pass
 try: air=urllib.unquote_plus(params["air"])
 except: pass
+try: mvoutv=urllib.unquote_plus(params["mvoutv"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -1455,6 +1487,7 @@ print "Fanart: "+str(fanart)
 print "Episode: "+str(episod)
 print "Namet: "+str(namet)
 print "Urltrailer: "+str(urltrailer)
+print "MvouTv: "+str(mvoutv)
 
 ######################################################################################
 
@@ -1489,7 +1522,7 @@ elif mode ==  6:
         xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode ==  7:
-        passar_nome_pesquisa_animacao(name,url)
+        passar_nome_pesquisa_animacao(name,url,year)
 
 elif mode ==  8:
         passar_nome_pesquisa_filmes(name)
@@ -2019,7 +2052,8 @@ elif mode == 3010:
         xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
         
-
+elif mode == 6000:
+        Play.PLAY_episodes(url,name,iconimage,checker,fanart)
 
 elif mode == 7000:
         INDEX(url,name)

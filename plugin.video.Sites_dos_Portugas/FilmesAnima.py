@@ -199,6 +199,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
                 except: html_source = ''
                 i=0
                 items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
+                #addLink(str(len(items)),'','','')
                 for item in items:                        
                         i = i + 1
                         a = str(i)
@@ -569,19 +570,23 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(FILMEN,url,pesquisou,imdbc,ite
 ##                num_f = 0
 ##		print len(items)
 ##		for item in items:
+        #addLink(imdbc,'','','')
         num_f = 0
         if item != '':
                 if item != '':
                         try:
-                                imdbcode = ''
+                                thumb = ''
                                 fanart = ''
-                                thumb 
+                                sinopse = ''
+                                genero = ''
+                                imdbcode = ''
 
                                 imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
                                 
                                 url = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(item)
+                                if not url: re.compile("<a href='(.+?)'>").findall(item)
                                 if 'http' not in url[0]:
                                         urllink = 'http:' + url[0]
                                 else: urllink = url[0]
@@ -605,10 +610,23 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(FILMEN,url,pesquisou,imdbc,ite
                                 titulo[0] = titulo[0].replace('&#038;',"&")
                                 titulo[0] = titulo[0].replace('&#39;',"'")
                                 titulo[0] = titulo[0].replace('&amp;','&')
+                                if 'Dear John' in titulo[0] and ano[0] == '2013': titulo[0] = titulo[0].replace('Dear John','12 Anos Escravo')
+                                nome = titulo[0]
+                                nome = nome.replace('&#8217;',"'")
+                                nome = nome.replace('&#8211;',"-")
+                                nome = nome.replace('&#39;',"'")
+                                nome = nome.replace('&amp;','&')
+                                nome = nome.replace('PT',"")
+                                a_q = re.compile('\d+')
+                                qq_aa = a_q.findall(nome)
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) == 4:
+                                                tirar_ano = '(' + str(q_a_q_a) + ')'
+                                                nome = nome.replace(tirar_ano,'')
 
                                 conta = 0
                                 if imdbcode == '':
-                                        nome_pesquisa = titulo[0]
+                                        nome_pesquisa = titulo[0] + '+' + ano_filme
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
                                         nome_pesquisa = nome_pesquisa.replace('ê','e')
                                         nome_pesquisa = nome_pesquisa.replace('á','a')
@@ -636,9 +654,9 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(FILMEN,url,pesquisou,imdbc,ite
                                         html_imdbcode = abrir_url(url_imdb)
                                         filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
                                         imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                                        imdbcode = imdbcd[0]
+                                        if imdbcd: imdbcode = imdbcd[0]
 
-                                
+                                #addLink(nome+'-'+ano_filme+'-'+imdbc+'1'+imdbcode,'','','')
                                 try:
                                         if imdbc != '' and imdbcode != '':
                                                 if imdbcode == imdbc:
@@ -654,10 +672,10 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(FILMEN,url,pesquisou,imdbc,ite
                                                                 try:
                                                                         fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
                                                                 except:pass
-                                                        name = '[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
+                                                        name = '[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
                                                         iconimage = thumb.replace('s72-c','s320').replace(' ','%20')
                                                         addDir1(name,'url',1001,iconimage,False,fanart)
-                                                        MovieTuga.MVT_links('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
+                                                        MovieTuga.MVT_links('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                         num_f = num_f + 1
                                         else:
                                                 nome = titulo[0]
@@ -672,10 +690,10 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(FILMEN,url,pesquisou,imdbc,ite
                                                         try:
                                                                 fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano_filme)
                                                         except:pass
-                                                name = '[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
+                                                name = '[COLOR orange]MVT | [/COLOR][B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
                                                 iconimage = thumb.replace('s72-c','s320').replace(' ','%20')
                                                 addDir1(name,'url',1001,iconimage,False,fanart)
-                                                MovieTuga.MVT_links('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
+                                                MovieTuga.MVT_links('[B][COLOR green]' + titulo[0] + ' [/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR]',urllink.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                 num_f = num_f + 1
                                 except: pass
                         except: pass
