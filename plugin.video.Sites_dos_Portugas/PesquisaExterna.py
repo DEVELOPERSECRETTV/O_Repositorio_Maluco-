@@ -18,7 +18,7 @@
 
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,threading
-import TopPt,TugaFilmesTV,TugaFilmesCom,MovieTuga,FoitaTuga,Cinematuga,CinematugaEu,CinemaEmCasa,Play
+import Play
 
 #from string import capwords
 import string
@@ -237,44 +237,69 @@ def pesquisar(nome_pesquisa,url):
         _linkservidor_ = []
         _thumbimage_ = []
         _legendas_ = []
-        
+
+        audioTPT = ''
+        audioTFC = ''
+        audioTFV = ''
         i = 0
-        for x in range(len(resultados)):
-                i = i + 1
-                a = str(i)
-                if i < 10: a = '0'+a
-                res = re.compile('(.+?)[|]URL[|](.+?)[|]THUMB[|](.+?)[|]FANART').findall(resultados[x])
-                _nomeservidor_.append(res[0][0].replace('SITESdosPORTUGAS',str(a)))                                                  
-                _linkservidor_.append(res[0][1])
-                _thumbimage_.append(res[0][2])
-                subs = re.compile('[|]SUBTITLES[|](.*)').findall(resultados[x])
-                if subs: _legendas_.append(subs[0])
-                else: _legendas_.append('---')
+        if resultados != []:                
+                for x in range(len(resultados)):
+                        audio_audio = re.compile('(.+?)[|]AUDIO[|](.*)').findall(resultados[x])
+                        if audio_audio and 'TOPPT' in audio_audio[0][0]:
+                                #_nomeservidor_.append(resultados[x])
+                                audioTPT = ' | '+audio_audio[0][1].replace(' ','')
+                        if audio_audio and 'TUGAFILMES.COM' in audio_audio[0][0]:
+                                #_nomeservidor_.append(resultados[x])
+                                audioTFC = ' | '+audio_audio[0][1].replace(' ','')
+                        if audio_audio and 'TUGAFILMES.TV' in audio_audio[0][0]:
+                                #_nomeservidor_.append(resultados[x])
+                                audioTFV = ' | '+audio_audio[0][1].replace(' ','')
+                        
+                        res = re.compile('(.+?)[|]URL[|](.+?)[|]THUMB[|](.+?)[|]FANART').findall(resultados[x])
+                        if res and 'AUDIO' not in resultados[x]:
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                
+                                if 'TOPPT' in res[0][0]: audio = audioTPT
+                                elif 'TUGAFILMES.COM' in res[0][0]: audio = audioTFC
+                                elif 'TUGAFILMES.TV' in res[0][0]: audio = audioTFV
+                                else: audio = ''
+                                
+                                _nomeservidor_.append(res[0][0].replace('SITESdosPORTUGAS',str(a))+audio)                                                  
+                                _linkservidor_.append(res[0][1])
+                                _thumbimage_.append(res[0][2])
+                                subs = re.compile('[|]SUBTITLES[|](.*)').findall(resultados[x])
+                                if subs: _legendas_.append(subs[0])
+                                else: _legendas_.append('---')
 
-        indexservidores = xbmcgui.Dialog().select
-        index = indexservidores('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', _nomeservidor_)
-        if index > -1:
-                nomedostream = _nomeservidor_[index]
-                nome_addon = ''
-                checker = ''
-                if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                        PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart)
-                else:
-                        nomefilme = name
-                        progress.create(nomefilme, 'A preparar vídeo.')
-                        progress.update( 98, '', 'Por favor aguarde...', "" )
+                indexservidores = xbmcgui.Dialog().select
+                index = indexservidores('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', _nomeservidor_)
+                if index > -1:
+                        nomedostream = _nomeservidor_[index]
+                        nome_addon = ''
+                        checker = ''
+                        if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
+                                PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart)
+                        else:
+                                nomefilme = name
+                                progress.create(nomefilme, 'A preparar vídeo.')
+                                progress.update( 98, '', 'Por favor aguarde...', "" )
 
-                        if _legendas_[index] == '---': checker = ''
-                        else: checker = _legendas_[index]
+                                if _legendas_[index] == '---': checker = ''
+                                else: checker = _legendas_[index]
 
-                        playlist = xbmc.PlayList(1)
-                        playlist.clear()
+                                playlist = xbmc.PlayList(1)
+                                playlist.clear()
 
-                        liz=xbmcgui.ListItem(nome_original, thumbnailImage=_thumbimage_[index])
-                        xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
-                        playlist.add(_linkservidor_[index],liz)
+                                liz=xbmcgui.ListItem(nome_original, thumbnailImage=_thumbimage_[index])
+                                xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                                playlist.add(_linkservidor_[index],liz)
 
-                        MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
+                                MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
+        else:
+                try: xbmcgui.Dialog().notification('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', 'Não existem fontes disponíveis.', artfolder + 'SDPI.png', 1500, sound=False)
+                except: xbmc.executebuiltin("Notification(%s,%s, 1500, %s)" % ('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', 'Não existem fontes disponíveis.', artfolder + 'SDPI.png'))
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -548,6 +573,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(FILMEN,url,pesquisou,imdbc,item)
                                                         except: pass
                                                         name = '[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao
                                                         iconimage = thumb.replace('s1600','s320').replace('.gif','.jpg')
+                                                        #resultados.append('TUGAFILMES.COM|AUDIO|'+qualidade.upper()+versao)
                                                         #addDir1(name,'url',1001,iconimage,False,fanart)
                                                         TFC_links('[B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                         num_f = num_f + 1
@@ -566,6 +592,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(FILMEN,url,pesquisou,imdbc,item)
                                                         except:pass
                                                         name = '[COLOR orange]TFC | [/COLOR][B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao
                                                         iconimage = thumb.replace('s1600','s320').replace('.gif','.jpg')
+                                                        #resultados.append('TUGAFILMES.COM|AUDIO|'+qualidade.upper()+versao)
                                                         #addDir1(name,'url',1001,iconimage,False,fanart)
                                                         TFC_links('[B][COLOR green]' + urletitulo[0][1].replace('&#39;',"'") + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                         num_f = num_f + 1
@@ -1260,7 +1287,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                                                                 
                                                                                 name = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
                                                                                 iconimage = thumb.replace('s72-c','s320')
-                                                                                #resultados.append('TOPPT|QUALIDADE|'+qualidade.upper())
+                                                                                resultados.append('TOPPT|AUDIO|'+audio_filme.upper().replace(':',''))
                                                                                 #addDir1(name,'url',1001,iconimage,False,fanart)
                                                                                 TPT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',iconimage,fanart)#,genero,sinopse,ano_filme)
                                                                                 num_f = num_f + 1
@@ -1288,7 +1315,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                                                                 except: pass
                                                                         name = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
                                                                         iconimage = thumb.replace('s72-c','s320')
-                                                                        #resultados.append('TOPPT|QUALIDADE|'+qualidade.upper())
+                                                                        resultados.append('TOPPT|AUDIO|'+audio_filme.upper().replace(':',''))
                                                                         #addDir1(name,'url',1001,iconimage,False,fanart)
                                                                         TPT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',iconimage,fanart)#,genero,sinopse,ano_filme)
                                                                         num_f = num_f + 1
@@ -1654,18 +1681,23 @@ def TFV_links(name,url,iconimage,fanart):
                                 if 'Legendado' in matchsvids and num_leg == 1:
                                         num_leg = 0
                                         if num_ptpt == 0: conta_id_video = 0
+                                        resultados.append('TUGAFILMES.TV|AUDIO|LEGENDADO')
                                         #addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
                                 if 'Portug' in matchsvids or 'PT-PT' in matchsvids:
                                         if num_ptpt == 1:
                                                 num_ptpt = 0
                                                 if num_leg == 0: conta_id_video = 0
+                                                resultados.append('TUGAFILMES.TV|AUDIO|PT-PT')
                                                 #addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                 if '</iframe>' in matchsvids:
                                         videomeg = re.compile('<iframe frameborder="0" height="400" scrolling="no" src="(.+?)"').findall(matchsvids)
                                         if videomeg:
                                                 conta_id_video = conta_id_video + 1
+                                                fonte_id = '(Videomega)'
                                                 #addDir('SITESdosPORTUGAS | TUGAFILMES.TV | VIDEOMEGA',videomeg[0],30,iconimage,'',fanart)
-                                                PLAY_movie_url(videomeg[0],'SITESdosPORTUGAS | TUGAFILMES.TV | VIDEOMEGA',iconimage,'',fanart)
+                                                PLAY_movie_url(videomeg[0],fonte_id,iconimage,'',fanart,'TUGAFILMES.TV')
+                                                #resultados.append(videomeg[0])
+                                                
                                 match = re.compile('href="(.+?)"').findall(matchsvids)
                                 url = match[0] 
                                 if url != '':
@@ -1679,15 +1711,78 @@ def TFV_links(name,url,iconimage,fanart):
                                                         if "dv" in servidor: url = 'dropvideo'
                                                         if "vt" in servidor: url = 'vidto.me'
                                                         if "nv" in servidor: url = 'nowvideo'
-                                                        TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)    
+                                                        #resultados.append(name+id_video+str(conta_id_video)+'TUGAFILMES.TV|AUDIO|PT-PT'+url)
+                                                     ##   TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)    
                                                         #TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video)
+                                                        if "videomega" in url:
+                                                                try:
+                                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video# + '///' + name
+                                                                        print url
+                                                                        fonte_id = '(Videomega)'
+                                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                                except: pass
+                                                        if "vidto.me" in url:
+                                                                try:
+                                                                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
+                                                                        print url
+                                                                        fonte_id = '(Vidto.me)'
+                                                                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | VIDTO.ME'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+                                                                except: pass
+                                                        if "dropvideo" in url:
+                                                                try:
+                                                                        url = 'http://dropvideo.com/embed/' + id_video #+ '///' + name
+                                                                        print url
+                                                                        fonte_id = '(Dropvideo)'
+                                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                                except:pass
+                                                        if "streamin.to" in url:
+                                                                try:
+                                                                        url = 'http://streamin.to/embed-' + id_video + '.html' #+ '///' + name
+                                                                        print url
+                                                                        fonte_id = '(Streamin)'
+                                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'',fanart)
+                                                                except:pass                        
+                                                        if "putlocker" in url:
+                                                                try:
+                                                                        url = 'http://www.putlocker.com/embed/' + id_video# + '///' + name
+                                                                        print url
+                                                                        fonte_id = '(Putlocker)'
+                                                                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | PUTLOCKER'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+                                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                                except:pass
+                                                        if "nowvideo" in url:
+                                                                try:
+                                                                        url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video #+ '///' + name
+                                                                        print url
+                                                                        fonte_id = '(Nowvideo)'
+                                                                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | NOWVIDEO'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+                                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                                except:pass
+                                                        if "videowood" in url:
+                                                                try:
+                                                                        if '/video/' in url: url = url.replace('/video/','/embed/')
+                                                                        url = 'http://www.videowood.tv/embed/' + id_video #+ '///' + name
+                                                                        print url
+                                                                        fonte_id = '(Videowood)'
+                                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                                except:pass
+                                                        if "firedrive" in url:
+                                                                try:
+                                                                        url = 'http://www.firedrive.com/file/' + id_video #+ '///' + name
+                                                                        fonte_id = '(Firedrive)'
+                                                                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | FIREDRIVE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+                                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                                except:pass
+                                                        #if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url:# and 'iiiiiiiiii' in url:
+                                                        if  'vidto.me' not in url and 'nowvideo' not in url and 'movshare' not in url and 'firedrive' not in url and 'putlocker' not in url and 'sockshare' not in url:
+                                                                PLAY_movie_url(url,fonte_id,iconimage,'',fanart,'TUGAFILMES.TV')
                                         except:pass
                 else:
                         videomeg = re.compile('<iframe frameborder="0" height="400" scrolling="no" src="(.+?)"').findall(link2)
                         if videomeg:
                                 conta_id_video = conta_id_video + 1
                                 fonte_id = '(Videomega)'
-                                PLAY_movie_url(videomeg[0],'SITESdosPORTUGAS | TUGAFILMES.TV | VIDEOMEGA',iconimage,'',fanart)
+                                PLAY_movie_url(videomeg[0],fonte_id,iconimage,'',fanart,'TUGAFILMES.TV')
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'',fanart)
 
         if 'Parte 1' and 'Parte 2' in link2:
@@ -1737,266 +1832,67 @@ def TFV_links(name,url,iconimage,fanart):
 ##                                        url=match[0]
                                         if "videomega" in url:
                                                 try:
+                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video# + '///' + name
+                                                        print url
                                                         fonte_id = '(Videomega)'
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                                 except: pass
                                         if "vidto.me" in url:
                                                 try:
-                                                        match = re.compile('http://vidto.me/embed-(.+?).html').findall(url)
-                                                        if match:
-                                                                id_video = match[0]
-                                                                url = 'http://vidto.me/' + id_video + '.html'# + '///' + nomeescolha
+                                                        url = 'http://vidto.me/' + id_video + '.html' + '///' + name
+                                                        print url
                                                         fonte_id = '(Vidto.me)'
-                                                        #resultados.append('SITESdosPORTUGAS | FOITATUGA | VIDTO.ME',url,30,iconimage,'',fanart)
                                                         resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | VIDTO.ME'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-
                                                 except: pass
-                                        if "thevideo.me" in url:
-                                                try:
-                                                        fonte_id = '(TheVideo.me)'
-                                                        #addDir('SITESdosPORTUGAS | FOITATUGA | THEVIDEO.ME',url,30,iconimage,'',fanart)
-                                                except:pass
                                         if "dropvideo" in url:
                                                 try:
-                                                        url = url.replace('/video/','/embed/')
-                                                        fonte_id = '(DropVideo)'
+                                                        url = 'http://dropvideo.com/embed/' + id_video #+ '///' + name
+                                                        print url
+                                                        fonte_id = '(Dropvideo)'
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                except:pass
-                                        if "vidzi.tv" in url:
-                                                try:
-                                                        fonte_id = '(Vidzi.tv)'
-                                                        #addDir('SITESdosPORTUGAS | FOITATUGA | VIDZI.TV',url,30,iconimage,'',fanart)
-                                                except:pass
-                                        if "vodlocker" in url:
-                                                try:
-                                                        fonte_id = '(Vodlocker)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vodlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                except:pass
-                                        if "played.to" in url:
-                                                try:
-                                                        fonte_id = '(Played.to)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Played.to)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                except:pass
-                                        if "cloudzilla" in url:
-                                                try:
-                                                        fonte_id = '(Cloudzilla)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                except:pass
-                                        if "divxstage" in url:
-                                                try:
-                                                        fonte_id = '(Divxstage)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Divxstage)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                except:pass
-                                        if "vidzen" in url:
-                                                try:
-                                                        fonte_id = '(Vidzen)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzen)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                                 except:pass
                                         if "streamin.to" in url:
                                                 try:
+                                                        url = 'http://streamin.to/embed-' + id_video + '.html' #+ '///' + name
+                                                        print url
                                                         fonte_id = '(Streamin)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B] [COLOR red]Não funciona[/COLOR]',url,30,iconimage,'',fanart)
                                                 except:pass                        
-                                        if "nowvideo" in url:
-                                                try:
-                                                        fonte_id = '(Nowvideo)'
-                                                        #addDir('SITESdosPORTUGAS | FOITATUGA | NOWVIDEO',url,30,iconimage,'',fanart)
-                                                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | NOWVIDEO'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-                                                except:pass
-                                        if "primeshare" in url:
-                                                try:
-                                                        fonte_id = '(Primeshare)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Primeshare.tv)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                except:pass
-                                        if "videoslasher" in url:
-                                                try:
-                                                        fonte_id = '(VideoSlasher)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoSlasher)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                except:pass
-                                        if "sockshare" in url:
-                                                try:
-                                                        fonte_id = '(Sockshare)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Sockshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | SOCKSHARE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-                                                except:pass
                                         if "putlocker" in url:
                                                 try:
-                                                        url = url.replace('putlocker.com/embed/','firedrive.com/file/')
-                                                        fonte_id = '(Firedrive)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                        url = 'http://www.putlocker.com/embed/' + id_video# + '///' + name
+                                                        print url
+                                                        fonte_id = '(Putlocker)'
                                                         resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | PUTLOCKER'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                                 except:pass
-                                        else:
-                                                if "firedrive" in url:
-                                                        try:
-                                                                fonte_id = '(Firedrive)'
-                                                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                                resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | FIREDRIVE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-                                                        except:pass
-                                        if "movshare" in url:
+                                        if "nowvideo" in url:
                                                 try:
-                                                        fonte_id = '(Movshare)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Movshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | MOVSHARE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-                                                except:pass
-                                        if "video.tt" in url:
-                                                try:
-                                                        url = url.replace('///' + nomeescolha,'')
-                                                        url = url.replace('/video/','/e/')
-                                                        url = url.replace('/video/','/e/')
-                                                        url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
-                                                        url = url.replace('http://www.video.tt/embed/','http://video.tt/e/')
-                                                        url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
-                                                        url = url + '///' + nomeescolha
-                                                        fonte_id = '(Video.tt)'
-                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                        url = 'http://embed.nowvideo.sx/embed.php?v=' + id_video #+ '///' + name
+                                                        print url
+                                                        fonte_id = '(Nowvideo)'
+                                                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | NOWVIDEO'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                                 except:pass
                                         if "videowood" in url:
                                                 try:
                                                         if '/video/' in url: url = url.replace('/video/','/embed/')
+                                                        url = 'http://www.videowood.tv/embed/' + id_video #+ '///' + name
                                                         print url
-                                                        fonte_id = '(VideoWood)'
+                                                        fonte_id = '(Videowood)'
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "firedrive" in url:
+                                                try:
+                                                        url = 'http://www.firedrive.com/file/' + id_video #+ '///' + name
+                                                        fonte_id = '(Firedrive)'
+                                                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | FIREDRIVE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+                                                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                                 except:pass
                                         #if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url:# and 'iiiiiiiiii' in url:
                                         if  'vidto.me' not in url and 'nowvideo' not in url and 'movshare' not in url and 'firedrive' not in url and 'putlocker' not in url and 'sockshare' not in url:
                                                 PLAY_movie_url(url,fonte_id,iconimage,'',fanart,'TUGAFILMES.TV')
 
-def TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
-##        req = urllib2.Request(url)
-##        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-##        response = urllib2.urlopen(req)
-##        link4=response.read()
-##        response.close()
-##        match = re.compile('<iframe src="(.+?)".+?></iframe></center>').findall(link4)
-##        url=match[0]
-        if "videomega" in url:
-		try:
-                        fonte_id = '(Videomega)'
-			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
-		except: pass
-        if "vidto.me" in url:
-		try:
-                        match = re.compile('http://vidto.me/embed-(.+?).html').findall(url)
-			if match:
-				id_video = match[0]
-				url = 'http://vidto.me/' + id_video + '.html'# + '///' + nomeescolha
-			fonte_id = '(Vidto.me)'
-			#resultados.append('SITESdosPORTUGAS | FOITATUGA | VIDTO.ME',url,30,iconimage,'',fanart)
-			resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | VIDTO.ME'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-
-		except: pass
-	if "thevideo.me" in url:
-		try:
-                        fonte_id = '(TheVideo.me)'
-			#addDir('SITESdosPORTUGAS | FOITATUGA | THEVIDEO.ME',url,30,iconimage,'',fanart)
-		except:pass
-        if "dropvideo" in url:
-		try:
-                        url = url.replace('/video/','/embed/')
-                        fonte_id = '(DropVideo)'
-			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
-		except:pass
-	if "vidzi.tv" in url:
-                try:
-                        fonte_id = '(Vidzi.tv)'
-			#addDir('SITESdosPORTUGAS | FOITATUGA | VIDZI.TV',url,30,iconimage,'',fanart)
-                except:pass
-        if "vodlocker" in url:
-		try:
-                        fonte_id = '(Vodlocker)'
-			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vodlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
-		except:pass
-	if "played.to" in url:
-                try:
-                        fonte_id = '(Played.to)'
-			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Played.to)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                except:pass
-        if "cloudzilla" in url:
-                try:
-                        fonte_id = '(Cloudzilla)'
-                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'',fanart)
-    		except:pass
-    	if "divxstage" in url:
-                try:
-                        fonte_id = '(Divxstage)'
-                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Divxstage)[/COLOR][/B]',url,30,iconimage,'',fanart)
-    		except:pass
-    	if "vidzen" in url:
-                try:
-                        fonte_id = '(Vidzen)'
-                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzen)[/COLOR][/B]',url,30,iconimage,'',fanart)
-    		except:pass
-	if "streamin.to" in url:
-                try:
-                        fonte_id = '(Streamin)'
-			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                except:pass                        
-    	if "nowvideo" in url:
-                try:
-                        fonte_id = '(Nowvideo)'
-                        #addDir('SITESdosPORTUGAS | FOITATUGA | NOWVIDEO',url,30,iconimage,'',fanart)
-                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | NOWVIDEO'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-    		except:pass
-    	if "primeshare" in url:
-                try:
-                        fonte_id = '(Primeshare)'
-                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Primeshare.tv)[/COLOR][/B]',url,30,iconimage,'',fanart)
-    		except:pass
-    	if "videoslasher" in url:
-                try:
-                        fonte_id = '(VideoSlasher)'
-                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoSlasher)[/COLOR][/B]',url,30,iconimage,'',fanart)
-    		except:pass
-    	if "sockshare" in url:
-                try:
-                        fonte_id = '(Sockshare)'
-                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Sockshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | SOCKSHARE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-    		except:pass
-    	if "putlocker" in url:
-                try:
-                        url = url.replace('putlocker.com/embed/','firedrive.com/file/')
-                        fonte_id = '(Firedrive)'
-                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | PUTLOCKER'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-    		except:pass
-    	else:
-                if "firedrive" in url:
-                        try:
-                                fonte_id = '(Firedrive)'
-                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | FIREDRIVE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-                        except:pass
-    	if "movshare" in url:
-                try:
-                        fonte_id = '(Movshare)'
-                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Movshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                        resultados.append('SITESdosPORTUGAS | TUGAFILMES.TV | MOVSHARE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-    		except:pass
-        if "video.tt" in url:
-                try:
-                        url = url.replace('///' + nomeescolha,'')
-                        url = url.replace('/video/','/e/')
-                        url = url.replace('/video/','/e/')
-                        url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
-                        url = url.replace('http://www.video.tt/embed/','http://video.tt/e/')
-                        url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
-                        url = url + '///' + nomeescolha
-                        fonte_id = '(Video.tt)'
-                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
-    		except:pass
-    	if "videowood" in url:
-                try:
-                        if '/video/' in url: url = url.replace('/video/','/embed/')
-                        print url
-                        fonte_id = '(VideoWood)'
-                        #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
-    		except:pass
-        #if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url:# and 'iiiiiiiiii' in url:
-        if  'vidto.me' not in url and 'nowvideo' not in url and 'movshare' not in url and 'firedrive' not in url and 'putlocker' not in url and 'sockshare' not in url:
-                PLAY_movie_url(url,fonte_id,iconimage,'',fanart,'TUGAFILMES.TV')
-    	return
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#        
@@ -2040,12 +1936,15 @@ def TFC_links(name,url,iconimage,fanart):
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
+                                                        resultados.append('TUGAFILMES.COM|AUDIO|LEGENDADO')
                                                         #addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,fanart)
                                                 if 'PT/PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
+                                                        resultados.append('TUGAFILMES.COM|AUDIO|PT-PT')
                                                         #addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                                 elif 'PT-PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
+                                                        resultados.append('TUGAFILMES.COM|AUDIO|PT-PT')
                                                         #addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                         if match:
                                                 for url in match:
@@ -2069,12 +1968,15 @@ def TFC_links(name,url,iconimage,fanart):
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
+                                                        resultados.append('TUGAFILMES.COM|AUDIO|LEGENDADO')
                                                         #addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,fanart)
                                                 if 'PT/PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
+                                                        resultados.append('TUGAFILMES.COM|AUDIO|PT-PT')
                                                         #addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                                 elif 'PT-PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
+                                                        resultados.append('TUGAFILMES.COM|AUDIO|PT-PT')
                                                         #addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                         if match:
                                                 for url in match:
@@ -2098,12 +2000,15 @@ def TFC_links(name,url,iconimage,fanart):
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
+                                                        resultados.append('TUGAFILMES.COM|AUDIO|LEGENDADO')
                                                         #addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,fanart)
                                                 if 'PT/PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
+                                                        resultados.append('TUGAFILMES.COM|AUDIO|PT-PT')
                                                         #addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                                 elif 'PT-PT' in assis[0]:
                                                         conta_os_items = conta_os_items + 1
+                                                        resultados.append('TUGAFILMES.COM|AUDIO|PT-PT')
                                                         #addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,fanart)
                                         if match:
                                                 for url in match:
@@ -3422,18 +3327,20 @@ def MVT_links(name,url,iconimage,fanart):
         nomeescolha = name
         colecao = 'nao'
         conta_id_video = 0
+        
         try:
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
         
         fontes_video = re.findall("<body>(.+?)</body>", fonte_video, re.DOTALL)
-        if imdbcode == '':
-                imdb = re.compile('imdb.com/title/(.+?)/').findall(fonte_video)
-                if imdb: imdbcode = imdb[0]
-                else: imdbcode = ''
+##        if imdbcode == '':
+##                imdb = re.compile('imdb.com/title/(.+?)/').findall(fonte_video)
+##                if imdb: imdbcode = imdb[0]
+##                else: imdbcode = ''
         numero_de_fontes = len(fontes_video)
         for fonte_e_url in fontes_video:
                 match = re.compile('<option value=(.+?)>(.+?)<').findall(fonte_e_url)
+                if not match: match = re.compile('<div class="btns"><a href="(.+?)" target="Player">').findall(fonte_e_url)
                 if '<option' in fonte_e_url:
                         for url_video_url_id,cd in match:
                                 if url_video_url_id == '""':
@@ -3458,10 +3365,10 @@ def MVT_links(name,url,iconimage,fanart):
                                         fonte = abrir_url(url_video)
                                 except: fonte = ''
                                 fontes = re.findall("<body>(.+?)</body>", fonte, re.DOTALL)
-                                for fonte_id in fontes:
-                                        if 'videomega' in fonte_id:
+                                for fonte_ids in fontes:
+                                        if 'videomega' in fonte_ids:
                                                 try:
-                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
+                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video# + '///' + name
@@ -3469,23 +3376,28 @@ def MVT_links(name,url,iconimage,fanart):
                                                         PLAY_movie_url(url,fonte_serv,iconimage,'',fanart,'MOVIETUGA')
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
-                                        if 'vidto' in fonte_id:
+                                        elif 'vidto' in fonte_ids:
                                                 try:
-                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
+                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         if match: match = re.compile('(.+?)-').findall(match[0])
                                                         id_video = match[0]
                                                         url = 'http://vidto.me/' + id_video + '.html'# + '///' + name
                                                         #addDir('SITESdosPORTUGAS | MOVIETUGA | VIDTO.ME',url,100,iconimage,'',fanart)
                                                         resultados.append('SITESdosPORTUGAS | MOVIETUGA | VIDTO.ME'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
-
                                                 except:pass
+                                        else:
+                                                match = re.compile('<iframe.+?src="(.+?)".+?</iframe>').findall(fonte_ids)
+                                                if match:
+                                                        url = match[0]
+                                                        conta_id_video = conta_id_video + 1
+                                                        MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video)
                 else:
  	                if fonte_video:
- 		                for fonte_id in fontes_video:
-                                        if 'videomega' in fonte_id:
+ 		                for fonte_ids in fontes_video:
+                                        if 'videomega' in fonte_ids:
                                                 try:
-                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
+                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video# + '///' + name
@@ -3493,9 +3405,9 @@ def MVT_links(name,url,iconimage,fanart):
                                                         PLAY_movie_url(url,fonte_serv,iconimage,'',fanart,'MOVIETUGA')
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
-                                        if 'vidto' in fonte_id:
+                                        elif 'vidto' in fonte_ids:
                                                 try:
-                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
+                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         if match: match = re.compile('(.+?)-').findall(match[0])
                                                         id_video = match[0]
@@ -3503,8 +3415,169 @@ def MVT_links(name,url,iconimage,fanart):
                                                         #addDir('SITESdosPORTUGAS | MOVIETUGA | VIDTO.ME',url,100,iconimage,'',fanart)
                                                         resultados.append('SITESdosPORTUGAS | MOVIETUGA | VIDTO.ME'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                                                 except:pass
+                                        else:
+                                                match = re.compile('<iframe.+?src="(.+?)".+?</iframe>').findall(fonte_ids)
+                                                if match:
+                                                        url = match[0]
+                                                        conta_id_video = conta_id_video + 1
+                                                        MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video)
 
-
+def MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video):
+        if "videomega" in url:
+		try:
+                        fonte_id = '(Videomega)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+		except: pass
+        if "vidto.me" in url:
+		try:
+                        match = re.compile('http://vidto.me/embed-(.+?).html').findall(url)
+			if match:
+				id_video = match[0]
+				url1 = 'http://vidto.me/' + id_video + '.html'
+				fonte_id = '(Vidto.me)'
+				url = 'http://vidto.me/' + id_video + '.html'
+			else: fonte_id = '(Vidto.me)'
+			fonte_id1 = '(Vidto.me)'
+			#fonte_id = '(Vidto.me)'+url
+			if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('SITESdosPORTUGAS | TOPPT | VIDTO.ME',url,30,iconimage,'',fanart)
+                                resultados.append('SITESdosPORTUGAS | MOVIETUGA | VIDTO.ME'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+		except: pass
+        if "dropvideo" in url:
+		try:
+                        #url = url.replace('/video/','/embed/')
+                        fonte_id = '(DropVideo)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+		except:pass
+	if "vidzi.tv" in url:
+                try:
+                        fonte_id = '(Vidzi.tv)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('SITESdosPORTUGAS | TOPPT | VIDZI.TV',url,30,iconimage,'',fanart)
+                                #resultados.append('SITESdosPORTUGAS | TOPPT | VIDZI.TV'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+                except:pass
+        if "vodlocker" in url:
+		try:
+                        fonte_id = '(Vodlocker)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+		except:pass
+	if "played.to" in url:
+                try:
+                        fonte_id = '(Played.to)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                except:pass
+        if "cloudzilla" in url:
+                try:
+                        fonte_id = '(Cloudzilla)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "divxstage" in url:
+                try:
+                        fonte_id = '(Divxstage)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "vidzen" in url:
+                try:
+                        fonte_id = '(Vidzen)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+	if "streamin.to" in url:
+                try:
+                        fonte_id = '(Streamin)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                except:pass                        
+    	if "nowvideo" in url:
+                try:
+                        fonte_id = '(Nowvideo)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('SITESdosPORTUGAS | TOPPT | NOWVIDEO',url,30,iconimage,'',fanart)
+                        resultados.append('SITESdosPORTUGAS | MOVIETUGA | NOWVIDEO'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+    		except:pass
+    	if "primeshare" in url:
+                try:
+                        fonte_id = '(Primeshare)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "videoslasher" in url:
+                try:
+                        fonte_id = '(VideoSlasher)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "sockshare" in url:
+                try:
+                        fonte_id = '(Sockshare)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('SITESdosPORTUGAS | TOPPT | SOCKSHARE',url,30,iconimage,'',fanart)
+                        resultados.append('SITESdosPORTUGAS | MOVIETUGA | SOCKSHARE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+    		except:pass
+    	if "putlocker" in url:
+                try:
+                        url = url.replace('putlocker.com/embed/','firedrive.com/file/')
+                        fonte_id = '(Firedrive)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('SITESdosPORTUGAS | TOPPT | PUTLOCKER',url,30,iconimage,'',fanart)
+                        resultados.append('SITESdosPORTUGAS | MOVIETUGA | PUTLOCKER'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+    		except:pass
+    	else:
+                if "firedrive" in url:
+                        try:
+                                fonte_id = '(Firedrive)'
+                                #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                        #addDir('SITESdosPORTUGAS | TOPPT | FIREDRIVE',url,30,iconimage,'',fanart)
+                                resultados.append('SITESdosPORTUGAS | MOVIETUGA | FIREDRIVE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+                        except:pass
+    	if "movshare" in url:
+                try:
+                        fonte_id = '(Movshare)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('SITESdosPORTUGAS | TOPPT | MOVSHARE',url,30,iconimage,'',fanart)
+                        resultados.append('SITESdosPORTUGAS | MOVIETUGA | MOVSHARE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
+    		except:pass
+        if "video.tt" in url:
+                try:
+                        url = url.replace('///' + nomeescolha,'')
+                        url = url.replace('/video/','/e/')
+                        url = url.replace('/video/','/e/')
+                        url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
+                        url = url.replace('http://www.video.tt/embed/','http://video.tt/e/')
+                        url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:                     
+                                url = url
+                        fonte_id = '(Video.tt)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('1[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "videowood" in url:
+                try:
+                        if '/video/' in url: url = url.replace('/video/','/embed/')
+                        print url
+                        fonte_id = '(VideoWood)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "thevideo.me" in url:
+                try:
+                        #if '/video/' in url: url = url.replace('/video/','/embed/')
+                        print url
+                        fonte_id = '(Thevideo.me)'
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('SITESdosPORTUGAS | TOPPT | THEVIDEO.ME',url,30,iconimage,'',fanart)
+    		except:pass
+    	#addLink(url,'','','')
+        #if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url and 'sockshare' not in url and 'firedrive' not in url and 'movshare' not in url and 'nowvideo' not in url and 'putlocker' not in url:# and 'iiiiiiiiii' in url:
+        if  'vidto.me' not in url and 'nowvideo' not in url and 'movshare' not in url and 'firedrive' not in url and 'putlocker' not in url and 'sockshare' not in url:
+                PLAY_movie_url(url,fonte_id,iconimage,'',fanart,'MOVIETUGA')
+    	return fonte_id
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#

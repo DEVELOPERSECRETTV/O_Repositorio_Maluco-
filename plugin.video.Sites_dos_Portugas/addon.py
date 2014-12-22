@@ -56,9 +56,17 @@ def MAIN_MENU():
                 d.doModal()
                 del d
                 selfAddon.setSetting('AvisoFanart',value='false')
-        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://direct',3003,artfolder + 'SERIES1.png','nao','')
-        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://direct',3004,artfolder + 'FILMES1.png','nao','')
-        #----------------------------------
+        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (TMDB)','http://direct',3003,artfolder + 'SERIES1.png','nao','')
+        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B] (TMDB)','http://direct',3004,artfolder + 'FILMES1.png','nao','')
+        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')                
+        url_TFC = 'http://www.tuga-filmes.info/'
+        url_MVT = 'http://www.movie-tuga.blogspot.pt'
+        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
+        url_TPT = 'http://toppt.net/category/series/'
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+        url_ultimos_episodios = urllib.urlencode(parameters)
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
+        #----------------------------
         url_toppt = 'http://toppt.net/'
         url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
         url_TFC = 'http://www.tuga-filmes.info/'
@@ -77,21 +85,35 @@ def MAIN_MENU():
         url_filmes_filmes = urllib.urlencode(parameters)                                                     #507
         addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]',url_filmes_filmes,10001,artfolder + 'UF.png','nao','')
         #----------------------------
-        url_TFC = 'http://www.tuga-filmes.info/'
-        url_MVT = 'http://www.movie-tuga.blogspot.pt'
-        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
-        url_TPT = 'http://toppt.net/category/series/'
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
-        url_ultimos_episodios = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
+        url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
+        url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
+        url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
+        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
+        url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'
+        url_CME = 'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
+        url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
+        saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
+        if saber_url_animacao: url_TPT = saber_url_animacao[0]
+        else: url_TPT = 'http://toppt.net/'
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
+        url_filmes_animacao = urllib.urlencode(parameters)                                                          #6 #507
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]ANIMAÇÃO[/COLOR][/B]',url_filmes_animacao,10001,artfolder + 'FA.png','nao','')
         #----------------------------
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+        #----------------------------------
+        #addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B]','url',7500,artfolder + 'P1.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
         addDir('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B] (Filmes/Séries)','url',10000,artfolder + 'SDPI.png','nao','')
         addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDB.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
         addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF1.png','nao','')#'ze-icon3.png'
-                
+        
+def ProcurarFilmesSeries():
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+
+
 def SITESdosPORTUGAS():
         #####################################
         url_TPT = 'http://toppt.net/'
@@ -212,42 +234,43 @@ class AvisoFanart(xbmcgui.WindowXMLDialog):
         if controlId == 2001: self.close()
 
 def FILMES_MENU():
-        url_toppt = 'http://toppt.net/'
-        url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
-        url_TFC = 'http://www.tuga-filmes.info/'
-        url_MVT = 'http://www.movie-tuga.blogspot.pt'
-        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
-        url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
-        url_CME = 'http://www.cinematuga.eu/search/label/Filmes'
-        url_CMC = 'http://www.cinemaemcasa.pt/'
-        try:
-                toppt_source = abrir_url(url_toppt)
-        except: toppt_source = ''
-        saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
-        if saber_url_todos: url_TPT = saber_url_todos[0]
-        else: url_TPT = 'http://toppt.net/'
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
-        url_filmes_filmes = urllib.urlencode(parameters)                                                     #507
-        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,10001,artfolder + 'FT.png','nao','')
+##        url_toppt = 'http://toppt.net/'
+##        url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
+##        url_TFC = 'http://www.tuga-filmes.info/'
+##        url_MVT = 'http://www.movie-tuga.blogspot.pt'
+##        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
+##        url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
+##        url_CME = 'http://www.cinematuga.eu/search/label/Filmes'
+##        url_CMC = 'http://www.cinemaemcasa.pt/'
+##        try:
+##                toppt_source = abrir_url(url_toppt)
+##        except: toppt_source = ''
+##        saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
+##        if saber_url_todos: url_TPT = saber_url_todos[0]
+##        else: url_TPT = 'http://toppt.net/'
+##        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
+##        url_filmes_filmes = urllib.urlencode(parameters)                                                     #507
+##        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,10001,artfolder + 'FT.png','nao','')
+##        #----------------------------
+##        url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
+##        url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
+##        url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
+##        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
+##        url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'
+##        url_CME = 'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
+##        url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
+##        saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
+##        if saber_url_animacao: url_TPT = saber_url_animacao[0]
+##        else: url_TPT = 'http://toppt.net/'
+##        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
+##        url_filmes_animacao = urllib.urlencode(parameters)                                                          #6 #507
+##        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,10001,artfolder + 'FA.png','nao','')
         #----------------------------
-        url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
-        url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
-        url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
-        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
-        url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'
-        url_CME = 'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
-        url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
-        saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
-        if saber_url_animacao: url_TPT = saber_url_animacao[0]
-        else: url_TPT = 'http://toppt.net/'
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
-        url_filmes_animacao = urllib.urlencode(parameters)                                                          #6 #507
-        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,10001,artfolder + 'FA.png','nao','')
-        #----------------------------
-        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (TMDB)','1',3002,artfolder + 'NC.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (TMDB)','1',3001,artfolder + 'FMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (TMDB)','1',3000,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','1',3002,artfolder + 'NC.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','1',3001,artfolder + 'FMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','1',3000,artfolder + 'MP.png','nao','')
+        addDir('[B][COLOR green]BREV[/COLOR][COLOR yellow]E[/COLOR][COLOR red]MENTE[/COLOR][/B] (Filmes)','1',2999,artfolder,'nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','1',2998,artfolder + 'P1.png','nao','')
 
 def dirtodos(url):
         try: xbmcgui.Dialog().notification('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
@@ -551,18 +574,18 @@ def dirtodos(url):
 
 
 def SERIES_MENU():
-        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]AS[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')
-        url_TFC = 'http://www.tuga-filmes.info/'
-        url_MVT = 'http://www.movie-tuga.blogspot.pt'
-        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
-        url_TPT = 'http://toppt.net/category/series/'
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
-        url_ultimos_episodios = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
-        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (TMDB)','1',3008,artfolder + 'EE.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (TMDB)','1',3009,artfolder + 'SMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (TMDB)','1',3010,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+##        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]AS[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')
+##        url_TFC = 'http://www.tuga-filmes.info/'
+##        url_MVT = 'http://www.movie-tuga.blogspot.pt'
+##        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
+##        url_TPT = 'http://toppt.net/category/series/'
+##        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+##        url_ultimos_episodios = urllib.urlencode(parameters)
+##        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
+        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (Séries)','1',3008,artfolder + 'EE.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','1',3009,artfolder + 'SMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Séries)','1',3010,artfolder + 'MP.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','1',3011,artfolder + 'P1.png','nao','')
      
 
 def passar_nome_pesquisa_animacao(name,url,year):
@@ -789,6 +812,27 @@ def NCINEMAS():
         npseg = int(npag) + 1
 	addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',str(npseg),3002,artfolder + 'PAGS1.png','','')
 
+def BREVEMFILMES():
+        num_pag = urllib.quote(url)
+        conta = 0
+        num_mode = 7
+        if num_mode == 7: noscinemas = themoviedb_api_pagina().fanart_and_id('movie','7','upcoming',str(num_pag))
+        npag = urllib.quote(url)
+        numpag = '('+str(npag)+'/22)'
+        npseg = int(npag) + 1
+	addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',str(npseg),2999,artfolder + 'PAGS1.png','','')
+
+def SEARCHTMDBMOVIES():
+        keyb = xbmc.Keyboard('', 'Escreva o parâmetro de pesquisa')
+	keyb.doModal()
+	if (keyb.isConfirmed()):
+		search = keyb.getText()
+		pesquisou = search
+		encode=urllib.quote(search)
+                num_mode = 7
+                if num_mode == 7: noscinemas = themoviedb_api_pagina().fanart_and_id('movie','7','search',str(encode))
+
+
 ###############################   SÉRIES TMDB
 
 def EMEXIBICAO():
@@ -821,7 +865,16 @@ def MPOPULARESTV():
         npseg = int(npag) + 1
 	addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',str(npseg),3010,artfolder + 'PAGS1.png','','')
 
-
+def SEARCHTMDBTV():
+        keyb = xbmc.Keyboard('', 'Escreva o parâmetro de pesquisa')
+	keyb.doModal()
+	if (keyb.isConfirmed()):
+		search = keyb.getText()
+		pesquisou = search
+		encode=urllib.quote(search)
+                num_mode = 3007
+                if num_mode == 3007: noscinemas = themoviedb_api_pagina().fanart_and_id('tv','3007','search',str(encode))
+        
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -1997,8 +2050,17 @@ elif mode == 1004:
 elif mode == 1005:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(502)")
-
-
+        
+elif mode == 2998:
+        SEARCHTMDBMOVIES()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(515)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 2999:
+        BREVEMFILMES()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(515)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 3000:
         MPOPULARES()
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -2051,6 +2113,11 @@ elif mode == 3010:
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 3011:
+        SEARCHTMDBTV()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(515)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
         
 elif mode == 6000:
         Play.PLAY_episodes(url,name,iconimage,checker,fanart)
@@ -2065,7 +2132,10 @@ elif mode == 7001:
         #xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?mode=7000&url='+url, item)
         xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+tt+'&mode=9000&name='+n, item)
         #xbmcxbmc(url,name)
-
+        
+elif mode == 7500:
+        ProcurarFilmesSeries()
+        
 elif mode == 8000:
         Funcoes.trailer(namet,url)
 

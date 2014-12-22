@@ -65,8 +65,9 @@ class themoviedb_api_pagina:
                         except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Séries.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
 ##                        builtin = 'XBMC.Notification(%s,%s, 2000, %s)'
 ##                        log = xbmc.executebuiltin(builtin % ('A Procurar Séries.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
-                        
-                url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(items) + '?api_key=' + self.api_key + '&language=en&page=' + urllib.quote(pagina)
+                if urllib.quote(items) == 'search' and urllib.quote(movie_tv) == 'movie': url_tmdb = 'http://api.themoviedb.org/3/search/movie?include_adult=false&query='+urllib.quote(pagina)+'&api_key='+self.api_key
+                elif urllib.quote(items) == 'search' and urllib.quote(movie_tv) == 'tv': url_tmdb = 'http://api.themoviedb.org/3/search/tv?include_adult=false&query='+urllib.quote(pagina)+'&api_key='+self.api_key       
+                else: url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(items) + '?api_key=' + self.api_key + '&language=en&page=' + urllib.quote(pagina)
                 try:datass = abrir_url(url_tmdb)
                 except: datass = ''
                 try: data = json_get(url_tmdb)

@@ -345,6 +345,8 @@ def MVT_encontrar_videos_filmes(name,url):
                 if nnnn:
                         n1 = nnnn[0]
         if not nnnn : n1 = nnn[0]
+        #addLink(n1,'','','')
+
 ##        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
 ##        n = re.compile('--(.+?)--').findall(nn)
 ##        addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n[0],'url',1004,iconimage,False,fanart)
@@ -355,8 +357,8 @@ def MVT_encontrar_videos_filmes(name,url):
                 else: ano_pesquisa = ''
                 conta = 0
 ##                nome_pesquisa = n[0] + ' ' + ano_pesquisa
-                nome_pesquisa = n1 + ' ' + ano_pesquisa
-                nome_pesquisa = nome_pesquisa.replace('é','e')
+                nome_pesquisa = n1 + '+' + ano_pesquisa
+                nome_pesquisa = nome_pesquisa.replace('é','e').replace(' 1 ',' ')
                 nome_pesquisa = nome_pesquisa.replace('ê','e')
                 nome_pesquisa = nome_pesquisa.replace('á','a')
                 nome_pesquisa = nome_pesquisa.replace('à','a')
@@ -380,11 +382,13 @@ def MVT_encontrar_videos_filmes(name,url):
                         else:
                                 nome_p = nome_p + '+' + q_a_q_a
                 url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
-                html_imdbcode = abrir_url(url_imdb)
+                try: html_imdbcode = abrir_url(url_imdb)
+                except: html_imdbcode = ''
                 filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                imdbcode = imdbc[0]
-
+                if filmes_imdb:
+                        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                        if imdbc: imdbcode = imdbc[0]
+        
         if n1 != '' and n2 != '':
                 addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
                 addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n2,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
@@ -393,16 +397,18 @@ def MVT_encontrar_videos_filmes(name,url):
                 
         addDir1(name,'url',1002,iconimage,False,fanart)
         conta_id_video = 0
+        
         try:
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
         
         fontes_video = re.findall("<body>(.+?)</body>", fonte_video, re.DOTALL)
-        if imdbcode == '':
-                imdb = re.compile('imdb.com/title/(.+?)/').findall(fonte_video)
-                if imdb: imdbcode = imdb[0]
-                else: imdbcode = ''
+##        if imdbcode == '':
+##                imdb = re.compile('imdb.com/title/(.+?)/').findall(fonte_video)
+##                if imdb: imdbcode = imdb[0]
+##                else: imdbcode = ''
         numero_de_fontes = len(fontes_video)
+
         for fonte_e_url in fontes_video:
                 match = re.compile('<option value=(.+?)>(.+?)<').findall(fonte_e_url)
                 if '<option' in fonte_e_url:
@@ -429,10 +435,10 @@ def MVT_encontrar_videos_filmes(name,url):
                                         fonte = abrir_url(url_video)
                                 except: fonte = ''
                                 fontes = re.findall("<body>(.+?)</body>", fonte, re.DOTALL)
-                                for fonte_id in fontes:
-                                        if 'videomega' in fonte_id:
+                                for fonte_ids in fontes:
+                                        if 'videomega' in fonte_ids:
                                                 try:
-                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
+                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
@@ -440,21 +446,28 @@ def MVT_encontrar_videos_filmes(name,url):
                                                         Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
-                                        if 'vidto' in fonte_id:
+                                        elif 'vidto' in fonte_id:
                                                 try:
-                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
+                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         if match: match = re.compile('(.+?)-').findall(match[0])
                                                         id_video = match[0]
                                                         url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
+                                        else:
+                                                match = re.compile('<iframe.+?src="(.+?)".+?</iframe>').findall(fonte_ids)
+                                                if match:
+                                                        url = match[0]
+                                                        conta_id_video = conta_id_video + 1
+                                                        MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video)
                 else:
  	                if fonte_video:
- 		                for fonte_id in fontes_video:
-                                        if 'videomega' in fonte_id:
+                                #addLink('sim','','','')
+ 		                for fonte_ids in fontes_video:
+                                        if 'videomega' in fonte_ids:
                                                 try:
-                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
+                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
@@ -462,15 +475,22 @@ def MVT_encontrar_videos_filmes(name,url):
                                                         Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
-                                        if 'vidto' in fonte_id:
+                                        elif 'vidto' in fonte_ids:
                                                 try:
-                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
+                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         if match: match = re.compile('(.+?)-').findall(match[0])
                                                         id_video = match[0]
                                                         url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
+                                        else:
+                                                match = re.compile('<iframe.+?src="(.+?)".+?</iframe>').findall(fonte_ids)
+                                                if match:
+                                                        url = match[0]
+                                                        conta_id_video = conta_id_video + 1
+                                                        MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video)
+                                        
 ##        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
 ##        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
 ##        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('MVT | ','')
@@ -493,6 +513,8 @@ def MVT_links(name,url,iconimage,fanart):
         nomeescolha = name
         colecao = 'nao'
         conta_id_video = 0
+        #addLink(url,'','','')
+
         try:
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
@@ -529,10 +551,10 @@ def MVT_links(name,url,iconimage,fanart):
                                         fonte = abrir_url(url_video)
                                 except: fonte = ''
                                 fontes = re.findall("<body>(.+?)</body>", fonte, re.DOTALL)
-                                for fonte_id in fontes:
-                                        if 'videomega' in fonte_id:
+                                for fonte_ids in fontes:
+                                        if 'videomega' in fonte_ids:
                                                 try:
-                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
+                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
@@ -540,21 +562,28 @@ def MVT_links(name,url,iconimage,fanart):
                                                         Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
-                                        if 'vidto' in fonte_id:
+                                        elif 'vidto' in fonte_id:
                                                 try:
-                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
+                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         if match: match = re.compile('(.+?)-').findall(match[0])
                                                         id_video = match[0]
                                                         url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
+                                        else:
+                                                match = re.compile('<iframe.+?src="(.+?)".+?</iframe>').findall(fonte_ids)
+                                                if match:
+                                                        url = match[0]
+                                                        conta_id_video = conta_id_video + 1
+                                                        MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video)
                 else:
  	                if fonte_video:
- 		                for fonte_id in fontes_video:
-                                        if 'videomega' in fonte_id:
+                                #addLink('sim','','','')
+ 		                for fonte_ids in fontes_video:
+                                        if 'videomega' in fonte_ids:
                                                 try:
-                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_id)
+                                                        match = re.compile("<script type=\'text/javascript\'>ref=\'(.+?)\'").findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
@@ -562,18 +591,173 @@ def MVT_links(name,url,iconimage,fanart):
                                                         Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
-                                        if 'vidto' in fonte_id:
+                                        elif 'vidto' in fonte_ids:
                                                 try:
-                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_id)
+                                                        match = re.compile('<iframe .+? src=".+?//vidto.me/embed-(.+?)" .+?</iframe>').findall(fonte_ids)
                                                         conta_id_video = conta_id_video + 1
                                                         if match: match = re.compile('(.+?)-').findall(match[0])
                                                         id_video = match[0]
                                                         url = 'http://vidto.me/' + id_video + '.html' + '///' + name
                                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
+                                        else:
+                                                match = re.compile('<iframe.+?src="(.+?)".+?</iframe>').findall(fonte_ids)
+                                                if match:
+                                                        url = match[0]
+                                                        conta_id_video = conta_id_video + 1
+                                                        MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video)
 
 
 
+def MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video):
+        if "videomega" in url:
+		try:
+                        fonte_id = '(Videomega)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+		except: pass
+        if "vidto.me" in url:
+		try:
+                        match = re.compile('http://vidto.me/embed-(.+?).html').findall(url)
+			if match:
+				id_video = match[0]
+				url1 = 'http://vidto.me/' + id_video + '.html'
+				fonte_id = '(Vidto.me)'+url1
+				url = 'http://vidto.me/' + id_video + '.html' + '///' + nomeescolha
+			else: fonte_id = '(Vidto.me)'+url
+			fonte_id1 = '(Vidto.me)'+url
+			#fonte_id = '(Vidto.me)'+url
+			if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id1.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+		except: pass
+        if "dropvideo" in url:
+		try:
+                        url = url.replace('/video/','/embed/')
+                        fonte_id = '(DropVideo)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+		except:pass
+	if "vidzi.tv" in url:
+                try:
+                        fonte_id = '(Vidzi.tv)'+url
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                except:pass
+        if "vodlocker" in url:
+		try:
+                        fonte_id = '(Vodlocker)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+		except:pass
+	if "played.to" in url:
+                try:
+                        fonte_id = '(Played.to)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                except:pass
+        if "cloudzilla" in url:
+                try:
+                        fonte_id = '(Cloudzilla)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "divxstage" in url:
+                try:
+                        fonte_id = '(Divxstage)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "vidzen" in url:
+                try:
+                        fonte_id = '(Vidzen)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+	if "streamin.to" in url:
+                try:
+                        fonte_id = '(Streamin)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                except:pass                        
+    	if "nowvideo" in url:
+                try:
+                        fonte_id = '(Nowvideo)'+url
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "primeshare" in url:
+                try:
+                        fonte_id = '(Primeshare)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "videoslasher" in url:
+                try:
+                        fonte_id = '(VideoSlasher)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "sockshare" in url:
+                try:
+                        fonte_id = '(Sockshare)'+url
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "putlocker" in url:
+                try:
+                        url = url.replace('putlocker.com/embed/','firedrive.com/file/')
+                        fonte_id = '(Firedrive)'+url
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	else:
+                if "firedrive" in url:
+                        try:
+                                fonte_id = '(Firedrive)'+url
+                                if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                        except:pass
+    	if "movshare" in url:
+                try:
+                        fonte_id = '(Movshare)'+url
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+        if "video.tt" in url:
+                try:
+                        url = url.replace('///' + nomeescolha,'')
+                        url = url.replace('/video/','/e/')
+                        url = url.replace('/video/','/e/')
+                        url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
+                        url = url.replace('http://www.video.tt/embed/','http://video.tt/e/')
+                        url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:                     
+                                url = url + '///' + nomeescolha
+                        fonte_id = '(Video.tt)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('1[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "videowood" in url:
+                try:
+                        if '/video/' in url: url = url.replace('/video/','/embed/')
+                        print url
+                        fonte_id = '(VideoWood)'+url
+                        #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "thevideo.me" in url:
+                try:
+                        #if '/video/' in url: url = url.replace('/video/','/embed/')
+                        print url
+                        fonte_id = '(Thevideo.me)'+url
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	#addLink(url,'','','')
+        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url and 'sockshare' not in url and 'firedrive' not in url and 'movshare' not in url and 'nowvideo' not in url and 'putlocker' not in url:# and 'iiiiiiiiii' in url:
+                        Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'').replace(url+'///'+nomeescolha,'')+'[/COLOR][/B]',iconimage,'',fanart)
+    	return fonte_id
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
