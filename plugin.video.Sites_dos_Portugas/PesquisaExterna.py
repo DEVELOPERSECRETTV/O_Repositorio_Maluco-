@@ -241,6 +241,8 @@ def pesquisar(nome_pesquisa,url):
         audioTPT = ''
         audioTFC = ''
         audioTFV = ''
+        audioFTT = ''
+        audioCMC = ''
         i = 0
         if resultados != []:                
                 for x in range(len(resultados)):
@@ -254,6 +256,12 @@ def pesquisar(nome_pesquisa,url):
                         if audio_audio and 'TUGAFILMES.TV' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
                                 audioTFV = ' | '+audio_audio[0][1].replace(' ','')
+                        if audio_audio and 'FOITATUGA' in audio_audio[0][0]:
+                                #_nomeservidor_.append(resultados[x])
+                                audioFTT = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','')
+                        if audio_audio and 'CINEMAEMCASA' in audio_audio[0][0]:
+                                #_nomeservidor_.append(resultados[x])
+                                audioCMC = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','').replace('&nbsp;','').replace('ê','Ê')
                         
                         res = re.compile('(.+?)[|]URL[|](.+?)[|]THUMB[|](.+?)[|]FANART').findall(resultados[x])
                         if res and 'AUDIO' not in resultados[x]:
@@ -264,6 +272,8 @@ def pesquisar(nome_pesquisa,url):
                                 if 'TOPPT' in res[0][0]: audio = audioTPT
                                 elif 'TUGAFILMES.COM' in res[0][0]: audio = audioTFC
                                 elif 'TUGAFILMES.TV' in res[0][0]: audio = audioTFV
+                                elif 'FOITATUGA' in res[0][0]: audio = audioFTT
+                                elif 'CINEMAEMCASA' in res[0][0]: audio = audioCMC
                                 else: audio = ''
                                 
                                 _nomeservidor_.append(res[0][0].replace('SITESdosPORTUGAS',str(a))+audio)                                                  
@@ -959,6 +969,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                                         
                                                         name = '[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]'
                                                         iconimage = thumb
+                                                        if audio_filme != '': resultados.append('FOITATUGA|AUDIO|'+audio_filme.upper())
                                                         #addDir1(name,'url',1001,iconimage,False,fanart)
                                                         FTT_links('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                         num_f = num_f + 1
@@ -984,6 +995,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                                 
                                                 name = '[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]'
                                                 iconimage = thumb
+                                                if audio_filme != '': resultados.append('FOITATUGA|AUDIO|'+audio_filme.upper())
                                                 #addDir1(name,'url',1001,iconimage,False,fanart)
                                                 FTT_links('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                 num_f = num_f + 1
@@ -1599,6 +1611,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(FILMEN,url,pesquisou,imdbc,item)
                                                                 except:pass
                                                         name = '[COLOR orange]CMC | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
                                                         iconimage = thumb
+                                                        resultados.append('CINEMAEMCASA|AUDIO|'+qualidade_filme.upper())
                                                         #addDir1(name,'url',1001,iconimage,False,fanart)
                                                         CMC_links('[COLOR orange]CMC | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlfilme.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage,fanart)                                              
                                 else:
@@ -1625,6 +1638,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(FILMEN,url,pesquisou,imdbc,item)
                                                         except:pass
                                                 name = '[COLOR orange]CMC | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
                                                 iconimage = thumb
+                                                resultados.append('CINEMAEMCASA|AUDIO|'+qualidade_filme.upper())
                                                 #addDir1(name,'url',1001,iconimage,False,fanart)
                                                 CMC_links('[COLOR orange]CMC | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlfilme.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage,fanart)                                              
 

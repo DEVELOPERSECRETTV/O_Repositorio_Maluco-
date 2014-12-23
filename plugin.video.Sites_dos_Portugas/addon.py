@@ -50,12 +50,12 @@ CMT_ONOFF = []
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
 def MAIN_MENU():
-        if selfAddon.getSetting("AvisoFanart") == "true":
-                SdPpath = selfAddon.getAddonInfo('path')
-                d = AvisoFanart("AvisoFanart.xml" , SdPpath, "Default")
-                d.doModal()
-                del d
-                selfAddon.setSetting('AvisoFanart',value='false')
+##        if selfAddon.getSetting("AvisoFanart") == "true":
+##                SdPpath = selfAddon.getAddonInfo('path')
+##                d = AvisoFanart("AvisoFanart.xml" , SdPpath, "Default")
+##                d.doModal()
+##                del d
+##                selfAddon.setSetting('AvisoFanart',value='false')
         addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (TMDB)','http://direct',3003,artfolder + 'SERIES1.png','nao','')
         addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B] (TMDB)','http://direct',3004,artfolder + 'FILMES1.png','nao','')
         addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')                
@@ -471,86 +471,88 @@ def dirtodos(url):
         num_filmes = len(threads)
         for site in _sites_:
                 _filmes_ = []
-                Filmes_Fi = open(folder + site, 'r')
-                read_Filmes_File = ''
-                for line in Filmes_Fi:
-                        read_Filmes_File = read_Filmes_File + line
-                        if line!='':_filmes_.append(line)
+                try:
+                        Filmes_Fi = open(folder + site, 'r')
+                        read_Filmes_File = ''
+                        for line in Filmes_Fi:
+                                read_Filmes_File = read_Filmes_File + line
+                                if line!='':_filmes_.append(line)
 
-                for x in range(len(_filmes_)):
-                        _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
-                        if _n: nome = _n[0]
-                        else: nome = '---'
-                        _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_filmes_[x])
-                        if _i: imdbcode = _i[0]
-                        else: imdbcode = '---'
-                        urltrailer = re.compile('(.+?)IMDB.+?MDB').findall(imdbcode)
-                        if urltrailer: urltrailer = urltrailer[0]
-                        else: urltrailer = '---'
-                        _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_filmes_[x])
-                        if _t: thumb = _t[0]
-                        else: thumb = '---'
-                        _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_filmes_[x])
-                        if _a: ano_filme = _a[0]
-                        else: ano_filme = '---'
-                        _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
-                        if _f: fanart = _f[0]
-                        else: fanart = ''
-                        if fanart == '---': fanart = ''
-                        _g = re.compile('[|]GENERO[|](.+?)[|]ONOME[|]').findall(_filmes_[x])
-                        if _g: genero = _g[0]
-                        else: genero = '---'
-                        _o = re.compile('[|]ONOME[|](.+?)[|]SINOPSE[|]').findall(_filmes_[x])
-                        if _o: O_Nome = _o[0]
-                        else: O_Nome = '---'
-                        _p = re.compile('PAGINA[|](.+?)[|]PAGINA').findall(_filmes_[x])
-                        if _p: P_url = _p[0]
-                        else: P_url = '---'
-                        _s = re.compile('[|]SINOPSE[|](.*)').findall(_filmes_[x])
-                        if _s: s = _s[0]
-                        if '|END|' in s: sinopse = s.replace('|END|','')
-                        else:
-                                si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
-                                if si: sinopse = si[0][0] + ' ' + si[0][1]
-                                else: sinopse = '---'
-                        if 'toppt.net'         in imdbcode:
-                                num_mode = 233
-                                site = 'TPT'
-                        if 'tuga-filmes.info'  in imdbcode:
-                                num_mode = 73
-                                site = 'TFC'
-                        if 'tuga-filmes.us'    in imdbcode:
-                                num_mode = 33
-                                site = 'TFV'
-                        if 'cinematuga.eu'     in imdbcode:
-                                num_mode = 803
-                                site = 'CME'
-                        if 'cinematuga.net'    in imdbcode:
-                                num_mode = 703
-                                site = 'CMT'
-                        if 'foitatuga'         in imdbcode:
-                                num_mode = 603
-                                site = 'FTT'
-                        if 'cinemaemcasa.pt'   in imdbcode:
-                                num_mode = 903
-                                site = 'CMC'
-                        if 'movietuga'         in imdbcode:
-                                num_mode = 103
-                                site = 'MVT'
-                        if nome != '---':
-                                addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
-                                #addDir_trailer1_filmes(nome,imdbcode,7,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
-                        else:
-                                if 'toppt.net'         in P_url: url_TPT = P_url
-                                if 'tuga-filmes.info'  in P_url: url_TFC = P_url
-                                if 'tuga-filmes.us'    in P_url: url_TFV = P_url
-                                if 'cinematuga.eu'     in P_url: url_CME = P_url
-                                if 'cinematuga.net'    in P_url: url_CMT = P_url
-                                if 'foitatuga'         in P_url: url_FTT = P_url
-                                if 'cinemaemcasa.pt'   in P_url: url_CMC = P_url
-                                if 'movie-tuga'        in P_url: url_MVT = P_url
-                        xbmc.sleep(12)
-                Filmes_Fi.close()
+                        for x in range(len(_filmes_)):
+                                _n = re.compile('NOME[|](.+?)[|]IMDBCODE[|]').findall(_filmes_[x])
+                                if _n: nome = _n[0]
+                                else: nome = '---'
+                                _i = re.compile('[|]IMDBCODE[|](.+?)[|]THUMB[|]').findall(_filmes_[x])
+                                if _i: imdbcode = _i[0]
+                                else: imdbcode = '---'
+                                urltrailer = re.compile('(.+?)IMDB.+?MDB').findall(imdbcode)
+                                if urltrailer: urltrailer = urltrailer[0]
+                                else: urltrailer = '---'
+                                _t = re.compile('[|]THUMB[|](.+?)[|]ANO[|]').findall(_filmes_[x])
+                                if _t: thumb = _t[0]
+                                else: thumb = '---'
+                                _a = re.compile('[|]ANO[|](.+?)[|]FANART[|]').findall(_filmes_[x])
+                                if _a: ano_filme = _a[0]
+                                else: ano_filme = '---'
+                                _f = re.compile('[|]FANART[|](.+?)[|]GENERO[|]').findall(_filmes_[x])
+                                if _f: fanart = _f[0]
+                                else: fanart = ''
+                                if fanart == '---': fanart = ''
+                                _g = re.compile('[|]GENERO[|](.+?)[|]ONOME[|]').findall(_filmes_[x])
+                                if _g: genero = _g[0]
+                                else: genero = '---'
+                                _o = re.compile('[|]ONOME[|](.+?)[|]SINOPSE[|]').findall(_filmes_[x])
+                                if _o: O_Nome = _o[0]
+                                else: O_Nome = '---'
+                                _p = re.compile('PAGINA[|](.+?)[|]PAGINA').findall(_filmes_[x])
+                                if _p: P_url = _p[0]
+                                else: P_url = '---'
+                                _s = re.compile('[|]SINOPSE[|](.*)').findall(_filmes_[x])
+                                if _s: s = _s[0]
+                                if '|END|' in s: sinopse = s.replace('|END|','')
+                                else:
+                                        si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
+                                        if si: sinopse = si[0][0] + ' ' + si[0][1]
+                                        else: sinopse = '---'
+                                if 'toppt.net'         in imdbcode:
+                                        num_mode = 233
+                                        site = 'TPT'
+                                if 'tuga-filmes.info'  in imdbcode:
+                                        num_mode = 73
+                                        site = 'TFC'
+                                if 'tuga-filmes.us'    in imdbcode:
+                                        num_mode = 33
+                                        site = 'TFV'
+                                if 'cinematuga.eu'     in imdbcode:
+                                        num_mode = 803
+                                        site = 'CME'
+                                if 'cinematuga.net'    in imdbcode:
+                                        num_mode = 703
+                                        site = 'CMT'
+                                if 'foitatuga'         in imdbcode:
+                                        num_mode = 603
+                                        site = 'FTT'
+                                if 'cinemaemcasa.pt'   in imdbcode:
+                                        num_mode = 903
+                                        site = 'CMC'
+                                if 'movietuga'         in imdbcode:
+                                        num_mode = 103
+                                        site = 'MVT'
+                                if nome != '---':
+                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
+                                        #addDir_trailer1_filmes(nome,imdbcode,7,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
+                                else:
+                                        if 'toppt.net'         in P_url: url_TPT = P_url
+                                        if 'tuga-filmes.info'  in P_url: url_TFC = P_url
+                                        if 'tuga-filmes.us'    in P_url: url_TFV = P_url
+                                        if 'cinematuga.eu'     in P_url: url_CME = P_url
+                                        if 'cinematuga.net'    in P_url: url_CMT = P_url
+                                        if 'foitatuga'         in P_url: url_FTT = P_url
+                                        if 'cinemaemcasa.pt'   in P_url: url_CMC = P_url
+                                        if 'movie-tuga'        in P_url: url_MVT = P_url
+                                xbmc.sleep(12)
+                        Filmes_Fi.close()
+                except: pass
 
         #################################################################################
 
