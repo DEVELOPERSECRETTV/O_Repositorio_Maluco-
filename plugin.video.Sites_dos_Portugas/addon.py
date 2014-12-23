@@ -645,7 +645,7 @@ def passar_nome_pesquisa_animacao(name,url,year):
         #PesquisaExterna.pesquisar(str(nome_pesquisa),url)
 ##        item = xbmcgui.ListItem(path=url)
 ##	item.setProperty("IsPlayable", "true")
-##        xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+url+'&mode=9000&name='+str(nome_pesquisa), item)
+##        xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+url+'&mode=9000&name='+str(nome_pesquisa)+'&automatico=', item)
 
 def passar_nome_pesquisa_externa(name,url):
 
@@ -1498,6 +1498,7 @@ air=None
 namet=None
 urltrailer=None
 mvoutv=None
+automatico=None
 
 try: url=urllib.unquote_plus(params["url"])
 except: pass
@@ -1529,6 +1530,8 @@ try: air=urllib.unquote_plus(params["air"])
 except: pass
 try: mvoutv=urllib.unquote_plus(params["mvoutv"])
 except: pass
+try: automatico=urllib.unquote_plus(params["automatico"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -1543,7 +1546,7 @@ print "Episode: "+str(episod)
 print "Namet: "+str(namet)
 print "Urltrailer: "+str(urltrailer)
 print "MvouTv: "+str(mvoutv)
-
+print "Automatico: "+str(automatico)
 ######################################################################################
 
 if mode==None or url==None or len(url)<1:
@@ -2142,7 +2145,7 @@ elif mode == 8000:
         Funcoes.trailer(namet,url)
 
 elif mode == 9000:
-        PesquisaExterna.pesquisar(name,url)
+        PesquisaExterna.pesquisar(name,url,automatico)
 elif mode == 9001:
         passar_nome_pesquisa_externa(name,url)
 elif mode == 9002:

@@ -1329,7 +1329,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                         playlist.clear()
 
                         liz=xbmcgui.ListItem(name, thumbnailImage=iconimage)
-                        xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                        #xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                         playlist.add(url,liz)
 
                         MyPlayer(nome_addon=nome_addon,checker=checker).PlayStream(playlist)
@@ -2027,7 +2027,7 @@ def PLAY_episodes(url,name,iconimage,checker,fanart):#,nomeAddon):
                         playlist.clear()
 
                         liz=xbmcgui.ListItem(name, thumbnailImage=iconimage)
-                        xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                        #xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                         playlist.add(url,liz)
 
                         MyPlayer(nome_addon=nome_addon,checker=checker).PlayStream(playlist)

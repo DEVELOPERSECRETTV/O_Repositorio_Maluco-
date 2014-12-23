@@ -39,7 +39,7 @@ resultados = []
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def pesquisar(nome_pesquisa,url):
+def pesquisar(nome_pesquisa,url,automatico):
         #resultados.append(nome_pesquisa+url+year'|URL|'+'--'+'|THUMB|'+'--'+'|FANART|'+'--')
         
         nome_original = nome_pesquisa
@@ -243,25 +243,28 @@ def pesquisar(nome_pesquisa,url):
         audioTFV = ''
         audioFTT = ''
         audioCMC = ''
+        automatico = automatico.upper()
+        encontrou = 'nao'
         i = 0
-        if resultados != []:                
+        if resultados != []:
+                        
                 for x in range(len(resultados)):
                         audio_audio = re.compile('(.+?)[|]AUDIO[|](.*)').findall(resultados[x])
                         if audio_audio and 'TOPPT' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
-                                audioTPT = ' | '+audio_audio[0][1].replace(' ','')
+                                audioTPT = ' | '+audio_audio[0][1].replace(' ','').replace('PORTUGUESPT','PT-PT')
                         if audio_audio and 'TUGAFILMES.COM' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
-                                audioTFC = ' | '+audio_audio[0][1].replace(' ','')
+                                audioTFC = ' | '+audio_audio[0][1].replace(' ','').replace('PORTUGUESPT','PT-PT')
                         if audio_audio and 'TUGAFILMES.TV' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
-                                audioTFV = ' | '+audio_audio[0][1].replace(' ','')
+                                audioTFV = ' | '+audio_audio[0][1].replace(' ','').replace('PORTUGUESPT','PT-PT')
                         if audio_audio and 'FOITATUGA' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
-                                audioFTT = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','')
+                                audioFTT = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','').replace('PORTUGUESPT','PT-PT')
                         if audio_audio and 'CINEMAEMCASA' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
-                                audioCMC = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','').replace('&nbsp;','').replace('ê','Ê')
+                                audioCMC = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','').replace('&nbsp;','').replace('ê','Ê').replace('PORTUGUESPT','PT-PT')
                         
                         res = re.compile('(.+?)[|]URL[|](.+?)[|]THUMB[|](.+?)[|]FANART').findall(resultados[x])
                         if res and 'AUDIO' not in resultados[x]:
@@ -282,31 +285,85 @@ def pesquisar(nome_pesquisa,url):
                                 subs = re.compile('[|]SUBTITLES[|](.*)').findall(resultados[x])
                                 if subs: _legendas_.append(subs[0])
                                 else: _legendas_.append('---')
+                if automatico != '' and automatico != None:
+                        for x in range(len(_nomeservidor_)):
+                                if automatico in _nomeservidor_[x]:
+                                        nomefilme = name
+                                        progress.create(nomefilme, 'A preparar vídeo.')
+                                        progress.update( 98, '', 'Por favor aguarde...', "" )
 
-                indexservidores = xbmcgui.Dialog().select
-                index = indexservidores('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', _nomeservidor_)
-                if index > -1:
-                        nomedostream = _nomeservidor_[index]
-                        nome_addon = ''
-                        checker = ''
-                        if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                                PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart)
+                                        if _legendas_[x] == '---': checker = ''
+                                        else: checker = _legendas_[x]
+
+                                        playlist = xbmc.PlayList(1)
+                                        playlist.clear()
+
+                                        liz=xbmcgui.ListItem(nome_original, thumbnailImage=_thumbimage_[x])
+                                        xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                                        playlist.add(_linkservidor_[x],liz)
+
+                                        encontrou = 'sim'
+                                        
+                        if encontrou == 'sim':
+                                if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
+                                        PLAY_movie(_linkservidor_[x],nome_original,iconimage,'',fanart)
+                                else:
+                                        MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
                         else:
-                                nomefilme = name
-                                progress.create(nomefilme, 'A preparar vídeo.')
-                                progress.update( 98, '', 'Por favor aguarde...', "" )
+                                #try: xbmcgui.Dialog().notification('Não foram encontrados streams '+automatico, 'Por favor escolha outro.', artfolder + 'SDPI.png', 1500, sound=False)
+                                #except: xbmc.executebuiltin("Notification(%s,%s, 1500, %s)" % ('Não foram encontrados streams '+automatico, 'Por favor escolha outro.', artfolder + 'SDPI.png'))
+                                xbmcgui.Dialog().ok('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', 'Não foram encontrados streams '+automatico, 'Por favor escolha outro stream.')
+                                
+                                indexservidores = xbmcgui.Dialog().select
+                                index = indexservidores('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', _nomeservidor_)
+                                if index > -1:
+                                        nomedostream = _nomeservidor_[index]
+                                        nome_addon = ''
+                                        checker = ''
+                                        if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
+                                                PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart)
+                                        else:
+                                                nomefilme = name
+                                                progress.create(nomefilme, 'A preparar vídeo.')
+                                                progress.update( 98, '', 'Por favor aguarde...', "" )
 
-                                if _legendas_[index] == '---': checker = ''
-                                else: checker = _legendas_[index]
+                                                if _legendas_[index] == '---': checker = ''
+                                                else: checker = _legendas_[index]
 
-                                playlist = xbmc.PlayList(1)
-                                playlist.clear()
+                                                playlist = xbmc.PlayList(1)
+                                                playlist.clear()
 
-                                liz=xbmcgui.ListItem(nome_original, thumbnailImage=_thumbimage_[index])
-                                xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
-                                playlist.add(_linkservidor_[index],liz)
+                                                liz=xbmcgui.ListItem(nome_original, thumbnailImage=_thumbimage_[index])
+                                                xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                                                playlist.add(_linkservidor_[index],liz)
 
-                                MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
+                                                MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
+                                
+                else:                       
+                        indexservidores = xbmcgui.Dialog().select
+                        index = indexservidores('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', _nomeservidor_)
+                        if index > -1:
+                                nomedostream = _nomeservidor_[index]
+                                nome_addon = ''
+                                checker = ''
+                                if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
+                                        PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart)
+                                else:
+                                        nomefilme = name
+                                        progress.create(nomefilme, 'A preparar vídeo.')
+                                        progress.update( 98, '', 'Por favor aguarde...', "" )
+
+                                        if _legendas_[index] == '---': checker = ''
+                                        else: checker = _legendas_[index]
+
+                                        playlist = xbmc.PlayList(1)
+                                        playlist.clear()
+
+                                        liz=xbmcgui.ListItem(nome_original, thumbnailImage=_thumbimage_[index])
+                                        xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                                        playlist.add(_linkservidor_[index],liz)
+
+                                        MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
         else:
                 try: xbmcgui.Dialog().notification('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', 'Não existem fontes disponíveis.', artfolder + 'SDPI.png', 1500, sound=False)
                 except: xbmc.executebuiltin("Notification(%s,%s, 1500, %s)" % ('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', 'Não existem fontes disponíveis.', artfolder + 'SDPI.png'))
@@ -5453,6 +5510,7 @@ air=None
 namet=None
 urltrailer=None
 mvoutv=None
+automatico=None
 
 try: url=urllib.unquote_plus(params["url"])
 except: pass
@@ -5484,6 +5542,8 @@ try: air=urllib.unquote_plus(params["air"])
 except: pass
 try: mvoutv=urllib.unquote_plus(params["mvoutv"])
 except: pass
+try: automatico=urllib.unquote_plus(params["automatico"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -5498,5 +5558,6 @@ print "Episode: "+str(episod)
 print "Namet: "+str(namet)
 print "Urltrailer: "+str(urltrailer)
 print "MvouTv: "+str(mvoutv)
+print "Automatico: "+str(automatico)
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
