@@ -285,10 +285,19 @@ def pesquisar(nome_pesquisa,url,automatico):
                                 subs = re.compile('[|]SUBTITLES[|](.*)').findall(resultados[x])
                                 if subs: _legendas_.append(subs[0])
                                 else: _legendas_.append('---')
-                if automatico != '' and automatico != None:
+                                
+                if automatico != '' and automatico != None and automatico != 'SIM':
                         for x in range(len(_nomeservidor_)):
                                 if automatico in _nomeservidor_[x]:
-                                        nomefilme = name
+                                        encontrou = 'sim'
+                                        break
+                                        
+                        if encontrou == 'sim':
+                                nomedostream = _nomeservidor_[x]
+                                if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
+                                        PLAY_movie(_linkservidor_[x],nome_original,iconimage,'',fanart)
+                                else:
+                                        nomefilme = name#+_nomeservidor_[x]
                                         progress.create(nomefilme, 'A preparar vídeo.')
                                         progress.update( 98, '', 'Por favor aguarde...', "" )
 
@@ -298,16 +307,10 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         playlist = xbmc.PlayList(1)
                                         playlist.clear()
 
-                                        liz=xbmcgui.ListItem(nome_original, thumbnailImage=_thumbimage_[x])
+                                        liz=xbmcgui.ListItem(nomefilme, thumbnailImage=_thumbimage_[x])
                                         xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                                         playlist.add(_linkservidor_[x],liz)
-
-                                        encontrou = 'sim'
                                         
-                        if encontrou == 'sim':
-                                if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                                        PLAY_movie(_linkservidor_[x],nome_original,iconimage,'',fanart)
-                                else:
                                         MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
                         else:
                                 #try: xbmcgui.Dialog().notification('Não foram encontrados streams '+automatico, 'Por favor escolha outro.', artfolder + 'SDPI.png', 1500, sound=False)
@@ -333,13 +336,34 @@ def pesquisar(nome_pesquisa,url,automatico):
                                                 playlist = xbmc.PlayList(1)
                                                 playlist.clear()
 
-                                                liz=xbmcgui.ListItem(nome_original, thumbnailImage=_thumbimage_[index])
+                                                liz=xbmcgui.ListItem(nomefilme, thumbnailImage=_thumbimage_[index])
                                                 xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                                                 playlist.add(_linkservidor_[index],liz)
 
                                                 MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
                                 
-                else:                       
+                elif automatico == 'SIM':
+                        nomedostream = _nomeservidor_[0]
+                        if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
+                                PLAY_movie(_linkservidor_[0],nome_original,iconimage,'',fanart)
+                        else:
+                                nomefilme = name#+_nomeservidor_[0]
+                                progress.create(nomefilme, 'A preparar vídeo.')
+                                progress.update( 98, '', 'Por favor aguarde...', "" )
+
+                                if _legendas_[0] == '---': checker = ''
+                                else: checker = _legendas_[0]
+
+                                playlist = xbmc.PlayList(1)
+                                playlist.clear()
+
+                                liz=xbmcgui.ListItem(nomefilme, thumbnailImage=_thumbimage_[0])
+                                xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                                playlist.add(_linkservidor_[0],liz)
+                                        
+                                MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
+
+                else:
                         indexservidores = xbmcgui.Dialog().select
                         index = indexservidores('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', _nomeservidor_)
                         if index > -1:
@@ -359,7 +383,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         playlist = xbmc.PlayList(1)
                                         playlist.clear()
 
-                                        liz=xbmcgui.ListItem(nome_original, thumbnailImage=_thumbimage_[index])
+                                        liz=xbmcgui.ListItem(nomefilme, thumbnailImage=_thumbimage_[index])
                                         xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                                         playlist.add(_linkservidor_[index],liz)
 
