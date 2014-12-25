@@ -295,7 +295,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                         if encontrou == 'sim':
                                 nomedostream = _nomeservidor_[x]
                                 if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                                        PLAY_movie(_linkservidor_[x],nome_original,iconimage,'',fanart)
+                                        PLAY_movie(_linkservidor_[x],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_)
                                 else:
                                         nomefilme = name#+_nomeservidor_[x]
                                         progress.create(nomefilme, 'A preparar vídeo.')
@@ -311,7 +311,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                                         playlist.add(_linkservidor_[x],liz)
                                         
-                                        MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
+                                        MyPlayer1(nomefilme=nomefilme,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
                         else:
                                 #try: xbmcgui.Dialog().notification('Não foram encontrados streams '+automatico, 'Por favor escolha outro.', artfolder + 'SDPI.png', 1500, sound=False)
                                 #except: xbmc.executebuiltin("Notification(%s,%s, 1500, %s)" % ('Não foram encontrados streams '+automatico, 'Por favor escolha outro.', artfolder + 'SDPI.png'))
@@ -324,7 +324,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         nome_addon = ''
                                         checker = ''
                                         if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                                                PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart)
+                                                PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_)
                                         else:
                                                 nomefilme = name
                                                 progress.create(nomefilme, 'A preparar vídeo.')
@@ -340,28 +340,42 @@ def pesquisar(nome_pesquisa,url,automatico):
                                                 xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                                                 playlist.add(_linkservidor_[index],liz)
 
-                                                MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
+                                                MyPlayer1(nomefilme=nomefilme,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
                                 
                 elif automatico == 'SIM':
-                        nomedostream = _nomeservidor_[0]
+                        for x in range(len(_nomeservidor_)):
+                                if 'CINEMATUGA.EU' in _nomeservidor_[x]:
+                                        nomedostream = _nomeservidor_[x]
+                                        linkservidor = _linkservidor_[x]
+                                        thumbimage = _thumbimage_[x]
+                                        if _legendas_[x] == '---': checker = ''
+                                        else: checker = _legendas_[x]
+                                        break
+                                else:
+                                        nomedostream = _nomeservidor_[0]
+                                        linkservidor = _linkservidor_[0]
+                                        thumbimage = _thumbimage_[0]
+                                        if _legendas_[0] == '---': checker = ''
+                                        else: checker = _legendas_[0] 
+                        #nomedostream = _nomeservidor_[0]
                         if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                                PLAY_movie(_linkservidor_[0],nome_original,iconimage,'',fanart)
+                                PLAY_movie(linkservidor,nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_)
                         else:
-                                nomefilme = name#+_nomeservidor_[0]
+                                nomefilme = name#+_nomeservidor_[x]
                                 progress.create(nomefilme, 'A preparar vídeo.')
                                 progress.update( 98, '', 'Por favor aguarde...', "" )
 
-                                if _legendas_[0] == '---': checker = ''
-                                else: checker = _legendas_[0]
+##                                if _legendas_[0] == '---': checker = ''
+##                                else: checker = _legendas_[0]
 
                                 playlist = xbmc.PlayList(1)
                                 playlist.clear()
 
-                                liz=xbmcgui.ListItem(nomefilme, thumbnailImage=_thumbimage_[0])
+                                liz=xbmcgui.ListItem(nomefilme, thumbnailImage=thumbimage)
                                 xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
-                                playlist.add(_linkservidor_[0],liz)
+                                playlist.add(linkservidor,liz)
                                         
-                                MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
+                                MyPlayer1(nomefilme=nomefilme,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
 
                 else:
                         indexservidores = xbmcgui.Dialog().select
@@ -371,7 +385,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                 nome_addon = ''
                                 checker = ''
                                 if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                                        PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart)
+                                        PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_)
                                 else:
                                         nomefilme = name
                                         progress.create(nomefilme, 'A preparar vídeo.')
@@ -387,7 +401,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                                         playlist.add(_linkservidor_[index],liz)
 
-                                        MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
+                                        MyPlayer1(nomefilme=nomefilme,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
         else:
                 try: xbmcgui.Dialog().notification('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', 'Não existem fontes disponíveis.', artfolder + 'SDPI.png', 1500, sound=False)
                 except: xbmc.executebuiltin("Notification(%s,%s, 1500, %s)" % ('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', 'Não existem fontes disponíveis.', artfolder + 'SDPI.png'))
@@ -4794,6 +4808,10 @@ class MyPlayer1(xbmc.Player):
                 xbmc.Player.__init__( self )
                 self.nomefilme = kwargs[ "nomefilme" ]
                 self.checkerSubs = kwargs[ "checker" ]
+                self._nomeserver_ = kwargs[ "_nomeservidor_" ]
+                self._linkserver_ = kwargs[ "_linkservidor_" ]
+                self._thumbim_ = kwargs[ "_thumbimage_" ]
+                self._legen_ = kwargs[ "_legendas_" ]
                 self.Playable = 'Nao'
 
         def PlayStream(self, playlist):
@@ -4803,6 +4821,7 @@ class MyPlayer1(xbmc.Player):
                 else: self.setSubtitles(self.checkerSubs)
                 if not self.isPlaying() and self.Playable == 'Nao':
                         xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
+                        outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_)
                 while self.isPlaying():
                         xbmc.sleep(1000)
 
@@ -4818,7 +4837,7 @@ class MyPlayer1(xbmc.Player):
                 self.Playable = 'Nao'
                 progress.close()
 
-def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
+def PLAY_movie(url,name,iconimage,checker,fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_):#,nomeAddon):
         nomeAddon = ''
         progress.create(name, 'A preparar vídeo.')
         progress.update( 98, "", 'Por favor aguarde...', "" )
@@ -5465,24 +5484,24 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 	#addLink(url,'','','')
 	#return
         #if 'vk.com' not in url and 'video.mail.ru' not in url and 'video.tt' not in url:
-        if 'vk.com' not in iframe_url and 'video.mail.ru' not in iframe_url and 'videoapi.my.mail' not in iframe_url and 'vidzi.tv' not in iframe_url and 'playfreehd' not in iframe_url  and 'thevideo.me' not in iframe_url:# and 'iiiiiiiiii' in url:
-                try:
-                        #addLink(name,url,iconimage,fanart)
-                        playlist = xbmc.PlayList(1)
-                        playlist.clear()
+        #if 'vk.com' not in iframe_url and 'video.mail.ru' not in iframe_url and 'videoapi.my.mail' not in iframe_url and 'vidzi.tv' not in iframe_url and 'playfreehd' not in iframe_url  and 'thevideo.me' not in iframe_url:# and 'iiiiiiiiii' in url:
+        try:
+                #addLink(name,url,iconimage,fanart)
+                playlist = xbmc.PlayList(1)
+                playlist.clear()
 
-                        liz=xbmcgui.ListItem(name, thumbnailImage=iconimage)
-                        xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
-                        playlist.add(url,liz)
+                liz=xbmcgui.ListItem(name, thumbnailImage=iconimage)
+                xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                playlist.add(url,liz)
 
-                        MyPlayer(nome_addon=nome_addon,checker=checker).PlayStream(playlist)
+                MyPlayer(nome_addon=nome_addon,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
                         
 ##                        playlist = xbmc.PlayList(1)
 ##                        playlist.clear()             
 ##                        playlist.add(url,xbmcgui.ListItem(name, thumbnailImage=str(iconimage)))
 ##                        MyPlayer(nome_addon=nome_addon,checker=checker).PlayStream(playlist)
 
-                except: pass
+        except: pass
         #return
                 
 class MyPlayer(xbmc.Player):
@@ -5490,6 +5509,10 @@ class MyPlayer(xbmc.Player):
                 xbmc.Player.__init__( self )
                 self.nomeaddon = kwargs[ "nome_addon" ]
                 self.checkerSubs = kwargs[ "checker" ]
+                self._nomeserver_ = kwargs[ "_nomeservidor_" ]
+                self._linkserver_ = kwargs[ "_linkservidor_" ]
+                self._thumbim_ = kwargs[ "_thumbimage_" ]
+                self._legen_ = kwargs[ "_legendas_" ]
                 self.Playable = 'Nao'
 
         def PlayStream(self, playlist):
@@ -5499,6 +5522,7 @@ class MyPlayer(xbmc.Player):
                 else: self.setSubtitles(self.checkerSubs)
                 if not self.isPlaying() and self.Playable == 'Nao':
                         xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
+                        outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_)
                 while self.isPlaying():
                         xbmc.sleep(1000)
 
@@ -5513,6 +5537,33 @@ class MyPlayer(xbmc.Player):
         def onPlayBackStopped(self):
                 self.Playable = 'Nao'
                 progress.close()
+                
+def outrostream(_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_):
+        nomefilme = name
+        indexservidores = xbmcgui.Dialog().select
+        index = indexservidores('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', _nomeservidor_)
+        if index > -1:
+                nomedostream = _nomeservidor_[index]
+                nome_addon = ''
+                checker = ''
+                if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
+                        PLAY_movie(_linkservidor_[index],nomefilme,iconimage,'',fanart)
+                else:
+                        
+                        progress.create(nomefilme, 'A preparar vídeo.')
+                        progress.update( 98, '', 'Por favor aguarde...', "" )
+
+                        if _legendas_[index] == '---': checker = ''
+                        else: checker = _legendas_[index]
+
+                        playlist = xbmc.PlayList(1)
+                        playlist.clear()
+
+                        liz=xbmcgui.ListItem(nomefilme, thumbnailImage=_thumbimage_[index])
+                        xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                        playlist.add(_linkservidor_[index],liz)
+
+                        MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
                 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
