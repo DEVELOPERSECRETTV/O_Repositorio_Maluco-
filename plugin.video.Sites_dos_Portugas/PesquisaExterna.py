@@ -5547,7 +5547,7 @@ def outrostream(_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_):
                 nome_addon = ''
                 checker = ''
                 if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                        PLAY_movie(_linkservidor_[index],nomefilme,iconimage,'',fanart)
+                        PLAY_movie(_linkservidor_[index],nomefilme,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_)
                 else:
                         
                         progress.create(nomefilme, 'A preparar vídeo.')
@@ -5563,7 +5563,7 @@ def outrostream(_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_):
                         xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                         playlist.add(_linkservidor_[index],liz)
 
-                        MyPlayer1(nomefilme=nomefilme,checker=checker).PlayStream(playlist)
+                        MyPlayer1(nomefilme=nomefilme,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
                 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#

@@ -1355,6 +1355,28 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                         n = re.compile('(.+?)[[].+?[]]').findall(nome)                                                        
                         if n: nome_pesquisa = n[0]
                         else: nome_pesquisa = nome
+
+                        ###########################
+                        season = re.compile('Season(.+?)[-].+?[(]').findall(nome)
+                        if season: season = season[0]
+                        else:
+                                season = re.compile('Season(.+?)[(]').findall(nome)
+                                if season: season = season[0]
+                                else:
+                                        season = re.compile('[(](.+?)[-].+?[)]').findall(nome)
+                                        if season: season = season[0]
+                                        else:
+                                                season = re.compile('[(](.+?)[)]').findall(nome)
+                                                if season: season = season[0]
+                                                else: season = ''
+                                        
+                                        
+                        temporada = re.compile('(\d+)').findall(season)
+                        if temporada:
+                                temporada = temporada[0]
+                        else:
+                                temporada = ''
+                        ###############################
                         
                         try:
                                 if genero == '': genero = '---'
