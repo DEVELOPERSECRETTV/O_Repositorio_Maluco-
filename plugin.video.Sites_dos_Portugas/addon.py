@@ -57,7 +57,9 @@ def MAIN_MENU():
 ##                del d
 ##                selfAddon.setSetting('AvisoFanart',value='false')
         addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (TMDB)','http://direct',3003,artfolder + 'SERIES1.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR] [COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (TMDB)','1',3011,artfolder + 'P1.png','nao','')
         addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B] (TMDB)','http://direct',3004,artfolder + 'FILMES1.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR] [COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B] (TMDB)','1',2998,artfolder + 'P1.png','nao','')
         addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')                
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
@@ -101,12 +103,14 @@ def MAIN_MENU():
         #----------------------------
         #----------------------------------
         #addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B]','url',7500,artfolder + 'P1.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (SITESdosPORTUGAS)','url',7500,artfolder + 'P1.png','nao','')
+        
+        
         addDir1('','url',1004,artfolder,False,'')
         addDir('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B] (Filmes/Séries)','url',10000,artfolder + 'SDPI.png','nao','')
         addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDB.png','nao','')
-        addDir1('','url',1004,artfolder,False,'')
-        addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF1.png','nao','')#'ze-icon3.png'
+        #addDir1('','url',1004,artfolder,False,'')
+        #addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF1.png','nao','')#'ze-icon3.png'
         
 def ProcurarFilmesSeries():
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
@@ -1010,6 +1014,10 @@ def pesquisar_SERIES(nome_pesquisa,url):
                                 url_TPT = url
         #addLink(url_TPT,'','')
         #addLink(url_TFV,'','')
+
+        nome_pesquisa = urllib.quote_plus(nome_pesquisa)
+        encode = urllib.quote(nome_pesquisa)
+        
         a = 0
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
         percent = int( ( a / 2.0 ) * 100)
@@ -1024,6 +1032,7 @@ def pesquisar_SERIES(nome_pesquisa,url):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
+        if url_TPT == '': url_TPT = 'http://toppt.net/?s=' + str(encode)
 	encontrar_fontes_SERIES_TPT(url_TPT + 'IMDB'+imdbcode+'IMDB',pesquisou)
 	
         a = 2
@@ -1163,6 +1172,7 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                                 temporada = temporada[0]
                         else:
                                 temporada = ''
+                        thumbl=''
                         ###############################
                         n = re.compile('(.+?)[(].+?[)]').findall(nome)
                         if n: nome_pesquisa = n[0]
@@ -1184,7 +1194,17 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                                                                 #thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
                                                                 if snpse and sinopse == '': sinopse = snpse[0]
-                                                        thumb = 'http://thetvdb.com/banners/seasons/' + ftart[0] + '-' + temporada + '.jpg'
+##                                                        if temporada!= '':
+##                                                                thumbl = 'http://thetvdb.com/banners/seasons/' + ftart[0] + '-' + temporada + '.jpg'
+##                                                                try:
+##                                                                        thml=abrir_url(thumbl)
+##                                                                        if thml: thumb = 'http://thetvdb.com/banners/seasons/' + ftart[0] + '-' + temporada + '.jpg'
+##                                                                except: pass
+                                                        if temporada!= '':
+                                                                try:
+                                                                        thumbl = buscathumb(ftart[0],str(temporada))
+                                                                        if thumbl != '': thumb = thumbl
+                                                                except: pass
                                                         n = re.compile('[(](.+?)[)]').findall(nome)
                                                         if n: nome = n[0]
                                                         #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'',fanart)
@@ -1199,10 +1219,21 @@ def encontrar_fontes_SERIES_TFV(url,pesquisou):
                                                         thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano[0])
                                                         ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                         if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                        if thumb == '' or 's1600' in thumb: thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                        #if thumb == '' or 's1600' in thumb: thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                         #addLink(thumb,'','')
+##                                                        if temporada!= '':
+##                                                                thumbl = 'http://thetvdb.com/banners/seasons/' + ftart[0] + '-' + temporada + '.jpg'
+##                                                                try:
+##                                                                        thml=abrir_url(thumbl)
+##                                                                        if thml: thumb = 'http://thetvdb.com/banners/seasons/' + ftart[0] + '-' + temporada + '.jpg'
+##                                                                except: pass
                                                         snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
                                                         if snpse and sinopse == '': sinopse = snpse[0]
+                                                if temporada!= '':
+                                                        try:
+                                                                thumbl = buscathumb(ftart[0],str(temporada))
+                                                                if thumbl != '': thumb = thumbl
+                                                        except: pass
                                                 n = re.compile('[(](.+?)[)]').findall(nome)
                                                 if n: nome = n[0]
                                                 #addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]',urletitulo[0][0],num_mode,thumbnail[0].replace('s72-c','s320'),'',fanart)
@@ -1352,32 +1383,35 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                         tirar_ano = '(' + str(q_a_q_a) + ')'
                                         nome = nome.replace(tirar_ano,'')
                                         
-                        n = re.compile('(.+?)[[].+?[]]').findall(nome)                                                        
+                        n = re.compile('(.+?)[[].+?[]].+?[]]').findall(nome)                                                        
                         if n: nome_pesquisa = n[0]
                         else: nome_pesquisa = nome
 
                         ###########################
-                        season = re.compile('Season(.+?)[-].+?[(]').findall(nome)
+                        season = re.compile('[[]Season(.+?)[]].+?[]]').findall(nome)
                         if season: season = season[0]
                         else:
-                                season = re.compile('Season(.+?)[(]').findall(nome)
+                                season = re.compile('[[]Temporada(.+?)[]].+?[]]').findall(nome)
                                 if season: season = season[0]
                                 else:
-                                        season = re.compile('[(](.+?)[-].+?[)]').findall(nome)
+                                        season = re.compile('Season(.+?)[(]').findall(nome)
                                         if season: season = season[0]
                                         else:
-                                                season = re.compile('[(](.+?)[)]').findall(nome)
+                                                season = re.compile('[(](.+?)[-].+?[)]').findall(nome)
                                                 if season: season = season[0]
-                                                else: season = ''
-                                        
-                                        
+                                                else:
+                                                        season = re.compile('[(](.+?)[)]').findall(nome)
+                                                        if season: season = season[0]
+                                                        else: season = ''
+
                         temporada = re.compile('(\d+)').findall(season)
                         if temporada:
                                 temporada = temporada[0]
                         else:
                                 temporada = ''
+                        thumbl=''
                         ###############################
-                        
+                        #addLink(temporada+'-','','','')
                         try:
                                 if genero == '': genero = '---'
                                 if sinopse == '': sinopse = '---'
@@ -1396,9 +1430,21 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                         thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
                                                         ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                         if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                        #if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                         snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
                                                         if snpse and sinopse == '---': sinopse = snpse[0]
+##                                                if temporada!= '':
+##                                                        thumbl = 'http://thetvdb.com/banners/seasons/' + ftart[0] + '-' + temporada + '.jpg'
+##                                                        try:
+##                                                                thml=abrir_url(thumbl)
+##                                                                if thml: thumb = 'http://thetvdb.com/banners/seasons/' + ftart[0] + '-' + temporada + '.jpg'
+##                                                        except: pass
+                                                if temporada!= '':
+                                                        try:
+                                                                thumbl = buscathumb(ftart[0],str(temporada))
+                                                                if thumbl != '': thumb = thumbl
+                                                        except: pass
+                                                #addLink(ftart[0],'','',fanart)
                                                 n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(nome)
                                                 if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(nome)
                                                 if n: nome = n[0][0]+' - '+n[0][1]
@@ -1423,9 +1469,20 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                 thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme.replace('(','').replace(')',''))
                                                 ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
                                                 if ftart: fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
-                                                if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
+                                                #if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'
                                                 snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
                                                 if snpse and sinopse == '---': sinopse = snpse[0]
+##                                        if temporada!= '':
+##                                                thumbl = 'http://thetvdb.com/banners/seasons/' + ftart[0] + '-' + temporada + '.jpg'
+##                                                try:
+##                                                        thml=abrir_url(thumbl)
+##                                                        if thml: thumb = 'http://thetvdb.com/banners/seasons/' + ftart[0] + '-' + temporada + '.jpg'
+##                                                except: pass
+                                        if temporada!= '':
+                                                try:
+                                                        thumbl = buscathumb(ftart[0],str(temporada))
+                                                        if thumbl != '': thumb = thumbl
+                                                except: pass
                                         n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(nome)
                                         if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(nome)
                                         if n: nome = n[0][0]+' - '+n[0][1]
@@ -1455,6 +1512,31 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
 ##                        addLink(imdbcode,'','')
         return
 
+def buscathumb(tvdbid,temporada):
+        seasonBanner = ''
+        if tvdbid!='':
+                try:
+                        url = 'http://thetvdb.com/api/23B3F3D91B980C9F/series/'+urllib.quote(tvdbid)+'/banners.xml'
+                        html_source = abrir_url(url)
+                except: html_source = ''
+                info = re.findall('<Banner>(.+?)</Banner>', html_source, re.DOTALL)
+                for infos in info:
+                        try:
+                                season = re.compile('<Season>(.+?)</Season>').findall(infos)
+                                bannertype = re.compile('<BannerType>(.+?)</BannerType>').findall(infos)
+                                bannertype2 = re.compile('<BannerType2>(.+?)</BannerType2>').findall(infos)
+                                language = re.compile('<Language>(.+?)</Language>').findall(infos)
+                                if season and bannertype and bannertype2 and language:
+                                        #addLink(season[0],'','','')
+                                        if season[0] == str(temporada) and bannertype[0] == 'season' and bannertype2[0] == 'season' and language[0] == 'en':
+                                                seasonB =re.compile('<BannerPath>(.+?)</BannerPath>').findall(infos)
+                                                try: seasonBanner = 'http://thetvdb.com/banners/'+seasonB[0]
+                                                except: seasonBanner = ''
+                                                break
+                                                
+                        except: seasonBanner = ''
+                return str(seasonBanner)
+        else: return str(seasonBanner)
 
 def INDEX(url,name):
         

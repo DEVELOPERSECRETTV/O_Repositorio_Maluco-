@@ -245,6 +245,7 @@ def pesquisar(nome_pesquisa,url,automatico):
         audioCMC = ''
         automatico = automatico.upper()
         encontrou = 'nao'
+        numstream = 0
         i = 0
         if resultados != []:
                         
@@ -252,19 +253,19 @@ def pesquisar(nome_pesquisa,url,automatico):
                         audio_audio = re.compile('(.+?)[|]AUDIO[|](.*)').findall(resultados[x])
                         if audio_audio and 'TOPPT' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
-                                audioTPT = ' | '+audio_audio[0][1].replace(' ','').replace('PORTUGUESPT','PT-PT')
+                                audioTPT = ' | '+audio_audio[0][1].replace(' ','').replace('PORTUGUESPT','PT-PT').replace('-',' | ')
                         if audio_audio and 'TUGAFILMES.COM' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
                                 audioTFC = ' | '+audio_audio[0][1].replace(' ','').replace('PORTUGUESPT','PT-PT')
                         if audio_audio and 'TUGAFILMES.TV' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
-                                audioTFV = ' | '+audio_audio[0][1].replace(' ','').replace('PORTUGUESPT','PT-PT')
+                                audioTFV = ' | '+audio_audio[0][1].replace(' ','').replace('PORTUGUESPT','PT-PT').replace('##',' | ')
                         if audio_audio and 'FOITATUGA' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
-                                audioFTT = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','').replace('PORTUGUESPT','PT-PT')
+                                audioFTT = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','').replace('PORTUGUESPT','PT-PT').replace('PTPT',' | PT-PT')
                         if audio_audio and 'CINEMAEMCASA' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
-                                audioCMC = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','').replace('&nbsp;','').replace('ê','Ê').replace('PORTUGUESPT','PT-PT')
+                                audioCMC = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','').replace('&nbsp;','').replace('ê','Ê').replace('PORTUGUÊS','PT-PT').replace('PORTUGUÊSPT','PT-PT').replace('INGLÊS','EN')   
                         
                         res = re.compile('(.+?)[|]URL[|](.+?)[|]THUMB[|](.+?)[|]FANART').findall(resultados[x])
                         if res and 'AUDIO' not in resultados[x]:
@@ -295,7 +296,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                         if encontrou == 'sim':
                                 nomedostream = _nomeservidor_[x]
                                 if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                                        PLAY_movie(_linkservidor_[x],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_)
+                                        PLAY_movie(_linkservidor_[x],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
                                 else:
                                         nomefilme = name#+_nomeservidor_[x]
                                         progress.create(nomefilme, 'A preparar vídeo.')
@@ -311,7 +312,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                                         playlist.add(_linkservidor_[x],liz)
                                         
-                                        MyPlayer1(nomefilme=nomefilme,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
+                                        MyPlayer1(nomefilme=nomefilme,checker=checker,numstream=numstream,automatico=automatico,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
                         else:
                                 #try: xbmcgui.Dialog().notification('Não foram encontrados streams '+automatico, 'Por favor escolha outro.', artfolder + 'SDPI.png', 1500, sound=False)
                                 #except: xbmc.executebuiltin("Notification(%s,%s, 1500, %s)" % ('Não foram encontrados streams '+automatico, 'Por favor escolha outro.', artfolder + 'SDPI.png'))
@@ -324,7 +325,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         nome_addon = ''
                                         checker = ''
                                         if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                                                PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_)
+                                                PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
                                         else:
                                                 nomefilme = name
                                                 progress.create(nomefilme, 'A preparar vídeo.')
@@ -340,7 +341,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                                 xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                                                 playlist.add(_linkservidor_[index],liz)
 
-                                                MyPlayer1(nomefilme=nomefilme,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
+                                                MyPlayer1(nomefilme=nomefilme,checker=checker,numstream=numstream,automatico=automatico,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
                                 
                 elif automatico == 'SIM':
                         for x in range(len(_nomeservidor_)):
@@ -350,16 +351,18 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         thumbimage = _thumbimage_[x]
                                         if _legendas_[x] == '---': checker = ''
                                         else: checker = _legendas_[x]
+                                        numstream = x
                                         break
                                 else:
                                         nomedostream = _nomeservidor_[0]
                                         linkservidor = _linkservidor_[0]
                                         thumbimage = _thumbimage_[0]
                                         if _legendas_[0] == '---': checker = ''
-                                        else: checker = _legendas_[0] 
-                        #nomedostream = _nomeservidor_[0]
+                                        else: checker = _legendas_[0]
+                                        numstream = 0
+
                         if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                                PLAY_movie(linkservidor,nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_)
+                                PLAY_movie(linkservidor,nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
                         else:
                                 nomefilme = name#+_nomeservidor_[x]
                                 progress.create(nomefilme, 'A preparar vídeo.')
@@ -375,7 +378,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                 xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                                 playlist.add(linkservidor,liz)
                                         
-                                MyPlayer1(nomefilme=nomefilme,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
+                                MyPlayer1(nomefilme=nomefilme,checker=checker,numstream=numstream,automatico=automatico,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
 
                 else:
                         indexservidores = xbmcgui.Dialog().select
@@ -385,7 +388,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                 nome_addon = ''
                                 checker = ''
                                 if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                                        PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_)
+                                        PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
                                 else:
                                         nomefilme = name
                                         progress.create(nomefilme, 'A preparar vídeo.')
@@ -401,7 +404,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                                         playlist.add(_linkservidor_[index],liz)
 
-                                        MyPlayer1(nomefilme=nomefilme,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
+                                        MyPlayer1(nomefilme=nomefilme,checker=checker,numstream=numstream,automatico=automatico,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
         else:
                 try: xbmcgui.Dialog().notification('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', 'Não existem fontes disponíveis.', artfolder + 'SDPI.png', 1500, sound=False)
                 except: xbmc.executebuiltin("Notification(%s,%s, 1500, %s)" % ('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', 'Não existem fontes disponíveis.', artfolder + 'SDPI.png'))
@@ -486,7 +489,11 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(FILMEN,url,pesquisou,imdbc,ite
                                                                 name = '[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
                                                                 iconimage = thumb.replace('s72-c','s320')
                                                                 #addDir1(name,'url',1001,iconimage,False,fanart)
-                                                                TFV_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
+                                                                #quality = re.compile('(.+?)[-].+?').findall(qualidade)
+                                                                #if quality: qualite = quality[0].replace(' ','')+'-'
+                                                                #else: qualite = ''
+                                                                #resultados.append('TUGAFILMES.TV|AUDIO|'+qualite.upper()+audio_filme.upper().replace(':','').replace('INGLES','EN'))
+                                                                TFV_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',qualidade,iconimage,fanart)
                                                                 num_f = num_f + 1
                                                 else:
                                                         nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
@@ -508,8 +515,12 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(FILMEN,url,pesquisou,imdbc,ite
                                                         
                                                         name = '[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
                                                         iconimage = thumb.replace('s72-c','s320')
+                                                        #quality = re.compile('(.+?)[-].+?').findall(qualidade)
+                                                        #if quality: qualite = quality[0].replace(' ','')+'-'
+                                                        #else: qualite = ''
+                                                        #resultados.append('TUGAFILMES.TV|AUDIO|'+qualite.upper()+audio_filme.upper().replace(':','').replace('INGLES','EN'))
                                                         #addDir1(name,'url',1001,iconimage,False,fanart)
-                                                        TFV_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
+                                                        TFV_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano[0].replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',qualidade,iconimage,fanart)
                                                         num_f = num_f + 1
                                 except: pass
                         except: pass
@@ -987,7 +998,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                 nome = nome.replace(' --',"")
                                 nome = nome.replace('--',"")
 
-                                if audio_filme!= '': audio_filme = ': '+audio_filme
+                                if audio_filme!= '': audio_filme = ': '+audio_filme.replace('/','-')
 
                                 nome = nome.replace('((','(')
                                 nome = nome.replace('))',')')
@@ -1005,7 +1016,9 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                         if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')+audio_filme
                                         else:
                                                 qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
-                                                if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')+audio_filme
+                                                if qualid:
+                                                        qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')+audio_filme
+                                                        if audio_filme not in qualidade_filme: qualidade_filme = qualidade_filme+audio_filme
 
                                 if imdbcode == '':
                                         conta = 0
@@ -1064,7 +1077,8 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                                         
                                                         name = '[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]'
                                                         iconimage = thumb
-                                                        if audio_filme != '': resultados.append('FOITATUGA|AUDIO|'+audio_filme.upper())
+                                                        #if audio_filme != '': resultados.append('FOITATUGA|AUDIO|'+qualidade_filme.replace('</div>','').upper())#+audio_filme.upper())
+                                                        if qualidade_filme.replace(' ','')!='': resultados.append('FOITATUGA|AUDIO|'+qualidade_filme.replace('</div>','').upper().replace('-',''))
                                                         #addDir1(name,'url',1001,iconimage,False,fanart)
                                                         FTT_links('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                         num_f = num_f + 1
@@ -1090,7 +1104,8 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                                 
                                                 name = '[COLOR orange]FTT | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]'
                                                 iconimage = thumb
-                                                if audio_filme != '': resultados.append('FOITATUGA|AUDIO|'+audio_filme.upper())
+                                                #if audio_filme != '': resultados.append('FOITATUGA|AUDIO|'+audio_filme.upper())
+                                                if qualidade_filme.replace(' ','')!='': resultados.append('FOITATUGA|AUDIO|'+qualidade_filme.replace('</div>','').upper().replace('-',''))
                                                 #addDir1(name,'url',1001,iconimage,False,fanart)
                                                 FTT_links('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                 num_f = num_f + 1
@@ -1394,7 +1409,10 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                                                                 
                                                                                 name = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
                                                                                 iconimage = thumb.replace('s72-c','s320')
-                                                                                resultados.append('TOPPT|AUDIO|'+audio_filme.upper().replace(':',''))
+                                                                                quality = re.compile('(.+?)[-].+?').findall(qualidade)
+                                                                                if quality: qualite = quality[0].replace(' ','')+'-'
+                                                                                else: qualite = ''
+                                                                                resultados.append('TOPPT|AUDIO|'+qualite.upper()+audio_filme.upper().replace(':','').replace('INGLES','EN'))
                                                                                 #addDir1(name,'url',1001,iconimage,False,fanart)
                                                                                 TPT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',iconimage,fanart)#,genero,sinopse,ano_filme)
                                                                                 num_f = num_f + 1
@@ -1422,7 +1440,10 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                                                                 except: pass
                                                                         name = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR]'
                                                                         iconimage = thumb.replace('s72-c','s320')
-                                                                        resultados.append('TOPPT|AUDIO|'+audio_filme.upper().replace(':',''))
+                                                                        quality = re.compile('(.+?)[-].+?').findall(qualidade)
+                                                                        if quality: qualite = quality[0].replace(' ','')+'-'
+                                                                        else: qualite = ''
+                                                                        resultados.append('TOPPT|AUDIO|'+qualite.upper()+audio_filme.upper().replace(':','').replace('INGLES','EN'))
                                                                         #addDir1(name,'url',1001,iconimage,False,fanart)
                                                                         TPT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',iconimage,fanart)#,genero,sinopse,ano_filme)
                                                                         num_f = num_f + 1
@@ -1706,7 +1727,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(FILMEN,url,pesquisou,imdbc,item)
                                                                 except:pass
                                                         name = '[COLOR orange]CMC | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
                                                         iconimage = thumb
-                                                        resultados.append('CINEMAEMCASA|AUDIO|'+qualidade_filme.upper())
+                                                        if qualidade_filme.replace(' ','')!='': resultados.append('CINEMAEMCASA|AUDIO|'+qualidade_filme.upper())
                                                         #addDir1(name,'url',1001,iconimage,False,fanart)
                                                         CMC_links('[COLOR orange]CMC | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlfilme.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage,fanart)                                              
                                 else:
@@ -1733,7 +1754,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(FILMEN,url,pesquisou,imdbc,item)
                                                         except:pass
                                                 name = '[COLOR orange]CMC | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]'
                                                 iconimage = thumb
-                                                resultados.append('CINEMAEMCASA|AUDIO|'+qualidade_filme.upper())
+                                                if qualidade_filme.replace(' ','')!='': resultados.append('CINEMAEMCASA|AUDIO|'+qualidade_filme.upper())
                                                 #addDir1(name,'url',1001,iconimage,False,fanart)
                                                 CMC_links('[COLOR orange]CMC | [/COLOR][B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + ano_filme + ')[/COLOR][COLOR red] (' + qualidade_filme + ')[/COLOR]',urlfilme.replace(' ','%20')+'IMDB'+imdbcode+'IMDB',iconimage,fanart)                                              
 
@@ -1746,7 +1767,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(FILMEN,url,pesquisou,imdbc,item)
 #----------------------------------------------------------------------------------------------------------------------------------------------#        
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
-def TFV_links(name,url,iconimage,fanart):
+def TFV_links(name,url,qualidade,iconimage,fanart):
         iconimage = iconimage
         nomeescolha = name
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
@@ -1790,13 +1811,20 @@ def TFV_links(name,url,iconimage,fanart):
                                 if 'Legendado' in matchsvids and num_leg == 1:
                                         num_leg = 0
                                         if num_ptpt == 0: conta_id_video = 0
-                                        resultados.append('TUGAFILMES.TV|AUDIO|LEGENDADO')
+                                        quality = re.compile('(.+?)[-].+?').findall(qualidade)
+                                        if quality: qualite = quality[0].replace(' ','')
+                                        else: qualite = ''
+                                        #resultados.append('TUGAFILMES.TV|AUDIO|'+qualite.upper()
+                                        resultados.append('TUGAFILMES.TV|AUDIO|'+qualite.upper()+'##LEGENDADO')
                                         #addDir1('[COLOR blue]LEGENDADO:[/COLOR]','','',iconimage,False,'')
                                 if 'Portug' in matchsvids or 'PT-PT' in matchsvids:
                                         if num_ptpt == 1:
                                                 num_ptpt = 0
                                                 if num_leg == 0: conta_id_video = 0
-                                                resultados.append('TUGAFILMES.TV|AUDIO|PT-PT')
+                                                quality = re.compile('(.+?)[-].+?').findall(qualidade)
+                                                if quality: qualite = quality[0].replace(' ','')
+                                                else: qualite = ''
+                                                resultados.append('TUGAFILMES.TV|AUDIO|'+qualite.upper()+'##PT-PT')
                                                 #addDir1('[COLOR blue]AUDIO PT:[/COLOR]','','',iconimage,False,'')
                                 if '</iframe>' in matchsvids:
                                         videomeg = re.compile('<iframe frameborder="0" height="400" scrolling="no" src="(.+?)"').findall(matchsvids)
@@ -1806,7 +1834,11 @@ def TFV_links(name,url,iconimage,fanart):
                                                 #addDir('SITESdosPORTUGAS | TUGAFILMES.TV | VIDEOMEGA',videomeg[0],30,iconimage,'',fanart)
                                                 PLAY_movie_url(videomeg[0],fonte_id,iconimage,'',fanart,'TUGAFILMES.TV')
                                                 #resultados.append(videomeg[0])
-                                                
+                                if 'Legendado' not in matchsvids and 'Portug' not in matchsvids:
+                                        quality = re.compile('(.+?)[-].+?').findall(qualidade)
+                                        if quality: qualite = quality[0].replace(' ','')
+                                        else: qualite = ''
+                                        resultados.append('TUGAFILMES.TV|AUDIO|'+qualite.upper())  
                                 match = re.compile('href="(.+?)"').findall(matchsvids)
                                 url = match[0] 
                                 if url != '':
@@ -4812,6 +4844,8 @@ class MyPlayer1(xbmc.Player):
                 self._linkserver_ = kwargs[ "_linkservidor_" ]
                 self._thumbim_ = kwargs[ "_thumbimage_" ]
                 self._legen_ = kwargs[ "_legendas_" ]
+                self.autom = kwargs[ "automatico" ]
+                self.numstream = kwargs[ "numstream" ]
                 self.Playable = 'Nao'
 
         def PlayStream(self, playlist):
@@ -4820,8 +4854,8 @@ class MyPlayer1(xbmc.Player):
                 if self.checkerSubs == '' or self.checkerSubs == None: pass
                 else: self.setSubtitles(self.checkerSubs)
                 if not self.isPlaying() and self.Playable == 'Nao':
-                        xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
-                        outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_)
+                        if self.autom == '': xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
+                        outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_,self.numstream,self.autom)
                 while self.isPlaying():
                         xbmc.sleep(1000)
 
@@ -4837,7 +4871,7 @@ class MyPlayer1(xbmc.Player):
                 self.Playable = 'Nao'
                 progress.close()
 
-def PLAY_movie(url,name,iconimage,checker,fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_):#,nomeAddon):
+def PLAY_movie(url,name,iconimage,checker,fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico):#,nomeAddon):
         nomeAddon = ''
         progress.create(name, 'A preparar vídeo.')
         progress.update( 98, "", 'Por favor aguarde...', "" )
@@ -5494,7 +5528,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart,_nomeservidor_,_linkservidor_,_
                 xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
                 playlist.add(url,liz)
 
-                MyPlayer(nome_addon=nome_addon,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
+                MyPlayer(nome_addon=nome_addon,checker=checker,numstream=numstream,automatico=automatico,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
                         
 ##                        playlist = xbmc.PlayList(1)
 ##                        playlist.clear()             
@@ -5513,6 +5547,8 @@ class MyPlayer(xbmc.Player):
                 self._linkserver_ = kwargs[ "_linkservidor_" ]
                 self._thumbim_ = kwargs[ "_thumbimage_" ]
                 self._legen_ = kwargs[ "_legendas_" ]
+                self.autom = kwargs[ "automatico" ]
+                self.numstream = kwargs[ "numstream" ]
                 self.Playable = 'Nao'
 
         def PlayStream(self, playlist):
@@ -5521,8 +5557,8 @@ class MyPlayer(xbmc.Player):
                 if self.checkerSubs == '' or self.checkerSubs == None: pass
                 else: self.setSubtitles(self.checkerSubs)
                 if not self.isPlaying() and self.Playable == 'Nao':
-                        xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
-                        outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_)
+                        if self.autom == '': xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
+                        outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_,self.numstream,self.autom)
                 while self.isPlaying():
                         xbmc.sleep(1000)
 
@@ -5538,32 +5574,60 @@ class MyPlayer(xbmc.Player):
                 self.Playable = 'Nao'
                 progress.close()
                 
-def outrostream(_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_):
-        nomefilme = name
-        indexservidores = xbmcgui.Dialog().select
-        index = indexservidores('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', _nomeservidor_)
-        if index > -1:
-                nomedostream = _nomeservidor_[index]
-                nome_addon = ''
-                checker = ''
+def outrostream(_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico):
+        if automatico != '':
+                if numstream == len(_nomeservidor_): numstream = 0
+                else: numstream = numstream + 1
+                
+                nomedostream = _nomeservidor_[numstream]
+                linkservidor = _linkservidor_[numstream]
+                thumbimage = _thumbimage_[numstream]
+                if _legendas_[numstream] == '---': checker = ''
+                else: checker = _legendas_[numstream]
+##                numstream = 0
+
                 if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
-                        PLAY_movie(_linkservidor_[index],nomefilme,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_)
+                        PLAY_movie(linkservidor,nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
                 else:
-                        
+                        nomefilme = name#+_nomeservidor_[x]
                         progress.create(nomefilme, 'A preparar vídeo.')
                         progress.update( 98, '', 'Por favor aguarde...', "" )
-
-                        if _legendas_[index] == '---': checker = ''
-                        else: checker = _legendas_[index]
-
+                        
                         playlist = xbmc.PlayList(1)
                         playlist.clear()
 
-                        liz=xbmcgui.ListItem(nomefilme, thumbnailImage=_thumbimage_[index])
+                        liz=xbmcgui.ListItem(nomefilme, thumbnailImage=thumbimage)
                         xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
-                        playlist.add(_linkservidor_[index],liz)
+                        playlist.add(linkservidor,liz)
+                                        
+                        MyPlayer1(nomefilme=nomefilme,checker=checker,numstream=numstream,automatico=automatico,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
+                
+        else:
+                nomefilme = name
+                indexservidores = xbmcgui.Dialog().select
+                index = indexservidores('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', _nomeservidor_)
+                if index > -1:
+                        nomedostream = _nomeservidor_[index]
+                        nome_addon = ''
+                        checker = ''
+                        if 'VIDTO.ME' in nomedostream or 'NOWVIDEO' in nomedostream or 'MOVSHARE' in nomedostream or 'FIREDRIVE' in nomedostream or 'PUTLOCKER' in nomedostream or 'SOCKSHARE' in nomedostream:
+                                PLAY_movie(_linkservidor_[index],nomefilme,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
+                        else:
+                                
+                                progress.create(nomefilme, 'A preparar vídeo.')
+                                progress.update( 98, '', 'Por favor aguarde...', "" )
 
-                        MyPlayer1(nomefilme=nomefilme,checker=checker,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
+                                if _legendas_[index] == '---': checker = ''
+                                else: checker = _legendas_[index]
+
+                                playlist = xbmc.PlayList(1)
+                                playlist.clear()
+
+                                liz=xbmcgui.ListItem(nomefilme, thumbnailImage=_thumbimage_[index])
+                                xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                                playlist.add(_linkservidor_[index],liz)
+
+                                MyPlayer1(nomefilme=nomefilme,checker=checker,numstream=numstream,automatico=automatico,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
                 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#

@@ -626,7 +626,7 @@ def TFV_Ultimos(fanart,name,url,item,tvdbid):
         
 def TPT_Ultimos(name,url,iconimage,fanart,item,tvdbid):
         #addLink(name,'',iconimage,fanart)
-        if 'Season' in name or 'Temporada' in name or 'Mini-Série' in name or 'Mini-Serie' in name:
+        if 'Season' in name or 'Temporada' in name or 'Mini-Série' in name or 'Mini-Serie' in name or 'Minisérie' in name or 'Miniserie' in name:
                 n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(name)
                 if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(name)
                 if n: nome = n[0][0]+' - '+n[0][1]
@@ -716,7 +716,7 @@ def TPT_Ultimos(name,url,iconimage,fanart,item,tvdbid):
         episodioanterior = ''
 	nome_antes = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + namet + '[/COLOR][/B] | '
 	if link2:
-                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-Serie' not in nometitulo:
+                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-Serie' not in nometitulo and 'Minisérie' not in nometitulo and 'Miniserie' not in nometitulo:
                         newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
                         l=1
                 else:
