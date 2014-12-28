@@ -26,7 +26,7 @@ import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,ti
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB, thetvdb_api_IMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
 from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode, addDir_trailer1, addDir_episode1, addDir_episode_false
-from Funcoes import get_params,abrir_url
+from Funcoes import get_params, abrir_url, addDir_episode1_true
 from TugaFilmesTV import TFV_resolve_not_videomega_series
 ##from TopPt import TPT_resolve_not_videomega_filmes
 import json
@@ -608,15 +608,16 @@ def TFV_Ultimos(fanart,name,url,item,tvdbid):
                                 epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
 
                                 try:
-                                        addDir_episode_false(nome_antes+' [COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer)
+                                        mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                        addDir_episode1_true(nome_antes+' [COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
                                         f_id = ''
                                 except: pass
                         except:                                     
                                 nomeepisodio = re.compile(' [-] (.*)').findall(nomecadaepisodio)
                                 if nomeepisodio: nomeepisodio = nomeepisodio[0]
                                 else: nomeepisodio = nomecadaepisodio
-
-                                addDir_episode_false(nome_antes+' [COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer)
+                                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                addDir_episode1_true(nome_antes+' [COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
                                 f_id = ''
                                 
                 except:pass
@@ -667,6 +668,7 @@ def TPT_Ultimos(name,url,iconimage,fanart,item,tvdbid):
                 else:
                         temporada = ''
                         temporadat = ''
+                if temporada == '': temporada = '0'
                 a_q = re.compile('\d+')
                 qq_aa = a_q.findall(temporada)
                 for q_a_q_a in qq_aa:
@@ -796,10 +798,12 @@ def TPT_Ultimos(name,url,iconimage,fanart,item,tvdbid):
                                 try:
 
                                         #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
-                                        addDir_episode_false(nome_antes+'[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer)
+                                        mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                        addDir_episode1_true(nome_antes+'[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
                                 except:
                                         if 'EPI' not in linkseries[0][0] and 'Epi' not in linkseries[0][0]: parte1 = linkseries[0][0]+'º EPISÓDIO'
-                                        addDir_episode_false(nome_antes+'[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer)
+                                        mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                        addDir_episode1_true(nome_antes+'[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
 
                                 f_id = ''
                                 i = i + 1
@@ -809,7 +813,7 @@ def TPT_Ultimos(name,url,iconimage,fanart,item,tvdbid):
 
 def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart):
         
-        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
                 url = url + '///' + nomeescolha
         
         if "videomega" in url:
@@ -829,7 +833,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
 			else: fonte_id = '(Vidto.me)'+url
 			fonte_id1 = '(Vidto.me)'+url
 			#fonte_id = '(Vidto.me)'+url
-			if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+			if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id1.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
         if "dropvideo" in url:
@@ -842,7 +846,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
 	if "vidzi.tv" in url:
                 try:
                         fonte_id = '(Vidzi.tv)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except:pass
         if "vodlocker" in url:
@@ -884,7 +888,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
     	if "nowvideo" in url:
                 try:
                         fonte_id = '(Nowvideo)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "primeshare" in url:
@@ -902,27 +906,27 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
     	if "sockshare" in url:
                 try:
                         fonte_id = '(Sockshare)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "putlocker" in url:
                 try:
                         url = url.replace('putlocker.com/embed/','firedrive.com/file/')
                         fonte_id = '(Firedrive)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	else:
                 if "firedrive" in url:
                         try:
                                 fonte_id = '(Firedrive)'+url
-                                if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                                if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
                                         addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
                         except:pass
     	if "movshare" in url:
                 try:
                         fonte_id = '(Movshare)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
         if "video.tt" in url:
@@ -933,7 +937,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
                         url = url.replace('http://www.video.tt/embed/','http://video.tt/e/')
                         url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:                     
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:                     
                                 url = url + '///' + nomeescolha
                         fonte_id = '(Video.tt)'+url
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
@@ -952,11 +956,11 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         #if '/video/' in url: url = url.replace('/video/','/embed/')
                         print url
                         fonte_id = '(Thevideo.me)'+url
-                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+                        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	#addLink(url,'','','')
-        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
+        if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
                 if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url and 'sockshare' not in url and 'firedrive' not in url and 'movshare' not in url and 'nowvideo' not in url and 'putlocker' not in url:# and 'iiiiiiiiii' in url:
                         Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'').replace(url+'///'+nomeescolha,'')+'[/COLOR][/B]',iconimage,'',fanart)
     	return fonte_id
@@ -1493,6 +1497,7 @@ def FTTMASHUP(item):
                                         fonte_video = abrir_url(urlvideo)
                                 except: fonte_video = ''
                                 fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+                                if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
                                 if fontes_video != []:
                                         qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
                                         if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','') + audio_filme

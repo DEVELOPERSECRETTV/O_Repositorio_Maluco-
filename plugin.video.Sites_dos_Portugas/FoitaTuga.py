@@ -64,6 +64,7 @@ def FTT_Menu_Filmes_Por_Categorias(artfolder):
                 for item_categorias in html_items_categorias:
                         filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n.+?[(](.+?)[)]\n.+?</option>").findall(item_categorias)
                         if not filmes_por_categoria: filmes_por_categoria = re.compile("<a dir='ltr' href='(.+?)'>(.+?)</a>").findall(item_categorias)
+                        if not filmes_por_categoria: filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n</option>").findall(item_categorias)
 ##                        for endereco_categoria,nome_categoria,total_categoria in filmes_por_categoria:
 ##                                addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ('+total_categoria+')',endereco_categoria,602,artfolder + 'FTT1.png','nao','')
                         for endereco_categoria,nome_categoria in filmes_por_categoria:
@@ -75,6 +76,7 @@ def FTT_Menu_Filmes_Por_Categorias(artfolder):
                 for item_categorias in html_items_categorias:
                         filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n.+?[(](.+?)[)]\n.+?</option>").findall(item_categorias)
                         if not filmes_por_categoria: filmes_por_categoria = re.compile("<a dir='ltr' href='(.+?)'>(.+?)</a>").findall(item_categorias)
+                        if not filmes_por_categoria: filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n</option>").findall(item_categorias)
                         for endereco_categoria,nome_categoria in filmes_por_categoria:
                                 Anos[i] = nome_categoria+'|'+endereco_categoria+'|'
                                 i = i + 1
@@ -125,6 +127,7 @@ def FTT_Top_Vistos(item_categorias):
                         fonte_video = abrir_url(url_titulo[0][0])
                 except: fonte_video = ''
                 fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+                if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
                 if fontes_video != []:
                         snpse = re.compile('Sinopse.png"></a></div>\n(.+?)\n').findall(fontes_video[0])
                         if not snpse: snpse = re.compile('Sinopse.png" /></a></div>\n(.+?)\n').findall(fontes_video[0])
@@ -142,6 +145,7 @@ def FTT_Top_Vistos(item_categorias):
                         
                 nome_f = nome_f.replace('&#8217;',"'")
                 nome_f = nome_f.replace('&#8211;',"-")
+                
                 nome_f = nome_f.replace('&#39;',"'")
                 nome_f = nome_f.replace('&amp;','&')
                 nome_f = nome_f.replace('(Pedido)',"").replace('[Pedido]','')
@@ -154,6 +158,7 @@ def FTT_Top_Vistos(item_categorias):
                 nome_f = nome_f.replace('PT/BR','')
                 nome_f = nome_f.replace('PT-BR','')
                 nome_f = nome_f.replace(' - ','')
+                nome_f = nome_f.replace('&#;',"-")
 
                 nnnn = re.compile('.+?[(](.+?)[)]').findall(nome_f)
                 if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome_f)
@@ -164,7 +169,7 @@ def FTT_Top_Vistos(item_categorias):
                 if imdbcode != '':
                         try:
                                 fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),anofilme)
-                                if sinopse == '': sinopse = sin
+                                if sinopse == '' or 'style' in sinopse: sinopse = sin
                                 if fanart == '': fanart,tmb,pter = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
                                 if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
                         except:pass
@@ -205,6 +210,7 @@ def FTT_encontrar_fontes_filmes(url):
 	except: html_source = ''
 	if name != '[COLOR yellow]- Top 10 + Vistos[/COLOR]':#'[COLOR yellow]- Todos[/COLOR]' or name == "[B]Página Seguinte >>[/B]":
                 items = re.findall("<a class='comment-link'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
         if name == '[COLOR yellow]- Top 10 + Vistos[/COLOR]':
                 html_items_categorias = re.findall("<div class='widget-content popular-posts'>(.*?)<div class='clear'>", html_source, re.DOTALL)
                 items = re.findall("<div class='item-thumbnail'>(.*?)<div style='clear: both;'>", html_items_categorias[0], re.DOTALL)
@@ -453,6 +459,7 @@ def Fontes_Filmes_FTT(item):
                                 fonte_video = abrir_url(urlvideo)
                         except: fonte_video = ''
                         fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+                        if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
                         if fontes_video != []:
                                 qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
                                 if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')+audio_filme
@@ -602,6 +609,7 @@ def FTT_encontrar_videos_filmes(name,url):
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
         fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+        if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
         if 'BREVEMENTE ONLINE' in fonte_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
         for fonte_e_url in fontes_video:
@@ -706,6 +714,7 @@ def FTT_links(name,url,iconimage,fanart):
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
         fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+        if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
         if 'BREVEMENTE ONLINE' in fonte_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
         for fonte_e_url in fontes_video:

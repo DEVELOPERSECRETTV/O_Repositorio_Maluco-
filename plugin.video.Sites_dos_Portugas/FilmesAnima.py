@@ -169,6 +169,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
                 except: html_source = ''
                 i=0
                 items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
                 for item in items:                        
                         i = i + 1
                         a = str(i)
@@ -875,6 +876,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                         fonte_video = abrir_url(urlvideo)
                                 except: fonte_video = ''
                                 fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+                                if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
                                 if fontes_video != []:
                                         qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
                                         if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')+audio_filme

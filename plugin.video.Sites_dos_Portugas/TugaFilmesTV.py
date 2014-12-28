@@ -1680,7 +1680,7 @@ def TFV_encontrar_videos_series(name,url):
                         #addLink(epis[x],'','','')
                         episo = re.compile('episodio(.+?)episodiot(.+?)nomeepisodio(.+?)f_id(.+?)[|]END').findall(epis[x])
                         for episodio,episodiot,nomeepisodio,f_id in episo:
-                                TFVepi = threading.Thread(name='TFVepi'+str(x), target=vamosla , args=(episodio,episodiot,nomeepisodio,f_id,temporada,temporadat,urltrailer,fanart,namet,n_items,tvdbid,'---',))
+                                TFVepi = threading.Thread(name='TFVepi'+str(x), target=vamosla , args=(episodio,episodiot,nomeepisodio,f_id,temporada,temporadat,urltrailer,fanart,namet,n_items,tvdbid,'---',imdbcode,year,))
                                 threads.append(TFVepi)
                                 
                 [i.start() for i in threads]
@@ -1723,15 +1723,16 @@ def TFV_encontrar_videos_series(name,url):
                 #addLink(temporada,'','','')
                 episodio = re.compile('EPISTIO(.+?)FANART').findall(episoding[x])
                 episodio = episodio[0]
-                #addLink(episodio,'','','')                
-                addDir_episode1_false('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,'tvepisode',n_items)
+                #addLink(episodio,'','','')
+                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+year
+                addDir_episode1_false('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,n_items)
                 xbmc.sleep(12)
                 
         xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
         xbmc.executebuiltin("Container.SetViewMode(504)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
                                 
-def vamosla(episodio,episodiot,nomeepisodio,f_id,temporada,temporadat,urltrailer,fanart,namet,n_items,tvdbid,nome_antes):
+def vamosla(episodio,episodiot,nomeepisodio,f_id,temporada,temporadat,urltrailer,fanart,namet,n_items,tvdbid,nome_antes,imdbcode,anne):
         
         try:
                 epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
@@ -1739,10 +1740,10 @@ def vamosla(episodio,episodiot,nomeepisodio,f_id,temporada,temporadat,urltrailer
                 if th == '': th = '---'
                 if air == '': air = '---'
                 if epi_nome == '': epi_nome = nomeepisodio
-                episoding.append('TEMPADAT'+temporadat+'EPISODT'+episodiot+'FIDID'+f_id+'EPINOME'+epi_nome+'THUMB'+th+'SINOPSE'+sin+'AIRDAY'+air+'NAMET'+namet+'TEMPORDA'+temporada+'EPISTIO'+episodio+'FANART'+fanart+'URLTRAILER'+urltrailer+'NMANTES'+nome_antes+'END')
+                episoding.append('TEMPADAT'+temporadat+'EPISODT'+episodiot+'FIDID'+f_id+'EPINOME'+epi_nome+'THUMB'+th+'SINOPSE'+sin+'AIRDAY'+air+'NAMET'+namet+'TEMPORDA'+temporada+'EPISTIO'+episodio+'FANART'+fanart+'URLTRAILER'+urltrailer+'NMANTES'+nome_antes+'END'+tvdbid+'|'+imdbcode+'|'+anne)
                 #addDir_episode1('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,'tvepisode',n_items)
         except:
-                episoding.append('TEMPADAT'+temporadat+'EPISODT'+episodiot+'FIDID'+f_id+'EPINOME'+nomeepisodio+'THUMB'+fanart+'SINOPSE---AIRDAY---'+'NAMET'+namet+'TEMPORDA'+temporada+'EPISTIO'+episodio+'FANART'+fanart+'URLTRAILER'+urltrailer+'NMANTES'+nome_antes+'END')
+                episoding.append('TEMPADAT'+temporadat+'EPISODT'+episodiot+'FIDID'+f_id+'EPINOME'+nomeepisodio+'THUMB'+fanart+'SINOPSE---AIRDAY---'+'NAMET'+namet+'TEMPORDA'+temporada+'EPISTIO'+episodio+'FANART'+fanart+'URLTRAILER'+urltrailer+'NMANTES'+nome_antes+'END'+tvdbid+'|'+imdbcode+'|'+anne)
                 #addDir_episode1('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+nomeepisodio+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,'tvepisode',n_items)
         
 
@@ -2254,7 +2255,7 @@ def TFV_Ultimos(fanart,name,url,item,tvdbid,n_items):
 ##                                episthreads.append(TFVepi)
 
 
-                TFVepi = threading.Thread(name='TFVepi'+FILMEN, target=vamosla , args=(episodio,episodiot,nomeepisodio,f_id,temporada,temporadat,urltrailer,fanart,namet,n_items,tvdbid,nome_antes,))
+                TFVepi = threading.Thread(name='TFVepi'+FILMEN, target=vamosla , args=(episodio,episodiot,nomeepisodio,f_id,temporada,temporadat,urltrailer,fanart,namet,n_items,tvdbid,nome_antes,imdbcode,anne,))
                 episthreads.append(TFVepi)
                 TFVepi.start()
                 TFVepi.join()
@@ -2462,9 +2463,14 @@ def ultimos_episodios_TFV_ultimos(url):
                 nome_antes = nome_antes[0]
                 if nome_antes == '---': nome_antes = ''
                 #addLink(urltrailer,'','','')
+                tvdbidimdbyear = re.compile('END(.+?)[|](.+?)[|](.*)').findall(episoding[x])
+                tvdbid = tvdbidimdbyear[0][0]
+                imdbcode = tvdbidimdbyear[0][1]
+                anne = tvdbidimdbyear[0][2]
                 #sin = ''
                 try:
-                        addDir_episode1_false(nome_antes+'[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namett,urltrailer,'tvepisode',num_total)
+                        mvoutv = temporada+'|'+episodio+'|'+namett+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                        addDir_episode1_false(nome_antes+'[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namett,urltrailer,mvoutv,num_total)
                 except: pass
                 xbmc.sleep(20)
 ##        percent = 0

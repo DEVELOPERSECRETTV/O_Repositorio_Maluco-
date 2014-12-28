@@ -1090,10 +1090,36 @@ def addDir_episode1_false(name,url,mode,iconimage,checker,fanart,episod,air,name
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker, "Episode": episod, "Premiered": air } )
         cm = []
   	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
-        cm.append(('Procurar no "Genesis"', 'RunPlugin(%s?mode=9002&namet=%s&url=%s&year=%s&urltrailer=%s)' % (sys.argv[0],namet,urllib.quote_plus(url),str(year),urllib.quote_plus(urltrailer))))
+        cm.append(('Procurar no "Genesis"', 'RunPlugin(%s?mode=9003&mvoutv=%s&url=%s)' % (sys.argv[0],urllib.quote_plus(mvoutv),urllib.quote_plus(url))))
         cm.append(('Ver Trailer', 'RunPlugin(%s?mode=8000&url=%s&namet=%s)' % (sys.argv[0],urllib.quote_plus(urltrailer),namet)))
         liz.addContextMenuItems(cm, replaceItems=False)
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False,totalItems=ttitems)
+        return ok
+
+def addDir_episode1_true(name,url,mode,iconimage,checker,fanart,episod,air,namet,urltrailer,mvoutv,ttitems):
+        if fanart == '': fanart = artfolder + 'FAN3.jpg'
+        #text = 'nnnnnn'
+        text = ''
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&namet="+urllib.quote_plus(namet)+"&urltrailer="+urllib.quote_plus(urltrailer)+"&mvoutv="+urllib.quote_plus(mvoutv)+"&name="+urllib.quote_plus(name)+"&namet="+urllib.quote_plus(namet)+"&air="+urllib.quote_plus(air)+"&episod="+urllib.quote_plus(episod)+"&fanart="+urllib.quote_plus(fanart)+"&checker="+urllib.quote_plus(checker)+"&iconimage="+urllib.quote_plus(iconimage)
+        ok=True
+        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+	liz.setProperty('fanart_image',fanart)
+        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": checker, "Episode": episod, "Premiered": air } )
+        cm = []
+  	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
+        #mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+##        ositems = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.*)').findall(mvoutv)
+##        porada = ositems[0][0]
+##        podio = ositems[0][1]
+##        show = ositems[0][2]
+##        idtv = ositems[0][3]
+##        idmdb = ositems[0][4]
+##        anoano = ositems[0][5]
+        #cm.append(('Procurar no "Genesis"', xbmc.Player().play('plugin://plugin.video.genesis/?action=play&imdb='+idmdb+'&season='+porada+'&show='+show+'&tvdb='+idtv+'&year='+anoano+'&episode='+podio)))
+        cm.append(('Procurar no "Genesis"', 'RunPlugin(%s?mode=9003&mvoutv=%s&url=%s)' % (sys.argv[0],urllib.quote_plus(mvoutv),urllib.quote_plus(url))))
+        cm.append(('Ver Trailer', 'RunPlugin(%s?mode=8000&url=%s&namet=%s)' % (sys.argv[0],urllib.quote_plus(urltrailer),namet)))
+        liz.addContextMenuItems(cm, replaceItems=False)
+        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True,totalItems=ttitems)
         return ok
         
 #----------------------------------------------------------------------------------------------------------------------------------------------#

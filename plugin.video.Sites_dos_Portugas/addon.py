@@ -201,6 +201,7 @@ def FTTONOFF(url_FTT):
 		html_source = abrir_url(url_FTT)
 	except: html_source = ''
 	items = re.findall("<div class='post-body entry-content'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
 	if items != []: FTT_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: FTT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 def CMTONOFF(url_CMT):
@@ -407,6 +408,7 @@ def dirtodos(url):
                         html_source = abrir_url(url_FTT)
                 except: html_source = ''
                 itemsFTT = re.findall("<a class='comment-link'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+                if not itemsFTT: itemsFTT = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
                 if itemsFTT != []:
                         try:
                                 proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)
@@ -1024,6 +1026,7 @@ def pesquisar_SERIES(nome_pesquisa,url):
         message = ''
         progress.update(percent, 'A Procurar em '+site, message, "")
         print str(a) + " de " + str(int(a))
+        if url_TFV == '': url_TFV = 'http://www.tuga-filmes.us/search?q=' + str(encode)
 	encontrar_fontes_SERIES_TFV(url_TFV + 'IMDB'+imdbcode+'IMDB',pesquisou)
 	
 	a = 1
@@ -2254,6 +2257,18 @@ elif mode == 9001:
         passar_nome_pesquisa_externa(name,url)
 elif mode == 9002:
         Funcoes.playparser(namet, url, year, urltrailer)
+elif mode == 9003:
+        ositems = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.*)').findall(mvoutv)
+        porada = ositems[0][0]
+        podio = ositems[0][1]
+        show = ositems[0][2]
+        idtv = ositems[0][3]
+        idmdb = ositems[0][4].replace('tt','')
+        anoano = ositems[0][5]
+        item = xbmcgui.ListItem(path=url)
+	item.setProperty("IsPlayable", "true")
+        xbmc.Player().play('plugin://plugin.video.genesis/?action=play&name='+show+'&imdb='+idmdb+'&season='+porada+'&show='+show+'&tvdb='+idtv+'&year='+anoano+'&episode='+podio)
+        #Funcoes.playparser(idmdb,porada,show,idtv,anoano,podio)
 
 elif mode == 10000:
         SITESdosPORTUGAS()
