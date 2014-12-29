@@ -739,16 +739,15 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
 
-                                urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                                urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                                if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                                 if urletitulo:
                                         urlvideo = urletitulo[0][0]
                                         nome = urletitulo[0][1]
                                 else:
                                         urlvideo = ''
                                         nome = ''
-                                        
                                 
-
                                 snpse = re.compile('Sinopse.png"></a></div>\n(.+?)\n').findall(item)
                                 if snpse: sinopse = snpse[0]
                                 sinopse = sinopse.replace('&#8216;',"'")

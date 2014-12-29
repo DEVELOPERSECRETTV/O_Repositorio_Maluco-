@@ -77,6 +77,22 @@ def PLAY_movie_url(url,name,iconimage,checker,fanart):#,nomeAddon):
 				checker = subtitle[0]
 				url = match[0]
 		except: pass
+	if "video.pw" in url :
+		try:
+
+			iframe_url = url
+			print iframe_url
+			link3 = abrir_url(iframe_url)
+			imagem=re.compile('var vscreenshot = "(.+?)"').findall(link3)
+			if imagem: iconimage = imagem[0]
+			match=re.compile('var vurl2 = "(.+?)"').findall(link3)
+			if match: url = match[0]
+			else: url = ''
+			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+			if subtitle == []: checker = ''
+			else: checker = subtitle[0]
+
+		except: pass
 	if "drive.google" in url or "docs.google" in url :
 		try:
 			iframe_url = url
@@ -715,6 +731,22 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 			else:
 				checker = subtitle[0]
 				url = match[0]
+		except: pass
+	elif "video.pw" in url :
+		try:
+
+			iframe_url = url
+			print iframe_url
+			link3 = abrir_url(iframe_url)
+			imagem=re.compile('var vscreenshot = "(.+?)"').findall(link3)
+			if imagem: iconimage = imagem[0]
+			match=re.compile('var vurl2 = "(.+?)"').findall(link3)
+			if match: url = match[0]
+			else: url = ''
+			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+			if subtitle == []: checker = ''
+			else: checker = subtitle[0]
+
 		except: pass
 	elif "drive.google" in url or "docs.google" in url :
 		try:
