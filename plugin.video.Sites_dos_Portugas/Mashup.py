@@ -1593,7 +1593,9 @@ def CMTMASHUP(item):
                                         nome_original = titulooriginal[0]
                                 else: nome_original = ''
                         ################urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
-                        urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        #urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         if not qualidade: qualidade = re.compile("Ass.+?tir online .+?[(](.+?)[)]").findall(item)
                         if qualidade: qualidade = qualidade[0].replace('<b>','').replace('</b>','')

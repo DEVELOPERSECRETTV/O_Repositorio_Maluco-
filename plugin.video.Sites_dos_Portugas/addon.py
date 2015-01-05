@@ -209,6 +209,7 @@ def CMTONOFF(url_CMT):
 		html_source = abrir_url(url_CMT)
 	except: html_source = ''
 	items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
 	if items != []: CMT_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: CMT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 def CMEONOFF(url_CME):
@@ -430,6 +431,7 @@ def dirtodos(url):
                         html_source = abrir_url(url_CMT)
                 except: html_source = ''
                 itemsCMT = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
+                if not itemsCMT: itemsCMT = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
                 if itemsCMT != []:
                         try:
                                 proxima = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)

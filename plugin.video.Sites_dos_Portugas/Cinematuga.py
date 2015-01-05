@@ -52,7 +52,7 @@ def CMT_MenuPrincipal(artfolder):
         addDir('[COLOR yellow]- Por Ano[/COLOR]','url',709,artfolder + 'ANO.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',708,artfolder + 'CT.png','nao','')
 	#addDir('[COLOR yellow]- Top Semanal[/COLOR]','url',718,artfolder + 'TPSE.png','nao','')
-	addDir('[COLOR yellow]- Qualidade[/COLOR]','url',719,artfolder,'nao','')
+	#addDir('[COLOR yellow]- Qualidade[/COLOR]','url',719,artfolder,'nao','')
 
 def CMT_Menu_Filmes_Top_5(artfolder):
         i = 1
@@ -76,6 +76,7 @@ def CMT_Menu_Filmes_Top_5(artfolder):
                         html_source = abrir_url(urletitulo[0][0])
                 except: html_source = ''
                 items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
+                if not items: items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
                 for item in items:
                         thumb = ''
                         fanart = ''
@@ -176,9 +177,10 @@ def CMT_Menu_Filmes_Top_5(artfolder):
 
 def CMT_Menu_Filmes_Por_Ano(artfolder):
         i = 0
-        url_ano = 'http://www.cinematuga.net'#'http://www.tugafilmes.org'
+        url_ano = 'http://www.cinematuga.net/'#'http://www.tugafilmes.org'
         html_categorias_source = abrir_url(url_ano)
 	html_items_categorias = re.findall("<h2>Anos de La(.*?)<div class=\'clear\'>", html_categorias_source, re.DOTALL)
+	if not html_items_categorias: html_items_categorias = re.findall("<h2>FILMES POR ANO</h2>(.*?)<div class='clear'>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<option value='(.+?)'>Filmes (\d+)\n</option>").findall(item_categorias)
@@ -198,6 +200,7 @@ def CMT_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.cinematuga.net'#'http://www.tugafilmes.org'
         html_categorias_source = abrir_url(url_categorias)
 	html_items_categorias = re.findall("<h2>Menu Filmes</h2>(.*?)<div class=\'clear\'>", html_categorias_source, re.DOTALL)
+	if not html_items_categorias: html_items_categorias = re.findall("<h2>CATEGORIAS</h2>(.*?)<div class='clear'>", html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n</option>").findall(item_categorias)
@@ -233,6 +236,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
 	except: html_source = ''
 	#items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
 	items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
 	conta_items = 0
 	if items != []:
 		print len(items)
@@ -274,7 +278,9 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
                                 else: nome_original = ''
                                 #addDir1(nome_original,'','','',False,'')
                         ################urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
-                        urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        #urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         if not qualidade: qualidade = re.compile("Ass.+?tir online .+?[(](.+?)[)]").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)

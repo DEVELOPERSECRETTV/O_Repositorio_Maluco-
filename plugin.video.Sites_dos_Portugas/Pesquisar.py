@@ -172,6 +172,7 @@ def pesquisar():
                         except: html_source = ''
                         i=0
                         items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
+                        if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
                         for item in items:
                                 i = i + 1
                                 a = str(i)
@@ -1104,8 +1105,8 @@ def encontrar_fontes_pesquisa_CMT(url,pesquisou,FS,item):
                                         nome_original = titulooriginal[0]
                                 else: nome_original = ''
                                 #addDir1(nome_original,'','','',False,'')
-                        ################urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
-                        urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         if not qualidade: qualidade = re.compile("Ass.+?tir online .+?[(](.+?)[)]").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)

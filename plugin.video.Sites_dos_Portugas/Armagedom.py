@@ -200,9 +200,17 @@ def ARM_Menu_Filmes_Por_Categorias_MEGA_net():
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile('<li><a href="(.+?)">(.+?)</a></li>').findall(item_categorias)
-                for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        if 'Lan\xc3\xa7amentos' not in nome_categoria and 'S\xc3\xa9ries' not in nome_categoria:
-                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,351,artfolder + 'SDB.png','nao','')
+                if filmes_por_categoria:
+                        for endereco_categoria,nome_categoria in filmes_por_categoria:
+                                if 'Lan\xc3\xa7amentos' not in nome_categoria and 'S\xc3\xa9ries' not in nome_categoria:
+                                        addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ',endereco_categoria,351,artfolder + 'SDB.png','nao','')
+                else:
+                        filmes_por_categoria = re.compile('<a href="(.+?)">(.+?) <span class="total-post-categoria">(\d+)</span></a>').findall(item_categorias)
+                        if filmes_por_categoria:
+                                for endereco_categoria,nome_categoria,total_categoria in filmes_por_categoria:
+                                        if 'Lan\xc3\xa7amentos' not in nome_categoria and 'S\xc3\xa9ries' not in nome_categoria:
+                                                addDir('[B][COLOR orange]' + nome_categoria + '[/COLOR][/B] ('+total_categoria+')',endereco_categoria,351,artfolder + 'SDB.png','nao','')
+
 
 def ARM_Menu_Series_MEGA_net():
         addDir1(name,'url',1005,artfolder + 'SDB.png',False,'')
@@ -436,8 +444,12 @@ def ARM_encontrar_fontes_filmes_MEGA_net(url):
                         else:
                                 thumb = ''
                                 urlfilme = ''
-                        ano = re.compile('<div class="tt-calendar">(.+?)</div>').findall(item)
-                        if ano: ano_filme = ano[0]
+                        ano = re.compile('<div class="tt-calendar">(.+?)[,].+?</div>').findall(item)
+                        #if not ano: ano = re.compile('<div class="tt-calendar">(.+?)[-].+?</div>').findall(item)
+                        if not ano: ano = re.compile('<div class="tt-calendar">(.+?)</div>').findall(item)
+                        if ano:
+                                ano_filme = ano[0].replace('&#8211;','')
+                                ano_filme = re.compile('(\d+)').findall(ano_filme)[0]
                         else: ano_filme = ''
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8230;',"...")
@@ -457,12 +469,15 @@ def ARM_encontrar_fontes_filmes_pesquisa_MEGA_net(url,nome_pesquisa):
 		html_source = ARM_abrir_url(url)
 	except: html_source = ''
 	num_f = 0
+	
 	items = re.findall('<li class="tooltip"(.*?)</li>', html_source, re.DOTALL)
+	if not items: items = re.findall('<li ti(.*?)<div class="tt-category">', html_source, re.DOTALL)
 	#addDir1(str(len(items)),'','',iconimage,False,'')
 	if items != []:
 		print len(items)
 		for item in items:
                         titulo = re.compile('title="(.+?)"').findall(item)
+                        if not titulo: titulo = re.compile('tle="(.+?)"').findall(item)
                         if titulo: nome = titulo[0]
                         else: nome = ''
                         urlthumb = re.compile('<a href="(.+?)"><img src="(.+?)"').findall(item)
@@ -472,13 +487,17 @@ def ARM_encontrar_fontes_filmes_pesquisa_MEGA_net(url,nome_pesquisa):
                         else:
                                 thumb = ''
                                 urlfilme = ''
+                        ano = re.compile('<div class="tt-calendar">(.+?)[,].+?</div>').findall(item)
+                        if not ano: ano = re.compile('<div class="tt-calendar">(.+?)</div>').findall(item)
+                        if ano: ano_filme = ano[0].replace(' ','')
+                        else: ano_filme = ''
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8230;',"...")
                         nome = nome.replace('&#8211;',"-")
                         nome = nome.replace('#038;','')
                         try:
                                 num_f = num_f + 1
-                                addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B]',urlfilme,354,thumb,'nao','')
+                                addDir('[B][COLOR yellow]' + nome + '[/COLOR][COLOR green] (' + ano_filme + ')[/COLOR][/B]',urlfilme,354,thumb,'nao','')
                         except: pass
 	if num_f == 0: addDir1('[B][COLOR red]- No Match Found -[/COLOR][/B]','url',1005,'',False,'')
 	proxima = re.compile('<a class="nextpostslink" href="(.+?)">></a>').findall(html_source)
@@ -488,11 +507,13 @@ def ARM_encontrar_fontes_filmes_pesquisa_MEGA_net(url,nome_pesquisa):
                 except: html_source = ''
                 num_f = 0
                 items = re.findall('<li class="tooltip"(.*?)</li>', html_source, re.DOTALL)
+                if not items: items = re.findall('<li ti(.*?)<div class="tt-category">', html_source, re.DOTALL)
                 #addDir1(str(len(items)),'','',iconimage,False,'')
                 if items != []:
                         print len(items)
                         for item in items:
                                 titulo = re.compile('title="(.+?)"').findall(item)
+                                if not titulo: titulo = re.compile('tle="(.+?)"').findall(item)
                                 if titulo: nome = titulo[0]
                                 else: nome = ''
                                 urlthumb = re.compile('<a href="(.+?)"><img src="(.+?)"').findall(item)
@@ -502,13 +523,17 @@ def ARM_encontrar_fontes_filmes_pesquisa_MEGA_net(url,nome_pesquisa):
                                 else:
                                         thumb = ''
                                         urlfilme = ''
+                                ano = re.compile('<div class="tt-calendar">(.+?)[,].+?</div>').findall(item)
+                                if not ano: ano = re.compile('<div class="tt-calendar">(.+?)</div>').findall(item)
+                                if ano: ano_filme = ano[0].replace(' ','')
+                                else: ano_filme = ''
                                 nome = nome.replace('&#8217;',"'")
                                 nome = nome.replace('&#8230;',"...")
                                 nome = nome.replace('&#8211;',"-")
                                 nome = nome.replace('#038;','')
                                 try:
                                         num_f = num_f + 1
-                                        addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B]',urlfilme,354,thumb,'nao','')
+                                        addDir('[B][COLOR yellow]' + nome + '[/COLOR][COLOR green] (' + ano_filme + ')[/COLOR][/B]',urlfilme,354,thumb,'nao','')
                                 except: pass
 
 
@@ -520,7 +545,8 @@ def ARM_encontrar_fontes_series_MEGA_net(url):
 	if name == '[B][COLOR orange]Séries[/COLOR][/B]': items_series = re.findall('<div id="listagem-series">(.*?)<!--/listagem-series-->', html_source, re.DOTALL)
 	if name == '[B][COLOR orange]Animes/Desenhos[/COLOR][/B]': items_series = re.findall('<div id="listagem-animmes">(.*?)<!--/listagem-animmes-->', html_source, re.DOTALL)
 	items = re.findall('<div class="search tooltip box-video"(.*?)</a></div>', items_series[0], re.DOTALL)
-	#addDir1(str(len(items)),'','',iconimage,False,'')
+	if not items: items = re.findall('"box-video search tooltip"(.*?)</a></div>', items_series[0], re.DOTALL)
+	#addDir1(str(len(items_series))+name,'','',iconimage,False,'')
 	if items != []:
 		print len(items)
 		for item in items:
@@ -557,6 +583,7 @@ def ARM_encontrar_fontes_series_pesquisa_MEGA_net(url,nome_pesquisa):
 	except: html_source = ''
 	num_f = 0
 	items = re.findall('<div class="search tooltip box-video"(.*?)/></a></div>', html_source, re.DOTALL)
+	if not items: items = re.findall('"box-video search tooltip"(.*?)</a></div>', items_series[0], re.DOTALL)
 	if items != []:
 		print len(items)
 		for item in items:
@@ -566,7 +593,8 @@ def ARM_encontrar_fontes_series_pesquisa_MEGA_net(url,nome_pesquisa):
                         urlthumb = re.compile('<a href="(.+?)"><img src="(.+?)"').findall(item)
                         if urlthumb:
                                 thumb = urlthumb[0][1]
-                                urlfilme = urlthumb[0][0]
+                                if 'megafilmeshd' not in urlthumb[0][0]: urlfilme = 'http://megafilmeshd.net/series/' + urlthumb[0][0]
+                                else: urlfilme = urlthumb[0][0]
                         else:
                                 thumb = ''
                                 urlfilme = ''
@@ -581,7 +609,7 @@ def ARM_encontrar_fontes_series_pesquisa_MEGA_net(url,nome_pesquisa):
                                 nome_capwords = nome.lower()
                                 if nome_pesquisa.lower() in nome_capwords:
                                         num_f = num_f + 1
-                                        addDir('[B][COLOR yellow] - ' + nome + '[/COLOR][COLOR green] (' + ano_filme + ')[/COLOR][/B]',urlfilme,354,thumb,'nao','')
+                                        addDir('[B][COLOR yellow]' + nome + '[/COLOR][COLOR green] (' + ano_filme + ')[/COLOR][/B]',urlfilme,354,thumb,'nao','')
                         except: pass
 
 

@@ -188,6 +188,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                 except: html_source = ''
                 i=0
                 items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
+                if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
                 for item in items:                        
                         i = i + 1
                         a = str(i)
@@ -244,6 +245,7 @@ def pesquisar(nome_pesquisa,url,automatico):
         audioTFV = ''
         audioFTT = ''
         audioCMC = ''
+        audioCMT = ''
         automatico = automatico.upper()
         encontrou = 'nao'
         numstream = 0
@@ -269,7 +271,10 @@ def pesquisar(nome_pesquisa,url,automatico):
                                 audioFTT = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','').replace('PORTUGUESPT','PT-PT').replace('PTPT',' | PT-PT')
                         if audio_audio and 'CINEMAEMCASA' in audio_audio[0][0]:
                                 #_nomeservidor_.append(resultados[x])
-                                audioCMC = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','').replace('&nbsp;','').replace('ê','Ê').replace('PORTUGUÊS','PT-PT').replace('PORTUGUÊSPT','PT-PT').replace('INGLÊS','EN')   
+                                audioCMC = ' | '+audio_audio[0][1].replace(':','').replace('/','-').replace(' ','').replace('&nbsp;','').replace('ê','Ê').replace('PORTUGUÊS','PT-PT').replace('PORTUGUÊSPT','PT-PT').replace('INGLÊS','EN')
+                        if audio_audio and 'CINEMATUGA.NET' in audio_audio[0][0]:
+                                #_nomeservidor_.append(resultados[x])
+                                audioCMT = ' | '+audio_audio[0][1].replace(' ','').replace('PORTUGUESPT','PT-PT').replace('-',' | ').replace('PT | PT','PT-PT')
                         
                         res = re.compile('(.+?)[|]URL[|](.+?)[|]THUMB[|](.+?)[|]FANART').findall(resultados[x])
                         if res and 'AUDIO' not in resultados[x]:
@@ -282,6 +287,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                 elif 'TUGAFILMES.TV' in res[0][0]: audio = audioTFV
                                 elif 'FOITATUGA' in res[0][0]: audio = audioFTT
                                 elif 'CINEMAEMCASA' in res[0][0]: audio = audioCMC
+                                elif 'CINEMATUGA.NET' in res[0][0]: audio = audioCMT
                                 else: audio = ''
                                 
                                 _nomeservidor_.append(res[0][0].replace('SITESdosPORTUGAS',str(a))+audio)                                                  
@@ -1155,7 +1161,9 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(FILMEN,url,pesquisou,imdbc,ite
                                         nome_original = titulooriginal[0]
                                 else: nome_original = ''
                         ################urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
-                        urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        #urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                         if ano: ano_filme = ano[0]
@@ -1233,6 +1241,10 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(FILMEN,url,pesquisou,imdbc,ite
                                                         name = '[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao
                                                         iconimage = thumb.replace('s72-c','s320')
                                                         #addDir1(name,'url',1001,iconimage,False,fanart)
+                                                        quality = re.compile('(.+?)[-].+?').findall(qualidade)
+                                                        if quality: qualite = quality[0].replace(' ','')+'-'
+                                                        else: qualite = ''
+                                                        resultados.append('CINEMATUGA.NET|AUDIO|'+qualite.upper()+audio_filme.upper().replace(':','').replace('INGLES','EN').replace('INGLÊS','EN'))
                                                         CMT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                         num_f = num_f + 1
                                         else:
@@ -1258,6 +1270,10 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(FILMEN,url,pesquisou,imdbc,ite
                                                                 poster = ''
                                                 name = '[COLOR orange]CMT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano[0].replace(' ','') + ')[/COLOR][COLOR red] (' + qualidade + audio_filme + ')[/COLOR] ' + versao
                                                 iconimage = thumb.replace('s72-c','s320')
+                                                quality = re.compile('(.+?)[-].+?').findall(qualidade)
+                                                if quality: qualite = quality[0].replace(' ','')+'-'
+                                                else: qualite = ''
+                                                resultados.append('CINEMATUGA.NET|AUDIO|'+qualite.upper()+audio_filme.upper().replace(':','').replace('INGLES','EN').replace('INGLÊS','EN'))
                                                 #addDir1(name,'url',1001,iconimage,False,fanart)
                                                 CMT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow](' + ano_filme.replace(' ','') + ')[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                 num_f = num_f + 1

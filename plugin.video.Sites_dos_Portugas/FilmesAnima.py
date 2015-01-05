@@ -185,6 +185,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
                 except: html_source = ''
                 i=0
                 items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
+                if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
                 for item in items:                        
                         i = i + 1
                         a = str(i)
@@ -1024,8 +1025,8 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(FILMEN,url,pesquisou,imdbc,ite
                                 if titulooriginal:
                                         nome_original = titulooriginal[0]
                                 else: nome_original = ''
-                        ################urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
-                        urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
                         ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
                         if ano: ano_filme = ano[0]
