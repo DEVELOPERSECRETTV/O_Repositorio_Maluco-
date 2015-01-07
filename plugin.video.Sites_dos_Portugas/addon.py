@@ -56,6 +56,8 @@ def MAIN_MENU():
 ##                d.doModal()
 ##                del d
 ##                selfAddon.setSetting('AvisoFanart',value='false')
+##        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B]','http://direct',3003,artfolder + 'SERIES1.png','nao','')
+##        addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B]','http://direct',3003,artfolder + 'SERIES1.png','nao','')
         addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (TMDB)','http://direct',3003,artfolder + 'SERIES1.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR] [COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (TMDB)','1',3011,artfolder + 'P1.png','nao','')
         addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B] (TMDB)','http://direct',3004,artfolder + 'FILMES1.png','nao','')

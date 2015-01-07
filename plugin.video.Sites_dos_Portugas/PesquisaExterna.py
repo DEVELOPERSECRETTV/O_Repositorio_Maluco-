@@ -35,6 +35,7 @@ artfolder = addonfolder + '/resources/img/'
 
 progress = xbmcgui.DialogProgress()
 resultados = []
+contastreams = []
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -309,8 +310,8 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         PLAY_movie(_linkservidor_[x],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
                                 else:
                                         nomefilme = name#+_nomeservidor_[x]
-                                        progress.create(nomefilme, 'A preparar vídeo.')
-                                        progress.update( 98, '', 'Por favor aguarde...', "" )
+                                        #progress.create(nomefilme, 'A preparar vídeo.')
+                                        #progress.update( 98, '', 'Por favor aguarde...', "" )
 
                                         if _legendas_[x] == '---': checker = ''
                                         else: checker = _legendas_[x]
@@ -338,8 +339,8 @@ def pesquisar(nome_pesquisa,url,automatico):
                                                 PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
                                         else:
                                                 nomefilme = name
-                                                progress.create(nomefilme, 'A preparar vídeo.')
-                                                progress.update( 98, '', 'Por favor aguarde...', "" )
+                                                #progress.create(nomefilme, 'A preparar vídeo.')
+                                                #progress.update( 98, '', 'Por favor aguarde...', "" )
 
                                                 if _legendas_[index] == '---': checker = ''
                                                 else: checker = _legendas_[index]
@@ -375,8 +376,8 @@ def pesquisar(nome_pesquisa,url,automatico):
                                 PLAY_movie(linkservidor,nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
                         else:
                                 nomefilme = name#+_nomeservidor_[x]
-                                progress.create(nomefilme, 'A preparar vídeo.')
-                                progress.update( 98, '', 'Por favor aguarde...', "" )
+                                #progress.create(nomefilme, 'A preparar vídeo.')
+                                #progress.update( 98, '', 'Por favor aguarde...---'+str(numstream), "" )
 
 ##                                if _legendas_[0] == '---': checker = ''
 ##                                else: checker = _legendas_[0]
@@ -393,6 +394,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                 else:
                         indexservidores = xbmcgui.Dialog().select
                         index = indexservidores('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', _nomeservidor_)
+                        #xbmc.sleep(1000)
                         if index > -1:
                                 nomedostream = _nomeservidor_[index]
                                 nome_addon = ''
@@ -401,8 +403,8 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         PLAY_movie(_linkservidor_[index],nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
                                 else:
                                         nomefilme = name
-                                        progress.create(nomefilme, 'A preparar vídeo.')
-                                        progress.update( 98, '', 'Por favor aguarde...', "" )
+                                        #progress.create(nomefilme, 'A preparar vídeo.')
+                                        #progress.update( 98, '', 'Por favor aguarde...', "" )
 
                                         if _legendas_[index] == '---': checker = ''
                                         else: checker = _legendas_[index]
@@ -3068,7 +3070,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
     	if "video.pw" in url:
                 try:
                         print url
-                        fonte_id = '(video.pw)'
+                        fonte_id = '(Video.pw)'
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
@@ -3904,6 +3906,11 @@ def CMT_links(name,url,iconimage,fanart):
                                         url = url + '///' + nomeescolha
                                         fonte_id = '(Video.tt)'
                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                except:pass
+                        if "video.pw" in url:
+                                try:
+                                        print url
+                                        fonte_id = '(Video.pw)'
                                 except:pass
                         if "videowood" in url:
                                 try:
@@ -4895,31 +4902,33 @@ class MyPlayer1(xbmc.Player):
 
         def PlayStream(self, playlist):
                 self.play(playlist)
-                progress.close()
+                #progress.close()
                 if self.checkerSubs == '' or self.checkerSubs == None: pass
                 else: self.setSubtitles(self.checkerSubs)
                 if not self.isPlaying() and self.Playable == 'Nao':
-                        if self.autom == '': xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
-                        outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_,self.numstream,self.autom)
+                        if self.autom == '':
+                                xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
+                                outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_,self.numstream,self.autom)
+                        elif self.autom == 'SIM': outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_,self.numstream,self.autom)
                 while self.isPlaying():
                         xbmc.sleep(1000)
 
         def onPlayBackStarted(self):
                 self.Playable = 'Sim'
-                progress.close()
+                #progress.close()
                             
         def onPlayBackEnded(self):
                 self.Playable = 'Nao'
-                progress.close()
+                #progress.close()
 
         def onPlayBackStopped(self):
                 self.Playable = 'Nao'
-                progress.close()
+                #progress.close()
 
 def PLAY_movie(url,name,iconimage,checker,fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico):#,nomeAddon):
         nomeAddon = ''
-        progress.create(name, 'A preparar vídeo.')
-        progress.update( 98, "", 'Por favor aguarde...', "" )
+        #progress.create(name, 'A preparar vídeo.')
+        #progress.update( 98, "", 'Por favor aguarde...', "" )
         
         #addLink(url,'','')
         url = url.replace('////','///')
@@ -5614,31 +5623,35 @@ class MyPlayer(xbmc.Player):
 
         def PlayStream(self, playlist):
                 self.play(playlist)
-                progress.close()
+                #progress.close()
                 if self.checkerSubs == '' or self.checkerSubs == None: pass
                 else: self.setSubtitles(self.checkerSubs)
                 if not self.isPlaying() and self.Playable == 'Nao':
-                        if self.autom == '': xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
-                        outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_,self.numstream,self.autom)
+                        if self.autom == '':
+                                xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.'+playlist)
+                                outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_,self.numstream,self.autom)
+                        elif self.autom == 'SIM': outrostream(self._nomeserver_,self._linkserver_,self._thumbim_,self._legen_,self.numstream,self.autom)
                 while self.isPlaying():
                         xbmc.sleep(1000)
 
         def onPlayBackStarted(self):
                 self.Playable = 'Sim'
-                progress.close()
+                #progress.close()
                             
         def onPlayBackEnded(self):
                 self.Playable = 'Nao'
-                progress.close()
+                #progress.close()
 
         def onPlayBackStopped(self):
                 self.Playable = 'Nao'
-                progress.close()
+                #progress.close()
                 
 def outrostream(_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico):
-        if automatico != '':
-                if numstream == len(_nomeservidor_): numstream = 0
+        if automatico != '' and len(contastreams) < len(_nomeservidor_):
+                if numstream == len(_nomeservidor_)-1: numstream = 0
                 else: numstream = numstream + 1
+
+                contastreams.append('1')
                 
                 nomedostream = _nomeservidor_[numstream]
                 linkservidor = _linkservidor_[numstream]
@@ -5651,8 +5664,8 @@ def outrostream(_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,
                         PLAY_movie(linkservidor,nome_original,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
                 else:
                         nomefilme = name#+_nomeservidor_[x]
-                        progress.create(nomefilme, 'A preparar vídeo.')
-                        progress.update( 98, '', 'Por favor aguarde...', "" )
+                        #progress.create(nomefilme, 'A preparar vídeo.')
+                        #progress.update( 98, '', 'Por favor aguarde...'+str(numstream), "" )
                         
                         playlist = xbmc.PlayList(1)
                         playlist.clear()
@@ -5675,8 +5688,8 @@ def outrostream(_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,
                                 PLAY_movie(_linkservidor_[index],nomefilme,iconimage,'',fanart,_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,automatico)
                         else:
                                 
-                                progress.create(nomefilme, 'A preparar vídeo.')
-                                progress.update( 98, '', 'Por favor aguarde...', "" )
+                                #progress.create(nomefilme, 'A preparar vídeo.')
+                                #progress.update( 98, '', 'Por favor aguarde...', "" )
 
                                 if _legendas_[index] == '---': checker = ''
                                 else: checker = _legendas_[index]

@@ -379,8 +379,10 @@ def CMT_encontrar_videos_filmes(name,url):
         site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B]'
         message = 'Por favor aguarde.'
         percent = 0
-        progress.create('Progresso', 'A Procurar...')
-        progress.update(percent, 'A Procurar em '+site, message, "")
+##        progress.create('Progresso', 'A Procurar...')
+##        progress.update(percent, 'A Procurar em '+site, message, "")
+        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
@@ -611,6 +613,11 @@ def CMT_links(name,url,iconimage,fanart):
                                         fonte_id = '(Video.tt)'
                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
+                        if "video.pw" in url:
+                                try:
+                                        print url
+                                        fonte_id = '(Video.pw)'
+                                except:pass
                         if "videowood" in url:
                                 try:
                                         if '/video/' in url: url = url.replace('/video/','/embed/')
@@ -733,6 +740,11 @@ def CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         url = url + '///' + nomeescolha
                         fonte_id = '(Video.tt)'
                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "video.pw" in url:
+                try:
+                        print url
+                        fonte_id = '(Video.pw)'
     		except:pass
     	if "videowood" in url:
                 try:
