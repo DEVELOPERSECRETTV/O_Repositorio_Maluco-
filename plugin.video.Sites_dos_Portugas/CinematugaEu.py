@@ -358,7 +358,7 @@ def Fontes_Filmes_CME(item):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def CME_encontrar_videos_filmes(name,url):
+def CME_encontrar_videos_filmes(name,url,mvoutv):
         try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
         except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
         site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B]'
@@ -532,7 +532,7 @@ def CME_encontrar_videos_filmes(name,url):
 ##        else: nome_pesquisa = nnn[0]
         #addLink(n1+imdbcode,'','')
         url = 'IMDB'+imdbcode+'IMDB'
-        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'CME',url)
+        if mvoutv != 'MoviesCME': FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'CME',url)
         
 ##        if '---' in nn:
 ##                n = re.compile('---(.+?)---').findall(nn)
@@ -771,6 +771,8 @@ episod=None
 air=None
 namet=None
 urltrailer=None
+mvoutv=None
+automatico=None
 
 try: url=urllib.unquote_plus(params["url"])
 except: pass
@@ -800,6 +802,10 @@ try: episod=urllib.unquote_plus(params["episod"])
 except: pass
 try: air=urllib.unquote_plus(params["air"])
 except: pass
+try: mvoutv=urllib.unquote_plus(params["mvoutv"])
+except: pass
+try: automatico=urllib.unquote_plus(params["automatico"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -813,4 +819,6 @@ print "Fanart: "+str(fanart)
 print "Episode: "+str(episod)
 print "Namet: "+str(namet)
 print "Urltrailer: "+str(urltrailer)
+print "MvouTv: "+str(mvoutv)
+print "Automatico: "+str(automatico)
 

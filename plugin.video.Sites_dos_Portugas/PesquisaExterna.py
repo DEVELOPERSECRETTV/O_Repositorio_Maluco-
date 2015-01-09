@@ -2120,6 +2120,12 @@ def TFC_links(name,url,iconimage,fanart):
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                        matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
+                                        if matchi:
+                                                for url in matchi:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                                 assistir_fontes = re.findall("------------------------------<br />(.*?)='postmeta'>", fonte, re.DOTALL)
                                 assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
@@ -2152,6 +2158,12 @@ def TFC_links(name,url,iconimage,fanart):
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                        matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
+                                        if matchi:
+                                                for url in matchi:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                         else:
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
@@ -2181,6 +2193,12 @@ def TFC_links(name,url,iconimage,fanart):
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                        matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
+                                        if matchi:
+                                                for url in matchi:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
@@ -3979,6 +3997,7 @@ def FTT_links(name,url,iconimage,fanart):
                                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                 match2 = re.compile('<iframe.+?src="(.+?)".+?></iframe>').findall(fonte_e_url)
+                if not match2: match2 = re.compile('<iframe.+?src="(.+?)".+?>').findall(fonte_e_url)
                 for fonte_id in match2:
                         if 'videomega' in fonte_id:
                                 try:
@@ -4128,6 +4147,11 @@ def FTT_resolve_not_videomega_filmes(url,nomeescolha,conta_id_video,fanart,iconi
                         url = url + '///' + nomeescolha
                         fonte_id = '(Video.tt)'
                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
+    		except:pass
+    	if "video.pw" in url:
+                try:
+                        print url
+                        fonte_id = '(Video.pw)'
     		except:pass
     	if "videowood" in url:
                 try:

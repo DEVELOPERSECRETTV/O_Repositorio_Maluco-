@@ -36,8 +36,16 @@ artfolder = addonfolder + '/resources/img/'
 def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         
         if nomesite == '':
+                nome_site = ''
                 try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
                 except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+                
+        if nomesite != '':
+                if 'site' in nomesite:
+                        nsite = re.compile('site(.*)').findall(nomesite)
+                        if nsite: nome_site = 'todos'+nsite[0]
+                try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
+                except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
         
         #antes_de = nome_pesquisa
         nome_pp = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]][[]COLOR yellow[]].+?[[]/COLOR[]]').findall(nome_pesquisa)
@@ -46,7 +54,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         imdb = re.compile('IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
-        #addLink(imdbcode,'','','')
+        #addLink(nomesite+nome_pesquisa+imdbcode,'','','')
         pesquisa_imdb = nome_pesquisa
         pp = nome_pesquisa
 ##        progress = xbmcgui.DialogProgress()
@@ -103,128 +111,136 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
 
 	url_pesquisa = 'http://toppt.net/?s=' + str(encode) #+ 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'TPT': #FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou)
-                try:
-                        html_source = abrir_url(url_pesquisa)
-                except: html_source = ''
-                i=0
-                items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
-                if not items: items = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', html_source, re.DOTALL)
-                for item in items:                        
-                        i = i + 1
-                        a = str(i)
-                        if i < 10: a = '0'+a
-                        FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(str(a),url_pesquisa,pesquisou,imdbcode,item)
-##                        TPT = threading.Thread(name='TPT'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_filmes_TPT , args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
-##                        threads.append(TPT)
+                if nomesite == 'siteTPT' or nomesite == '' or nomesite=='TFV' or nomesite=='TFC' or nomesite=='FTT' or nomesite=='MVT' or nomesite=='CME' or nomesite=='CMT' or nomesite=='CMC':
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                        if not items: items = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', html_source, re.DOTALL)
+                        for item in items:                        
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(str(a),url_pesquisa,pesquisou,imdbcode,item)
+        ##                        TPT = threading.Thread(name='TPT'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_filmes_TPT , args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
+        ##                        threads.append(TPT)
 
 	url_pesquisa = 'http://www.tuga-filmes.info/search?q=' + str(encode) #+ 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'TFC': #FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(url_pesquisa,pesquisou)
-                try:
-                        html_source = abrir_url(url_pesquisa)
-                except: html_source = ''
-                i=0
-                items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
-                for item in items:                        
-                        i = i + 1
-                        a = str(i)
-                        if i < 10: a = '0'+a
-                        FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(str(a),url_pesquisa,pesquisou,imdbcode,item)
-##                        TFC = threading.Thread(name='TFC'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_filmes_TFC , args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
-##                        threads.append(TFC)            
+                if nomesite == 'siteTFC' or nomesite == '' or nomesite=='TFV' or nomesite=='TPT' or nomesite=='FTT' or nomesite=='MVT' or nomesite=='CME' or nomesite=='CMT' or nomesite=='CMC':
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
+                        for item in items:                        
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(str(a),url_pesquisa,pesquisou,imdbcode,item)
+        ##                        TFC = threading.Thread(name='TFC'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_filmes_TFC , args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
+        ##                        threads.append(TFC)            
 
 	url_pesquisa = 'http://www.tuga-filmes.us/search?q=' + str(encode)# + 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'TFV': #FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(url_pesquisa,pesquisou)
-                try:
-                        html_source = abrir_url(url_pesquisa)
-                except: html_source = ''
-                i=0
-                items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
-                for item in items:                        
-                        i = i + 1
-                        a = str(i)
-                        if i < 10: a = '0'+a
-                        FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(str(a),url_pesquisa,pesquisou,imdbcode,item)
-##                        TFV = threading.Thread(name='TFV'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV , args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
-##                        threads.append(TFV)
+                if nomesite == 'siteTFV' or nomesite == '' or nomesite=='TPT' or nomesite=='TFC' or nomesite=='FTT' or nomesite=='MVT' or nomesite=='CME' or nomesite=='CMT' or nomesite=='CMC':
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+                        for item in items:                        
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV(str(a),url_pesquisa,pesquisou,imdbcode,item)
+        ##                        TFV = threading.Thread(name='TFV'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_TFV , args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
+        ##                        threads.append(TFV)
 
 	url_pesquisa = 'http://www.cinematuga.eu/search?q=' + str(encode)# + 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'CME': #FILMES_ANIMACAO_encontrar_fontes_filmes_CME(url_pesquisa,pesquisou)
-                try:
-                        html_source = abrir_url(url_pesquisa)
-                except: html_source = ''
-                i=0
-                items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-                for item in items:                        
-                        i = i + 1
-                        a = str(i)
-                        if i < 10: a = '0'+a
-                        FILMES_ANIMACAO_encontrar_fontes_filmes_CME(str(a),url_pesquisa,pesquisou,imdbcode,item)
-##                        CME = threading.Thread(name='CME'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_filmes_CME , args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
-##                        threads.append(CME)
+                if nomesite == 'siteCME' or nomesite == '' or nomesite=='TFV' or nomesite=='TFC' or nomesite=='FTT' or nomesite=='MVT' or nomesite=='TPT' or nomesite=='CMT' or nomesite=='CMC':
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                        for item in items:                        
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                FILMES_ANIMACAO_encontrar_fontes_filmes_CME(str(a),url_pesquisa,pesquisou,imdbcode,item)
+        ##                        CME = threading.Thread(name='CME'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_filmes_CME , args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
+        ##                        threads.append(CME)
 
 	url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar'# + 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'FTT': #FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url_pesquisa)
-                try:
-                        html_source = abrir_url(url_pesquisa)
-                except: html_source = ''
-                i=0
-                items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-                if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
-                for item in items:                        
-                        i = i + 1
-                        a = str(i)
-                        if i < 10: a = '0'+a
-                        FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(str(a),url_pesquisa,pesquisou,imdbcode,item)
-##                        FTT = threading.Thread(name='FTT'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT, args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
-##                        threads.append(FTT)
+                if nomesite == 'siteFTT' or nomesite == '' or nomesite=='TFV' or nomesite=='TFC' or nomesite=='TPT' or nomesite=='MVT' or nomesite=='CME' or nomesite=='CMT' or nomesite=='CMC':
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                        if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
+                        for item in items:                        
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(str(a),url_pesquisa,pesquisou,imdbcode,item)
+        ##                        FTT = threading.Thread(name='FTT'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT, args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
+        ##                        threads.append(FTT)
 
 	url_pesquisa = 'http://www.cinematuga.net/search?q=' + str(encode)# + 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'CMT': #FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(url_pesquisa,pesquisou)
-                try:
-                        html_source = abrir_url(url_pesquisa)
-                except: html_source = ''
-                i=0
-                items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
-                if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
-                for item in items:                        
-                        i = i + 1
-                        a = str(i)
-                        if i < 10: a = '0'+a
-                        FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(str(a),url_pesquisa,pesquisou,imdbcode,item)
-##                        CMT = threading.Thread(name='CMT'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT, args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
-##                        threads.append(CMT)
+                if nomesite == 'siteCMT' or nomesite == '' or nomesite=='TFV' or nomesite=='TFC' or nomesite=='FTT' or nomesite=='MVT' or nomesite=='CME' or nomesite=='TPT' or nomesite=='CMC':
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
+                        if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
+                        for item in items:                        
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT(str(a),url_pesquisa,pesquisou,imdbcode,item)
+        ##                        CMT = threading.Thread(name='CMT'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_CMT, args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
+        ##                        threads.append(CMT)
 
 	url_pesquisa = 'http://www.movie-tuga.blogspot.pt/search?q=' + str(encode) #+ 'IMDB'+imdbcode+'IMDB'	
 	if nomesite != 'MVT': #FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(url_pesquisa)
-                try:
-                        html_source = abrir_url(url_pesquisa)
-                except: html_source = ''
-                i=0
-                items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
-                #addLink(str(len(items)),'','','')
-                for item in items:                        
-                        i = i + 1
-                        a = str(i)
-                        if i < 10: a = '0'+a
-                        FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(str(a),url_pesquisa,pesquisou,imdbcode,item)
-##                        MVT = threading.Thread(name='MVT'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT, args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
-##                        threads.append(MVT)
+                if nomesite == 'siteMVT' or nomesite == '' or nomesite=='TFV' or nomesite=='TFC' or nomesite=='FTT' or nomesite=='TPT' or nomesite=='CME' or nomesite=='CMT' or nomesite=='CMC':
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
+                        #addLink(str(len(items)),'','','')
+                        for item in items:                        
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(str(a),url_pesquisa,pesquisou,imdbcode,item)
+        ##                        MVT = threading.Thread(name='MVT'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT, args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
+        ##                        threads.append(MVT)
 
 	url_pesquisa = 'http://www.cinemaemcasa.pt/search?q=' + str(encode) #+ 'IMDB'+imdbcode+'IMDB'
 	if nomesite != 'CMC': #FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(url_pesquisa,pesquisou)
-                try:
-                        html_source = abrir_url(url_pesquisa)
-                except: html_source = ''
-                i=0
-                items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-                if not items: items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-                for item in items:                        
-                        i = i + 1
-                        a = str(i)
-                        if i < 10: a = '0'+a
-                        FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(str(a),url_pesquisa,pesquisou,imdbcode,item)
-##                        CMC = threading.Thread(name='CMC'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_filmes_CMC, args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
-##                        threads.append(CMC)
+                if nomesite == 'siteCMC' or nomesite == '' or nomesite=='TFV' or nomesite=='TFC' or nomesite=='FTT' or nomesite=='MVT' or nomesite=='CME' or nomesite=='CMT' or nomesite=='TPT':
+                        try:
+                                html_source = abrir_url(url_pesquisa)
+                        except: html_source = ''
+                        i=0
+                        items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                        if not items: items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                        for item in items:                        
+                                i = i + 1
+                                a = str(i)
+                                if i < 10: a = '0'+a
+                                FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(str(a),url_pesquisa,pesquisou,imdbcode,item)
+        ##                        CMC = threading.Thread(name='CMC'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_filmes_CMC, args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
+        ##                        threads.append(CMC)
 
 ##        [i.start() for i in threads]
 ##        [i.join() for i in threads]

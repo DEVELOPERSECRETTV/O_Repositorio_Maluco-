@@ -510,7 +510,7 @@ def Fontes_Filmes_FTT(item):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def FTT_encontrar_videos_filmes(name,url):
+def FTT_encontrar_videos_filmes(name,url,mvoutv):
         try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
         except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
         site = '[B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]'
@@ -643,6 +643,7 @@ def FTT_encontrar_videos_filmes(name,url):
                                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                 match2 = re.compile('<iframe.+?src="(.+?)" .+?</iframe>').findall(fonte_e_url)
+                if not match2: match2 = re.compile('<iframe.+?src="(.+?)".+?>').findall(fonte_e_url)
                 for fonte_id in match2:
                         if 'videomega' in fonte_id:
                                 try:
@@ -685,7 +686,7 @@ def FTT_encontrar_videos_filmes(name,url):
 ##        else: nome_pesquisa = nnn[0]
         #addLink(n1+imdbcode,'','')
         url = 'IMDB'+imdbcode+'IMDB'
-        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'FTT',url)
+        if mvoutv != 'MoviesFTT': FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'FTT',url)
         
 ##        if '---' in nn:
 ##                n = re.compile('---(.+?)---').findall(nn)
@@ -749,6 +750,7 @@ def FTT_links(name,url,iconimage,fanart):
                                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                 match2 = re.compile('<iframe.+?src="(.+?)".+?></iframe>').findall(fonte_e_url)
+                if not match2: match2 = re.compile('<iframe.+?src="(.+?)".+?>').findall(fonte_e_url)
                 for fonte_id in match2:
                         if 'videomega' in fonte_id:
                                 try:
@@ -891,6 +893,11 @@ def FTT_resolve_not_videomega_filmes(url,nomeescolha,conta_id_video,fanart,iconi
                         fonte_id = '(Video.tt)'
                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
+    	if "video.pw" in url:
+                try:
+                        print url
+                        fonte_id = '(Video.pw)'
+    		except:pass
     	if "videowood" in url:
                 try:
                         if '/video/' in url: url = url.replace('/video/','/embed/')
@@ -925,6 +932,7 @@ episod=None
 air=None
 namet=None
 urltrailer=None
+mvoutv=None
 
 try: url=urllib.unquote_plus(params["url"])
 except: pass
@@ -954,6 +962,8 @@ try: episod=urllib.unquote_plus(params["episod"])
 except: pass
 try: air=urllib.unquote_plus(params["air"])
 except: pass
+try: mvoutv=urllib.unquote_plus(params["mvoutv"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -967,3 +977,4 @@ print "Fanart: "+str(fanart)
 print "Episode: "+str(episod)
 print "Namet: "+str(namet)
 print "Urltrailer: "+str(urltrailer)
+print "MvouTv: "+str(mvoutv)

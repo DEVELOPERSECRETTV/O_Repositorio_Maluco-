@@ -549,7 +549,9 @@ def dirtodos(url):
                                         num_mode = 103
                                         site = 'MVT'
                                 if nome != '---':
-                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
+                                        num_mode = 9004
+                                        #addDir_trailer1_filmes(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies'+site,num_filmes)
+                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies'+site,num_filmes)
                                         #addDir_trailer1_filmes(nome,imdbcode,7,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
                                 else:
                                         if 'toppt.net'         in P_url: url_TPT = P_url
@@ -584,7 +586,649 @@ def dirtodos(url):
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
+def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
+        _nomeproc_ = []
+        _nomeproc_.append('[B][COLOR white]GENESIS[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TOPPT.NET')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.COM')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.TV')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMATUGA.EU')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMATUGA.NET')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | FOITATUGA')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMAEMCASA')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | MOVIETUGA')
+        _nummode_ = [0,1,233,73,33,803,703,603,903,103]
 
+        indexservidores = xbmcgui.Dialog().select
+        index = indexservidores('Procurar streams em:', _nomeproc_)
+        if index > -1:
+                if 'GENESIS' in _nomeproc_[index]: Funcoes.playparser(namet, url, year, urltrailer)
+                elif 'TODOS' in _nomeproc_[index]:                        
+                        if mvoutv == 'MoviesTPT':
+                                mvoutv = 'Movies'
+                                TopPt.TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv)
+                        elif mvoutv == 'MoviesTFC':
+                                mvoutv = 'Movies'
+                                TugaFilmesCom.TFC_encontrar_videos_filmes(name,url,mvoutv)
+                        elif mvoutv == 'MoviesTFV':
+                                mvoutv = 'Movies'
+                                TugaFilmesTV.TFV_encontrar_videos_filmes(name,url,mvoutv)
+                        elif mvoutv == 'MoviesCME':
+                                mvoutv = 'Movies'
+                                CinematugaEu.CME_encontrar_videos_filmes(name,url,mvoutv)
+                        elif mvoutv == 'MoviesCMT':
+                                mvoutv = 'Movies'
+                                Cinematuga.CMT_encontrar_videos_filmes(name,url,mvoutv)
+                        elif mvoutv == 'MoviesFTT':
+                                mvoutv = 'Movies'
+                                FoitaTuga.FTT_encontrar_videos_filmes(name,url,mvoutv)
+                        elif mvoutv == 'MoviesCMC':
+                                mvoutv = 'Movies'
+                                CinemaEmCasa.CMC_encontrar_videos_filmes(name,url,mvoutv)
+                        elif mvoutv == 'MoviesMVT':
+                                mvoutv = 'Movies'
+                                MovieTuga.MVT_encontrar_videos_filmes(name,url,mvoutv)
+                elif 'TOPPT.NET' in _nomeproc_[index]:
+                        if mvoutv != 'MoviesTPT':
+                                if mvoutv=='MoviesTFC':
+                                        strstr,url = TFCmovies(name,url)
+                                elif mvoutv=='MoviesFTT':
+                                        strstr,url = FTTmovies(name,url)
+                                elif mvoutv=='MoviesTFV':
+                                        strstr,url = TFVmovies(name,url)
+                                elif mvoutv=='MoviesMVT':
+                                        strstr,url = MVTmovies(name,url)
+                                elif mvoutv=='MoviesCME':
+                                        strstr,url = CMEmovies(name,url)
+                                elif mvoutv=='MoviesCMT':
+                                        strstr,url = CMTmovies(name,url)
+                                elif mvoutv=='MoviesCMC':
+                                        strstr,url = CMCmovies(name,url)
+                                FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTPT',url)     
+                        else: TopPt.TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv)
+                elif 'TUGA-FILMES.COM' in _nomeproc_[index]:
+                        if mvoutv != 'MoviesTFC':
+                                if mvoutv=='MoviesTPT':
+                                        strstr,url = TPTmovies(name,url,iconimage)
+                                elif mvoutv=='MoviesFTT':
+                                        strstr,url = FTTmovies(name,url)
+                                elif mvoutv=='MoviesTFV':
+                                        strstr,url = TFVmovies(name,url)
+                                elif mvoutv=='MoviesMVT':
+                                        strstr,url = MVTmovies(name,url)
+                                elif mvoutv=='MoviesCME':
+                                        strstr,url = CMEmovies(name,url)
+                                elif mvoutv=='MoviesCMT':
+                                        strstr,url = CMTmovies(name,url)
+                                elif mvoutv=='MoviesCMC':
+                                        strstr,url = CMCmovies(name,url)
+                                FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTFC',url)
+                        else: TugaFilmesCom.TFC_encontrar_videos_filmes(name,url,mvoutv)
+                elif 'TUGA-FILMES.TV' in _nomeproc_[index]:
+                        if mvoutv != 'MoviesTFV':
+                                if mvoutv=='MoviesTPT':
+                                        strstr,url = TPTmovies(name,url,iconimage)
+                                elif mvoutv=='MoviesFTT':
+                                        strstr,url = FTTmovies(name,url)
+                                elif mvoutv=='MoviesTFC':
+                                        strstr,url = TFCmovies(name,url)
+                                elif mvoutv=='MoviesMVT':
+                                        strstr,url = MVTmovies(name,url)
+                                elif mvoutv=='MoviesCME':
+                                        strstr,url = CMEmovies(name,url)
+                                elif mvoutv=='MoviesCMT':
+                                        strstr,url = CMTmovies(name,url)
+                                elif mvoutv=='MoviesCMC':
+                                        strstr,url = CMCmovies(name,url)
+                                FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTFV',url)
+                        else: TugaFilmesTV.TFV_encontrar_videos_filmes(name,url,mvoutv)
+                elif 'CINEMATUGA.EU' in _nomeproc_[index]:
+                        if mvoutv != 'MoviesCME':
+                                if mvoutv=='MoviesTPT':
+                                        strstr,url = TPTmovies(name,url,iconimage)
+                                elif mvoutv=='MoviesFTT':
+                                        strstr,url = FTTmovies(name,url)
+                                elif mvoutv=='MoviesTFV':
+                                        strstr,url = TFVmovies(name,url)
+                                elif mvoutv=='MoviesMVT':
+                                        strstr,url = MVTmovies(name,url)
+                                elif mvoutv=='MoviesTFC':
+                                        strstr,url = TFCmovies(name,url)
+                                elif mvoutv=='MoviesCMT':
+                                        strstr,url = CMTmovies(name,url)
+                                elif mvoutv=='MoviesCMC':
+                                        strstr,url = CMCmovies(name,url)
+                                FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCME',url)
+                        else: CinematugaEu.CME_encontrar_videos_filmes(name,url,mvoutv)
+                elif 'CINEMATUGA.NET' in _nomeproc_[index]:
+                        if mvoutv != 'MoviesCMT':
+                                if mvoutv=='MoviesTPT':
+                                        strstr,url = TPTmovies(name,url,iconimage)
+                                elif mvoutv=='MoviesFTT':
+                                        strstr,url = FTTmovies(name,url)
+                                elif mvoutv=='MoviesTFV':
+                                        strstr,url = TFVmovies(name,url)
+                                elif mvoutv=='MoviesMVT':
+                                        strstr,url = MVTmovies(name,url)
+                                elif mvoutv=='MoviesCME':
+                                        strstr,url = CMEmovies(name,url)
+                                elif mvoutv=='MoviesTFC':
+                                        strstr,url = TFCmovies(name,url)
+                                elif mvoutv=='MoviesCMC':
+                                        strstr,url = CMCmovies(name,url)
+                                FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCMT',url)
+                        else: Cinematuga.CMT_encontrar_videos_filmes(name,url,mvoutv)
+                elif 'FOITATUGA' in _nomeproc_[index]:
+                        if mvoutv != 'MoviesFTT':
+                                if mvoutv=='MoviesTPT':
+                                        strstr,url = TPTmovies(name,url,iconimage)
+                                elif mvoutv=='MoviesTFC':
+                                        strstr,url = FTTmovies(name,url)
+                                elif mvoutv=='MoviesTFV':
+                                        strstr,url = TFVmovies(name,url)
+                                elif mvoutv=='MoviesMVT':
+                                        strstr,url = TFCmovies(name,url)
+                                elif mvoutv=='MoviesCME':
+                                        strstr,url = CMEmovies(name,url)
+                                elif mvoutv=='MoviesCMT':
+                                        strstr,url = CMTmovies(name,url)
+                                elif mvoutv=='MoviesCMC':
+                                        strstr,url = CMCmovies(name,url)
+                                FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteFTT',url)
+                        else: FoitaTuga.FTT_encontrar_videos_filmes(name,url,mvoutv)
+                elif 'CINEMAEMCASA' in _nomeproc_[index]:
+                        if mvoutv != 'MoviesCMC':
+                                if mvoutv=='MoviesTPT':
+                                        strstr,url = TPTmovies(name,url,iconimage)
+                                elif mvoutv=='MoviesFTT':
+                                        strstr,url = FTTmovies(name,url)
+                                elif mvoutv=='MoviesTFV':
+                                        strstr,url = TFVmovies(name,url)
+                                elif mvoutv=='MoviesMVT':
+                                        strstr,url = MVTmovies(name,url)
+                                elif mvoutv=='MoviesCME':
+                                        strstr,url = CMEmovies(name,url)
+                                elif mvoutv=='MoviesCMT':
+                                        strstr,url = CMTmovies(name,url)
+                                elif mvoutv=='MoviesTFC':
+                                        strstr,url = TFCmovies(name,url)
+                                FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCMC',url)
+                        else: CinemaEmCasa.CMC_encontrar_videos_filmes(name,url,mvoutv)
+                elif 'MOVIETUGA' in _nomeproc_[index]:
+                        if mvoutv != 'MoviesMVT':
+                                if mvoutv=='MoviesTPT':
+                                        strstr,url = TPTmovies(name,url,iconimage)
+                                elif mvoutv=='MoviesFTT':
+                                        strstr,url = FTTmovies(name,url)
+                                elif mvoutv=='MoviesTFV':
+                                        strstr,url = TFVmovies(name,url)
+                                elif mvoutv=='MoviesTFC':
+                                        strstr,url = MVTmovies(name,url)
+                                elif mvoutv=='MoviesCME':
+                                        strstr,url = CMEmovies(name,url)
+                                elif mvoutv=='MoviesCMT':
+                                        strstr,url = CMTmovies(name,url)
+                                elif mvoutv=='MoviesCMC':
+                                        strstr,url = CMCmovies(name,url)
+                                FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteMVT',url)
+                        else: MovieTuga.MVT_encontrar_videos_filmes(name,url,mvoutv)
+
+def TPTmovies(name,url,iconimage):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        n1 = ''
+        n2 = ''
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        if nnnn:
+                n2 = nnnn[0][0]
+                n1 = nnnn[0][1]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0][0]
+                        n1 = nnnn[0][1]        
+        if not nnnn:
+                nnnn = re.compile('(.+?) [-] ').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[:] ').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0]
+        if not nnnn : n2 = nnn[0]
+        if n1 != '' and n2 != '':
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n2,'url',1004,iconimage,False,fanart)
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n1,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+        else:
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n2,'url',1004,iconimage,False,fanart)
+        url = 'IMDB'+imdbcode+'IMDB'
+        return str(n2),url
+
+def FTTmovies(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        n1 = ''
+        n2 = ''
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        if nnnn:
+                n2 = nnnn[0][0]
+                n1 = nnnn[0][1]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0][0]
+                        n1 = nnnn[0][1]        
+        if not nnnn:
+                nnnn = re.compile('(.+?) [-] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[:] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn : n1 = nnn[0]
+
+        if imdbcode == '' or imdbcode == '---':
+                conta = 0
+                nome_pesquisa = n1
+                nome_pesquisa = nome_pesquisa.replace('é','e')
+                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                nome_pesquisa = nome_pesquisa.replace('á','a')
+                nome_pesquisa = nome_pesquisa.replace('à','a')
+                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                nome_pesquisa = nome_pesquisa.replace('è','e')
+                nome_pesquisa = nome_pesquisa.replace('í','i')
+                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                a_q = re.compile('\w+')
+                qq_aa = a_q.findall(nome_pesquisa)
+                nome_p = ''
+                for q_a_q_a in qq_aa:
+                        if conta == 0:
+                                nome_p = q_a_q_a
+                                conta = 1
+                        else:
+                                nome_p = nome_p + '+' + q_a_q_a
+                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                html_imdbcode = abrir_url(url_imdb)
+                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                imdbcode = imdbc[0]
+
+        if n1 != '' and n2 != '':
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n2,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+        else:
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+        url = 'IMDB'+imdbcode+'IMDB'
+        return str(n1),url
+
+def TFCmovies(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        n1 = ''
+        n2 = ''
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        if nnnn:
+                n2 = nnnn[0][0]
+                n1 = nnnn[0][1]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0][0]
+                        n1 = nnnn[0][1]        
+        if not nnnn:
+                nnnn = re.compile('(.+?) [-] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[:] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn : n1 = nnn[0]
+
+        if imdbcode == '' or '---' in imdbcode:                
+                conta = 0
+                ano_pp = re.compile('[[]COLOR yellow[]](.+?)[[]/COLOR[]]').findall(name)
+                if ano_pp: ano_pesquisa = ano_pp[0].replace('(','').replace(')','').replace(' ','')
+                else: ano_pesquisa = ''
+                #addLink(imdbcode+'sim'+n1+'-'+ano_pesquisa,'','','')
+                nome_pesquisa = n1 + ' ' + ano_pesquisa
+                nome_pesquisa = nome_pesquisa.replace('é','e')
+                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                nome_pesquisa = nome_pesquisa.replace('á','a')
+                nome_pesquisa = nome_pesquisa.replace('à','a')
+                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                nome_pesquisa = nome_pesquisa.replace('è','e')
+                nome_pesquisa = nome_pesquisa.replace('í','i')
+                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                a_q = re.compile('\w+')
+                qq_aa = a_q.findall(nome_pesquisa)
+                nome_p = ''
+                for q_a_q_a in qq_aa:
+                        if conta == 0:
+                                nome_p = q_a_q_a
+                                conta = 1
+                        else:
+                                nome_p = nome_p + '+' + q_a_q_a
+                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                html_imdbcode = abrir_url(url_imdb)
+                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                if imdbc: imdbcode = imdbc[0]
+                else: imdbcode = ''
+                #addLink(imdbcode+'sim'+n1+'-'+ano_pesquisa,'','','')
+
+        if n1 != '' and n2 != '':
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n2,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+        else:
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+        url = 'IMDB'+imdbcode+'IMDB'
+        return str(n1),url
+
+def CMTmovies(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        n1 = ''
+        n2 = ''
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        if nnnn:
+                n2 = nnnn[0][0]
+                n1 = nnnn[0][1]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0][0]
+                        n1 = nnnn[0][1]        
+        if not nnnn:
+                nnnn = re.compile('(.+?) [-] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[:] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn : n1 = nnn[0]
+                        
+        if n1 != '' and n2 != '':
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n2,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+        else:
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+        url = 'IMDB'+imdbcode+'IMDB'
+        return str(n1),url
+
+def CMEmovies(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        n1 = ''
+        n2 = ''
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        if nnnn:
+                n2 = nnnn[0][0]
+                n1 = nnnn[0][1]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0][0]
+                        n1 = nnnn[0][1]        
+        if not nnnn:
+                nnnn = re.compile('(.+?) [-] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[:] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn : n1 = nnn[0]
+
+        if imdbcode == '' or imdbcode == '---':
+                conta = 0
+                nome_pesquisa = n1
+                nome_pesquisa = nome_pesquisa.replace('é','e')
+                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                nome_pesquisa = nome_pesquisa.replace('á','a')
+                nome_pesquisa = nome_pesquisa.replace('à','a')
+                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                nome_pesquisa = nome_pesquisa.replace('è','e')
+                nome_pesquisa = nome_pesquisa.replace('í','i')
+                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                a_q = re.compile('\w+')
+                qq_aa = a_q.findall(nome_pesquisa)
+                nome_p = ''
+                for q_a_q_a in qq_aa:
+                        if conta == 0:
+                                nome_p = q_a_q_a
+                                conta = 1
+                        else:
+                                nome_p = nome_p + '+' + q_a_q_a
+                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                html_imdbcode = abrir_url(url_imdb)
+                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                imdbcode = imdbc[0]
+
+        if n1 != '' and n2 != '':
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n2,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+        else:
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+        url = 'IMDB'+imdbcode+'IMDB'
+        return str(n1),url
+
+def TFVmovies(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        n1 = ''
+        n2 = ''
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        if nnnn:
+                n2 = nnnn[0][0]
+                n1 = nnnn[0][1]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0][0]
+                        n1 = nnnn[0][1]        
+        if not nnnn:
+                nnnn = re.compile('(.+?) [-] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[:] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn : n1 = nnn[0]
+
+        if n1 != '' and n2 != '':
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n2,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+        else:
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+        url = 'IMDB'+imdbcode+'IMDB'
+        return str(n1),url
+
+def MVTmovies(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        n1 = ''
+        n2 = ''
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        if nnnn:
+                n2 = nnnn[0][0]
+                n1 = nnnn[0][1]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0][0]
+                        n1 = nnnn[0][1]        
+        if not nnnn:
+                nnnn = re.compile('(.+?) [-] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[:] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn : n1 = nnn[0]
+
+        if imdbcode == '' or '---' in imdbcode:
+                ano_pp = re.compile('[[]COLOR yellow[]](.+?)[[]/COLOR[]]').findall(name)
+                if ano_pp: ano_pesquisa = ano_pp[0].replace('(','').replace(')','')
+                else: ano_pesquisa = ''
+                conta = 0
+##                nome_pesquisa = n[0] + ' ' + ano_pesquisa
+                nome_pesquisa = n1 + '+' + ano_pesquisa
+                nome_pesquisa = nome_pesquisa.replace('é','e').replace(' 1 ',' ')
+                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                nome_pesquisa = nome_pesquisa.replace('á','a')
+                nome_pesquisa = nome_pesquisa.replace('à','a')
+                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                nome_pesquisa = nome_pesquisa.replace('è','e')
+                nome_pesquisa = nome_pesquisa.replace('í','i')
+                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                a_q = re.compile('\w+')
+                qq_aa = a_q.findall(nome_pesquisa)
+                nome_p = ''
+                for q_a_q_a in qq_aa:
+                        if conta == 0:
+                                nome_p = q_a_q_a
+                                conta = 1
+                        else:
+                                nome_p = nome_p + '+' + q_a_q_a
+                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                try: html_imdbcode = abrir_url(url_imdb)
+                except: html_imdbcode = ''
+                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                if filmes_imdb:
+                        imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                        if imdbc: imdbcode = imdbc[0]
+        
+        if n1 != '' and n2 != '':
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n2,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+        else:
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+        url = 'IMDB'+imdbcode+'IMDB'
+        return str(n1),url
+
+def CMCmovies(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        n1 = ''
+        n2 = ''
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        if nnnn:
+                n2 = nnnn[0][0]
+                n1 = nnnn[0][1]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0][0]
+                        n1 = nnnn[0][1]        
+        if not nnnn:
+                nnnn = re.compile('(.+?) [-] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[:] ').findall(nnn[0])
+                if nnnn:
+                        n1 = nnnn[0]
+        if not nnnn : n1 = nnn[0]
+
+        if imdbcode == '' or '---' in imdbcode:
+                ano_pp = re.compile('[[]COLOR yellow[]](.+?)[[]/COLOR[]]').findall(name)
+                if ano_pp: ano_pesquisa = ano_pp[0].replace('(','').replace(')','')
+                else: ano_pesquisa = ''
+                conta = 0
+##                nome_pesquisa = n[0] + ' ' + ano_pesquisa
+                nome_pesquisa = n1 + ' ' + ano_pesquisa
+                nome_pesquisa = nome_pesquisa.replace('é','e')
+                nome_pesquisa = nome_pesquisa.replace('ê','e')
+                nome_pesquisa = nome_pesquisa.replace('á','a')
+                nome_pesquisa = nome_pesquisa.replace('à','a')
+                nome_pesquisa = nome_pesquisa.replace('ã','a')
+                nome_pesquisa = nome_pesquisa.replace('è','e')
+                nome_pesquisa = nome_pesquisa.replace('í','i')
+                nome_pesquisa = nome_pesquisa.replace('ó','o')
+                nome_pesquisa = nome_pesquisa.replace('ô','o')
+                nome_pesquisa = nome_pesquisa.replace('õ','o')
+                nome_pesquisa = nome_pesquisa.replace('ú','u')
+                nome_pesquisa = nome_pesquisa.replace('Ú','U')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                nome_pesquisa = nome_pesquisa.replace('ç','c')
+                a_q = re.compile('\w+')
+                qq_aa = a_q.findall(nome_pesquisa)
+                nome_p = ''
+                for q_a_q_a in qq_aa:
+                        if conta == 0:
+                                nome_p = q_a_q_a
+                                conta = 1
+                        else:
+                                nome_p = nome_p + '+' + q_a_q_a
+                url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
+                html_imdbcode = abrir_url(url_imdb)
+                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
+                imdbc = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                if imdbc: imdbcode = imdbc[0]
+
+        if n1 != '' and n2 != '':
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n2,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+        else:
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
+        url = 'IMDB'+imdbcode+'IMDB'
+        return str(n1),url
+        
 def SERIES_MENU():
 ##        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]AS[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')
 ##        url_TFC = 'http://www.tuga-filmes.info/'
@@ -1764,7 +2408,7 @@ elif mode == 32:
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode == 33: TugaFilmesTV.TFV_encontrar_videos_filmes(name,url)
+elif mode == 33: TugaFilmesTV.TFV_encontrar_videos_filmes(name,url,mvoutv)
 elif mode == 34: TugaFilmesTV.TFV_pesquisar()
 elif mode == 35: TugaFilmesTV.TFV_resolve_videomega_filmes(url,conta_id_video)
 elif mode == 36: TugaFilmesTV.TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,nome_fonte_video)
@@ -1838,7 +2482,7 @@ elif mode == 72:
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode == 73: TugaFilmesCom.TFC_encontrar_videos_filmes(name,url)
+elif mode == 73: TugaFilmesCom.TFC_encontrar_videos_filmes(name,url,mvoutv)
 elif mode == 74: TugaFilmesCom.TFC_pesquisar_filmes()
 elif mode == 75: TugaFilmesCom.TFC_resolve_videomega_filmes(url,conta_id_video)
 elif mode == 76: TugaFilmesCom.TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,nome_fonte_video)
@@ -1873,7 +2517,7 @@ elif mode == 102:
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode == 103: MovieTuga.MVT_encontrar_videos_filmes(name,url)
+elif mode == 103: MovieTuga.MVT_encontrar_videos_filmes(name,url,mvoutv)
 elif mode == 104: MovieTuga.MVT_pesquisar_filmes()
 elif mode == 105: MovieTuga.MVT_Menu_Filmes(artfolder)
 elif mode == 106: MovieTuga.MVT_Menu_Filmes_Por_Categorias(artfolder)
@@ -1893,7 +2537,7 @@ elif mode == 232:
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode == 233: TopPt.TPT_encontrar_videos_filmes(name,url,iconimage)
+elif mode == 233: TopPt.TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv)
 elif mode == 234: TopPt.TPT_pesquisar()
 elif mode == 235: TopPt.TPT_resolve_videomega_filmes(url,conta_id_video)
 elif mode == 236: TopPt.TPT_resolve_not_videomega_filmes(name,conta_id_video)
@@ -2015,7 +2659,7 @@ elif mode == 602:
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode == 603: FoitaTuga.FTT_encontrar_videos_filmes(name,url)
+elif mode == 603: FoitaTuga.FTT_encontrar_videos_filmes(name,url,mvoutv)
 elif mode == 604: FoitaTuga.FTT_pesquisar_filmes()
 elif mode == 605: FoitaTuga.FTT_Menu_Filmes(artfolder)
 elif mode == 606: FoitaTuga.FTT_Menu_Filmes_Por_Categorias(artfolder)
@@ -2038,7 +2682,7 @@ elif mode == 702:
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode == 703: Cinematuga.CMT_encontrar_videos_filmes(name,url)
+elif mode == 703: Cinematuga.CMT_encontrar_videos_filmes(name,url,mvoutv)
 elif mode == 704: Cinematuga.CMT_pesquisar()
 elif mode == 705: Cinematuga.CMT_resolve_videomega_filmes(url,conta_id_video)
 elif mode == 706: Cinematuga.CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha)
@@ -2100,7 +2744,7 @@ elif mode == 802:
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode == 803: CinematugaEu.CME_encontrar_videos_filmes(name,url)
+elif mode == 803: CinematugaEu.CME_encontrar_videos_filmes(name,url,mvoutv)
 elif mode == 804: CinematugaEu.CME_pesquisar_filmes()
 elif mode == 805: CinematugaEu.CME_Menu_Filmes(artfolder)
 elif mode == 806: CinematugaEu.CME_Menu_Filmes_Por_Categorias(artfolder)
@@ -2123,7 +2767,7 @@ elif mode == 902:
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')
         xbmc.executebuiltin("Container.SetViewMode(560)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-elif mode == 903: CinemaEmCasa.CMC_encontrar_videos_filmes(name,url)
+elif mode == 903: CinemaEmCasa.CMC_encontrar_videos_filmes(name,url,mvoutv)
 elif mode == 904: CinemaEmCasa.CMC_pesquisar_filmes()
 elif mode == 905:
         CinemaEmCasa.CMC_Menu_Filmes_Top_Semanal(artfolder)
@@ -2273,6 +2917,8 @@ elif mode == 9003:
 	item.setProperty("IsPlayable", "true")
         xbmc.Player().play('plugin://plugin.video.genesis/?action=play&name='+show+'&imdb='+idmdb+'&season='+porada+'&show='+show+'&tvdb='+idtv+'&year='+anoano+'&episode='+podio)
         #Funcoes.playparser(idmdb,porada,show,idtv,anoano,podio)
+elif mode == 9004:
+        procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage)
 
 elif mode == 10000:
         SITESdosPORTUGAS()

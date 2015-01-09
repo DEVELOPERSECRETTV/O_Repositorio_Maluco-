@@ -375,7 +375,7 @@ def CMT_encontrar_fontes_filmes(url,artfolder):
 #----------------------------------------------------------------------------------------------------------------------------------------------#	
 
 
-def CMT_encontrar_videos_filmes(name,url):
+def CMT_encontrar_videos_filmes(name,url,mvoutv):
         site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B]'
         message = 'Por favor aguarde.'
         percent = 0
@@ -466,7 +466,7 @@ def CMT_encontrar_videos_filmes(name,url):
 ##        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('CMT | ','')
 ##        n = re.compile('--(.+?)--').findall(nn)
         url = 'IMDB'+imdbcode+'IMDB'
-        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'CMT',url)
+        if mvoutv != 'MoviesCMT': FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'CMT',url)
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#	
@@ -777,6 +777,8 @@ episod=None
 air=None
 namet=None
 urltrailer=None
+mvoutv=None
+automatico=None
 
 try: url=urllib.unquote_plus(params["url"])
 except: pass
@@ -806,6 +808,10 @@ try: episod=urllib.unquote_plus(params["episod"])
 except: pass
 try: air=urllib.unquote_plus(params["air"])
 except: pass
+try: mvoutv=urllib.unquote_plus(params["mvoutv"])
+except: pass
+try: automatico=urllib.unquote_plus(params["automatico"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -819,3 +825,5 @@ print "Fanart: "+str(fanart)
 print "Episode: "+str(episod)
 print "Namet: "+str(namet)
 print "Urltrailer: "+str(urltrailer)
+print "MvouTv: "+str(mvoutv)
+print "Automatico: "+str(automatico)

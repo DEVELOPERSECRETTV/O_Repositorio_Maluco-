@@ -559,7 +559,7 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_i
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def TFC_encontrar_videos_filmes(name,url):
+def TFC_encontrar_videos_filmes(name,url,mvoutv):
         try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
         except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].com'
@@ -697,6 +697,12 @@ def TFC_encontrar_videos_filmes(name,url):
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                        matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
+                                        if matchi:
+                                                for url in matchi:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                                 assistir_fontes = re.findall("------------------------------<br />(.*?)='postmeta'>", fonte, re.DOTALL)
                                 assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
@@ -726,6 +732,12 @@ def TFC_encontrar_videos_filmes(name,url):
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                        matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
+                                        if matchi:
+                                                for url in matchi:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                         else:
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
@@ -752,6 +764,12 @@ def TFC_encontrar_videos_filmes(name,url):
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                        matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
+                                        if matchi:
+                                                for url in matchi:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
@@ -801,7 +819,7 @@ def TFC_encontrar_videos_filmes(name,url):
 ##        n = re.compile('--(.+?)--').findall(nn)
         url = 'IMDB'+imdbcode+'IMDB'
         #addLink(url+'-'+str(n[0]),'','')
-        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'TFC',url)
+        if mvoutv != 'MoviesTFC': FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'TFC',url)
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -982,6 +1000,7 @@ episod=None
 air=None
 namet=None
 urltrailer=None
+mvoutv=None
 
 try: url=urllib.unquote_plus(params["url"])
 except: pass
@@ -1011,6 +1030,8 @@ try: episod=urllib.unquote_plus(params["episod"])
 except: pass
 try: air=urllib.unquote_plus(params["air"])
 except: pass
+try: mvoutv=urllib.unquote_plus(params["mvoutv"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
@@ -1024,3 +1045,4 @@ print "Fanart: "+str(fanart)
 print "Episode: "+str(episod)
 print "Namet: "+str(namet)
 print "Urltrailer: "+str(urltrailer)
+print "MvouTv: "+str(mvoutv)

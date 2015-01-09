@@ -771,7 +771,7 @@ def Fontes_Filmes_TFV(item):
 #----------------------------------------------------------------------------------------------------------------------------------------------#	
 
 
-def TFV_encontrar_videos_filmes(name,url):
+def TFV_encontrar_videos_filmes(name,url,mvoutv):
         try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
         except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
         site = '[B][COLOR green]TUGA[/COLOR][COLOR yellow]-[/COLOR][COLOR red]FILMES[/COLOR][/B].tv'
@@ -1012,7 +1012,7 @@ def TFV_encontrar_videos_filmes(name,url):
 ##        #addDir1('','url',1004,artfolder,False,'')
 
         url = 'IMDB'+imdbcode+'IMDB'
-        FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'TFV',url)
+        if mvoutv != 'MoviesTFV': FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'TFV',url)
         
 ##        if '---' in nn:
 ##                n = re.compile('---(.+?)---').findall(nn)

@@ -830,8 +830,9 @@ def Fontes_Filmes_TPT(item):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
                 
-def TPT_encontrar_videos_filmes(name,url,iconimage):
-        
+def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
+##        addLink(mvoutv,'','','')
+##        return
         if 'Season' in name or 'Temporada' in name or 'Mini-Série' in name or 'Mini-serie' in name or 'Minisérie' in name or 'Miniserie' in name:
                 n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(name)
                 if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(name)
@@ -965,7 +966,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                         addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n2,'url',1004,iconimage,False,fanart)
        
         if 'Season' not in name and 'Temporada' not in name and 'Mini-Série' not in name and 'Mini-Serie' not in name and 'Minisérie' not in name and 'Miniserie' not in name:
-                addDir(name,'url',9999,iconimage,'',fanart)
+                addDir1(name,'url',1004,iconimage,False,fanart)
         #addDir(name+url,'url',9999,iconimage,'',fanart)
         l= 0
 	try:
@@ -2097,7 +2098,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage):
                 progress.update( percent, "", message, "" )
         if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-serie' not in nometitulo and 'Minisérie' not in nometitulo and 'Miniserie' not in nometitulo:
                 url = 'IMDB'+imdbcode+'IMDB'
-                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n2),'TPT',url)
+                if mvoutv != 'MoviesTPT': FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n2),'TPT',url)
 ##                nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
 ##                nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
 ##                nn = nomeescolha.replace('[B][COLOR green]','--').replace('[/COLOR][/B]','--').replace('[COLOR orange]','').replace('[/COLOR]','').replace('[','---').replace(']','---').replace('TPT | ','')
@@ -2263,7 +2264,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
     	if "video.pw" in url:
                 try:
                         print url
-                        fonte_id = '(Video.pw)'
+                        fonte_id = '(Video.pw)'+url
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
