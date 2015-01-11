@@ -46,6 +46,9 @@ CMC_ONOFF = []
 CME_ONOFF = []
 CMT_ONOFF = []
 
+results = []
+resultos = []
+
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
@@ -107,8 +110,8 @@ def MAIN_MENU():
         #addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (SITESdosPORTUGAS)','url',7500,artfolder + 'P1.png','nao','')
         
-        
         addDir1('','url',1004,artfolder,False,'')
+        addDir('[B][COLOR green]RA[/COLOR][COLOR yellow]T[/COLOR][COLOR red]OTV[/COLOR][/B] (Filmes/Séries)[COLOR blue] NOVO[/COLOR] W.I.P.','url',20001,artfolder,'nao','')        
         addDir('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B] (Filmes/Séries)','url',10000,artfolder + 'SDPI.png','nao','')
         addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDB.png','nao','')
         #addDir1('','url',1004,artfolder,False,'')
@@ -584,9 +587,16 @@ def dirtodos(url):
         #addLink(str(CME)+str(threading.active_count()),'','','')
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
+        mv = mvoutv
+        nmt = namet
+        ur = url
+        ye = year
+        utr = urltrailer
+        nm = name
+        ico = iconimage
         _nomeproc_ = []
         _nomeproc_.append('[B][COLOR white]GENESIS[/COLOR][/B]')
         _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
@@ -629,6 +639,8 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                         elif mvoutv == 'MoviesMVT':
                                 mvoutv = 'Movies'
                                 MovieTuga.MVT_encontrar_videos_filmes(name,url,mvoutv)
+                        elif mvoutv == 'MoviesRTV':
+                                FilmesAnima.FILMES_ANIMACAO_pesquisar(namet,'',url)
                 elif 'TOPPT.NET' in _nomeproc_[index]:
                         if mvoutv != 'MoviesTPT':
                                 if mvoutv=='MoviesTFC':
@@ -645,6 +657,8 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif mvoutv=='MoviesCMC':
                                         strstr,url = CMCmovies(name,url)
+                                elif mvoutv=='MoviesRTV':
+                                        strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTPT',url)     
                         else: TopPt.TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv)
                 elif 'TUGA-FILMES.COM' in _nomeproc_[index]:
@@ -663,6 +677,8 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif mvoutv=='MoviesCMC':
                                         strstr,url = CMCmovies(name,url)
+                                elif mvoutv=='MoviesRTV':
+                                        strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTFC',url)
                         else: TugaFilmesCom.TFC_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'TUGA-FILMES.TV' in _nomeproc_[index]:
@@ -681,6 +697,8 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif mvoutv=='MoviesCMC':
                                         strstr,url = CMCmovies(name,url)
+                                elif mvoutv=='MoviesRTV':
+                                        strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTFV',url)
                         else: TugaFilmesTV.TFV_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'CINEMATUGA.EU' in _nomeproc_[index]:
@@ -699,6 +717,8 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif mvoutv=='MoviesCMC':
                                         strstr,url = CMCmovies(name,url)
+                                elif mvoutv=='MoviesRTV':
+                                        strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCME',url)
                         else: CinematugaEu.CME_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'CINEMATUGA.NET' in _nomeproc_[index]:
@@ -717,6 +737,8 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = TFCmovies(name,url)
                                 elif mvoutv=='MoviesCMC':
                                         strstr,url = CMCmovies(name,url)
+                                elif mvoutv=='MoviesRTV':
+                                        strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCMT',url)
                         else: Cinematuga.CMT_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'FOITATUGA' in _nomeproc_[index]:
@@ -735,6 +757,8 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif mvoutv=='MoviesCMC':
                                         strstr,url = CMCmovies(name,url)
+                                elif mvoutv=='MoviesRTV':
+                                        strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteFTT',url)
                         else: FoitaTuga.FTT_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'CINEMAEMCASA' in _nomeproc_[index]:
@@ -753,6 +777,8 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif mvoutv=='MoviesTFC':
                                         strstr,url = TFCmovies(name,url)
+                                elif mvoutv=='MoviesRTV':
+                                        strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCMC',url)
                         else: CinemaEmCasa.CMC_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'MOVIETUGA' in _nomeproc_[index]:
@@ -771,8 +797,406 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif mvoutv=='MoviesCMC':
                                         strstr,url = CMCmovies(name,url)
+                                elif mvoutv=='MoviesRTV':
+                                        strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteMVT',url)
                         else: MovieTuga.MVT_encontrar_videos_filmes(name,url,mvoutv)
+        #if 'PROCUROU' in name or 'PROCURAR' in name:
+       # addLink(name,'','','')
+        #procurarOnde(mv, nmt, ur, ye, utr, nm, ico)
+
+def MenuFilmesRato():
+        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]O[/COLOR][COLOR red]DOS[/COLOR][/B] (Filmes)','http://www.ratotv.net/movies/page/1/',20000,artfolder + 'FT.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','http://www.ratotv.net/',20002,artfolder + 'FMV.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] P[/COLOR][COLOR red]OPULARES[/COLOR][/B] (Filmes)','http://www.ratotv.net/',20002,artfolder + 'MP.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] R[/COLOR][COLOR red]ECENTES[/COLOR][/B] (Filmes)','http://www.ratotv.net/',20002,artfolder,'nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]ISTOS[/COLOR][/B] (Filmes)','http://www.ratotv.net/',20002,artfolder,'nao','')
+        #addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','1',2998,artfolder + 'P1.png','nao','')
+        addDir1('','url',1004,artfolder,False,'')
+        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]O[/COLOR][COLOR red]DAS[/COLOR][/B] (Séries)','http://www.ratotv.net/tvshows/page/1/',20003,artfolder + 'FT.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','http://www.ratotv.net/',20002,artfolder + 'FMV.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] P[/COLOR][COLOR red]OPULARES[/COLOR][/B] (Séries)','http://www.ratotv.net/',20002,artfolder + 'MP.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] R[/COLOR][COLOR red]ECENTES[/COLOR][/B] (Séries)','http://www.ratotv.net/',20002,artfolder,'nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]ISTAS[/COLOR][/B] (Séries)','http://www.ratotv.net/',20002,artfolder,'nao','')
+        #addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','1',2998,artfolder + 'P1.png','nao','')
+
+def tvoumv(name,url):
+        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+        
+        i=0
+        _fs_ =[]
+        resultos=[]
+        results=[]
+        threads=[]
+        
+        if 'Filmes' in name:
+                FilmesOuSeries = 'Filmes'
+        elif 'Séries' in name:
+                FilmesOuSeries = 'Séries'
+                
+        try: html_source = abrir_url(url)
+	except: html_source = ''
+	
+        name = name.replace('[COLOR yellow]','').replace('[COLOR red]','').replace('[/COLOR]','')
+	if 'Filmes' in name and 'VISTOS' in name:
+		pasta = False
+		mode = 3
+		html_source_trunk = re.findall('<div id="viewed">(.*?)<div id="rated">', html_source, re.DOTALL)
+	elif 'Filmes' in name and 'POPULARES' in name:
+		pasta = False
+		mode = 3
+		html_source_trunk = re.findall('<div id="popular">(.*?)<div id="viewed">', html_source, re.DOTALL)
+	elif 'Filmes' in name and 'RECENTES' in name:
+		pasta = False
+		mode = 3
+		html_source_trunk = re.findall('<div id="new"(.*?)<div id="popular">', html_source, re.DOTALL)
+	elif 'Filmes' in name and 'VOTADOS' in name:
+		pasta = False
+		mode = 3
+		html_source_trunk = re.findall('<div id="rated">(.*?)</div></div>', html_source, re.DOTALL)
+	elif 'Séries' in name and 'VISTAS' in name:
+		pasta = True
+		mode = 10
+		html_source_trunk = re.findall('<div id="viewed2">(.*?)<div id="rated2">', html_source, re.DOTALL)
+	elif 'Séries' in name and 'POPULARES' in name:
+		pasta = True
+		mode = 10
+		html_source_trunk = re.findall('<div id="popular2">(.*?)<div id="viewed2">', html_source, re.DOTALL)
+	elif 'Séries' in name and 'RECENTES' in name:
+		pasta = True
+		mode = 10
+		html_source_trunk = re.findall('<div id="new2">(.*?)<div id="popular2">', html_source, re.DOTALL)
+	elif 'Séries' in name and 'VOTADAS' in name:
+		pasta = True
+		mode = 10
+		html_source_trunk = re.findall('<div id="rated2">(.*?)</div></div>', html_source, re.DOTALL)
+	
+	if html_source:
+		items = re.compile('<img src="(.+?)" alt=".+?"/><span>(.+?)</span><a href="(.+?)"').findall(html_source_trunk[0])
+		for img,titulo,url in items:
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        DA = threading.Thread(name='DA'+str(i), target=ratoTV1 , args=(url, resultos, ))
+                        threads.append(DA)
+
+
+        [i.start() for i in threads]
+        [i.join() for i in threads]
+
+        i = 0
+        x = 0
+        threads = []
+        for r in range(len(resultos)):
+                dads = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]END[|]').findall(resultos[r])
+                title = dads[0][0]
+                Otitle = dads[0][1]
+                url = dads[0][2]
+                year = dads[0][3]
+                imdbcode = dads[0][4]                
+                sinopse = dads[0][5]
+                i = i + 1
+                a = str(i)
+                if i < 10: a = '0'+a
+                if FilmesOuSeries == 'Filmes':
+                        DADOS = threading.Thread(name='DADOS'+str(i), target=dadosImdbcode , args=(title, Otitle, url, year, str(a), results, imdbcode, sinopse, ))
+                elif FilmesOuSeries == 'Séries':
+                        DADOS = threading.Thread(name='DADOS'+str(i), target=thetvdbIMDB , args=(title, Otitle, url, year, str(a), results, imdbcode, sinopse, ))
+                threads.append(DADOS)
+                x = x + 1
+                
+        [i.start() for i in threads]
+        [i.join() for i in threads]
+        
+        num_filmes = len(results)
+        results.sort()
+        for x in range(len(results)):
+                name = ''
+                imdbcode = ''
+                iconimage = ''
+                fanart = ''
+                url = ''
+                year = ''
+                Otitle = ''
+                sinopse = ''
+                genero = ''
+                dads = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]END[|]').findall(results[x])
+                order = dads[0][0]
+                name = dads[0][1]
+                imdbcode = dads[0][2]
+                iconimage = dads[0][3]
+                fanart = dads[0][4]
+                url = dads[0][5]
+                year = dads[0][6]
+                Otitle = dads[0][7]
+                sinopse = dads[0][8]
+                if FilmesOuSeries == 'Filmes':                                                                                                          #7
+                        addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                elif FilmesOuSeries == 'Séries':
+                        addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',3007,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                xbmc.sleep(12)                                                                                                                  
+
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(515)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def ratoTV1(url,resultos):
+
+        #resultos = []
+        
+        try:
+                html_source = abrir_url(url)
+        except: html_source = ''
+
+        items = re.findall('<div class="posthead">(.+?)<div class="full-post">', html_source, re.DOTALL)
+
+        for item in items:
+                Otitle = re.compile('tulo Original.+?/strong>(.+?)</li>\n').findall(item)
+
+                title = re.compile('tulo Portugu.+?/strong>(.+?)</li>\n').findall(item)
+                
+                #link = re.compile('<h1> <a href="(.+?)">.+?</a></h1>').findall(item)
+                        
+                anos = re.compile('<li><strong>Ano: </strong><a .+?>(.+?)</a></li>\n').findall(item)
+
+                sins = re.compile('style="display:inline;">(.+?)\n').findall(item)
+                        
+                imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+
+                resultos.append(title[0]+'|'+Otitle[0]+'|'+url+'|'+anos[0]+'|'+imdb[0]+'|'+sins[0]+'|END|')
+
+def ratoTV(url):
+
+        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+
+        threads = []
+        results = []
+        
+        try:
+                html_source = abrir_url(url)
+        except: html_source = ''
+        i = 0
+        x = 0
+        items = re.findall('<div class="posthead">(.+?)<span class="more-btn">', html_source, re.DOTALL)
+        for item in items:
+                Otitle = re.compile('tulo Original.+?/strong>(.+?)</li>\n').findall(item)
+
+                title = re.compile('tulo Portugu.+?/strong>(.+?)</li>\n').findall(item)
+                
+                link = re.compile('<h1> <a href="(.+?)">.+?</a></h1>').findall(item)
+                        
+                anos = re.compile('<li><strong>Ano: </strong>(.+?)</li>').findall(item)
+
+                sins = re.compile('style="display:inline;">(.+?)\n').findall(item)
+                        
+                imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+              
+                i = i + 1
+                a = str(i)
+                if i < 10: a = '0'+a
+                DADOS = threading.Thread(name='DADOS'+str(i), target=dadosImdbcode , args=(title[0], Otitle[0], link[0], anos[0], str(a), results, imdb[0], sins[0], ))
+                threads.append(DADOS)
+                x = x + 1
+
+        [i.start() for i in threads]
+        [i.join() for i in threads]
+
+        num_filmes = len(results)
+        results.sort()
+        for x in range(len(results)):
+                name = ''
+                imdbcode = ''
+                iconimage = ''
+                fanart = ''
+                url = ''
+                year = ''
+                Otitle = ''
+                sinopse = ''
+                genero = ''
+                dads = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]END[|]').findall(results[x])
+                order = dads[0][0]
+                name = dads[0][1]
+                imdbcode = dads[0][2]
+                iconimage = dads[0][3]
+                fanart = dads[0][4]
+                url = dads[0][5]
+                year = dads[0][6]
+                Otitle = dads[0][7]
+                sinopse = dads[0][8]
+                #addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
+                addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                #addLink('|'+name+'|'+imdbcode+'|'+iconimage+'|'+fanart+'|'+url+'|'+year+'|'+sinopse,'',iconimage,fanart)
+                xbmc.sleep(12)
+
+        pseg = re.compile('<div class="next"><a href="(.+?)"><img').findall(html_source)
+        addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pseg[0],20000,artfolder + 'PAGS1.png','','')
+
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(503)")#503
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        
+#http://api.themoviedb.org/3/movie/tt1174954?language=pt&api_key=3e7807c4a01f18298f64662b257d7059
+def dadosImdbcode(title, Otitle, url, year, ordem, results, imdbcode, sinopse):
+        api_key = '3e7807c4a01f18298f64662b257d7059'
+        tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        
+        try:
+                url_tmdb = 'http://api.themoviedb.org/3/movie/'+urllib.quote_plus(imdbcode)+'?language=pt&api_key=' + api_key 
+                try: data = Funcoes.json_get(url_tmdb)
+                except: data = ''
+
+##                try: name = data[u'title']
+##                except:name = ''
+##                try: name = data[u'original_title']
+##                except: name = ''
+
+##                try: sinopse = data[u'overview']
+##                except: sinopse = '---'
+                        
+                try: fanart = tmdb_base_url + data[u'backdrop_path']
+                except: fanart = ''
+                        
+                try: thumb = tmdb_base_url.replace('w1280','w600') + data[u'poster_path']
+                except: thumb =''
+                        
+                try: id_tmdb = data[u'id']
+                except: id_tmdb=''
+        except: pass
+
+        if fanart == '':
+                try:
+                        url_tmdb = 'http://api.themoviedb.org/3/movie/'+urllib.quote_plus(imdbcode)+'?language=en&api_key=' + api_key 
+                        try: data = Funcoes.json_get(url_tmdb)
+                        except: data = ''
+
+##                        try: name = data[u'title']
+##                        except:name = ''
+##                        try: name = data[u'original_title']
+##                        except: name = ''
+
+##                        try: sinopse = data[u'overview']
+##                        except: sinopse = '--'
+                                
+                        try: fanart = tmdb_base_url + data[u'backdrop_path']
+                        except: fanart = ''
+                                
+                        try: thumb = tmdb_base_url.replace('w1280','w600') + data[u'poster_path']
+                        except: thumb =''
+                                
+                        try: id_tmdb = data[u'id']
+                        except: id_tmdb=''
+                except: pass
+        results.append(str(ordem)+'|'+str(title)+'|'+str(imdbcode)+'|'+str(thumb)+'|'+str(fanart)+'|'+str(url)+'|'+str(year)+'|'+str(Otitle)+'|'+str(sinopse)+'|END|')                       
+        #return fanart,str(id_tmdb),thumb
+
+def ratoTVTV(url):
+
+        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+
+        threads = []
+        results = []
+        
+        try:
+                html_source = abrir_url(url)
+        except: html_source = ''
+        i = 0
+        x = 0
+        items = re.findall('<div class="posthead">(.+?)<span class="more-btn">', html_source, re.DOTALL)
+        for item in items:
+                Otitle = re.compile('tulo Original.+?/strong>(.+?)</li>\n').findall(item)
+
+                title = re.compile('tulo Portugu.+?/strong>(.+?)</li>\n').findall(item)
+                
+                link = re.compile('<h1> <a href="(.+?)">.+?</a></h1>').findall(item)
+                        
+                anos = re.compile('<li><strong>Ano: </strong>(.+?)</li>').findall(item)
+
+                sins = re.compile('style="display:inline;">(.+?)\n').findall(item)
+                        
+                imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+              
+                i = i + 1
+                a = str(i)
+                if i < 10: a = '0'+a
+                DADOS = threading.Thread(name='DADOS'+str(i), target=thetvdbIMDB , args=(title[0], Otitle[0], link[0], anos[0], str(a), results, imdb[0], sins[0], ))
+                threads.append(DADOS)
+                x = x + 1
+
+        [i.start() for i in threads]
+        [i.join() for i in threads]
+
+        num_filmes = len(results)
+        results.sort()
+        for x in range(len(results)):
+                name = ''
+                imdbcode = ''
+                iconimage = ''
+                fanart = ''
+                url = ''
+                year = ''
+                Otitle = ''
+                sinopse = ''
+                genero = ''
+                dads = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]END[|]').findall(results[x])
+                order = dads[0][0]
+                name = dads[0][1]
+                imdbcode = dads[0][2]
+                iconimage = dads[0][3]
+                fanart = dads[0][4]
+                url = dads[0][5]
+                year = dads[0][6]
+                Otitle = dads[0][7]
+                sinopse = dads[0][8]
+                #addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
+                addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',3007,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                #addLink('|'+name+'|'+imdbcode+'|'+iconimage+'|'+fanart+'|'+url+'|'+year+'|'+sinopse,'',iconimage,fanart)
+                xbmc.sleep(12)
+
+        pseg = re.compile('<div class="next"><a href="(.+?)"><img').findall(html_source)
+        addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pseg[0],20000,artfolder + 'PAGS1.png','','')
+
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(503)")#503
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def thetvdbIMDB(title, Otitle, url, year, ordem, results, imdbcode, sinopse):
+                
+	sin = ''
+	idserie = ''
+
+	try:
+		url = 'http://thetvdb.com/api/GetSeriesByRemoteID.php?imdbid=' + urllib.quote(imdbcode)+'&language=pt'
+		html_source = abrir_url(url)
+	except: html_source = ''
+		
+        sid = re.compile('<seriesid>(.+?)</seriesid>').findall(html_source)
+        overview = re.compile('<Overview>(.+?)</Overview>').findall(html_source)
+        imdbcode = re.compile('<IMDB_ID>(.+?)</IMDB_ID>').findall(html_source)
+        aired = re.compile('<FirstAired>(.+?)-.+?-.+?</FirstAired>').findall(html_source)
+        bann = re.compile('<banner>(.+?)</banner>').findall(html_source)
+
+        if overview: sinopse = overview[0]
+        #else: sin = '---'
+        if sid: idserie = sid[0]
+        else: idserie = ''
+
+        #thumb = 'http://thetvdb.com/banners/'+bann[0]
+        thumb = 'http://thetvdb.com/banners/posters/' + idserie + '-1.jpg'
+        fanart = 'http://thetvdb.com/banners/fanart/original/' + idserie + '-1.jpg'
+                                                
+        results.append(str(ordem)+'|'+str(title)+'|'+str(imdbcode)+'|'+str(thumb)+'|'+str(fanart)+'|'+str(url)+'|'+str(year)+'|'+str(Otitle)+'|'+str(sinopse)+'|END|')                       
+        
+def RTVmovies(namet,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+namet,'url',1004,iconimage,False,fanart)
+        url = 'IMDB'+imdbcode+'IMDB'
+
+        return namet,url
 
 def TPTmovies(name,url,iconimage):
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
@@ -806,6 +1230,7 @@ def TPTmovies(name,url,iconimage):
         else:
                 addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n2,'url',1004,iconimage,False,fanart)
         url = 'IMDB'+imdbcode+'IMDB'
+        #addLink(name,'','','')
         return str(n2),url
 
 def FTTmovies(name,url):
@@ -2920,6 +3345,13 @@ elif mode == 9003:
 elif mode == 9004:
         procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage)
 
+elif mode == 9005:
+       # item = xbmcgui.ListItem(path=url)
+	#item.setProperty("IsPlayable", "false")
+        #xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?mode=7000&url='+url, item)
+        xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+url+'&mode=9004&name='+name+'&namet='+namet+'&mvoutv='+mvoutv+'&year='+year+'&urltrailer='+urltrailer+'&iconimage='+iconimage)#, item)
+        #xbmcxbmc(url,name)
+
 elif mode == 10000:
         SITESdosPORTUGAS()
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -2927,6 +3359,15 @@ elif mode == 10000:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 10001:
         dirtodos(url)
+
+elif mode == 20000:
+        ratoTV(url)
+elif mode == 20001:
+        MenuFilmesRato()
+elif mode == 20002:
+        tvoumv(name,url)
+elif mode == 20003:
+        ratoTVTV(url)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
