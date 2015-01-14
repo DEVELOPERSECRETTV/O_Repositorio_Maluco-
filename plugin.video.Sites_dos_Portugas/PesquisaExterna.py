@@ -1320,10 +1320,10 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                                 audio_filme = ''
                                                 titulo = re.compile('<h2 class="title">(.+?)</h2>').findall(item)
                                                 #urlpesq = re.compile('<a href="(.+?)" rel="bookmark">').findall(item)
-                                                qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
-                                                if not qualidade: qualidade = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
-                                                ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
-                                                audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)    
+                                                qualidade = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br").findall(item)
+                                                if not qualidade: qualidade = re.compile("<b>VERSÃO:.+?</b>(.+?)<br").findall(item)
+                                                ano = re.compile("<b>ANO:.+?/b>(.+?)<br").findall(item)
+                                                audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br").findall(item)    
                                                 thumbnail = re.compile('src="(.+?)"').findall(item)
                                                 if thumbnail: thumb = thumbnail[0]
                                                 print urletitulo,thumbnail
@@ -1366,13 +1366,13 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                                         else:
                                                                 audio_filme = ': ' + audio[0]
                                                 if not audio:
-                                                        audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br/>").findall(item)
+                                                        audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br").findall(item)
                                                         if audio:
                                                                 audio_filme = ': ' + audio[0]
                                                         else:
                                                                 audio_filme = ''
                                                 if not ano:
-                                                        ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
+                                                        ano = re.compile("\nANO:\xc2\xa0(.+?)<br").findall(item)
                                                         if ano:
                                                                 ano_filme = ': ' + ano[0].replace(' ','')
                                                         else:
@@ -1390,7 +1390,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                                         qualidade = qualidade.replace('[',' - ')
                                                         qualidade = qualidade.replace(']','')
                                                 else:
-                                                        qualidade = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                                        qualidade = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br").findall(item)
                                                         if qualidade:
                                                                 qualidade = qualidade[0]
                                                                 qualidade = qualidade.replace('[',' - ')

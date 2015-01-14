@@ -49,6 +49,8 @@ CMT_ONOFF = []
 
 results = []
 resultos = []
+resul = []
+resulo = []
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
@@ -57,8 +59,10 @@ def MAIN_MENU():
         _sites_ = ['filmesTPT.txt','filmesCME.txt','filmesFTT.txt','filmesTFC.txt','filmesMVT.txt','filmesCMTnet.txt','filmesCMC.txt','filmesTFV.txt']
         folder = perfil
         for site in _sites_:
-                Filmes_Fi = open(folder + site, 'w')
-                Filmes_Fi.close()
+                try:
+                        Filmes_Fi = open(folder + site, 'w')
+                        Filmes_Fi.close()
+                except: pass
 ##        if selfAddon.getSetting("AvisoFanart") == "true":
 ##                SdPpath = selfAddon.getAddonInfo('path')
 ##                d = AvisoFanart("AvisoFanart.xml" , SdPpath, "Default")
@@ -68,7 +72,7 @@ def MAIN_MENU():
         addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries) [COLOR blue]BREVEMENTE[/COLOR]','','',artfolder,'nao','')
         addDir('[B][COLOR green]T[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','http://direct',3012,artfolder,'nao','')
         addDir('[B][COLOR green]RA[/COLOR][COLOR yellow]T[/COLOR][COLOR red]OTV[/COLOR][/B] (Filmes/Séries)','url',20001,artfolder,'nao','')
-        addDir('[B][COLOR green]WAR[/COLOR][COLOR yellow]E[/COLOR][COLOR red]ZTUGA[/COLOR][/B] (Filmes/Séries) [COLOR blue]NOVO[/COLOR] W.I.P.','url',30001,artfolder,'nao','')
+        addDir('[B][COLOR green]WAR[/COLOR][COLOR yellow]E[/COLOR][COLOR red]ZTUGA[/COLOR][/B] (Filmes/Séries)','url',30001,artfolder,'nao','')
         addDir1('','url',1004,artfolder,False,'')
         
 ##        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (TMDB)','http://direct',3003,artfolder + 'SERIES1.png','nao','')
@@ -845,14 +849,16 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
 
         #if 'PROCUROU' in name or 'PROCURAR' in name:
        # addLink(name,'','','')
-        #procurarOnde(mv, nmt, ur, ye, utr, nm, ico)
+        #procurarOnde(mv, nmt, ur, ye, utr, nm, ico)http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=movies
 
 def MenuW():
         addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','url',30003,artfolder,'nao','')
         addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','url',30004,artfolder,'nao','')
         addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=movies',30000,artfolder,'nao','')
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S[/COLOR][COLOR red] ANIMAÇÃO[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&genres=17&mediaType=movies',30000,artfolder,'nao','')
         addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series',30002,artfolder,'nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','url','',artfolder + 'P1.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.wareztuga.tv/',30009,artfolder + 'P1.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.wareztuga.tv/',30009,artfolder + 'P1.png','nao','')
 
 def MenuWFilmes():
         addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=movies',30000,artfolder,'nao','')
@@ -862,8 +868,8 @@ def MenuWFilmes():
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]ISTOS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=views&mediaType=movies',30000,artfolder,'nao','')
         addDir('[B][COLOR green]RECO[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ENDADOS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&btn=moviesrecommended&mediaType=movies',30000,artfolder + 'MP.png','nao','')
         addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B]','http://www.wareztuga.tv/movies.php?p=1&mediaType=movies&order=year',30000,artfolder,'nao','')
-        addDir('[B][COLOR green]CAT[/COLOR][COLOR yellow]E[/COLOR][COLOR red]GORIAS[/COLOR][/B]','http://www.wareztuga.tv/series.php?p=1',30007,artfolder,'nao','')
-        addDir('[B][COLOR green]A[/COLOR][COLOR yellow]N[/COLOR][COLOR red]OS[/COLOR][/B]','http://www.wareztuga.tv/series.php?p=1',30008,artfolder,'nao','')
+        addDir('[B][COLOR green]CAT[/COLOR][COLOR yellow]E[/COLOR][COLOR red]GORIAS[/COLOR][/B]','http://www.wareztuga.tv/movies.php?p=1',30007,artfolder,'nao','')
+        addDir('[B][COLOR green]A[/COLOR][COLOR yellow]N[/COLOR][COLOR red]OS[/COLOR][/B]','http://www.wareztuga.tv/movies.php?p=1',30008,artfolder,'nao','')
 
 def MenuWSeries():
         addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series',30002,artfolder,'nao','')
@@ -890,6 +896,21 @@ def MenuWFilmesE():
         addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B]','http://www.wareztuga.tv/movies.php?p=1&mediaType=movies&order=year',30000,artfolder + 'MP.png','nao','')
         addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]PONTUAÇÃO[/COLOR][/B]','http://www.wareztuga.tv/movies.php?p=1&mediaType=movies&order=rate',30000,artfolder,'nao','')
 
+def procurarW(name,url):
+        keyb = xbmc.Keyboard('', 'Escreva o parâmetro de pesquisa')
+        keyb.doModal()
+        if (keyb.isConfirmed()):
+                search = keyb.getText()
+                if search=='': sys.exit(0)
+                encode=urllib.quote(search)
+                if 'Filmes' in name:
+                        url_pesquisa = url + 'pagination.ajax.php?p=1&order=date&words=' + encode + '&mediaType=movies'
+                        WlinksF(url_pesquisa)
+                if 'Séries' in name:
+                        url_pesquisa = url + 'pagination.ajax.php?p=1&order=date&words=' + encode + '&mediaType=series'
+                        WlinksS(url_pesquisa)
+        else: sys.exit(0)
+
 def categoriaW(url):
         if re.search('movies',url): FS='&mediaType=movies';nummode=30000
         elif re.search('series',url): FS='&mediaType=series';nummode=30002     
@@ -915,14 +936,21 @@ def anoW(url):
                         addDir('[COLOR yellow]' + ncat + '[/COLOR] ','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&years='+urli+FS,nummode,artfolder,'','')
 
 def WlinksF(url):
+        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
 
+        pgat = url
+        i = 0
         resul = []
+        resulo = []
+        threads = []
         
         try:
                 html_source = abrir_url(url)
         except: html_source = ''
 
         items = re.findall('<div class="thumb-and-episodes">(.+?)<div id="movie.+?" class="item', html_source, re.DOTALL)
+        if not items: items = re.findall('<div class="thumb-and-episodes">(.+?)\r\n\t</div>\r\n</div>\r\n</div>', html_source, re.DOTALL)
         for item in items:
                 Otitle = re.compile('<span class="original-name".+?"(.+?)"</span>').findall(item)
                 title = re.compile('class="movie-name">(.+?)</a>').findall(item)                
@@ -930,12 +958,13 @@ def WlinksF(url):
                 anos = re.compile('[(]</span>(.+?)<span>[)]').findall(item)
                 sins = re.compile('class="movie-synopsis-aux">(.+?)</span>').findall(item)
                 if not sins: sins = re.compile('class="movie-synopsis-aux">(.+?)\n').findall(item)
-                thumb = re.compile('<img src="(.+?)" alt=').findall(item)                        
-                #imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+                thumb = re.compile('<img src="(.+?)" alt=').findall(item)
                 resul.append(title[0]+'|'+Otitle[0]+'|'+'http://www.wareztuga.tv/'+link[0]+'|'+anos[0]+'|'+'http://www.wareztuga.tv/'+thumb[0]+'|'+sins[0]+'|END|')
-                #addLink(Otitle[0]+'-'+anos[0],'','http://www.wareztuga.tv/'+thumb[0],'')
-                addDir_trailer1('[B][COLOR green]' + Otitle[0] + '[/COLOR][/B][COLOR yellow] (' + anos[0] + ')[/COLOR]',link[0],9004,'http://www.wareztuga.tv/'+thumb[0],sins[0],'',anos[0],'',Otitle[0],'','MoviesRTV',0)
-
+                i = i + 1
+                a = str(i)
+                if i < 10: a = '0'+a
+                DA = threading.Thread(name='DA'+str(i), target=tmdbW , args=(Otitle[0], anos[0], resulo, str(a), ))
+                threads.append(DA)
                 
         items = re.findall('class="item last">(.+?)<div id="pagination"', html_source, re.DOTALL)
         for item in items:
@@ -946,23 +975,96 @@ def WlinksF(url):
                 sins = re.compile('class="movie-synopsis-aux">(.+?)</span>').findall(item)
                 if not sins: sins = re.compile('class="movie-synopsis-aux">(.+?)\n').findall(item)
                 thumb = re.compile('<img src="(.+?)" alt=').findall(item)                        
-                #imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
                 resul.append(title[0]+'|'+Otitle[0]+'|'+'http://www.wareztuga.tv/'+link[0]+'|'+anos[0]+'|'+'http://www.wareztuga.tv/'+thumb[0]+'|'+sins[0]+'|END|')
-                #addLink(Otitle[0]+'-'+anos[0],'','http://www.wareztuga.tv/'+thumb[0],'')
-                addDir_trailer1('[B][COLOR green]' + Otitle[0] + '[/COLOR][/B][COLOR yellow] (' + anos[0] + ')[/COLOR]',link[0],9004,'http://www.wareztuga.tv/'+thumb[0],sins[0],'',anos[0],'',Otitle[0],'','MoviesRTV',0)
+                a = str(i)
+                if i < 10: a = '0'+a
+                DA = threading.Thread(name='DA'+str(i), target=tmdbW , args=(Otitle[0], anos[0], resulo, str(a), ))
+                threads.append(DA)
+                
+        [i.start() for i in threads]
+        [i.join() for i in threads]
+        num_filmes = len(resul)
+        resulo.sort()
+        for x in range(len(resul)):
+                fanart = ''
+                imdbcode = ''
+                dados = re.compile('(.+?)[|](.+?)[|](.+?)[|]END[|]').findall(resulo[x])
+                try: imdbcode = dados[0][1]
+                except: imdbcode = ''
+                try: fanart = dados[0][2]
+                except: fanart = ''
+                name = ''          
+                iconimage = ''          
+                url = ''
+                year = ''
+                Otitle = ''
+                sinopse = ''
+                dads = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]END[|]').findall(resul[x])
+                try: name = dads[0][0]
+                except: name = ''
+                try: Otitle = dads[0][1]
+                except: Otitle = ''
+                try: url = dads[0][2]
+                except: url = ''
+                try: year = dads[0][3]
+                except: year = ''
+                try: iconimage = dads[0][4]
+                except: iconimage = ''
+                try: sinopse = dads[0][5]
+                except: sinopse = ''
+                addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                xbmc.sleep(12)
+                
+        if 'onclick="paginationScroll();"' in html_source:
+                pags = re.compile('p=(.+?)&order').findall(pgat)
+                if pags:
+                        numpag = int(pags[0]) + 1
+                        pseg = pgat.replace('p='+pags[0]+'&order','p='+str(numpag)+'&order')
+                        addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pseg,30000,artfolder + 'PAGS1.png','','')
 
-       #addDir_trailer1('[B][COLOR green]' + Otitle[0] + '[/COLOR][/B][COLOR yellow] (' + anos[0] + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,thumb[0],sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
- 
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(515)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def tmdbW(nomefilme,ano,resulo,ordem):
+        api_key = '3e7807c4a01f18298f64662b257d7059'
+
+        #url_tmdb = 'http://api.themoviedb.org/3/search/tv?api_key=' + api_key + '&query=' + urllib.quote_plus(nomefilme) + '&year=' + urllib.quote_plus(ano)
+        url_tmdb = 'http://api.themoviedb.org/3/search/movie?api_key='+api_key+'&order=asc&year='+str(ano)+'&query='+urllib.quote_plus(nomefilme)+'&per_page=1'
+        try: data = Funcoes.json_get(url_tmdb)
+        except: data = ''
+
+        try: id_tmdb = data['results'][0]['id']
+        except: id_tmdb=''
+        try: fanart = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w780' + str(data['results'][0]['backdrop_path'])
+        except: fanart=''
+
+        url_t = 'http://api.themoviedb.org/3/movie/'+str(id_tmdb)+'?api_key='+api_key
+        try: datas = abrir_url(url_t)
+        except: datas = ''
+        try:
+                imdb = re.compile('"imdb_id":"(.+?)"').findall(datas)
+                imdbcode = imdb[0]
+        except: imdbcode = ''
+
+        resulo.append(ordem+'|'+imdbcode+'|'+fanart+'|END|')
 
 def WlinksS(url):
+        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
 
+        pgat = url
+        i = 0
         resul = []
+        resulo = []
+        threads = []
         
         try:
                 html_source = abrir_url(url)
         except: html_source = ''
 
         items = re.findall('<div class="thumb-and-episodes">(.+?)<div id="movie.+?" class="item', html_source, re.DOTALL)
+        if not items: items = re.findall('<div class="thumb-and-episodes">(.+?)\r\n\t</div>\r\n</div>\r\n</div>', html_source, re.DOTALL)
         for item in items:
                 Otitle = re.compile('<span class="original-name">[-](.+?)</span>').findall(item)
                 title = re.compile('class="movie-name">(.+?)</a>').findall(item)                
@@ -970,13 +1072,13 @@ def WlinksS(url):
                 anos = re.compile('[(]</span>(.+?)<span>[)]').findall(item)
                 sins = re.compile('class="movie-synopsis-aux">(.+?)</span>').findall(item)
                 if not sins: sins = re.compile('class="movie-synopsis-aux">(.+?)\n').findall(item)
-                thumb = re.compile('<img src="(.+?)" alt=').findall(item)                        
-                #imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+                thumb = re.compile('<img src="(.+?)" alt=').findall(item)
                 resul.append(title[0]+'|'+Otitle[0]+'|'+'http://www.wareztuga.tv/'+link[0]+'|'+anos[0]+'|'+'http://www.wareztuga.tv/'+thumb[0]+'|'+sins[0]+'|END|')
-                #addLink(title[0]+'-'+anos[0],'','http://www.wareztuga.tv/'+thumb[0],'')
-                #addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',3007,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
-                addDir_trailer1('[B][COLOR green]' + title[0] + '[/COLOR][/B][COLOR yellow] (' + anos[0] + ')[/COLOR]',link[0],3007,'http://www.wareztuga.tv/'+thumb[0],sins[0],'',anos[0],'',title[0],'','MoviesRTV',0)
-
+                i = i + 1
+                a = str(i)
+                if i < 10: a = '0'+a
+                DA = threading.Thread(name='DA'+str(i), target=tvdbW , args=(title[0], resulo, str(a), ))
+                threads.append(DA)
 
         items = re.findall('class="item last">(.+?)<div id="pagination"', html_source, re.DOTALL)
         for item in items:
@@ -987,11 +1089,69 @@ def WlinksS(url):
                 sins = re.compile('class="movie-synopsis-aux">(.+?)</span>').findall(item)
                 if not sins: sins = re.compile('class="movie-synopsis-aux">(.+?)\n').findall(item)
                 thumb = re.compile('<img src="(.+?)" alt=').findall(item)                        
-                #imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
                 resul.append(title[0]+'|'+Otitle[0]+'|'+'http://www.wareztuga.tv/'+link[0]+'|'+anos[0]+'|'+'http://www.wareztuga.tv/'+thumb[0]+'|'+sins[0]+'|END|')
-                #addLink(title[0]+'-'+anos[0],'','http://www.wareztuga.tv/'+thumb[0],'')
-                addDir_trailer1('[B][COLOR green]' + title[0] + '[/COLOR][/B][COLOR yellow] (' + anos[0] + ')[/COLOR]',link[0],3007,'http://www.wareztuga.tv/'+thumb[0],sins[0],'',anos[0],'',title[0],'','MoviesRTV',0)
+                a = str(i)
+                if i < 10: a = '0'+a
+                DA = threading.Thread(name='DA'+str(i), target=tvdbW , args=(title[0], resulo, str(a), ))
+                threads.append(DA)
+                
+        [i.start() for i in threads]
+        [i.join() for i in threads]
+        num_filmes = len(resul)
+        resulo.sort()
+        for x in range(len(resul)):
+                fanart = ''
+                imdbcode = ''
+                dados = re.compile('(.+?)[|](.+?)[|](.+?)[|]END[|]').findall(resulo[x])
+                try: imdbcode = dados[0][1]
+                except: imdbcode = ''
+                try: fanart = dados[0][2]
+                except: fanart = ''
+                name = ''          
+                iconimage = ''          
+                url = ''
+                year = ''
+                Otitle = ''
+                sinopse = ''
+                dads = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]END[|]').findall(resul[x])
+                try: name = dads[0][0]
+                except: name = ''
+                try: Otitle = dads[0][1]
+                except: Otitle = ''
+                try: url = dads[0][2]
+                except: url = ''
+                try: year = dads[0][3]
+                except: year = ''
+                try: iconimage = dads[0][4]
+                except: iconimage = ''
+                try: sinopse = dads[0][5]
+                except: sinopse = ''
+                addDir_trailer1('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',3007,iconimage,sinopse,fanart,year,'',name,url,'MoviesRTV',num_filmes)
+                xbmc.sleep(12)
+                
+        if 'onclick="paginationScroll();"' in html_source:        
+                pags = re.compile('p=(.+?)&order').findall(pgat)
+                if pags:
+                        numpag = int(pags[0]) + 1
+                        pseg = pgat.replace('p='+pags[0]+'&order','p='+str(numpag)+'&order')
+                        addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pseg,30002,artfolder + 'PAGS1.png','','')
 
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(515)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def tvdbW(nomeserie,resulo,ordem):
+        try: html_s = abrir_url('http://thetvdb.com/api/GetSeries.php?seriesname=' + urllib.quote_plus(nomeserie)+'&language=pt')
+	except: html_s = ''
+	idtvdb = re.findall('<seriesid>(.+?)</seriesid>', html_s, re.DOTALL)
+	if idtvdb: tvdbid = idtvdb[0]
+	else: tvdbid = ''
+	overview = re.findall('<Overview>(.+?)</Overview>', html_s, re.DOTALL)
+        imdb = re.findall('<IMDB_ID>(.+?)</IMDB_ID>', html_s, re.DOTALL)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        fanart = 'http://thetvdb.com/banners/fanart/original/' + tvdbid + '-1.jpg'
+        resulo.append(ordem+'|'+imdbcode+'|'+fanart+'|END|')
         
 def MenuFilmesRato():
         addDir('[B][COLOR green]T[/COLOR][COLOR yellow]O[/COLOR][COLOR red]DOS[/COLOR][/B] (Filmes)','http://www.ratotv.net/movies/page/1/',20000,artfolder + 'FT.png','nao','')        
@@ -1010,6 +1170,9 @@ def MenuSeriesRato():
 def MenuRato():
         addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://www.ratotv.net/',20007,artfolder,'nao','')
         addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://www.ratotv.net/',20008,artfolder,'nao','')
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','http://www.ratotv.net/movies/page/1/',20000,artfolder,'nao','')
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S[/COLOR][COLOR red] ANIMAÇÃO[/COLOR][/B]','http://www.ratotv.net/tags/Animação/page/1/',20000,artfolder,'nao','')
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','http://www.ratotv.net/tvshows/page/1/',20003,artfolder,'nao','')
         addDir('[B][COLOR green]CAT[/COLOR][COLOR yellow]E[/COLOR][COLOR red]GORIAS[/COLOR][/B] (Filmes/Séries)','http://www.ratotv.net/',20004,artfolder,'nao','')
         addDir('[B][COLOR green]A[/COLOR][COLOR yellow]N[/COLOR][COLOR red]OS[/COLOR][/B] (Filmes/Séries)','http://www.ratotv.net/',20005,artfolder,'nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.ratotv.net/',20006,artfolder + 'P1.png','nao','')
@@ -2607,20 +2770,20 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         
-                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
-                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br").findall(item)
+                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br").findall(item)
                         if qualid:
                                 qualidade = qualid[0]
                                 qualidade = qualidade.replace('[',' - ')
                                 qualidade = qualidade.replace(']','')
                         else:
-                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br").findall(item)
                                 if qualid:
                                         qualidade = qualid[0]
                                         qualidade = qualidade.replace('[',' - ')
                                         qualidade = qualidade.replace(']','')
                                 else:
-                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(item)
+                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br").findall(item)
                                         if qualid:
                                                 qualidade = qualid[0]
                                                 qualidade = qualidade.replace('[',' - ')
@@ -2628,11 +2791,11 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                         else:
                                                 qualidade = ''
                                         
-                        genr = re.compile("NERO:.+?/b>(.+?)<br/>").findall(item)
+                        genr = re.compile("NERO:.+?/b>(.+?)<br").findall(item)
                         if genr: genero = genr[0]
                         
-                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
-                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)
+                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br").findall(item)
+                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br").findall(item)
                         thumbnail = re.compile('src="(.+?)"').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
                         print urletitulo,thumbnail
@@ -2675,13 +2838,13 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                 else:
                                         audio_filme = ': ' + audio[0]
                         if not audio:
-                                audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br/>").findall(item)
+                                audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br").findall(item)
                                 if audio:
                                         audio_filme = ': ' + audio[0]
                                 else:
                                         audio_filme = ''
                         if not ano:
-                                ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
+                                ano = re.compile("\nANO:\xc2\xa0(.+?)<br").findall(item)
                                 if ano:
                                         ano_filme = ': ' + ano[0].replace(' ','')
                                 else:
@@ -3651,6 +3814,8 @@ elif mode == 30007:
         categoriaW(url)
 elif mode == 30008:
         anoW(url)
+elif mode == 30009:
+        procurarW(name,url)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 

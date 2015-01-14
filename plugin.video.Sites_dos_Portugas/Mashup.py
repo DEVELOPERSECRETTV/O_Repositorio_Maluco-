@@ -249,19 +249,19 @@ def ultimos_ep_TPT(item):
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
-                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br").findall(item)
                         if qualid:
                                 qualidade = qualid[0]
                                 qualidade = qualidade.replace('[',' - ')
                                 qualidade = qualidade.replace(']','')
                         else:
-                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br").findall(item)
                                 if qualid:
                                         qualidade = qualid[0]
                                         qualidade = qualidade.replace('[',' - ')
                                         qualidade = qualidade.replace(']','')
                                 else:
-                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(item)
+                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br").findall(item)
                                         if qualid:
                                                 qualidade = qualid[0]
                                                 qualidade = qualidade.replace('[',' - ')
@@ -269,15 +269,15 @@ def ultimos_ep_TPT(item):
                                         else:
                                                 qualidade = ''
 
-                        genr = re.compile("NERO:.+?/b>(.+?)<br/>").findall(item)
+                        genr = re.compile("NERO:.+?/b>(.+?)<br").findall(item)
                         if genr: genero = genr[0]
 
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
                         
-                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
-                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)
+                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br").findall(item)
+                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br").findall(item)
                         thumbnail = re.compile('src="(.+?)"').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
                         print urletitulo,thumbnail
@@ -320,13 +320,13 @@ def ultimos_ep_TPT(item):
                                 else:
                                         audio_filme = ': ' + audio[0]
                         if not audio:
-                                audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br/>").findall(item)
+                                audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br").findall(item)
                                 if audio:
                                         audio_filme = ': ' + audio[0]
                                 else:
                                         audio_filme = ''
                         if not ano:
-                                ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
+                                ano = re.compile("\nANO:\xc2\xa0(.+?)<br").findall(item)
                                 if ano:
                                         ano_filme = ': ' + ano[0].replace(' ','')
                                 else:
@@ -991,8 +991,8 @@ def TPTMASHUP(item):
                                 
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
                         if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
-                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br/>").findall(item)
-                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br/>").findall(item)
+                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br").findall(item)
+                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br").findall(item)
                         thumbnail = re.compile('src="(.+?)"').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
                         print urletitulo,thumbnail
@@ -1020,20 +1020,20 @@ def TPTMASHUP(item):
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
                                 
-                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
-                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br/>").findall(item)
+                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br").findall(item)
+                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br").findall(item)
                         if qualid:
                                 qualidade = qualid[0]
                                 qualidade = qualidade.replace('[',' - ')
                                 qualidade = qualidade.replace(']','')
                         else:
-                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br/>").findall(item)
+                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br").findall(item)
                                 if qualid:
                                         qualidade = qualid[0]
                                         qualidade = qualidade.replace('[',' - ')
                                         qualidade = qualidade.replace(']','')
                                 else:
-                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br/>").findall(item)
+                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br").findall(item)
                                         if qualid:
                                                 qualidade = qualid[0]
                                                 qualidade = qualidade.replace('[',' - ')
@@ -1064,13 +1064,13 @@ def TPTMASHUP(item):
                                 else:
                                         audio_filme = ': ' + audio[0]
                         if not audio:
-                                audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br/>").findall(item)
+                                audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br").findall(item)
                                 if audio:
                                         audio_filme = ': ' + audio[0]
                                 else:
                                         audio_filme = ''
                         if not ano:
-                                ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
+                                ano = re.compile("\nANO:\xc2\xa0(.+?)<br").findall(item)
                                 if ano:
                                         ano_filme = ': ' + ano[0].replace(' ','')
                                 else:
