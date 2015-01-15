@@ -18,22 +18,26 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,time,os,threading
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,time,os,threading,HTMLParser
 import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TopPt,FilmesAnima,Mashup,Armagedom,FoitaTuga,Cinematuga,CinematugaEu,CinemaEmCasa,Funcoes
 import PesquisaExterna
 from array import array
 from string import capwords
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
-from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode, addDir_trailer1, addDir_episode1
-from Funcoes import addDir_trailer1_filmes, addDir_trailer_filmes
+from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode, addDir_trailer1, addDir_episode1,addDir_episode1_false
+from Funcoes import addDir_trailer1_filmes, addDir_trailer_filmes,addDir_episode1_true
 from Funcoes import get_params,abrir_url
+
+h = HTMLParser.HTMLParser()
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
-perfil = xbmc.translatePath(selfAddon.getAddonInfo('profile'))
+
+perfil = xbmc.translatePath(selfAddon.getAddonInfo('profile')).decode("utf-8")
+if not os.path.exists(perfil): os.makedirs(perfil)
 
 progress = xbmcgui.DialogProgress()
 mensagemok = xbmcgui.Dialog().ok
@@ -51,6 +55,7 @@ results = []
 resultos = []
 resul = []
 resulo = []
+_imdbcode_ = []
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
@@ -850,7 +855,20 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
         #if 'PROCUROU' in name or 'PROCURAR' in name:
        # addLink(name,'','','')
         #procurarOnde(mv, nmt, ur, ye, utr, nm, ico)http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=movies
+       
+def procurarSeasonsOnde(name, url):
+        n = name
+        u = url
+        _nomeproc_ = []
+        _nomeproc_.append('[B][COLOR white]GENESIS[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B]')
 
+        indexservidores = xbmcgui.Dialog().select
+        index = indexservidores('Procurar em:', _nomeproc_)
+        if index > -1:
+                if 'GENESIS' in _nomeproc_[index]: seasonsW(name,url)
+                elif 'SITESdosPORTUGAS' in _nomeproc_[index]: passar_nome_SERIES_IMDB(name)
+                
 def MenuW():
         addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','url',30003,artfolder,'nao','')
         addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','url',30004,artfolder,'nao','')
@@ -915,7 +933,7 @@ def categoriaW(url):
         if re.search('movies',url): FS='&mediaType=movies';nummode=30000
         elif re.search('series',url): FS='&mediaType=series';nummode=30002     
         try:
-                html_source = abrir_url(url)
+                html_source = clean(abrir_url(url))
         except: html_source = ''
         html_source_trunk = re.findall('<div id="item1" class="item">(.*?)<div id="years-list" class="years-list">', html_source, re.DOTALL)
         if html_source:
@@ -935,10 +953,16 @@ def anoW(url):
 		for urli,ncat in items:
                         addDir('[COLOR yellow]' + ncat + '[/COLOR] ','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&years='+urli+FS,nummode,artfolder,'','')
 
+def clean(text):
+      command={'\r':'','\n':'','\t':'','\xC0':'À','\xC1':'Á','\xC2':'Â','\xC3':'Ã','\xC7':'Ç','\xC8':'È','\xC9':'É','\xCA':'Ê','\xCC':'Ì','\xCD':'Í','\xCE':'Î','\xD2':'Ò','\xD3':'Ó','\xD4':'Ô','\xDA':'Ú','\xDB':'Û','\xE0':'à','\xE1':'á','\xE2':'â','\xE3':'ã','\xE7':'ç','\xE8':'è','\xE9':'é','\xEA':'ê','\xEC':'ì','\xED':'í','\xEE':'î','\xF3':'ó','\xF5':'õ','\xFA':'ú'}
+      regex = re.compile("|".join(map(re.escape, command.keys())))
+      return regex.sub(lambda mo: command[mo.group(0)], text)
+
 def WlinksF(url):
         try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
         except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
 
+        umF = ''
         pgat = url
         i = 0
         resul = []
@@ -946,15 +970,26 @@ def WlinksF(url):
         threads = []
         
         try:
-                html_source = abrir_url(url)
+                html_source = clean(abrir_url(url))
         except: html_source = ''
 
+##        items=re.compile("""<a href="(.+?)"><img src="(.+?)" alt="(.+?)" /><div class="thumb-effect" title=".+?"></div></a></div></div><div class="movie-info"><a href=".+?" class="movie-name">.+?</a><div class="clear"></div><div class="movie-detailed-info"><div class="detailed-aux" style=".+?"><span class="genre">(.+?)</span>.+?year.+?</span>(.+?)<span>.+?</span></span><span class="original-name"> - "(.+?)"</span></div><div class="detailed-aux"><span class="director-caption">Realizador: </span><span class="director"(.+?)</span></div><div class="detailed-aux"><span class="director-caption">Elenco:</span><span class="director"(.+?)</span></div></div><div class="movie-actions.+?><a id="watched" href="javascript: movieUserAction.+?'movies.+?watched.+?;.+?>(.+?)<span class=".+?"></span></a><br /><a id="cliped" href="javascript: movieUserAction.+?'movies.+?cliped.+?;".+?>(.+?)<span class=".+?"></span></a><br /><a id="faved" href="javascript: movieUserAction.+?'movies.+?faved.+?;".+?>(.+?)<span class=".+?"></span></a></div><div class="clear"></div><div class="wtv-rating"><s.+?></span><s.+?></span><s.+?></span><s.+?></span><s.+?></span><s.+?></span><s.+?></span><s.+?></span><s.+?></span><s.+?></span></div><div class="clear"></div><span id="movie-synopsis" class="movie-synopsis">.+?</span><span id="movie-synopsis-aux" class="movie-synopsis-aux">(.+?)</span>""").findall(html_source)
+##        for link,thumb,title,genero,anos,Otitle,director,cast,visto,agendar,faved,sins in items:
+##                resul.append(title+'|'+Otitle+'|'+'http://www.wareztuga.tv/'+link+'|'+anos+'|'+'http://www.wareztuga.tv/'+thumb+'|'+sins+'|END|')
+##                i = i + 1
+##                a = str(i)
+##                if i < 10: a = '0'+a
+##                DA = threading.Thread(name='DA'+str(i), target=tmdbW , args=(Otitle, anos, resulo, str(a), ))
+##                threads.append(DA)
+                
         items = re.findall('<div class="thumb-and-episodes">(.+?)<div id="movie.+?" class="item', html_source, re.DOTALL)
-        if not items: items = re.findall('<div class="thumb-and-episodes">(.+?)\r\n\t</div>\r\n</div>\r\n</div>', html_source, re.DOTALL)
+        if not items:
+                umF = '2'
+                items = re.findall('<div class="thumb-and-episodes">(.*)', html_source, re.DOTALL)                
         for item in items:
                 Otitle = re.compile('<span class="original-name".+?"(.+?)"</span>').findall(item)
                 title = re.compile('class="movie-name">(.+?)</a>').findall(item)                
-                link = re.compile('<a href="(.+?)" class="movie-name">').findall(item)                        
+                link = re.compile('<a href="(.+?)"><img src=').findall(item)
                 anos = re.compile('[(]</span>(.+?)<span>[)]').findall(item)
                 sins = re.compile('class="movie-synopsis-aux">(.+?)</span>').findall(item)
                 if not sins: sins = re.compile('class="movie-synopsis-aux">(.+?)\n').findall(item)
@@ -967,10 +1002,11 @@ def WlinksF(url):
                 threads.append(DA)
                 
         items = re.findall('class="item last">(.+?)<div id="pagination"', html_source, re.DOTALL)
+        if not items and umF == '': items = re.findall('<div class="thumb-and-episodes">(.*)', html_source, re.DOTALL)
         for item in items:
                 Otitle = re.compile('<span class="original-name".+?"(.+?)"</span>').findall(item)
                 title = re.compile('class="movie-name">(.+?)</a>').findall(item)                
-                link = re.compile('<a href="(.+?)" class="movie-name">').findall(item)                        
+                link = re.compile('<a href="(.+?)"><img src=').findall(item)                        
                 anos = re.compile('[(]</span>(.+?)<span>[)]').findall(item)
                 sins = re.compile('class="movie-synopsis-aux">(.+?)</span>').findall(item)
                 if not sins: sins = re.compile('class="movie-synopsis-aux">(.+?)\n').findall(item)
@@ -1053,47 +1089,85 @@ def WlinksS(url):
         try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
         except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
 
+        umS = ''
         pgat = url
         i = 0
         resul = []
         resulo = []
         threads = []
+        _imdbc_ = []
+        _imdbcode_ = []
         
         try:
-                html_source = abrir_url(url)
+                html_source = clean(abrir_url(url))
         except: html_source = ''
 
         items = re.findall('<div class="thumb-and-episodes">(.+?)<div id="movie.+?" class="item', html_source, re.DOTALL)
-        if not items: items = re.findall('<div class="thumb-and-episodes">(.+?)\r\n\t</div>\r\n</div>\r\n</div>', html_source, re.DOTALL)
+        if not items:
+                umS = '2'
+                items = re.findall('<div class="thumb-and-episodes">(.*)', html_source, re.DOTALL)
         for item in items:
                 Otitle = re.compile('<span class="original-name">[-](.+?)</span>').findall(item)
                 title = re.compile('class="movie-name">(.+?)</a>').findall(item)                
-                link = re.compile('<a href="(.+?)" class="movie-name">').findall(item)                        
+                link = re.compile('<a href="(.+?)"><img src=').findall(item)
                 anos = re.compile('[(]</span>(.+?)<span>[)]').findall(item)
                 sins = re.compile('class="movie-synopsis-aux">(.+?)</span>').findall(item)
                 if not sins: sins = re.compile('class="movie-synopsis-aux">(.+?)\n').findall(item)
                 thumb = re.compile('<img src="(.+?)" alt=').findall(item)
+                _imdbc_.append('http://www.wareztuga.tv/'+link[0])
                 resul.append(title[0]+'|'+Otitle[0]+'|'+'http://www.wareztuga.tv/'+link[0]+'|'+anos[0]+'|'+'http://www.wareztuga.tv/'+thumb[0]+'|'+sins[0]+'|END|')
-                i = i + 1
-                a = str(i)
-                if i < 10: a = '0'+a
-                DA = threading.Thread(name='DA'+str(i), target=tvdbW , args=(title[0], resulo, str(a), ))
-                threads.append(DA)
+##                i = i + 1
+##                a = str(i)
+##                if i < 10: a = '0'+a
+##                DA = threading.Thread(name='DA'+str(i), target=tvdbW , args=(title[0], resulo, str(a), ))
+##                threads.append(DA)
 
         items = re.findall('class="item last">(.+?)<div id="pagination"', html_source, re.DOTALL)
+        if not items and umS == '': items = re.findall('<div class="thumb-and-episodes">(.*)', html_source, re.DOTALL)
         for item in items:
                 Otitle = re.compile('<span class="original-name">[-](.+?)</span>').findall(item)
                 title = re.compile('class="movie-name">(.+?)</a>').findall(item)                
-                link = re.compile('<a href="(.+?)" class="movie-name">').findall(item)                        
+                link = re.compile('<a href="(.+?)"><img src=').findall(item)                        
                 anos = re.compile('[(]</span>(.+?)<span>[)]').findall(item)
                 sins = re.compile('class="movie-synopsis-aux">(.+?)</span>').findall(item)
                 if not sins: sins = re.compile('class="movie-synopsis-aux">(.+?)\n').findall(item)
-                thumb = re.compile('<img src="(.+?)" alt=').findall(item)                        
+                thumb = re.compile('<img src="(.+?)" alt=').findall(item)
+                _imdbc_.append('http://www.wareztuga.tv/'+link[0])
                 resul.append(title[0]+'|'+Otitle[0]+'|'+'http://www.wareztuga.tv/'+link[0]+'|'+anos[0]+'|'+'http://www.wareztuga.tv/'+thumb[0]+'|'+sins[0]+'|END|')
+##                a = str(i)
+##                if i < 10: a = '0'+a
+##                DA = threading.Thread(name='DA'+str(i), target=tvdbW , args=(title[0], resulo, str(a), ))
+##                threads.append(DA)
+                
+        i = 0                
+        threads1 = []
+        for l in _imdbc_:
+                i = i + 1
                 a = str(i)
                 if i < 10: a = '0'+a
-                DA = threading.Thread(name='DA'+str(i), target=tvdbW , args=(title[0], resulo, str(a), ))
+                D = threading.Thread(name='D'+str(i), target=imdbimdbW , args=(str(a), l, _imdbcode_, ))
+                threads1.append(D)
+
+        [i.start() for i in threads1]
+        [i.join() for i in threads1]
+        _imdbcode_.sort()
+                
+        i = 0
+        for x in range(len(_imdbcode_)):
+                im = re.compile('.+?[|](.*)').findall(_imdbcode_[x])[0]
+                i = i + 1
+                a = str(i)
+                if i < 10: a = '0'+a
+                DA = threading.Thread(name='DA'+str(i), target=WthetvdbIMDB , args=(im, resulo, str(a), ))
                 threads.append(DA)
+                
+##        for x in range(len(resul)):
+##                nomedaserie = re.compile('(.+?)[|].+?[|].+?[|].+?[|].+?[|].+?[|]END[|]').findall(resul[x])[0]
+##                i = i + 1
+##                a = str(i)
+##                if i < 10: a = '0'+a
+##                DA = threading.Thread(name='DA'+str(i), target=tvdbW , args=(nomedaserie, resulo, str(a), ))
+##                threads.append(DA)
                 
         [i.start() for i in threads]
         [i.join() for i in threads]
@@ -1125,8 +1199,8 @@ def WlinksS(url):
                 try: iconimage = dads[0][4]
                 except: iconimage = ''
                 try: sinopse = dads[0][5]
-                except: sinopse = ''
-                addDir_trailer1('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',3007,iconimage,sinopse,fanart,year,'',name,url,'MoviesRTV',num_filmes)
+                except: sinopse = ''                                                                                                    #3007#30010
+                addDir_trailer1('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',19004,iconimage,sinopse,fanart,year,'',name,url,'MoviesRTV',num_filmes)
                 xbmc.sleep(12)
                 
         if 'onclick="paginationScroll();"' in html_source:        
@@ -1140,6 +1214,63 @@ def WlinksS(url):
         xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
+def imdbimdbW(ordem,l,_imdbcode_):
+        try: html_so = clean(abrir_url(l))
+	except: html_so = ''
+        imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(html_so)[0]
+        _imdbcode_.append(ordem+'|'+imdb)
+
+def seasonsW(name,url):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        imdbcode = 'IMDB'+imdb[0]+'IMDB'
+        ul = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        url = ul[0]
+        
+        link=abrir_url(url)
+        idtv = re.compile('http://thetvdb.com/banners/fanart/original/(.+?)-1').findall(fanart)
+        nomeserie=re.compile('<div class="thumb serie" title="(.+?)">').findall(link)[0]
+        nomes = 'NOME'+nomeserie+'NOME'
+        match=re.compile('<div id="season.+?" class="season"><a href=".+?">(.+?)</a></div>').findall(link)
+        for numero in match:
+                thumbl = buscathumb(idtv[0],str(numero))
+                if thumbl != '': thumb = thumbl
+                else: thumb = iconimage
+                addDir('Temporada ' + numero,url + "&season=" + numero + imdbcode + year + nomes,30011,thumb,'',fanart)
+        xbmcplugin.setContent(int(sys.argv[1]), 'seasons')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        
+def episodesW(name,url):
+        nomes = re.compile('.+?NOME(.+?)NOME').findall(url)
+        nomeserie = nomes[0]
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        imdbcode = imdb[0]
+        y = re.compile('IMDB.+?IMDB(.+?)NOME.+?NOME').findall(url)
+        year = y[0]
+        ul = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        url = ul[0]        
+        idtv = re.compile('http://thetvdb.com/banners/fanart/original/(.+?)-1').findall(fanart)        
+        s = re.compile('season=(.*)').findall(url)
+        
+        link=clean(abrir_url(url))
+        textosubs='</div><div class="officialSubs">'
+        episodelist=re.compile('<div class="slide-content-bg">(.+?)<input type="hidden" id="raterDefault"').findall(link)[0]
+        match=re.compile('<a href="serie.php(.+?)"><img src="(.+?)" alt="(.+?)" /><div class="thumb-shadow"></div><div class="thumb-effect"></div><div class="episode-number">(.+?)</div></a>').findall(episodelist)
+        for url,thumb,name,num in match:
+                epi_nome = ''
+                air = ''
+                sin = ''
+                th = ''
+                if int(num) < 10: numero = '0'+str(num)
+                else: numero = str(num)
+                try: epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(idtv[0]),str(s[0]),str(num))
+                except: pass
+                mvoutv = s[0]+'|'+num+'|'+nomeserie+'|'+idtv[0]+'|'+imdbcode+'|'+year
+                addDir_episode1_false('[COLOR blue]'+s[0]+'x'+numero+'[/COLOR]'+' '+name,'http://www.wareztuga.tv/serie.php' + url,9003,th,sin,fanart,num,air,s[0]+'x'+num+' '+name,'http://www.wareztuga.tv/serie.php' + url,mvoutv,int(len(match)))
+        xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+        xbmc.executebuiltin("Container.SetViewMode(504)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
 def tvdbW(nomeserie,resulo,ordem):
         try: html_s = abrir_url('http://thetvdb.com/api/GetSeries.php?seriesname=' + urllib.quote_plus(nomeserie)+'&language=pt')
 	except: html_s = ''
@@ -1151,6 +1282,21 @@ def tvdbW(nomeserie,resulo,ordem):
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
         fanart = 'http://thetvdb.com/banners/fanart/original/' + tvdbid + '-1.jpg'
+        resulo.append(ordem+'|'+imdbcode+'|'+fanart+'|END|')
+
+def WthetvdbIMDB(imdbcode,resulo,ordem):
+        urli = 'http://thetvdb.com/api/GetSeriesByRemoteID.php?imdbid=' + urllib.quote_plus(imdbcode)+'&language=pt'
+	try: html_source = abrir_url(urli)
+	except: html_source = ''
+		
+        sid = re.compile('<seriesid>(.+?)</seriesid>').findall(html_source)
+        overview = re.compile('<Overview>(.+?)</Overview>').findall(html_source)
+        imdbc = re.compile('<IMDB_ID>(.+?)</IMDB_ID>').findall(html_source)
+        aired = re.compile('<FirstAired>(.+?)-.+?-.+?</FirstAired>').findall(html_source)
+        bann = re.compile('<banner>(.+?)</banner>').findall(html_source)
+        if sid: idserie = sid[0]
+        else: idserie = ''
+        fanart = 'http://thetvdb.com/banners/fanart/original/' + idserie + '-1.jpg'
         resulo.append(ordem+'|'+imdbcode+'|'+fanart+'|END|')
         
 def MenuFilmesRato():
@@ -1323,7 +1469,8 @@ def tvoumv(name,url):
                 url = dads[0][5]
                 year = dads[0][6]
                 Otitle = dads[0][7]
-                sinopse = dads[0][8]
+                if FilmesOuSeries == 'Filmes': sinopse = h.unescape(dads[0][8]).encode('utf-8').replace('</div>','')
+                if FilmesOuSeries == 'Séries': sinopse = h.unescape(dads[0][8])
                 if FilmesOuSeries == 'Filmes':                                                                                                          #7
                         addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
                 elif FilmesOuSeries == 'Séries':
@@ -1428,7 +1575,8 @@ def ratoTV(name,url):
                 url = dads[0][5]
                 year = dads[0][6]
                 Otitle = dads[0][7]
-                sinopse = dads[0][8]
+                if 'movies' in url: sinopse = h.unescape(dads[0][8]).encode('utf-8').replace('</div>','')
+                if 'tvshows' in url: sinopse = h.unescape(dads[0][8])
                 if 'movies' in url:
                         if ('[COLOR green]' not in name and '[COLOR blue]' not in name) or name == "[COLOR blue]Página Seguinte >>>[/COLOR]" or '[COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR]' in name or '[COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR]' in name:
                                 FS = '[COLOR white]FILME | [/COLOR]'
@@ -1570,7 +1718,7 @@ def ratoTVTV(url):
                 url = dads[0][5]
                 year = dads[0][6]
                 Otitle = dads[0][7]
-                sinopse = dads[0][8]
+                sinopse = h.unescape(dads[0][8])
                 #addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
                 addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',3007,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
                 #addLink('|'+name+'|'+imdbcode+'|'+iconimage+'|'+fanart+'|'+url+'|'+year+'|'+sinopse,'',iconimage,fanart)
@@ -3742,6 +3890,7 @@ elif mode == 9001:
 elif mode == 9002:
         Funcoes.playparser(namet, url, year, urltrailer)
 elif mode == 9003:
+        #addLink(mvoutv,'','','')
         ositems = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.*)').findall(mvoutv)
         porada = ositems[0][0]
         podio = ositems[0][1]
@@ -3816,6 +3965,13 @@ elif mode == 30008:
         anoW(url)
 elif mode == 30009:
         procurarW(name,url)
+elif mode == 30010:
+        seasonsW(name,url)
+elif mode == 30011:
+        episodesW(name,url)
+
+elif mode == 19004:
+        procurarSeasonsOnde(name,url)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
