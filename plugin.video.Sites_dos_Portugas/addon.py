@@ -93,38 +93,10 @@ def MAIN_MENU():
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_ultimos_episodios = urllib.urlencode(parameters)
         addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
-        #----------------------------
-        url_toppt = 'http://toppt.net/'
-        url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
-        url_TFC = 'http://www.tuga-filmes.info/'
-        url_MVT = 'http://www.movie-tuga.blogspot.pt'
-        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
-        url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
-        url_CME = 'http://www.cinematuga.eu/search/label/Filmes'
-        url_CMC = 'http://www.cinemaemcasa.pt/'
-        try:
-                toppt_source = abrir_url(url_toppt)
-        except: toppt_source = ''
-        saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
-        if saber_url_todos: url_TPT = saber_url_todos[0]
-        else: url_TPT = 'http://toppt.net/'
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
-        url_filmes_filmes = urllib.urlencode(parameters)                                                     #507
-        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]',url_filmes_filmes,10001,artfolder + 'UF.png','nao','')
-        #----------------------------
-        url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
-        url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
-        url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
-        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
-        url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'
-        url_CME = 'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
-        url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
-        saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
-        if saber_url_animacao: url_TPT = saber_url_animacao[0]
-        else: url_TPT = 'http://toppt.net/'
-        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
-        url_filmes_animacao = urllib.urlencode(parameters)                                                          #6 #507
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]ANIMAÇÃO[/COLOR][/B]',url_filmes_animacao,10001,artfolder + 'FA.png','nao','')
+        #----------------------------                                                                  #507#10001
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','url',9006,artfolder + 'UF.png','nao','')
+        #----------------------------                                                         #6 #507
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]ANIMAÇÃO[/COLOR][/B]','url',9006,artfolder + 'FA.png','nao','')
         #----------------------------
         #----------------------------------
         #addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
@@ -279,38 +251,6 @@ class AvisoFanart(xbmcgui.WindowXMLDialog):
 ############################################ SEM USO ######################################################
 
 def FILMES_MENU():
-##        url_toppt = 'http://toppt.net/'
-##        url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
-##        url_TFC = 'http://www.tuga-filmes.info/'
-##        url_MVT = 'http://www.movie-tuga.blogspot.pt'
-##        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
-##        url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
-##        url_CME = 'http://www.cinematuga.eu/search/label/Filmes'
-##        url_CMC = 'http://www.cinemaemcasa.pt/'
-##        try:
-##                toppt_source = abrir_url(url_toppt)
-##        except: toppt_source = ''
-##        saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
-##        if saber_url_todos: url_TPT = saber_url_todos[0]
-##        else: url_TPT = 'http://toppt.net/'
-##        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
-##        url_filmes_filmes = urllib.urlencode(parameters)                                                     #507
-##        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]OS[/COLOR][/B]',url_filmes_filmes,10001,artfolder + 'FT.png','nao','')
-##        #----------------------------
-##        url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
-##        url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
-##        url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
-##        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
-##        url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'
-##        url_CME = 'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
-##        url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
-##        saber_url_animacao = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
-##        if saber_url_animacao: url_TPT = saber_url_animacao[0]
-##        else: url_TPT = 'http://toppt.net/'
-##        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
-##        url_filmes_animacao = urllib.urlencode(parameters)                                                          #6 #507
-##        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B]',url_filmes_animacao,10001,artfolder + 'FA.png','nao','')
-        #----------------------------
         addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','1',3002,artfolder + 'NC.png','nao','')
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','1',3001,artfolder + 'FMV.png','nao','')
         addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','1',3000,artfolder + 'MP.png','nao','')
@@ -318,20 +258,126 @@ def FILMES_MENU():
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','1',2998,artfolder + 'P1.png','nao','')
 
 def SERIES_MENU():
-##        addDir('[B][COLOR green]TO[/COLOR][COLOR yellow]D[/COLOR][COLOR red]AS[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')
-##        url_TFC = 'http://www.tuga-filmes.info/'
-##        url_MVT = 'http://www.movie-tuga.blogspot.pt'
-##        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
-##        url_TPT = 'http://toppt.net/category/series/'
-##        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
-##        url_ultimos_episodios = urllib.urlencode(parameters)
-##        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
         addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (Séries)','1',3008,artfolder + 'EE.png','nao','')
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','1',3009,artfolder + 'SMV.png','nao','')
         addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Séries)','1',3010,artfolder + 'MP.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','1',3011,artfolder + 'P1.png','nao','')
 
 ####################################################################################################################################
+
+def qualtodos(name):
+        _sites_ = ['filmesTPT.txt','filmesCME.txt','filmesFTT.txt','filmesTFC.txt','filmesMVT.txt','filmesCMTnet.txt','filmesCMC.txt','filmesTFV.txt']
+        folder = perfil
+        for site in _sites_:
+                try:
+                        Filmes_Fi = open(folder + site, 'w')
+                        Filmes_Fi.close()
+                except: pass
+        _nomeproc_ = []
+        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TOPPT.NET')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.COM')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.TV')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMATUGA.EU')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMATUGA.NET')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | FOITATUGA')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMAEMCASA')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | MOVIETUGA')
+        _nummode_ = [0,1,233,73,33,803,703,603,903,103]
+
+        indexservidores = xbmcgui.Dialog().select
+        index = indexservidores('Procurar em:', _nomeproc_)
+        if index > -1:
+                if 'RATOTV' in _nomeproc_[index]:
+                        if 'FILMES' in name: ratoTV('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','http://www.ratotv.net/movies/page/1/')
+                        elif 'ANIMAÇÃO' in name: ratoTV('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]ANIMAÇÃO[/COLOR][/B]','http://www.ratotv.net/tags/Animação/page/1/')
+                elif 'WAREZTUGA' in _nomeproc_[index]:
+                        if 'FILMES' in name: WlinksF('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=movies')
+                        elif 'ANIMAÇÃO' in name: WlinksF('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&genres=17&mediaType=movies')
+                elif 'TODOS' in _nomeproc_[index]:
+                        if 'FILMES' in name: chamaUltimos('TODOS')
+                        elif 'ANIMAÇÃO' in name: chamaUltimosA('TODOS')
+                elif 'TOPPT.NET' in _nomeproc_[index]:
+                        if 'FILMES' in name: chamaUltimos('TPT')
+                        elif 'ANIMAÇÃO' in name: chamaUltimosA('TPT')
+                elif 'TUGA-FILMES.COM' in _nomeproc_[index]:
+                        if 'FILMES' in name: chamaUltimos('TFC')
+                        elif 'ANIMAÇÃO' in name: chamaUltimosA('TFC')
+                elif 'TUGA-FILMES.TV' in _nomeproc_[index]:
+                        if 'FILMES' in name: chamaUltimos('TFV')
+                        elif 'ANIMAÇÃO' in name: chamaUltimosA('TFV')
+                elif 'CINEMATUGA.EU' in _nomeproc_[index]:
+                        if 'FILMES' in name: chamaUltimos('CME')
+                        elif 'ANIMAÇÃO' in name: chamaUltimosA('CME')
+                elif 'CINEMATUGA.NET' in _nomeproc_[index]: 
+                        if 'FILMES' in name: chamaUltimos('CMT')
+                        elif 'ANIMAÇÃO' in name: chamaUltimosA('CMT')
+                elif 'FOITATUGA' in _nomeproc_[index]: 
+                        if 'FILMES' in name: chamaUltimos('FTT')
+                        elif 'ANIMAÇÃO' in name: chamaUltimosA('FTT')
+                elif 'CINEMAEMCASA' in _nomeproc_[index]: 
+                        if 'FILMES' in name: chamaUltimos('CMC')
+                        elif 'ANIMAÇÃO' in name: chamaUltimosA('CMC')
+                elif 'MOVIETUGA' in _nomeproc_[index]: 
+                        if 'FILMES' in name: chamaUltimos('MVT')
+                        elif 'ANIMAÇÃO' in name: chamaUltimosA('MVT')
+
+def chamaUltimos(name):
+        if name == 'TFV' or name == 'TODOS': url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
+        else: url_TFV = 'http:'
+        if name == 'TFC' or name == 'TODOS': url_TFC = 'http://www.tuga-filmes.info/'
+        else: url_TFC = 'http:'
+        if name == 'MVT' or name == 'TODOS': url_MVT = 'http://www.movie-tuga.blogspot.pt'
+        else: url_MVT = 'http:'
+        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
+        else: url_FTT = 'http:'
+        if name == 'CMT' or name == 'TODOS': url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
+        else: url_CMT = 'http:'
+        if name == 'CME' or name == 'TODOS': url_CME = 'http://www.cinematuga.eu/search/label/Filmes'
+        else: url_CME = 'http:'
+        if name == 'CMC' or name == 'TODOS': url_CMC = 'http://www.cinemaemcasa.pt/'
+        else: url_CMC = 'http:'
+        if name == 'TPT' or name == 'TODOS':
+                try:
+                        toppt_source = abrir_url('http://toppt.net/')
+                except: toppt_source = ''
+                saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
+                if saber_url_todos: url_TPT = saber_url_todos[0]
+                else: url_TPT = 'http:'
+        else: url_TPT = 'http:'
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
+        url_filmes_filmes = urllib.urlencode(parameters)
+        dirtodos(url_filmes_filmes)
+
+def chamaUltimosA(name):
+        if name == 'TFV' or name == 'TODOS': url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
+        else: url_TFV = 'http:'
+        if name == 'TFC' or name == 'TODOS': url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
+        else: url_TFC = 'http:'
+        if name == 'MVT' or name == 'TODOS': url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
+        else: url_MVT = 'http:'
+        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
+        else: url_FTT = 'http:'
+        if name == 'CMT' or name == 'TODOS': url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'#'http://www.tugafilmes.org/search/label/Filmes'
+        else: url_CMT = 'http:'
+        if name == 'CME' or name == 'TODOS': url_CME = 'http://www.cinematuga.eu/search/label/Filmes'
+        else: url_CME = 'http:'
+        if name == 'CMC' or name == 'TODOS': url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
+        else: url_CMC = 'http:'
+        if name == 'TPT' or name == 'TODOS':
+                try:
+                        toppt_source = abrir_url('http://toppt.net/')
+                except: toppt_source = ''
+                saber_url_todos = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
+                if saber_url_todos: url_TPT = saber_url_todos[0]
+                else: url_TPT = 'http:'
+        else: url_TPT = 'http:'
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
+        url_filmes_filmes = urllib.urlencode(parameters)
+        dirtodos(url_filmes_filmes)
+        
 
 def dirtodos(url):
         try: xbmcgui.Dialog().notification('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
@@ -866,7 +912,9 @@ def procurarSeasonsOnde(name, url):
         indexservidores = xbmcgui.Dialog().select
         index = indexservidores('Procurar em:', _nomeproc_)
         if index > -1:
-                if 'GENESIS' in _nomeproc_[index]: seasonsW(name,url)
+                if 'GENESIS' in _nomeproc_[index]:
+                        if 'ratotv' in url: seasonsR(name,url)
+                        elif 'wareztuga' in url: seasonsW(name,url)
                 elif 'SITESdosPORTUGAS' in _nomeproc_[index]: passar_nome_SERIES_IMDB(name)
                 
 def MenuW():
@@ -1473,8 +1521,8 @@ def tvoumv(name,url):
                 if FilmesOuSeries == 'Séries': sinopse = h.unescape(dads[0][8])
                 if FilmesOuSeries == 'Filmes':                                                                                                          #7
                         addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
-                elif FilmesOuSeries == 'Séries':
-                        addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',3007,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                elif FilmesOuSeries == 'Séries':                                                                                                     #3007
+                        addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',19004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
                 xbmc.sleep(12)                                                                                                                  
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -1584,8 +1632,8 @@ def ratoTV(name,url):
                         addDir_trailer1(FS+'[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
                 elif 'tvshows' in url:
                         if ('[COLOR green]' not in name and '[COLOR blue]' not in name) or name == "[COLOR blue]Página Seguinte >>>[/COLOR]" or '[COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR]' in name or '[COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR]' in name:
-                                FS = '[COLOR orange]SÉRIE | [/COLOR]'
-                        addDir_trailer1(FS+'[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',3007,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                                FS = '[COLOR orange]SÉRIE | [/COLOR]'                                                                                   #3007
+                        addDir_trailer1(FS+'[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',19004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
                 xbmc.sleep(12)
 
         pseg = re.compile('<div class="next"><a href="(.+?)"><img').findall(html_source)
@@ -1719,8 +1767,8 @@ def ratoTVTV(url):
                 year = dads[0][6]
                 Otitle = dads[0][7]
                 sinopse = h.unescape(dads[0][8])
-                #addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
-                addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',3007,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                #addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)         #3007
+                addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',19004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
                 #addLink('|'+name+'|'+imdbcode+'|'+iconimage+'|'+fanart+'|'+url+'|'+year+'|'+sinopse,'',iconimage,fanart)
                 xbmc.sleep(12)
 
@@ -1729,6 +1777,97 @@ def ratoTVTV(url):
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(503)")#503
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def seasonsR(name,url):
+        imdb = re.compile('IMDB(.+?)IMDB').findall(url)
+        imdbcode = 'IMDB'+imdb[0]+'IMDB'
+        ul = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        url = ul[0]
+        idtv = re.compile('http://thetvdb.com/banners/fanart/original/(.+?)-1').findall(fanart)
+        Temporada = []
+        seas = []
+        try:
+                urli = 'http://thetvdb.com/api/23B3F3D91B980C9F/series/'+urllib.quote(idtv[0])+'/banners.xml'#http://thetvdb.com/api/23B3F3D91B980C9F/series/250487/all/en.xml
+                html_source = abrir_url(urli)
+        except: html_source = ''
+        info = re.findall('<Banner>(.+?)</Banner>', html_source, re.DOTALL)
+        for infos in info:
+                try:
+                        season = re.compile('<Season>(.+?)</Season>').findall(infos)
+                        bannertype = re.compile('<BannerType>(.+?)</BannerType>').findall(infos)
+                        bannertype2 = re.compile('<BannerType2>(.+?)</BannerType2>').findall(infos)
+                        language = re.compile('<Language>(.+?)</Language>').findall(infos)
+                        if season and bannertype and bannertype2 and language:
+                                if season[0] not in Temporada and bannertype[0] == 'season' and bannertype2[0] == 'season' and language[0] == 'en' and season[0] != '0':
+                                        seasonB =re.compile('<BannerPath>(.+?)</BannerPath>').findall(infos)
+                                        try: seasonBanner = 'http://thetvdb.com/banners/'+seasonB[0]
+                                        except: seasonBanner = ''
+                                        Temporada.append(season[0])
+                                        seas.append(season[0]+'|'+seasonBanner)
+                except: pass
+        seas.sort()
+        for tempor in seas:
+                dados = re.compile('(.+?)[|](.*)').findall(tempor)
+                addDir('Temporada ' + dados[0][0],imdbcode + year + 'NOME'+namet+'NOME',20010,dados[0][1],'',fanart)
+
+        xbmcplugin.setContent(int(sys.argv[1]), 'seasons')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def episodeR(name,url):
+        nomes = re.compile('NOME(.+?)NOME').findall(url)
+        if nomes: nomeserie = nomes[0]
+        imdb = re.compile('IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        y = re.compile('IMDB.+?IMDB(.+?)NOME.+?NOME').findall(url)
+        if y: year = y[0]
+        ul = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if ul: url = ul[0]        
+        idtv = re.compile('http://thetvdb.com/banners/fanart/original/(.+?)-1').findall(fanart)        
+        s = re.compile('Temporada (.*)').findall(name)
+        try:
+                urli = 'http://thetvdb.com/api/23B3F3D91B980C9F/series/'+urllib.quote(idtv[0])+'/all/pt.xml'
+                html_source = abrir_url(urli)
+        except: html_source = ''
+        info = re.findall('<Episode>(.+?)</Episode>', html_source, re.DOTALL)
+        for infos in info:                
+                try:
+                        season = re.compile('<DVD_season>(.+?)</DVD_season>').findall(infos)
+                        if not season: season = re.compile('<Combined_season>(.+?)</Combined_season>').findall(infos)
+                        episode = re.compile('<EpisodeNumber>(.+?)</EpisodeNumber>').findall(infos)
+                        if season and episode:                                
+                                if season[0] == str(s[0]):
+                                        num = episode[0]
+                                        epi_nome =re.compile('<EpisodeName>(.+?)</EpisodeName>').findall(infos)
+                                        air = re.compile('<FirstAired>(.+?)</FirstAired>').findall(infos)
+                                        sin = re.compile('<Overview>(.+?)</Overview>').findall(infos)
+                                        th = re.compile('<filename>(.+?)</filename>').findall(infos)
+                                        try: epi_nome = epi_nome[0]
+                                        except: epi_nome = ''
+                                        try: air = air[0]
+                                        except: air = ''
+                                        try: sin = sin[0]
+                                        except: sin = ''
+                                        try: th = 'http://thetvdb.com/banners/'+th[0]
+                                        except: th = ''
+                                        if int(num) < 10: numero = '0'+str(num)
+                                        else: numero = str(num)      
+                                        mvoutv = s[0]+'|'+num+'|'+nomeserie+'|'+idtv[0]+'|'+imdbcode+'|'+year
+                                        addDir_episode1_false('[COLOR blue]'+s[0]+'x'+numero+'[/COLOR]'+' '+epi_nome,url,9003,th,sin,fanart,num,air,s[0]+'x'+num+' '+epi_nome,url,mvoutv,int(len(info)))                                                
+                except:
+                        epi_nome = ''
+                        air = ''
+                        sin = ''
+                        th = ''
+                        num = ''
+                        if int(num) < 10: numero = '0'+str(num)
+                        else: numero = str(num)      
+                        mvoutv = s[0]+'|'+num+'|'+nomeserie+'|'+idtv[0]+'|'+imdbcode+'|'+year
+                        addDir_episode1_false('[COLOR blue]'+s[0]+'x'+numero+'[/COLOR]'+' '+epi_nome,url,9003,th,sin,fanart,num,air,s[0]+'x'+num+' '+epi_nome,url,mvoutv,int(len(info)))
+                        
+        xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+        xbmc.executebuiltin("Container.SetViewMode(504)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 def thetvdbIMDB(title, Otitle, url, year, ordem, results, imdbcode, sinopse):
@@ -3168,6 +3307,7 @@ def buscathumb(tvdbid,temporada):
                 return str(seasonBanner)
         else: return str(seasonBanner)
 
+
 def INDEX(url,name):
         
         #nepi = re.compile('[[].+?[]].+?[[].+?[]][[].+?[]].+?[[].+?[]](.*)').findall(name)
@@ -3912,6 +4052,9 @@ elif mode == 9005:
         xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+url+'&mode=9004&name='+name+'&namet='+namet+'&mvoutv='+mvoutv+'&year='+year+'&urltrailer='+urltrailer+'&iconimage='+iconimage)#, item)
         #xbmcxbmc(url,name)
 
+elif mode == 9006:
+        qualtodos(name)
+
 elif mode == 10000:
         SITESdosPORTUGAS()
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -3938,6 +4081,10 @@ elif mode == 20007:
         MenuFilmesRato()
 elif mode == 20008:
         MenuSeriesRato()
+elif mode == 20009:
+        seasonsR(name,url)
+elif mode == 20010:
+        episodeR(name,url)
 
 elif mode == 30000:
         WlinksF(url)
