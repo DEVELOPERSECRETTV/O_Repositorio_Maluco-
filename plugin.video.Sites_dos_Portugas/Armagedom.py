@@ -418,7 +418,8 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
                         try:
                                 addDir('[B][COLOR yellow]' + nome + '[/COLOR][/B][COLOR blue]' + ano + '[/COLOR][COLOR green] - ' + dubleg + '[/COLOR]',urlfilme,333,thumb,'nao',fanart)
                         except: pass
-	proxima = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">»</a>').findall(html_source)		
+	proxima = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">»</a>').findall(html_source)
+	if not proxima: proxima = re.compile('[.][.][.]</span><a class="nextpostslink" rel="next" href="(.+?)">').findall(html_source)
 	try:
                 #addDir1('','url',1005,artfolder + 'SDB.png',False,'')
 		addDir("Página Seguinte >>",proxima[0].replace('amp;',''),349,artfolder + 'PAGS2.png','nao','')

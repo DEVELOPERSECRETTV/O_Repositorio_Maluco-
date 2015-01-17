@@ -79,12 +79,6 @@ def MAIN_MENU():
         addDir('[B][COLOR green]RA[/COLOR][COLOR yellow]T[/COLOR][COLOR red]OTV[/COLOR][/B] (Filmes/Séries)','url',20001,artfolder,'nao','')
         addDir('[B][COLOR green]WAR[/COLOR][COLOR yellow]E[/COLOR][COLOR red]ZTUGA[/COLOR][/B] (Filmes/Séries)','url',30001,artfolder,'nao','')
         addDir1('','url',1004,artfolder,False,'')
-        
-##        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (TMDB)','http://direct',3003,artfolder + 'SERIES1.png','nao','')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR] [COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (TMDB)','1',3011,artfolder + 'P1.png','nao','')
-##        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B] (TMDB)','http://direct',3004,artfolder + 'FILMES1.png','nao','')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR] [COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B] (TMDB)','1',2998,artfolder + 'P1.png','nao','')
-        
         addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')                
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
@@ -93,15 +87,9 @@ def MAIN_MENU():
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_ultimos_episodios = urllib.urlencode(parameters)
         addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
-        #----------------------------                                                                  #507#10001
         addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','url',9006,artfolder + 'UF.png','nao','')
-        #----------------------------                                                         #6 #507
         addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]ANIMAÇÃO[/COLOR][/B]','url',9006,artfolder + 'FA.png','nao','')
-        #----------------------------
-        #----------------------------------
-        #addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (SITESdosPORTUGAS)','url',7500,artfolder + 'P1.png','nao','')
-        #[COLOR blue] NOVO[/COLOR] W.I.P.
         addDir1('','url',1004,artfolder,False,'')
         
         addDir('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B] (Filmes/Séries)','url',10000,artfolder + 'SDPI.png','nao','')
@@ -396,11 +384,6 @@ def dirtodos(url):
         url_CMT = urls[0][1]
         url_CME = urls[0][6]
         url_CMC = urls[0][4]
-        
-##        percent = 0
-##        message = 'Por favor aguarde.'
-##        progress.create('Progresso', 'A Procurar')
-##        progress.update( percent, 'A Procurar Filmes...', message, "" )
 
         threads = []
         i = 0
@@ -666,18 +649,9 @@ def dirtodos(url):
                 except: pass
 
         #################################################################################
-
-##        num_total = num_filmes + 0.0
-##        progress.create('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B]', '')
-##        for a in range(num_filmes):
-##                percent = int( ( a / num_total ) * 100)
-##                message = str(a+1) + " de " + str(num_filmes)
-##                progress.update( percent, 'A Finalizar ...', message, "" )
-##                xbmc.sleep(12)
                 
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
-        #progress.close()
         addDir('[B]Página Seguinte >>[/B]',url_filmes_filmes,10001,artfolder + 'PAGS1.png','','')
         
         #addLink(str(CME)+str(threading.active_count()),'','','')
@@ -913,9 +887,119 @@ def procurarSeasonsOnde(name, url):
         index = indexservidores('Procurar em:', _nomeproc_)
         if index > -1:
                 if 'GENESIS' in _nomeproc_[index]:
-                        if 'ratotv' in url: seasonsR(name,url)
+                        if 'ratotv' in url or 'toppt' in url or 'tuga-filmes' in url: seasonsR(name,url)
+                        elif 'thetvdb' in url:
+                                try:
+                                        urli = 'http://thetvdb.com/api/GetSeries.php?seriesname=' + urllib.quote(namet)+'&language=pt'
+                                        html_source = abrir_url(urli)
+                                except: html_source = ''
+                                idtvdb = re.compile('<seriesid>(.+?)</seriesid>').findall(html_source)
+                                if idtvdb: tvdbid = idtvdb[0]
+                                else: tvdbid = ''
+                                imdb = re.compile('<IMDB_ID>(.+?)</IMDB_ID>').findall(html_source)
+                                if imdb: imdbcode = imdb[0]
+                                else: imdbcode = ''
+                                tmdbid = re.compile('id=(.+?)IMDB.+?IMDB').findall(url)
+                                if tmdbid: tmdb = tmdbid[0]
+                                else: tmdb = ''
+                                seasonsTMDB(name,url.replace('---',imdbcode).replace(tmdb,tvdbid))
                         elif 'wareztuga' in url: seasonsW(name,url)
-                elif 'SITESdosPORTUGAS' in _nomeproc_[index]: passar_nome_SERIES_IMDB(name)
+                elif 'SITESdosPORTUGAS' in _nomeproc_[index]:
+                        if 'toppt' in url or 'tuga-filmes' in url: pesquisar_SERIES(name,url)
+                        else: passar_nome_SERIES_IMDB(name)
+
+def seasonsTMDB(name,url):
+        imdb = re.compile('IMDB(.+?)IMDB').findall(url)
+        imdbcode = 'IMDB'+imdb[0]+'IMDB'
+        idtv = re.compile('id=(.+?)IMDB.+?IMDB').findall(url)
+        ul = re.compile('(.+?)IMDB.+?IMDB').findall(url)    
+        url = ul[0]
+        
+        Temporada = []
+        seas = []
+        try:
+                urli = 'http://thetvdb.com/api/23B3F3D91B980C9F/series/'+urllib.quote(idtv[0])+'/banners.xml'#http://thetvdb.com/api/23B3F3D91B980C9F/series/250487/all/en.xml
+                html_source = abrir_url(urli)
+        except: html_source = ''
+        info = re.findall('<Banner>(.+?)</Banner>', html_source, re.DOTALL)
+        for infos in info:
+                try:
+                        season = re.compile('<Season>(.+?)</Season>').findall(infos)
+                        bannertype = re.compile('<BannerType>(.+?)</BannerType>').findall(infos)
+                        bannertype2 = re.compile('<BannerType2>(.+?)</BannerType2>').findall(infos)
+                        language = re.compile('<Language>(.+?)</Language>').findall(infos)
+                        if season and bannertype and bannertype2 and language:
+                                if season[0] not in Temporada and bannertype[0] == 'season' and bannertype2[0] == 'season' and language[0] == 'en' and season[0] != '0':
+                                        seasonB =re.compile('<BannerPath>(.+?)</BannerPath>').findall(infos)
+                                        try: seasonBanner = 'http://thetvdb.com/banners/'+seasonB[0]
+                                        except: seasonBanner = ''
+                                        Temporada.append(season[0])
+                                        seas.append(season[0]+'|'+seasonBanner)
+                except: pass
+        seas.sort()
+        for tempor in seas:
+                dados = re.compile('(.+?)[|](.*)').findall(tempor)
+                addDir('Temporada ' + dados[0][0],imdbcode + year + 'NOME'+namet+'NOME' + idtv[0],20510,dados[0][1],'',fanart)
+
+        xbmcplugin.setContent(int(sys.argv[1]), 'seasons')
+        xbmc.executebuiltin("Container.SetViewMode(500)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def episodeTMDB(name,url):
+        nomes = re.compile('NOME(.+?)NOME').findall(url)
+        if nomes: nomeserie = nomes[0]
+        imdb = re.compile('IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        y = re.compile('IMDB.+?IMDB(.+?)NOME.+?NOME').findall(url)
+        if y: year = y[0]
+        idtv = re.compile('NOME.+?NOME(.*)').findall(url) 
+        ul = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if ul: url = ul[0]        
+               
+        s = re.compile('Temporada (.*)').findall(name)
+        try:
+                urli = 'http://thetvdb.com/api/23B3F3D91B980C9F/series/'+urllib.quote(idtv[0])+'/all/pt.xml'
+                html_source = abrir_url(urli)
+        except: html_source = ''
+        info = re.findall('<Episode>(.+?)</Episode>', html_source, re.DOTALL)
+        for infos in info:                
+                try:
+                        season = re.compile('<DVD_season>(.+?)</DVD_season>').findall(infos)
+                        if not season: season = re.compile('<Combined_season>(.+?)</Combined_season>').findall(infos)
+                        episode = re.compile('<EpisodeNumber>(.+?)</EpisodeNumber>').findall(infos)
+                        if season and episode:                                
+                                if season[0] == str(s[0]):
+                                        num = episode[0]
+                                        epi_nome =re.compile('<EpisodeName>(.+?)</EpisodeName>').findall(infos)
+                                        air = re.compile('<FirstAired>(.+?)</FirstAired>').findall(infos)
+                                        sin = re.compile('<Overview>(.+?)</Overview>').findall(infos)
+                                        th = re.compile('<filename>(.+?)</filename>').findall(infos)
+                                        try: epi_nome = epi_nome[0]
+                                        except: epi_nome = ''
+                                        try: air = air[0]
+                                        except: air = ''
+                                        try: sin = sin[0]
+                                        except: sin = ''
+                                        try: th = 'http://thetvdb.com/banners/'+th[0]
+                                        except: th = ''
+                                        if int(num) < 10: numero = '0'+str(num)
+                                        else: numero = str(num)      
+                                        mvoutv = s[0]+'|'+num+'|'+nomeserie+'|'+idtv[0]+'|'+imdbcode+'|'+year
+                                        addDir_episode1_false('[COLOR blue]'+s[0]+'x'+numero+'[/COLOR]'+' '+epi_nome,url,9003,th,sin,fanart,num,air,s[0]+'x'+num+' '+epi_nome,url,mvoutv,int(len(info)))                                                
+                except:
+                        epi_nome = ''
+                        air = ''
+                        sin = ''
+                        th = ''
+                        num = ''
+                        if int(num) < 10: numero = '0'+str(num)
+                        else: numero = str(num)      
+                        mvoutv = s[0]+'|'+num+'|'+nomeserie+'|'+idtv[0]+'|'+imdbcode+'|'+year
+                        addDir_episode1_false('[COLOR blue]'+s[0]+'x'+numero+'[/COLOR]'+' '+epi_nome,url,9003,th,sin,fanart,num,air,s[0]+'x'+num+' '+epi_nome,url,mvoutv,int(len(info)))
+                        
+        xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+        xbmc.executebuiltin("Container.SetViewMode(504)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
                 
 def MenuW():
         addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','url',30003,artfolder,'nao','')
@@ -1781,12 +1865,17 @@ def ratoTVTV(url):
 
 def seasonsR(name,url):
         imdb = re.compile('IMDB(.+?)IMDB').findall(url)
-        imdbcode = 'IMDB'+imdb[0]+'IMDB'
+        if imdb: imdbcode = 'IMDB'+imdb[0]+'IMDB'
+        else:imdbcode = '---'
         ul = re.compile('(.+?)IMDB.+?IMDB').findall(url)
-        url = ul[0]
+        if ul: url = ul[0]
+        else:
+                ul = re.compile('IMDB.+?IMDB(.*)').findall(url)
+                if ul: url = ul[0]
+                else: url = ''
         idtv = re.compile('http://thetvdb.com/banners/fanart/original/(.+?)-1').findall(fanart)
         Temporada = []
-        seas = []
+        seas = []        
         try:
                 urli = 'http://thetvdb.com/api/23B3F3D91B980C9F/series/'+urllib.quote(idtv[0])+'/banners.xml'#http://thetvdb.com/api/23B3F3D91B980C9F/series/250487/all/en.xml
                 html_source = abrir_url(urli)
@@ -4062,7 +4151,10 @@ elif mode == 10000:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 elif mode == 10001:
         dirtodos(url)
-
+        
+elif mode == 19004:
+        procurarSeasonsOnde(name,url)
+        
 elif mode == 20000:
         ratoTV(name,url)
 elif mode == 20001:
@@ -4085,6 +4177,9 @@ elif mode == 20009:
         seasonsR(name,url)
 elif mode == 20010:
         episodeR(name,url)
+
+elif mode == 20510:
+        episodeTMDB(name,url)
 
 elif mode == 30000:
         WlinksF(url)
@@ -4117,8 +4212,7 @@ elif mode == 30010:
 elif mode == 30011:
         episodesW(name,url)
 
-elif mode == 19004:
-        procurarSeasonsOnde(name,url)
+
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 

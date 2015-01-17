@@ -2378,7 +2378,7 @@ def Series_Series_M(url):
                                                                                 imdbcode = imdbcode + '|' + ul
                                                 
                                         num_mode = 3006
-                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Tvshows',num_filmes)
+                                        addDir_trailer1(nome,imdbcode,19004,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Tvshows',num_filmes)
                                         xbmc.sleep(12)
                 except: pass
         except: pass

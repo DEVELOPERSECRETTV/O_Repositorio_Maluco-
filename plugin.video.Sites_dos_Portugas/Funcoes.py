@@ -38,33 +38,25 @@ tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
 
 progress = xbmcgui.DialogProgress()
 
+res = []
+
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 class themoviedb_api_pagina:
-        
+
         api_key = '3e7807c4a01f18298f64662b257d7059'
         tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
         def fanart_and_id(self,movie_tv,num_mode,items,pagina):
                 a = 1
                 i = 0
                 threads = []
-##                percent = 0
-##                message = 'Por favor aguarde.'
-##                progress.create('Progresso', 'A Procurar')
                 if urllib.quote(movie_tv) == 'movie':
-                        #progress.update( percent, 'A Procurar Filmes...', message, "" )
                         try: xbmcgui.Dialog().notification('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png', 2000, sound=False)
                         except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
-##                        builtin = 'XBMC.Notification(%s,%s, 2000, %s)'
-##                        log = xbmc.executebuiltin(builtin % ('A Procurar Filmes.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
-                        
                 if urllib.quote(movie_tv) == 'tv':
-                        #progress.update( percent, 'A Procurar Séries...', message, "" )
                         try: xbmcgui.Dialog().notification('A Procurar Séries.', 'Por favor aguarde...', artfolder + 'SDPI.png', 2000, sound=False)
                         except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Séries.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
-##                        builtin = 'XBMC.Notification(%s,%s, 2000, %s)'
-##                        log = xbmc.executebuiltin(builtin % ('A Procurar Séries.', 'Por favor aguarde...',artfolder + 'SDPI.png'))
                 if urllib.quote(items) == 'search' and urllib.quote(movie_tv) == 'movie': url_tmdb = 'http://api.themoviedb.org/3/search/movie?include_adult=false&query='+urllib.quote(pagina)+'&api_key='+self.api_key
                 elif urllib.quote(items) == 'search' and urllib.quote(movie_tv) == 'tv': url_tmdb = 'http://api.themoviedb.org/3/search/tv?include_adult=false&query='+urllib.quote(pagina)+'&api_key='+self.api_key       
                 else: url_tmdb = 'http://api.themoviedb.org/3/' + urllib.quote(movie_tv) + '/' + urllib.quote(items) + '?api_key=' + self.api_key + '&language=en&page=' + urllib.quote(pagina)
@@ -74,10 +66,7 @@ class themoviedb_api_pagina:
                 except: data = ''
                 if urllib.quote(movie_tv) == 'movie': n = re.findall('"title":"(.+?)"', datass, re.DOTALL)
                 if urllib.quote(movie_tv) == 'tv': n = re.findall('"name":"(.+?)"', datass, re.DOTALL)
-##                numero = len(n)
-##                num = numero + 0.0
                 for nn in n:
-        
                         try:
                                 name=nn
                         except: name = ''
@@ -99,20 +88,51 @@ class themoviedb_api_pagina:
                                         y = re.compile('(.+?)[-].+?[-]').findall(year)
                                         if y: year = y[0]
                                 except: year = ''
-
                         i = i + 1
                         a = str(i)
                         if i < 10: a = '0'+a
-                        adddirtodos = threading.Thread(name='adddirtodos'+str(i), target=adddirt , args=(name,movie_tv,self.api_key,tmdb_id,num_mode,thumb,fanart,year,))
-
+                        adddirtodos = threading.Thread(name='adddirtodos'+str(i), target=adddirt , args=(str(a),name,movie_tv,self.api_key,tmdb_id,num_mode,thumb,fanart,year,))
                         threads.append(adddirtodos)
-
                 [i.start() for i in threads]
-
                 [i.join() for i in threads]
-                
-
-def adddirt(name,movie_tv,api_key,tmdb_id,num_mode,thumb,fanart,year):
+                num_filmes = len(res)
+                res.sort()
+                for x in range(len(res)):
+                        imdbcode = ''                                 
+                        iconimage = ''          
+                        url = ''
+                        year = ''
+                        Otitle = ''
+                        sinopse = ''
+                        fanart = ''
+                        genero = ''
+                        dads = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]END[|]').findall(res[x])
+                        try: ordem = dads[0][0]
+                        except: ordem = ''
+                        try: Otitle = dads[0][1]
+                        except: Otitle = ''
+                        try: year = dads[0][2]
+                        except: year = ''
+                        try: url = dads[0][3]
+                        except: url = ''
+                        urlt = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+                        try: urltrailer = urlt[0]
+                        except: urltrailer = ''
+                        try: iconimage = dads[0][4]
+                        except: iconimage = ''
+                        try: fanart = dads[0][5]
+                        except: fanart = ''
+                        try: genero = dads[0][6]
+                        except: genero = ''
+                        try: sinopse = dads[0][7]
+                        except: sinopse = ''
+                        if movie_tv == 'movie':
+                                addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url,9004,iconimage,sinopse,fanart,year,genero,Otitle,urltrailer,'MoviesRTV',num_filmes)
+                        elif movie_tv == 'tv':
+                                addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url,19004,iconimage,sinopse,fanart,year,genero,Otitle,urltrailer,'MoviesRTV',num_filmes)
+                        xbmc.sleep(12)
+#http://api.themoviedb.org/3/tv/1438/season?api_key=3e7807c4a01f18298f64662b257d7059             
+def adddirt(ordem,name,movie_tv,api_key,tmdb_id,num_mode,thumb,fanart,year):
         if name != '':
                 try:
                         try:
@@ -121,7 +141,7 @@ def adddirt(name,movie_tv,api_key,tmdb_id,num_mode,thumb,fanart,year):
                                 except: datas = ''
                                 imdb = re.compile('"imdb_id":"(.+?)"').findall(datas)
                                 if imdb: imdbcode = imdb[0]
-                                else: imdbcode = ''
+                                else: imdbcode = '---'
                                 sin = re.compile('"overview":"(.+?)"[,]"popularity').findall(datas)
                                 if sin: sinopse = sin[0].replace('\\"','"')
                                 else: sinopse = '---'
@@ -144,10 +164,10 @@ def adddirt(name,movie_tv,api_key,tmdb_id,num_mode,thumb,fanart,year):
                                         except: datas = ''
                                         imdb = re.compile('"imdb_id":"(.+?)"').findall(datas)
                                         if imdb: imdbcode = imdb[0]
-                                        else: imdbcode = ''
+                                        else: imdbcode = '---'
                                         sin = re.compile('"overview":"(.+?)"[,]"popularity').findall(datas)
                                         if sin: sinopse = sin[0].replace('\\"','"')
-                                        else: sinopse =''
+                                        else: sinopse ='---'
                                         if gen:
                                                 gen = re.compile('"name":"(.+?)"').findall(gen[0])
                                                 if gen:
@@ -160,14 +180,15 @@ def adddirt(name,movie_tv,api_key,tmdb_id,num_mode,thumb,fanart,year):
                                         else: genero = ''
                                 except: pass
                         if movie_tv == 'movie':
-                                addDir_trailer('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]','IMDB'+imdbcode+'IMDB',urllib.quote(num_mode),thumb,sinopse,fanart,year,genero,name,'http://thetvdb.com/?tab=series&id='+urllib.quote(tmdb_id))
+                                url = 'http://thetvdb.com/?tab=movies&id='+urllib.quote(tmdb_id)+'IMDB'+str(imdbcode)+'IMDB'
+                                res.append(str(ordem)+'|'+str(name)+'|'+str(year)+'|'+url+'|'+str(thumb)+'|'+str(fanart)+'|'+str(genero)+'|'+str(sinopse)+'|END|')
+                                #addDir_trailer('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]','IMDB'+imdbcode+'IMDB',urllib.quote(num_mode),thumb,sinopse,fanart,year,genero,name,'http://thetvdb.com/?tab=movies&id='+urllib.quote(tmdb_id))
                                 #addDir_trailer_filmes('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]','IMDB'+imdbcode+'IMDB',urllib.quote(num_mode),thumb,sinopse,fanart,year,genero,name,'http://thetvdb.com/?tab=series&id='+urllib.quote(tmdb_id))
                         if movie_tv == 'tv':
-                                addDir_trailer('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]','IMDB'+imdbcode+'IMDB',urllib.quote(num_mode),thumb,sinopse,fanart,year,genero,name,'http://thetvdb.com/?tab=series&id='+urllib.quote(tmdb_id))
+                                url = 'http://thetvdb.com/?tab=series&id='+urllib.quote(tmdb_id)+'IMDB'+str(imdbcode)+'IMDB'
+                                res.append(str(ordem)+'|'+str(name)+'|'+str(year)+'|'+url+'|'+str(thumb)+'|'+str(fanart)+'|'+str(genero)+'|'+str(sinopse)+'|END|')
+                                #addDir_trailer('[B][COLOR green]' + name + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]','IMDB'+imdbcode+'IMDB',urllib.quote(num_mode),thumb,sinopse,fanart,year,genero,name,'http://thetvdb.com/?tab=series&id='+urllib.quote(tmdb_id))
 
-
-##                        a = a + 1
-##                        i = i + 1
                 except: pass
                 
 ######################################################################################################################################3
