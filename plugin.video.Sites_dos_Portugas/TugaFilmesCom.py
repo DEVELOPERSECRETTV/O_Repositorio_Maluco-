@@ -501,7 +501,7 @@ def Fontes_Filmes_TFC(item):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 	
-def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart):
+def TFC_resolve_not_videomega_filmesll(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart):
         if 'videomega' in url: vidv = url
         url = url + '///' + name
         if "videomega" in url:
@@ -557,6 +557,61 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_i
                 Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id+'[/COLOR][/B]',iconimage,'',fanart)
     	return
 
+def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart):
+        if 'videomega' in url: vidv = url
+        url = url + '///' + name
+        if "videomega" in url:
+		try:
+                        if 'hashkey' in url:
+                                try:
+                                        urlvideomega = abrir_url(vidv)
+                                except: urlvideomega = ''
+                                if urlvideomega != '':
+                                        urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
+                                        if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
+                        fonte_id = '(Videomega)'
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
+		except: pass
+        if "vidto.me" in url:
+		try:
+                        print url
+                        fonte_id = '(Vidto.me)'
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,70,iconimage,'',fanart)
+		except: pass
+        if "dropvideo" in url:
+		try:
+                        if '/video/' in url: url = url.replace('/video/','/embed/')
+                        fonte_id = '(DropVideo)'
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,70,iconimage,'',fanart)
+		except:pass
+	if "streamin.to" in url:
+                try:
+			print url
+			fonte_id = '(Streamin)'
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,70,iconimage,'',fanart)
+                except:pass                        
+        if "putlocker" in url:
+                try:
+                        print url
+                        fonte_id = '(Putlocker)'
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Putlocker)[/COLOR][/B]',url,70,iconimage,'',fanart)
+    		except:pass
+    	if "nowvideo" in url:
+                try:
+                        print url
+                        fonte_id = '(Nowvideo)'
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,70,iconimage,'',fanart)
+    		except:pass
+    	if "videowood" in url:
+                try:
+                        if '/video/' in url: url = url.replace('/video/','/embed/')
+                        print url
+                        fonte_id = '(VideoWood)'
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,70,iconimage,'',fanart)
+    		except:pass
+##    	if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url:# and 'iiiiiiiiii' in url:
+##                Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id+'[/COLOR][/B]',iconimage,'',fanart)
+    	return
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 def TFC_encontrar_videos_filmes(name,url,mvoutv):

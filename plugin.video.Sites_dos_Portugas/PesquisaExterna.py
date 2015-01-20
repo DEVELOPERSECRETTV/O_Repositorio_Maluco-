@@ -413,7 +413,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                                         playlist.clear()
 
                                         liz=xbmcgui.ListItem(nomefilme, thumbnailImage=_thumbimage_[index])
-                                        xbmcplugin.setResolvedUrl(int(sys.argv[1]),True,liz)
+                                        xbmcplugin.setResolvedUrl(int(sys.argv[1]),False,liz)
                                         playlist.add(_linkservidor_[index],liz)
 
                                         MyPlayer1(nomefilme=nomefilme,checker=checker,numstream=numstream,automatico=automatico,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
@@ -2946,6 +2946,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
         if "videomega" in url:
 		try:
                         fonte_id = '(Videomega)'+url
+                   ##     resultados.append('SITESdosPORTUGAS | TOPPT | VIDEOMEGA'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
@@ -2968,12 +2969,14 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
 		try:
                         #url = url.replace('/video/','/embed/')
                         fonte_id = '(DropVideo)'
+                   ##     resultados.append('SITESdosPORTUGAS | TOPPT | DROPVIDEO'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except:pass
 	if "vidzi.tv" in url:
                 try:
                         fonte_id = '(Vidzi.tv)'
+                   ##     resultados.append('SITESdosPORTUGAS | TOPPT | VIDZI.TV'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('SITESdosPORTUGAS | TOPPT | VIDZI.TV',url,30,iconimage,'',fanart)
                                 #resultados.append('SITESdosPORTUGAS | TOPPT | VIDZI.TV'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
@@ -2981,36 +2984,42 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
         if "vodlocker" in url:
 		try:
                         fonte_id = '(Vodlocker)'
+                   ##     resultados.append('SITESdosPORTUGAS | TOPPT | VODLOCKER'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except:pass
 	if "played.to" in url:
                 try:
                         fonte_id = '(Played.to)'
+                    ##    resultados.append('SITESdosPORTUGAS | TOPPT | PLAYED.TO'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except:pass
         if "cloudzilla" in url:
                 try:
                         fonte_id = '(Cloudzilla)'
+                   ##     resultados.append('SITESdosPORTUGAS | TOPPT | CLOUDZILLA'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "divxstage" in url:
                 try:
                         fonte_id = '(Divxstage)'
+                    ##    resultados.append('SITESdosPORTUGAS | TOPPT | DIVXSTAGE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "vidzen" in url:
                 try:
                         fonte_id = '(Vidzen)'
+                   ##     resultados.append('SITESdosPORTUGAS | TOPPT | VIDZEN'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
 	if "streamin.to" in url:
                 try:
                         fonte_id = '(Streamin)'
+                    ##    resultados.append('SITESdosPORTUGAS | TOPPT | STREAMIN'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except:pass                        
@@ -3024,12 +3033,14 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
     	if "primeshare" in url:
                 try:
                         fonte_id = '(Primeshare)'
+                  ##      resultados.append('SITESdosPORTUGAS | TOPPT | PRIMESHARE'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "videoslasher" in url:
                 try:
                         fonte_id = '(VideoSlasher)'
+                  ##      resultados.append('SITESdosPORTUGAS | TOPPT | VIDEOSLASHER'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
@@ -3074,6 +3085,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:                     
                                 url = url
                         fonte_id = '(Video.tt)'
+                        resultados.append('SITESdosPORTUGAS | TOPPT | VIDEO.TT'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('1[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
@@ -3082,6 +3094,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         if '/video/' in url: url = url.replace('/video/','/embed/')
                         print url
                         fonte_id = '(VideoWood)'
+                        resultados.append('SITESdosPORTUGAS | TOPPT | VIDEOWOOD'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
@@ -3089,6 +3102,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                 try:
                         print url
                         fonte_id = '(Video.pw)'
+                        resultados.append('SITESdosPORTUGAS | TOPPT | VIDEO.PW'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
@@ -3097,6 +3111,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                         #if '/video/' in url: url = url.replace('/video/','/embed/')
                         print url
                         fonte_id = '(Thevideo.me)'
+                        resultados.append('SITESdosPORTUGAS | TOPPT | THEVIDEO.ME'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('SITESdosPORTUGAS | TOPPT | THEVIDEO.ME',url,30,iconimage,'',fanart)
     		except:pass

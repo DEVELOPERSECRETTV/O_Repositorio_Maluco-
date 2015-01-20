@@ -74,7 +74,7 @@ def MAIN_MENU():
 ##                d.doModal()
 ##                del d
 ##                selfAddon.setSetting('AvisoFanart',value='false')
-        addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries) [COLOR blue]BREVEMENTE[/COLOR]','','',artfolder,'nao','')
+        addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries) [COLOR blue]W.I.P[/COLOR]','url',20100,artfolder,'nao','')
         addDir('[B][COLOR green]T[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','http://direct',3012,artfolder,'nao','')
         addDir('[B][COLOR green]RA[/COLOR][COLOR yellow]T[/COLOR][COLOR red]OTV[/COLOR][/B] (Filmes/Séries)','url',20001,artfolder,'nao','')
         addDir('[B][COLOR green]WAR[/COLOR][COLOR yellow]E[/COLOR][COLOR red]ZTUGA[/COLOR][/B] (Filmes/Séries)','url',30001,artfolder,'nao','')
@@ -114,6 +114,18 @@ def TMDBmenu():
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','1',3009,artfolder + 'SMV.png','nao','')
         addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Séries)','1',3010,artfolder + 'MP.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','1',3011,artfolder + 'P1.png','nao','')
+
+def IMDBmenu():
+        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','http://www.imdb.com/movies-in-theaters/?ref_=nv_tp_inth_1',20101,artfolder + 'NC.png','nao','')
+##        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','1',3001,artfolder + 'FMV.png','nao','')
+##        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','1',3000,artfolder + 'MP.png','nao','')
+##        addDir('[B][COLOR green]BREV[/COLOR][COLOR yellow]E[/COLOR][COLOR red]MENTE[/COLOR][/B] (Filmes)','1',2999,artfolder,'nao','')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','1',2998,artfolder + 'P1.png','nao','')
+##        addDir1('','url',1004,artfolder,False,'')
+##        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (Séries)','1',3008,artfolder + 'EE.png','nao','')
+##        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','1',3009,artfolder + 'SMV.png','nao','')
+##        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Séries)','1',3010,artfolder + 'MP.png','nao','')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','1',3011,artfolder + 'P1.png','nao','')
 
 def SITESdosPORTUGAS():
         #####################################
@@ -908,6 +920,122 @@ def procurarSeasonsOnde(name, url):
                         if 'toppt' in url or 'tuga-filmes' in url: pesquisar_SERIES(name,url)
                         else: passar_nome_SERIES_IMDB(name)
 
+def procurarIMDB(name,url):
+        keyb = xbmc.Keyboard('', 'Escreva o parâmetro de pesquisa')
+        keyb.doModal()
+        if (keyb.isConfirmed()):
+                search = keyb.getText()
+                if search=='': sys.exit(0)
+                encode=urllib.quote(search)
+                url_pesquisa = url + 'pagination.ajax.php?p=1&order=date&words=' + encode + '&mediaType=movies'
+                WlinksF(url_pesquisa)
+        else: sys.exit(0)
+
+def LinksIMDB(url):
+        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+
+        threads = []
+        results = []
+        
+        try:
+                html_source = abrir_url(url)
+        except: html_source = ''
+
+        i = 0
+        x = 0
+
+        items = re.findall('valign="top" id="img_primary">(.+?)<div class="txt-block">', html_source, re.DOTALL)
+        #addLink(str(len(items)),'','','')
+        #return
+        for item in items:
+                Otitle = re.compile('title="(.+?) [(].+?[)]"\n').findall(item)
+                try: Otitle = Otitle[0]
+                except: Otitle = '---'
+                #addLink(Otitle,'','','')
+                title = re.compile('title="(.+?) [(].+?[)]"\n').findall(item)
+                try: title = title[0]
+                except: title = '---'
+                #addLink(title,'','','')
+                link = re.compile('href="(.+?)"').findall(item)
+                try: link = link[0]
+                except: link = '---'
+                #addLink(link,'','','')       
+                anos = re.compile('title=".+?[(](.+?)[)]"\n').findall(item)
+                try: anos = anos[0]
+                except: anos = '---'
+                #addLink(anos,'','','')
+                sins = re.compile('<div class="outline" itemprop="description">\n(.+?)</div>\n').findall(item)
+                try: sins = sins[0]
+                except: sins = '---'
+                #addLink(sins,'','','')      
+                imdb = re.compile('/title/(.+?)/[?]ref_=inth_ov_i').findall(item)
+                try: imdb = imdb[0]
+                except: imdb = ''
+                #addLink(imdb,'','','')
+                i = i + 1
+                a = str(i)
+                if i < 10: a = '0'+a
+##                if 'movies' in link[0]:
+                DADOS = threading.Thread(name='DADOS'+str(i), target=dadosImdbcode , args=(title, Otitle, link, anos, str(a), results, imdb, sins, ))
+##                elif 'tvshows' in link[0]:
+##                        DADOS = threading.Thread(name='DADOS'+str(i), target=thetvdbIMDB , args=(title[0], Otitle[0], link[0], anos[0], str(a), results, imdb[0], sins[0], ))
+                threads.append(DADOS)
+                x = x + 1
+
+        #return
+        [i.start() for i in threads]
+        [i.join() for i in threads]
+        
+        
+        num_filmes = len(results)
+        results.sort()
+        #return
+        for x in range(len(results)):
+                #addLink(results[x],'','','')
+                FS = ''
+                title = ''
+                imdbcode = ''
+                iconimage = ''
+                fanart = ''
+                url = ''
+                year = ''
+                Otitle = ''
+                sinopse = ''
+                genero = ''
+                dads = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]END[|]').findall(results[x])
+                try:order = dads[0][0]
+                except:order=''
+                try:title = dads[0][1]
+                except:title = ''
+                try:imdbcode = dads[0][2]
+                except:imdbcode = ''
+                try:iconimage = dads[0][3]
+                except:iconimage=''
+                try:fanart = dads[0][4]
+                except: fanart = ''
+                try:url = dads[0][5]
+                except: url = ''
+                try:year = dads[0][6]
+                except: year = ''
+                try:Otitle = dads[0][7]
+                except: Otitle = ''
+                try: sinopse = dads[0][8]
+                except: sinopse = ''
+                addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                xbmc.sleep(12)
+                
+        if 'onclick="paginationScroll();"' in html_source:
+                pags = re.compile('p=(.+?)&order').findall(pgat)
+                if pags:
+                        numpag = int(pags[0]) + 1
+                        pseg = pgat.replace('p='+pags[0]+'&order','p='+str(numpag)+'&order')
+                        addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pseg,30000,artfolder + 'PAGS1.png','','')
+
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
 def seasonsTMDB(name,url):
         imdb = re.compile('IMDB(.+?)IMDB').findall(url)
         imdbcode = 'IMDB'+imdb[0]+'IMDB'
@@ -1561,12 +1689,18 @@ def tvoumv(name,url):
         threads = []
         for r in range(len(resultos)):
                 dads = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]END[|]').findall(resultos[r])
-                title = dads[0][0]
-                Otitle = dads[0][1]
-                url = dads[0][2]
-                year = dads[0][3]
-                imdbcode = dads[0][4]                
-                sinopse = dads[0][5]
+                try: title = dads[0][0]
+                except: title = ''
+                try: Otitle = dads[0][1]
+                except: Otitle = ''
+                try: url = dads[0][2]
+                except: url = ''
+                try: year = dads[0][3]
+                except: year = ''
+                try: imdbcode = dads[0][4]
+                except: imdbcode = ''
+                try: sinopse = dads[0][5]
+                except: sinopse = ''
                 i = i + 1
                 a = str(i)
                 if i < 10: a = '0'+a
@@ -1593,16 +1727,30 @@ def tvoumv(name,url):
                 sinopse = ''
                 genero = ''
                 dads = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]END[|]').findall(results[x])
-                order = dads[0][0]
-                name = dads[0][1]
-                imdbcode = dads[0][2]
-                iconimage = dads[0][3]
-                fanart = dads[0][4]
-                url = dads[0][5]
-                year = dads[0][6]
-                Otitle = dads[0][7]
+                
+                try: order = dads[0][0]
+                except: pass
+                try: name = dads[0][1]
+                except: name = ''
+                try: imdbcode = dads[0][2]
+                except: imdbcode = '---'
+                try: iconimage = dads[0][3]
+                except: iconimage = ''
+                try: fanart = dads[0][4]
+                except: fanart = ''
+                try: url = dads[0][5]
+                except: url = ''
+                try: year = dads[0][6]
+                except: year = ''
+                try: Otitle = dads[0][7]
+                except: Otitle = ''
                 if FilmesOuSeries == 'Filmes': sinopse = h.unescape(dads[0][8]).encode('utf-8').replace('</div>','')
-                if FilmesOuSeries == 'Séries': sinopse = h.unescape(dads[0][8])
+                if FilmesOuSeries == 'Séries': 
+                        try: sinopse = h.unescape(dads[0][8]).encode('utf-8').replace('</div>','')
+                        except:
+                                addLink('s','','','')
+                                try: sinopse = dads[0][8]
+                                except: sinopse = '---'
                 if FilmesOuSeries == 'Filmes':                                                                                                          #7
                         addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
                 elif FilmesOuSeries == 'Séries':                                                                                                     #3007
@@ -1708,7 +1856,11 @@ def ratoTV(name,url):
                 year = dads[0][6]
                 Otitle = dads[0][7]
                 if 'movies' in url: sinopse = h.unescape(dads[0][8]).encode('utf-8').replace('</div>','')
-                if 'tvshows' in url: sinopse = h.unescape(dads[0][8])
+                if 'tvshows' in url: 
+                        try: sinopse = h.unescape(dads[0][8]).encode('utf-8').replace('</div>','')
+                        except:
+                                try: sinopse = dads[0][8]
+                                except: sinopse = '---'
                 if 'movies' in url:
                         if ('[COLOR green]' not in name and '[COLOR blue]' not in name) or name == "[COLOR blue]Página Seguinte >>>[/COLOR]" or '[COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR]' in name or '[COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR]' in name:
                                 FS = '[COLOR white]FILME | [/COLOR]'
@@ -1756,10 +1908,10 @@ def dadosImdbcode(title, Otitle, url, year, ordem, results, imdbcode, sinopse):
 ##                except: sinopse = '---'
                         
                 try: fanart = tmdb_base_url + data[u'backdrop_path']
-                except: fanart = ''
+                except: fanart = '---'
                         
                 try: thumb = tmdb_base_url.replace('w1280','w600') + data[u'poster_path']
-                except: thumb =''
+                except: thumb ='---'
                         
                 try: id_tmdb = data[u'id']
                 except: id_tmdb=''
@@ -1780,10 +1932,10 @@ def dadosImdbcode(title, Otitle, url, year, ordem, results, imdbcode, sinopse):
 ##                        except: sinopse = '--'
                                 
                         try: fanart = tmdb_base_url + data[u'backdrop_path']
-                        except: fanart = ''
+                        except: fanart = '---'
                                 
                         try: thumb = tmdb_base_url.replace('w1280','w600') + data[u'poster_path']
-                        except: thumb =''
+                        except: thumb ='---'
                                 
                         try: id_tmdb = data[u'id']
                         except: id_tmdb=''
@@ -1850,7 +2002,10 @@ def ratoTVTV(url):
                 url = dads[0][5]
                 year = dads[0][6]
                 Otitle = dads[0][7]
-                sinopse = h.unescape(dads[0][8])
+                try: sinopse = h.unescape(dads[0][8]).encode('utf-8').replace('</div>','')
+                except:
+                        try: sinopse = dads[0][8]
+                        except: sinopse = '---'
                 #addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)         #3007
                 addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',19004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
                 #addLink('|'+name+'|'+imdbcode+'|'+iconimage+'|'+fanart+'|'+url+'|'+year+'|'+sinopse,'',iconimage,fanart)
@@ -1975,7 +2130,7 @@ def thetvdbIMDB(title, Otitle, url, year, ordem, results, imdbcode, sinopse):
         aired = re.compile('<FirstAired>(.+?)-.+?-.+?</FirstAired>').findall(html_source)
         bann = re.compile('<banner>(.+?)</banner>').findall(html_source)
 
-        if overview: sinopse = overview[0]
+        #if overview: sinopse = overview[0]
         #else: sin = '---'
         if sid: idserie = sid[0]
         else: idserie = ''
@@ -4177,6 +4332,11 @@ elif mode == 20009:
         seasonsR(name,url)
 elif mode == 20010:
         episodeR(name,url)
+
+elif mode == 20100:
+        IMDBmenu()
+elif mode == 20101:
+        LinksIMDB(url)
 
 elif mode == 20510:
         episodeTMDB(name,url)
