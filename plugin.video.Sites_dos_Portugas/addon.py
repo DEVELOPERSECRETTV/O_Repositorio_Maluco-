@@ -74,7 +74,7 @@ def MAIN_MENU():
 ##                d.doModal()
 ##                del d
 ##                selfAddon.setSetting('AvisoFanart',value='false')
-        addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries) [COLOR blue]W.I.P[/COLOR]','url',20100,artfolder,'nao','')
+        addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','url',20100,artfolder,'nao','')
         addDir('[B][COLOR green]T[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','http://direct',3012,artfolder,'nao','')
         addDir('[B][COLOR green]RA[/COLOR][COLOR yellow]T[/COLOR][COLOR red]OTV[/COLOR][/B] (Filmes/Séries)','url',20001,artfolder,'nao','')
         addDir('[B][COLOR green]WAR[/COLOR][COLOR yellow]E[/COLOR][COLOR red]ZTUGA[/COLOR][/B] (Filmes/Séries)','url',30001,artfolder,'nao','')
@@ -117,15 +117,21 @@ def TMDBmenu():
 
 def IMDBmenu():
         addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','http://www.imdb.com/movies-in-theaters/?ref_=nv_tp_inth_1',20101,artfolder + 'NC.png','nao','')
-##        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','1',3001,artfolder + 'FMV.png','nao','')
-##        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','1',3000,artfolder + 'MP.png','nao','')
-##        addDir('[B][COLOR green]BREV[/COLOR][COLOR yellow]E[/COLOR][COLOR red]MENTE[/COLOR][/B] (Filmes)','1',2999,artfolder,'nao','')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','1',2998,artfolder + 'P1.png','nao','')
-##        addDir1('','url',1004,artfolder,False,'')
-##        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (Séries)','1',3008,artfolder + 'EE.png','nao','')
-##        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','1',3009,artfolder + 'SMV.png','nao','')
-##        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Séries)','1',3010,artfolder + 'MP.png','nao','')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','1',3011,artfolder + 'P1.png','nao','')
+        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B] (Filmes)','http://www.imdb.com/genre/animation/',20102,artfolder,'nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?sort=num_votes&title_type=feature,tv_movie&count=12&start=1',20102,artfolder + 'FMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?sort=moviemeter,asc&title_type=feature,tv_movie&count=12&start=1',20102,artfolder + 'MP.png','nao','')
+        addDir('[B][COLOR green]BOX[/COLOR][COLOR yellow]O[/COLOR][COLOR red]FFICE[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?sort=boxoffice_gross_us&title_type=feature,tv_movie&count=12&start=1',20102,artfolder,'nao','')
+        addDir('[B][COLOR green]ÓS[/COLOR][COLOR yellow]C[/COLOR][COLOR red]ARES[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?count=12&groups=oscar_best_picture_winners&sort=year,desc&start=1',20102,artfolder,'nao','')
+        addDir('[B][COLOR green]GÉ[/COLOR][COLOR yellow]N[/COLOR][COLOR red]EROS[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,tv_movie&sort=boxoffice_gross_us&count=12&start=1&genres=',20103,artfolder,'nao','')
+        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,tv_movie&sort=boxoffice_gross_us&count=12&start=1&year=',20104,artfolder,'nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,short,tv_movie,tv_special,video&sort=moviemeter,asc&count=25&start=1&title=',20110,artfolder + 'P1.png','nao','')
+        addDir1('','url',1004,artfolder,False,'')
+        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&production_status=active&sort=moviemeter,asc&count=12&start=1',20102,artfolder + 'EE.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=num_votes,desc&count=12&start=1',20102,artfolder + 'SMV.png','nao','')
+        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=12&start=1',20102,artfolder + 'MP.png','nao','')
+        addDir('[B][COLOR green]GÉ[/COLOR][COLOR yellow]N[/COLOR][COLOR red]EROS[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=25&start=1&genres=',20103,artfolder,'nao','')
+        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter&count=12&start=1&year=',20104,artfolder,'nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=50&start=1&title=',20110,artfolder + 'P1.png','nao','')
 
 def SITESdosPORTUGAS():
         #####################################
@@ -899,7 +905,7 @@ def procurarSeasonsOnde(name, url):
         index = indexservidores('Procurar em:', _nomeproc_)
         if index > -1:
                 if 'GENESIS' in _nomeproc_[index]:
-                        if 'ratotv' in url or 'toppt' in url or 'tuga-filmes' in url: seasonsR(name,url)
+                        if 'ratotv' in url or 'toppt' in url or 'tuga-filmes' in url or 'imdb.com' in url: seasonsR(name,url)
                         elif 'thetvdb' in url:
                                 try:
                                         urli = 'http://thetvdb.com/api/GetSeries.php?seriesname=' + urllib.quote(namet)+'&language=pt'
@@ -920,16 +926,43 @@ def procurarSeasonsOnde(name, url):
                         if 'toppt' in url or 'tuga-filmes' in url: pesquisar_SERIES(name,url)
                         else: passar_nome_SERIES_IMDB(name)
 
-def procurarIMDB(name,url):
+def procurarIMDB(url):
         keyb = xbmc.Keyboard('', 'Escreva o parâmetro de pesquisa')
         keyb.doModal()
         if (keyb.isConfirmed()):
                 search = keyb.getText()
                 if search=='': sys.exit(0)
                 encode=urllib.quote(search)
-                url_pesquisa = url + 'pagination.ajax.php?p=1&order=date&words=' + encode + '&mediaType=movies'
-                WlinksF(url_pesquisa)
+                url_pesquisa = url + str(encode)
+                LinksIMDB1(url_pesquisa)
         else: sys.exit(0)
+
+def categoriaIMDB_movies(url):     
+        try:
+                html_source = clean(abrir_url('http://akas.imdb.com/genre/'))
+        except: html_source = ''
+        html_source_trunk = re.findall('<table class="genre-table"(.*?)</table>', html_source, re.DOTALL)
+        if html_source_trunk:
+		items = re.compile('<h3><a href=".+?">(.+?) <span class="normal">.+?</span></a></h3>').findall(html_source_trunk[0])
+		for ncat in items:
+                        addDir('[COLOR yellow]' + ncat + '[/COLOR] ',url+ncat,20102,artfolder,'','')
+                        
+def anosIMDB(url):     
+        keyb = xbmc.Keyboard('', 'Escreva o ano')
+        keyb.doModal()
+        if (keyb.isConfirmed()):
+                search = keyb.getText()
+                encode=urllib.quote(search)
+                try:
+                        int(encode)
+                        inteiro = True
+                except:
+                        inteiro = False
+                        ok=mensagemok('SITESdosPORTUGAS','Por favor coloque um valor inteiro!')
+                if inteiro == True:
+                        url_pesquisa = url + str(encode)
+                        LinksIMDB1(url_pesquisa)
+                else: sys.exit(0)
 
 def LinksIMDB(url):
         try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
@@ -976,7 +1009,7 @@ def LinksIMDB(url):
                 i = i + 1
                 a = str(i)
                 if i < 10: a = '0'+a
-##                if 'movies' in link[0]:
+##                if 'tv_movies' in link[0]:
                 DADOS = threading.Thread(name='DADOS'+str(i), target=dadosImdbcode , args=(title, Otitle, link, anos, str(a), results, imdb, sins, ))
 ##                elif 'tvshows' in link[0]:
 ##                        DADOS = threading.Thread(name='DADOS'+str(i), target=thetvdbIMDB , args=(title[0], Otitle[0], link[0], anos[0], str(a), results, imdb[0], sins[0], ))
@@ -1033,7 +1066,140 @@ def LinksIMDB(url):
                         addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pseg,30000,artfolder + 'PAGS1.png','','')
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmc.executebuiltin("Container.SetViewMode(515)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def LinksIMDB1(url):
+        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+
+        pagat = url
+
+        threads = []
+        results = []
+        thumbs = []
+        
+        try:
+                html_source = clean(abrir_url(url))
+        except: html_source = ''
+
+        i = 0
+        x = 0
+
+        items = re.findall('<td class="title">(.+?)<tr class=".+? detailed">', html_source, re.DOTALL)
+        if not items: items = re.findall('<td class="title">(.+?)<span class="runtime">', html_source, re.DOTALL)
+        #addLink(pagat+str(len(items)),'','','')
+        #return
+        for item in items:
+                LinkTitle = re.compile('<a href="(.+?)">(.+?)</a>').findall(item)
+                try: Otitle = h.unescape(LinkTitle[0][1]).encode('utf-8')
+                except: Otitle = '---'
+                #addLink(Otitle,'','','')
+                try: title = h.unescape(LinkTitle[0][1]).encode('utf-8')
+                except: title = '---'
+                #addLink(title,'','','')
+                try: link = LinkTitle[0][0]
+                except: link = '---'
+                #addLink(link,'','','')       
+                anos = re.compile('<span class="year_type">[(](.+?)[)]</span>').findall(item)
+                try: anos = anos[0].replace(' TV Series','')
+                except: anos = '---'
+                #addLink(anos,'','','')
+                sins = re.compile('<span class="outline">(.+?)</span>').findall(item)
+                try: sins = sins[0]
+                except: sins = '---'
+                #addLink(sins,'','','')      
+                imdb = re.compile('/title/(.+?)/').findall(item)
+                try: imdb = imdb[0]
+                except: imdb = ''
+##                thumbn = re.compile('src="(.+?)"').findall(item)
+##                try:
+##                        thumb = thumbn[0]
+##                        thumbs.append(thumb)
+##                except:
+##                        thumb = '---'
+##                        thumbs.append(thumb)
+                #addLink(imdb,'','','')
+                i = i + 1
+                a = str(i)
+                if i < 10: a = '0'+a
+                if 'tv_movie' in pagat or 'oscar_best_picture_winners' in pagat or 'genre/animation/' in pagat:
+                        DADOS = threading.Thread(name='DADOS'+str(i), target=dadosImdbcode , args=(title, Otitle, link, anos, str(a), results, imdb, sins, ))
+                        threads.append(DADOS)
+                if 'tv_series' in pagat:
+                        DADOS = threading.Thread(name='DADOS'+str(i), target=thetvdbIMDB , args=(title, Otitle, link, anos, str(a), results, imdb, sins, ))
+                        threads.append(DADOS)
+                x = x + 1
+
+        #return
+        [i.start() for i in threads]
+        [i.join() for i in threads]
+        
+        
+        num_filmes = len(results)
+        results.sort()
+        #return
+        for x in range(len(results)):
+                #addLink(results[x],'','','')
+                FS = ''
+                title = ''
+                imdbcode = ''
+                iconimage = ''
+                fanart = ''
+                url = ''
+                year = ''
+                Otitle = ''
+                sinopse = ''
+                genero = ''
+                dads = re.compile('(.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|](.+?)[|]END[|]').findall(results[x])
+                try:order = dads[0][0]
+                except:order=''
+                try:title = dads[0][1]
+                except:title = ''
+                try:imdbcode = dads[0][2]
+                except:imdbcode = ''
+                try:
+                        iconimage = dads[0][3]
+                        if iconimage == '---' or iconimage == '' or 'posters/-1' in iconimage:iconimage='http://i.media-imdb.com/images/SFaa265aa19162c9e4f3781fbae59f856d/nopicture/medium/film.png'
+                except: iconimage='http://i.media-imdb.com/images/SFaa265aa19162c9e4f3781fbae59f856d/nopicture/medium/film.png'
+                try:
+                        fanart = dads[0][4]
+                        if fanart == '---': fanart = ''
+                except: fanart = ''
+                try:url = 'http://www.imdb.com'+dads[0][5]
+                except: url = ''
+                try:year = dads[0][6]
+                except: year = ''
+                try:Otitle = dads[0][7]
+                except: Otitle = ''
+                try: sinopse = dads[0][8]
+                except: sinopse = ''
+                if 'tv_movie' in pagat or 'oscar_best_picture_winners' in pagat or 'genre/animation/' in pagat:
+                        addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                if 'tv_series' in pagat:                       
+                        addDir_trailer1('[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',19004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                xbmc.sleep(12)
+
+        if '&genres=' in pagat: nump = re.compile('&start=(.+?)&genres=').findall(pagat)
+        elif '&years=' in pagat: nump = re.compile('&start=(.+?)&years=').findall(pagat)
+        elif '&title=' in pagat: nump = re.compile('&start=(.+?)&title=').findall(pagat)
+        else: nump = re.compile('&start=(.*)').findall(pagat)
+        if nump and len(items)>=11:
+                nump = nump[0]
+                pags = re.compile('count=(.+?)&groups=oscar').findall(pagat)
+                if pags:
+                        numpag = int(pags[0])# + int(nump)
+                        pseg = pagat.replace('&start='+str(nump),'&start='+str(numpag))
+                        addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pseg,20102,artfolder + 'PAGS1.png','','')
+                else:
+                        pags = re.compile('count=(.+?)&start').findall(pagat)
+                        if pags:
+                                numpag = int(pags[0])# + int(nump)
+                                pseg = pagat.replace('&start='+str(nump),'&start='+str(numpag))
+                                addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pseg,20102,artfolder + 'PAGS1.png','','')
+
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 def seasonsTMDB(name,url):
@@ -1893,7 +2059,8 @@ def ratoTV(name,url):
 def dadosImdbcode(title, Otitle, url, year, ordem, results, imdbcode, sinopse):
         api_key = '3e7807c4a01f18298f64662b257d7059'
         tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
-        
+        thumb=''
+        fanart = ''
         try:
                 url_tmdb = 'http://api.themoviedb.org/3/movie/'+urllib.quote_plus(imdbcode)+'?language=pt&api_key=' + api_key 
                 try: data = Funcoes.json_get(url_tmdb)
@@ -1915,7 +2082,7 @@ def dadosImdbcode(title, Otitle, url, year, ordem, results, imdbcode, sinopse):
                         
                 try: id_tmdb = data[u'id']
                 except: id_tmdb=''
-        except: pass
+        except: thumb='---';fanart='---'
 
         if fanart == '':
                 try:
@@ -1939,7 +2106,7 @@ def dadosImdbcode(title, Otitle, url, year, ordem, results, imdbcode, sinopse):
                                 
                         try: id_tmdb = data[u'id']
                         except: id_tmdb=''
-                except: pass
+                except: thumb='---';fanart='---'
         results.append(str(ordem)+'|'+str(title)+'|'+str(imdbcode)+'|'+str(thumb)+'|'+str(fanart)+'|'+str(url)+'|'+str(year)+'|'+str(Otitle)+'|'+str(sinopse)+'|END|')                       
         #return fanart,str(id_tmdb),thumb
 
@@ -4337,6 +4504,14 @@ elif mode == 20100:
         IMDBmenu()
 elif mode == 20101:
         LinksIMDB(url)
+elif mode == 20102:
+        LinksIMDB1(url)
+elif mode == 20103:
+        categoriaIMDB_movies(url)
+elif mode == 20104:
+        anosIMDB(url)
+elif mode == 20110:
+        procurarIMDB(url)
 
 elif mode == 20510:
         episodeTMDB(name,url)

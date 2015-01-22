@@ -680,7 +680,14 @@ def PLAY_movie_url(url,name,iconimage,checker,fanart):#,nomeAddon):
                                 checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
                                 url = match[0]
                         #addLink(checker,match[0],'')
-		except: pass
+		except:
+                        sources = []
+                        hosted_media = urlresolver.HostedMediaFile(url)
+                        sources.append(hosted_media)
+                        source = urlresolver.choose_source(sources)
+                        if source: 
+                                url = source.resolve()
+                        else: url = ''
         #addLink(url,url,'','')
         #if 'vk.com' not in iframe_url and 'video.mail.ru' not in iframe_url and 'videoapi.my.mail' not in iframe_url and 'vidzi.tv' not in iframe_url and 'playfreehd' not in iframe_url  and 'thevideo.me' not in iframe_url:# and 'iiiiiiiiii' in url:
         try:
@@ -1351,7 +1358,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                         #addLink(checker,match[0],'')
 		except: pass
 	nome_addon = nomeAddon
-	#addLink(url,'','','')
+	#addLink(iframe_url,'','','')
 	#return
         #if 'vk.com' not in url and 'video.mail.ru' not in url and 'video.tt' not in url:
         if 'vk.com' not in iframe_url and 'video.mail.ru' not in iframe_url and 'videoapi.my.mail' not in iframe_url and 'vidzi.tv' not in iframe_url and 'playfreehd' not in iframe_url  and 'thevideo.me' not in iframe_url:# and 'iiiiiiiiii' in url:
@@ -2046,7 +2053,7 @@ def PLAY_episodes(url,name,iconimage,checker,fanart):#,nomeAddon):
                         else:
                                 checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
                                 url = match[0]
-                        #addLink(checker,match[0],'')
+                        #addLink(checker,match[0],'','')
 		except: pass
 	nome_addon = nomeAddon
 	#addLink(url,'','','')
