@@ -17,7 +17,8 @@
 
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,threading
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,threading,HTMLParser,json
+h = HTMLParser.HTMLParser()
 import Play
 
 #from string import capwords
@@ -1796,8 +1797,12 @@ def TFV_links(name,url,qualidade,iconimage,fanart):
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
-        if not urlimdb: url = url.replace('IMDBIMDB','')
-        else: url = urlimdb[0]
+        if not urlimdb:
+                url = url.replace('IMDBIMDB','')
+                urlvideomega = url
+        else:
+                url = urlimdb[0]
+                urlvideomega = url
         conta_id_video = 0    
 	try:
 		link2=abrir_url(url)
@@ -1854,7 +1859,7 @@ def TFV_links(name,url,qualidade,iconimage,fanart):
                                                 conta_id_video = conta_id_video + 1
                                                 fonte_id = '(Videomega)'
                                                 #addDir('SITESdosPORTUGAS | TUGAFILMES.TV | VIDEOMEGA',videomeg[0],30,iconimage,'',fanart)
-                                                PLAY_movie_url(videomeg[0],fonte_id,iconimage,'',fanart,'TUGAFILMES.TV')
+                                                PLAY_movie_url(urlvideomega,fonte_id,iconimage,'',fanart,'TUGAFILMES.TV')
                                                 #resultados.append(videomeg[0])
                                 if 'Legendado' not in matchsvids and 'Portug' not in matchsvids:
                                         quality = re.compile('(.+?)[-].+?').findall(qualidade)
@@ -1880,6 +1885,7 @@ def TFV_links(name,url,qualidade,iconimage,fanart):
                                                         if "videomega" in url:
                                                                 try:
                                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video# + '///' + name
+                                                                        url = urlvideomega
                                                                         print url
                                                                         fonte_id = '(Videomega)'
                                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
@@ -1945,7 +1951,7 @@ def TFV_links(name,url,qualidade,iconimage,fanart):
                         if videomeg:
                                 conta_id_video = conta_id_video + 1
                                 fonte_id = '(Videomega)'
-                                PLAY_movie_url(videomeg[0],fonte_id,iconimage,'',fanart,'TUGAFILMES.TV')
+                                PLAY_movie_url(urlvideomega,fonte_id,iconimage,'',fanart,'TUGAFILMES.TV')
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'',fanart)
 
         if 'Parte 1' and 'Parte 2' in link2:
@@ -1996,6 +2002,7 @@ def TFV_links(name,url,qualidade,iconimage,fanart):
                                         if "videomega" in url:
                                                 try:
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video# + '///' + name
+                                                        url = urlvideomega
                                                         print url
                                                         fonte_id = '(Videomega)'
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
@@ -2068,8 +2075,12 @@ def TFC_links(name,url,iconimage,fanart):
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
-        if not urlimdb: url = url.replace('IMDBIMDB','')
-        else: url = urlimdb[0]
+        if not urlimdb:
+                url = url.replace('IMDBIMDB','')
+                urlvideomega = url
+        else:
+                url = urlimdb[0]
+                urlvideomega = url
                 
         nomeescolha = name
         conta_os_items = 0
@@ -2113,19 +2124,19 @@ def TFC_links(name,url,iconimage,fanart):
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                         matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
                                         if matchi:
                                                 for url in matchi:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                         conta_os_items = conta_os_items + 1
                                 assistir_fontes = re.findall("------------------------------<br />(.*?)='postmeta'>", fonte, re.DOTALL)
                                 assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
@@ -2151,19 +2162,19 @@ def TFC_links(name,url,iconimage,fanart):
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                         matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
                                         if matchi:
                                                 for url in matchi:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                         conta_os_items = conta_os_items + 1
                         else:
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
@@ -2189,19 +2200,19 @@ def TFC_links(name,url,iconimage,fanart):
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                         matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
                                         if matchi:
                                                 for url in matchi:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                         conta_os_items = conta_os_items + 1
                 else:
                         match = re.compile('www.videowood(.+?)" target="_blank">.+?[(]Online').findall(fonte)
@@ -2210,7 +2221,7 @@ def TFC_links(name,url,iconimage,fanart):
                                 url = 'http://www.videowood'+url                                
                                 id_video = ''
                                 conta_id_video = conta_id_video + 1
-                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                 conta_os_items = conta_os_items + 1
                         match = re.compile('<iframe .+? src="(.+?)"').findall(fonte)
                         if match:
@@ -2218,7 +2229,7 @@ def TFC_links(name,url,iconimage,fanart):
                                 for url in match:
                                         id_video = ''
                                         conta_id_video = conta_id_video + 1
-                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                         conta_os_items = conta_os_items + 1
                         else:
                                 match = re.compile("<script type='text/javascript' src='(.+?)'></script>").findall(fonte)
@@ -2227,7 +2238,7 @@ def TFC_links(name,url,iconimage,fanart):
                                         if 'hashkey' in url:
                                                 id_video = ''
                                                 conta_id_video = conta_id_video + 1
-                                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                                TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                                 conta_os_items = conta_os_items + 1
                         if numero_de_fontes > 0:
                                 conta_video = 0
@@ -2238,22 +2249,23 @@ def TFC_links(name,url,iconimage,fanart):
                                                 for url in match:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
-                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                                         conta_os_items = conta_os_items + 1
                                         except:pass
 
-def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart):
+def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega):
         if 'videomega' in url: vidv = url
         url = url + '///' + name
         if "videomega" in url:
 		try:
-                        if 'hashkey' in url:
-                                try:
-                                        urlvideomega = abrir_url(vidv)
-                                except: urlvideomega = ''
-                                if urlvideomega != '':
-                                        urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
-                                        if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
+##                        if 'hashkey' in url:
+##                                try:
+##                                        urlvideomega = abrir_url(vidv)
+##                                except: urlvideomega = ''
+##                                if urlvideomega != '':
+##                                        urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
+##                                        if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
+                        url = urlvideomega
                         fonte_id = '(Videomega)'
 			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
@@ -2391,8 +2403,12 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(urlescolha)
-        if not urlimdb: url = urlescolha.replace('IMDBIMDB','')
-        else: url = urlimdb[0]
+        if not urlimdb:
+                url = urlescolha.replace('IMDBIMDB','')
+                urlvideomega = url
+        else:
+                url = urlimdb[0]
+                urlvideomega = url
         conta_os_items = 0
         nometitulo = nomeescolha
         i = 1
@@ -2438,13 +2454,13 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                 if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                         conta_id_video = conta_id_video + 1
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                         match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                         for url in match:
                                                 if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                         conta_id_video = conta_id_video + 1
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                         i = i + 1
                 if newmatch:
                         if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-Serie' not in nometitulo:
@@ -2453,7 +2469,7 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                 conta_id_video = conta_id_video + 1
                                                 conta_os_items = conta_os_items + 1
-                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                         else:
                                 lin = re.findall('.+?EPIS',newmatch1[0],re.DOTALL)
                                 num = len(lin) + 0.0 - 1
@@ -2468,13 +2484,13 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                 if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                         conta_id_video = conta_id_video + 1
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                         match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                         for url in match:
                                                 if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                         conta_id_video = conta_id_video + 1
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                         i = i + 1
 			linksseccaopartes = re.findall('.+?PARTE',newmatch[0],re.DOTALL)
 			if linksseccaopartes:
@@ -2489,20 +2505,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                 for url in match:
                                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
-                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                 match = re.compile('"window.open(.+?)"').findall(parte2)
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                         v_id = re.compile('=(.*)').findall(url)
                                         if not v_id: v_id = re.compile('//(.*)').findall(url)
                                         nmatch = re.findall(v_id[0]+'.+?DOWNLOAD',link2,re.DOTALL)
@@ -2517,20 +2533,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                 for url in match:
                                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
-                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                 match = re.compile('"window.open(.+?)"').findall(parte2)
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                 if len(linksseccaopartes) == 1:
                                         linksseccao = re.findall('<p>PARTE(.+?)<.+?>\n(.+?)<p>&nbsp;</p>',newmatch[0],re.DOTALL)
                                         for parte1,parte2 in linksseccao:
@@ -2542,20 +2558,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                 for url in match:
                                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
-                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                 match = re.compile('"window.open(.+?)"').findall(parte2)
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                         linksseccao = re.findall('<p>PARTE(\d+)</p>\n(.+?)<p>&nbsp;</p>',newmatch[0],re.DOTALL)
                                         for parte1,parte2 in linksseccao:
                                                 conta_id_video = 0
@@ -2566,20 +2582,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                 for url in match:
                                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
-                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                 match = re.compile('"window.open(.+?)"').findall(parte2)
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 			else:
                                 linksseccao = re.findall('<span style="color:.+?">(.+?)</span><br.+?>(.+?)Ver Aqui</a></p>',newmatch[0],re.DOTALL)
 				if linksseccao:
@@ -2593,20 +2609,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
 						for url in match:
                                                         conta_id_video = conta_id_video + 1
 							conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 						match = re.compile('<a href="(.+?)" target="_blank">').findall(parte2)
 						if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
 						for url in match:
                                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
-                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 						match = re.compile('"window.open(.+?)"').findall(parte2)
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 				else:
 					linksseccao = re.findall('<span style="color:.+?"><strong>(.+?)</strong></span><br.+?>(.+?)Ver Aqui</a></p>',newmatch[0],re.DOTALL)
                                         if linksseccao:
@@ -2620,20 +2636,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                         for url in match:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
-                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                         match = re.compile('<a href="(.+?)" target="_blank">').findall(parte2)
                                                         if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                         for url in match:
                                                                 if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                         conta_id_video = conta_id_video + 1
                                                                         conta_os_items = conta_os_items + 1
-                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                         match = re.compile('"window.open(.+?)"').findall(parte2)
                                                         for url in match:
                                                                 conta_id_video = conta_id_video + 1
                                                                 url = url.replace("'","").replace("(","").replace(")","")
                                                                 conta_os_items = conta_os_items + 1
-                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                         else:
                                                 if '<h2 class="title">Sleepy Hollow[Season 1][Completa]</h2>' in link2:
                                                         linksseccao = re.findall('<p>(.+?)<br/>(.+?)</p>',newmatch[0],re.DOTALL)
@@ -2649,20 +2665,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                                         for url in match:
                                                                                 conta_id_video = conta_id_video + 1
                                                                                 conta_os_items = conta_os_items + 1
-                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                         match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                                         if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                                         for url in match:
                                                                                 if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         conta_os_items = conta_os_items + 1
-                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                         match = re.compile('"window.open(.+?)"').findall(parte2)
                                                                         for url in match:
                                                                                 conta_id_video = conta_id_video + 1
                                                                                 url = url.replace("'","").replace("(","").replace(")","")
                                                                                 conta_os_items = conta_os_items + 1
-                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                 else:
                                                         lin = re.findall('.+?EPIS',newmatch[0],re.DOTALL)
                                                         if len(lin) == 1: linksseccao = re.findall('ODIO (.+?)<.+?>(.+?)<img',newmatch[0],re.DOTALL)
@@ -2683,21 +2699,21 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                                         for url in match:
                                                                                 conta_id_video = conta_id_video + 1
                                                                                 conta_os_items = conta_os_items + 1
-                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                         match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                                         if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                                         for url in match:
                                                                                 if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         conta_os_items = conta_os_items + 1
-                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                         match = re.compile('"window.open(.+?)"').findall(parte2)
                                                                         for url in match:
                                                                                 if 'LINK' not in url:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                                                         conta_os_items = conta_os_items + 1
-                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                         i = i + 1
                                                                 conta_id_video = 0
                                                                 v_id = re.compile('=(.*)').findall(url)
@@ -2714,20 +2730,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                                                 for url in match:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         conta_os_items = conta_os_items + 1
-                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                                                 for url in match:
                                                                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                                 conta_id_video = conta_id_video + 1
                                                                                                 conta_os_items = conta_os_items + 1
-                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                 match = re.compile('"window.open(.+?)"').findall(parte2)
                                                                                 for url in match:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                                                         conta_os_items = conta_os_items + 1
-                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                 i = i + 1
                                                                 conta_id_video = 0
                                                                 v_id = re.compile('=(.*)').findall(url)
@@ -2745,20 +2761,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                                         for url in match:
                                                                                 conta_id_video = conta_id_video + 1
                                                                                 conta_os_items = conta_os_items + 1
-                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                         match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(linksseccao[0])
                                                                         if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(linksseccao[0])
                                                                         for url in match:
                                                                                 if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         conta_os_items = conta_os_items + 1
-                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                         match = re.compile('"window.open(.+?)"').findall(linksseccao[0])
                                                                         for url in match:
                                                                                 conta_id_video = conta_id_video + 1
                                                                                 url = url.replace("'","").replace("(","").replace(")","")
                                                                                 conta_os_items = conta_os_items + 1
-                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                 ####################################################################
                                                         else:
                                                                 linksseccao = re.findall('<p>(.+?)EPISODIO<br/>(.+?)</iframe>',newmatch[0],re.DOTALL)
@@ -2771,20 +2787,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                                                 for url in match:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         conta_os_items = conta_os_items + 1
-                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                                                 for url in match:
                                                                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                                 conta_id_video = conta_id_video + 1
                                                                                                 conta_os_items = conta_os_items + 1
-                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                 match = re.compile('"window.open(.+?)"').findall(parte2)
                                                                                 for url in match:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                                                         conta_os_items = conta_os_items + 1
-                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                 i = i + 1
                                                                         conta_id_video = 0
                                                                         v_id = re.compile('=(.*)').findall(url)
@@ -2799,20 +2815,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                                                 for url in match:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         conta_os_items = conta_os_items + 1
-                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                                                 for url in match:
                                                                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                                 conta_id_video = conta_id_video + 1
                                                                                                 conta_os_items = conta_os_items + 1
-                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                 match = re.compile('"window.open(.+?)"').findall(parte2)
                                                                                 for url in match:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                                                         conta_os_items = conta_os_items + 1
-                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                 i = i + 1
                                                                         if i != int(num):
                                                                                 conta_id_video = 0
@@ -2828,20 +2844,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                                                         for url in match:
                                                                                                 conta_id_video = conta_id_video + 1
                                                                                                 conta_os_items = conta_os_items + 1
-                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                         match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
                                                                                         if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
                                                                                         for url in match:
                                                                                                 if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                                         conta_id_video = conta_id_video + 1
                                                                                                         conta_os_items = conta_os_items + 1
-                                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                         match = re.compile('"window.open(.+?)"').findall(parte2)
                                                                                         for url in match:
                                                                                                 conta_id_video = conta_id_video + 1
                                                                                                 url = url.replace("'","").replace("(","").replace(")","")
                                                                                                 conta_os_items = conta_os_items + 1
-                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                                         i = i + 1
                                                                 else:
                                                                         match = re.compile('<iframe.+?src="(.+?)"').findall(newmatch[0])
@@ -2849,20 +2865,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                                         for url in match:
                                                                                 conta_id_video = conta_id_video + 1
                                                                                 conta_os_items = conta_os_items + 1
-                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                         match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(newmatch[0])
                                                                         if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(newmatch[0])
                                                                         for url in match:
                                                                                 if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                                         conta_id_video = conta_id_video + 1
                                                                                         conta_os_items = conta_os_items + 1
-                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                                                         match = re.compile('"window.open(.+?)"').findall(newmatch[0])
                                                                         for url in match:
                                                                                 conta_id_video = conta_id_video + 1
                                                                                 url = url.replace("'","").replace("(","").replace(")","")
                                                                                 conta_os_items = conta_os_items + 1
-                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 		else:
 			newmatch = re.findall('EM PT/PT:.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
 			if newmatch:
@@ -2876,20 +2892,20 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
 						for url in match:
                                                         conta_id_video = conta_id_video + 1
 							conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 						match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
 						if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(parte2)
 						for url in match:
                                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
-                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 						match = re.compile('"window.open(.+?)"').findall(parte2)
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
                                 else:
 					linksseccao = re.findall('EPISODIO (.+?)<br.+?\n(.+?)</p>',newmatch[0],re.DOTALL)
 					if linksseccao:
@@ -2904,7 +2920,7 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
 							for url in match:
                                                                 conta_id_video = conta_id_video + 1
 								conta_os_items = conta_os_items + 1
-                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 							match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
 							match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
 							match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
@@ -2912,40 +2928,41 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                                 if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                         conta_id_video = conta_id_video + 1
                                                                         conta_os_items = conta_os_items + 1
-                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 							match = re.compile('"window.open(.+?)"').findall(parte2)
                                                         for url in match:
                                                                 conta_id_video = conta_id_video + 1
                                                                 url = url.replace("'","").replace("(","").replace(")","")
                                                                 conta_os_items = conta_os_items + 1
-                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 					else:
 						match = re.compile('<iframe src="(.+?)"').findall(newmatch[0])	
 						for url in match:
                                                         conta_id_video = conta_id_video + 1
 							conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 						match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(newmatch[0])
                                                 if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(newmatch[0])
 						for url in match:
                                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                                 conta_id_video = conta_id_video + 1
                                                                 conta_os_items = conta_os_items + 1
-                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 						match = re.compile('"window.open(.+?)"').findall(newmatch[0])
                                                 for url in match:
                                                         conta_id_video = conta_id_video + 1
                                                         url = url.replace("'","").replace("(","").replace(")","")
                                                         conta_os_items = conta_os_items + 1
-                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 
 
-def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart):
+def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega):
 
         
         if "videomega" in url:
 		try:
-                        fonte_id = '(Videomega)'+url
+                        url = urlvideomega
+                        fonte_id = '(Videomega)'#+url
                    ##     resultados.append('SITESdosPORTUGAS | TOPPT | VIDEOMEGA'+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart)
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
@@ -3132,8 +3149,12 @@ def CME_links(name,url,iconimage,fanart):
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
-        if not urlimdb: url = url.replace('IMDBIMDB','')
-        else: url = urlimdb[0]
+        if not urlimdb:
+                url = url.replace('IMDBIMDB','')
+                urlvideomega = url
+        else:
+                url = urlimdb[0]
+                urlvideomega = url
         nomeescolha = name
         colecao = 'nao'
         conta_id_video = 0
@@ -3162,7 +3183,7 @@ def CME_links(name,url,iconimage,fanart):
                                                         urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
                                                         if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
                                                         fonte_serv = '(Videomega)'
-                                                        PLAY_movie_url(url,fonte_serv,iconimage,'',fanart,'CINEMATUGA.EU')
+                                                        PLAY_movie_url(urlvideomega,fonte_serv,iconimage,'',fanart,'CINEMATUGA.EU')
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                         if 'iframe.js' in fonte_id:
                                                 conta_id_video = conta_id_video + 1
@@ -3170,7 +3191,7 @@ def CME_links(name,url,iconimage,fanart):
                                                 if not refvideo: refvideo = re.compile(">ref='(.+?)'.+?</script>").findall(fonte_e_url)
                                                 url = 'http://videomega.tv/iframe.php?ref=' + refvideo[0] + '///' + name
                                                 fonte_serv = '(Videomega)'
-                                                PLAY_movie_url(url,fonte_serv,iconimage,'',fanart,'CINEMATUGA.EU')
+                                                PLAY_movie_url(urlvideomega,fonte_serv,iconimage,'',fanart,'CINEMATUGA.EU')
                                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                 match2 = re.compile('<iframe.+?src=(.+?) frameborder.+?</iframe>').findall(fonte_e_url)
@@ -3180,7 +3201,7 @@ def CME_links(name,url,iconimage,fanart):
                                         conta_id_video = conta_id_video + 1
                                         url = fonte_id + '///' + name
                                         fonte_serv = '(Videomega)'
-                                        PLAY_movie_url(url,fonte_serv,iconimage,'',fanart,'CINEMATUGA.EU')
+                                        PLAY_movie_url(urlvideomega,fonte_serv,iconimage,'',fanart,'CINEMATUGA.EU')
                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         elif 'dropvideo' in fonte_id:
@@ -3203,13 +3224,14 @@ def CME_links(name,url,iconimage,fanart):
                                 except:pass
                         else:
                                 conta_id_video = conta_id_video + 1
-                                CME_resolve_not_videomega_filmes(fonte_id,nomeescolha,conta_id_video,fanart,iconimage)
+                                CME_resolve_not_videomega_filmes(fonte_id,nomeescolha,conta_id_video,fanart,iconimage,urlvideomega)
 
 
-def CME_resolve_not_videomega_filmes(url,nomeescolha,conta_id_video,fanart,iconimage):
+def CME_resolve_not_videomega_filmes(url,nomeescolha,conta_id_video,fanart,iconimage,urlvideomega):
         url = url + '///' + nomeescolha
         if "videomega" in url:
 		try:
+                        url = urlvideomega
                         fonte_id = '(Videomega)'
 			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
@@ -3345,11 +3367,12 @@ def CME_resolve_not_videomega_filmes(url,nomeescolha,conta_id_video,fanart,iconi
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-def CMC_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart):
+def CMC_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega):
         
         
         if "videomega" in url:
 		try:
+                        url = urlvideomega
                         fonte_id = '(Videomega)'
 			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
@@ -3486,8 +3509,12 @@ def CMC_links(name,url,iconimage,fanart):
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
-        if not urlimdb: url = url.replace('IMDBIMDB','')
-        else: url = urlimdb[0]
+        if not urlimdb:
+                url = url.replace('IMDBIMDB','')
+                urlvideomega = url
+        else:
+                url = urlimdb[0]
+                urlvideomega = url
         nomeescolha = name
         colecao = 'nao'
         conta_id_video = 0
@@ -3509,7 +3536,7 @@ def CMC_links(name,url,iconimage,fanart):
                         conta_id_video = conta_id_video + 1
                         url = match
                         conta_os_items = conta_os_items + 1
-                        CMC_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                        CMC_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart,urlvideomega)
 
 
 
@@ -3525,8 +3552,12 @@ def MVT_links(name,url,iconimage,fanart):
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
-        if not urlimdb: url = url.replace('IMDBIMDB','')
-        else: url = urlimdb[0]
+        if not urlimdb:
+                url = url.replace('IMDBIMDB','')
+                urlvideomega = url
+        else:
+                url = urlimdb[0]
+                urlvideomega = url
         nomeescolha = name
         colecao = 'nao'
         conta_id_video = 0
@@ -3576,7 +3607,7 @@ def MVT_links(name,url,iconimage,fanart):
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video# + '///' + name
                                                         fonte_serv = '(Videomega)'
-                                                        PLAY_movie_url(url,fonte_serv,iconimage,'',fanart,'MOVIETUGA')
+                                                        PLAY_movie_url(urlvideomega,fonte_serv,iconimage,'',fanart,'MOVIETUGA')
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
                                         elif 'vidto' in fonte_ids:
@@ -3594,7 +3625,7 @@ def MVT_links(name,url,iconimage,fanart):
                                                 if match:
                                                         url = match[0]
                                                         conta_id_video = conta_id_video + 1
-                                                        MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video)
+                                                        MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video,urlvideomega)
                 else:
  	                if fonte_video:
  		                for fonte_ids in fontes_video:
@@ -3605,7 +3636,7 @@ def MVT_links(name,url,iconimage,fanart):
                                                         id_video = match[0]
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video# + '///' + name
                                                         fonte_serv = '(Videomega)'
-                                                        PLAY_movie_url(url,fonte_serv,iconimage,'',fanart,'MOVIETUGA')
+                                                        PLAY_movie_url(urlvideomega,fonte_serv,iconimage,'',fanart,'MOVIETUGA')
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
                                                 except:pass
                                         elif 'vidto' in fonte_ids:
@@ -3623,12 +3654,13 @@ def MVT_links(name,url,iconimage,fanart):
                                                 if match:
                                                         url = match[0]
                                                         conta_id_video = conta_id_video + 1
-                                                        MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video)
+                                                        MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video,urlvideomega)
 
-def MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video):
+def MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video,urlvideomega):
         if "videomega" in url:
 		try:
-                        fonte_id = '(Videomega)'+url
+                        url = urlvideomega
+                        fonte_id = '(Videomega)'#+url
                         #if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
@@ -3793,8 +3825,12 @@ def CMT_links(name,url,iconimage,fanart):
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
-        if not urlimdb: url = url.replace('IMDBIMDB','')
-        else: url = urlimdb[0]
+        if not urlimdb:
+                url = url.replace('IMDBIMDB','')
+                urlvideomega = url
+        else:
+                url = urlimdb[0]
+                urlvideomega = url
         nomeescolha = name
         conta_id_video = 0
         conta_os_items = 0    
@@ -3823,9 +3859,10 @@ def CMT_links(name,url,iconimage,fanart):
                         conta_id_video = conta_id_video + 1
                         conta_os_items = conta_os_items + 1
                         ##############################################CINEMATUGA.NET
-                        url = url + '///' + nomeescolha
+                        url = url #+ '///' + nomeescolha
                         if "videomega" in url:
                                 try:
+                                        url = urlvideomega
                                         fonte_id = '(Videomega)'
                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except: pass
@@ -3969,8 +4006,12 @@ def FTT_links(name,url,iconimage,fanart):
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
-        if not urlimdb: url = url.replace('IMDBIMDB','')
-        else: url = urlimdb[0]
+        if not urlimdb:
+                url = url.replace('IMDBIMDB','')
+                urlvideomega = url
+        else:
+                url = urlimdb[0]
+                urlvideomega = url
         nomeescolha = name
         colecao = 'nao'
         conta_id_video = 0
@@ -4000,7 +4041,7 @@ def FTT_links(name,url,iconimage,fanart):
                                                         urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
                                                         if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
                                                         fonte_serv = '(Videomega)'
-                                                        PLAY_movie_url(url,fonte_serv,iconimage,'',fanart,'FOITATUGA')
+                                                        PLAY_movie_url(urlvideomega,fonte_serv,iconimage,'',fanart,'FOITATUGA')
                                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                         if 'iframe.js' in fonte_id:
                                                 conta_id_video = conta_id_video + 1
@@ -4008,7 +4049,7 @@ def FTT_links(name,url,iconimage,fanart):
                                                 if not refvideo: refvideo = re.compile(">ref='(.+?)'.+?</script>").findall(fonte_e_url)
                                                 url = 'http://videomega.tv/iframe.php?ref=' + refvideo[0] + '///' + name
                                                 fonte_serv = '(Videomega)'
-                                                PLAY_movie_url(url,fonte_serv,iconimage,'',fanart,'FOITATUGA')
+                                                PLAY_movie_url(urlvideomega,fonte_serv,iconimage,'',fanart,'FOITATUGA')
                                                 #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                 match2 = re.compile('<iframe.+?src="(.+?)".+?></iframe>').findall(fonte_e_url)
@@ -4019,7 +4060,7 @@ def FTT_links(name,url,iconimage,fanart):
                                         conta_id_video = conta_id_video + 1
                                         url = fonte_id + '///' + name
                                         fonte_serv = '(Videomega)'
-                                        PLAY_movie_url(url,fonte_serv,iconimage,'',fanart,'FOITATUGA')
+                                        PLAY_movie_url(urlvideomega,fonte_serv,iconimage,'',fanart,'FOITATUGA')
                                         #addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                 except:pass
                         elif 'dropvideo' in fonte_id:
@@ -4042,13 +4083,14 @@ def FTT_links(name,url,iconimage,fanart):
                                 except:pass
                         else:
                                 conta_id_video = conta_id_video + 1
-                                FTT_resolve_not_videomega_filmes(fonte_id,nomeescolha,conta_id_video,fanart,iconimage)
+                                FTT_resolve_not_videomega_filmes(fonte_id,nomeescolha,conta_id_video,fanart,iconimage,urlvideomega)
 
 
-def FTT_resolve_not_videomega_filmes(url,nomeescolha,conta_id_video,fanart,iconimage):
+def FTT_resolve_not_videomega_filmes(url,nomeescolha,conta_id_video,fanart,iconimage,urlvideomega):
         url = url + '///' + nomeescolha
         if "videomega" in url:
 		try:
+                        url = urlvideomega
                         fonte_id = '(Videomega)'
 			#addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
@@ -4888,28 +4930,32 @@ def PLAY_movie_url(url,name,iconimage,checker,fanart,nomeAddon):
     		except:pass
     		resultados.append('SITESdosPORTUGAS | '+nomeAddon+' | '+name.upper()+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart+'|SUBTITLES|'+checker)
 
-    	if "videomega" in url:
+    	if "videomega" in url or 'Videomega' in name:
 		try:
-                        if "iframe" not in url:
-                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
-                                iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
-                        else: iframe_url = url
-                        print iframe_url
-                        link3 = abrir_url(iframe_url)
-                        match=re.compile('document.write\(unescape\("(.+?)"\)').findall(link3)
-                        print match
-                        tit=re.compile('<div id="title">&nbsp;&nbsp;&nbsp;(.+?)</div>').findall(link3)
-                        video_url_escape = urllib.unquote(match[0])
-                        match=re.compile('file: "(.+?)"').findall(video_url_escape)
-                        subtitle=re.compile('"file": "(.+?)"').findall(video_url_escape)
-                        if subtitle==[]:
-                                subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)      
-                        if subtitle == []:
-                                checker = ''
-                                url = match[0]
-                        else:
-                                checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
-                                url = match[0]
+                        urli,checker = videomega_resolver(iframe_url)
+                        uli=re.compile('(.+?)[|]Host=').findall(urli)
+                        if uli: url=uli[0]
+                        else: url=urli
+##                        if "iframe" not in url:
+##                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
+##                                iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
+##                        else: iframe_url = url
+##                        print iframe_url
+##                        link3 = abrir_url(iframe_url)
+##                        match=re.compile('document.write\(unescape\("(.+?)"\)').findall(link3)
+##                        print match
+##                        tit=re.compile('<div id="title">&nbsp;&nbsp;&nbsp;(.+?)</div>').findall(link3)
+##                        video_url_escape = urllib.unquote(match[0])
+##                        match=re.compile('file: "(.+?)"').findall(video_url_escape)
+##                        subtitle=re.compile('"file": "(.+?)"').findall(video_url_escape)
+##                        if subtitle==[]:
+##                                subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)      
+##                        if subtitle == []:
+##                                checker = ''
+##                                url = match[0]
+##                        else:
+##                                checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
+##                                url = match[0]
                         #addLink(checker,match[0],'')
 		except: pass
 		resultados.append('SITESdosPORTUGAS | '+nomeAddon+' | '+name.upper()+'|URL|'+url+'|THUMB|'+iconimage+'|FANART|'+fanart+'|SUBTITLES|'+checker)
@@ -5741,6 +5787,92 @@ def outrostream(_nomeservidor_,_linkservidor_,_thumbimage_,_legendas_,numstream,
                                 playlist.add(_linkservidor_[index],liz)
 
                                 MyPlayer1(nomefilme=nomefilme,checker=checker,numstream=numstream,automatico=automatico,_nomeservidor_=_nomeservidor_,_linkservidor_=_linkservidor_,_thumbimage_=_thumbimage_,_legendas_=_legendas_).PlayStream(playlist)
+
+def abrir_url_tommy(url,referencia,form_data=None,erro=True):
+	print "A fazer request tommy de: " + url
+	from t0mm0.common.net import Net
+	net = Net()
+	try:
+		if form_data==None:link = net.http_GET(url,referencia).content
+		else:link= net.http_POST(url,form_data=form_data,headers=referencia).content.encode('latin-1','ignore')
+		return link
+
+	except urllib2.HTTPError, e:
+		return "Erro"
+	except urllib2.URLError, e:
+		return "Erro"
+	
+def videomega_resolver(referer):
+        #referer='http://toppt.net/penguins-of-madagascar-os-pinguins-de-madagascar/'
+	html = abrir_url(referer)
+	if re.search('http://videomega.tv/iframe.js',html):
+		lines = html.splitlines()
+		aux = ''
+		for line in lines:
+			if re.search('http://videomega.tv/iframe.js',line):
+				aux = line
+				break;
+		ref = re.compile('ref="(.+?)"').findall(line)[0]
+	else:
+		try:
+			hash = re.compile('"http://videomega.tv/validatehash.php\?hashkey\=(.+?)"').findall(html)[0]
+			ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+hash))[0]
+		except:
+			try:
+				hash = re.compile("'http://videomega.tv/validatehash.php\?hashkey\=(.+?)'").findall(html)[0]
+				ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+hash))[0]
+			except:
+				try:
+                                        iframe = re.compile('"http://videomega.tv/iframe.php\?(.+?)"').findall(html)[0] + '&'
+                                        ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+				except:
+                                        try:
+                                                iframe = re.compile('"http://videomega.tv/cdn.php\?(.+?)"').findall(html)[0] + '&'
+                                                ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+                                        except:
+                                                iframe = re.compile('<iframe.+?src=http://videomega.tv/cdn.php\?(.+?) frameborder.+?</iframe>').findall(html)[0] + '&'
+                                                ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+	
+	ref_data={'Host':'videomega.tv',
+			  'Connection':'Keep-alive',
+			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+			  'Referer':referer}
+	url = 'http://videomega.tv/iframe.php?ref=' + ref
+	iframe_html = abrir_url_tommy(url,ref_data)
+	code = re.compile('document.write\(unescape\("(.+?)"\)\)\;').findall(iframe_html)
+	id = re.compile('<div id="(.+?)" name="adblock"').findall(iframe_html)[0]
+	texto = ''
+	for c in code:
+		aux = urllib.unquote(c)
+		if re.search(id,aux):
+			texto = aux
+			break
+	if texto == '': return ['-','-']
+	try: url_video = re.compile('file:"(.+?)"').findall(texto)[0]
+	except: 
+		try: url_video = re.compile('file: "(.+?)"').findall(texto)[0]
+		except: url_video = '-'
+	if not 'mp4' in url_video: return ['-','-']
+	try: url_legendas = re.compile('http://videomega.tv/servesrt.php\?s=(.+?).srt').findall(texto)[0] + '.srt'
+	except: url_legendas = '-'
+	ref_data={'Host':url_video.split('/')[2],
+			  'Connection':'Keep-alive',
+			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+			  'Referer':'http://videomega.tv/player/jwplayer.flash.swf'}
+	#addLink(urltrailer+url_video+headers_str(ref_data),'','','')
+	return url_video+headers_str(ref_data),url_legendas
+
+def headers_str(headers):
+	start = True
+	headers_str = ''
+	for k,v in headers.items():
+		if start:
+			headers_str += '|'+urllib.quote_plus(k)+'='+urllib.quote_plus(v)
+			start = False
+		else: headers_str += '&'+urllib.quote_plus(k)+'='+urllib.quote_plus(v)
+	return headers_str
                 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#

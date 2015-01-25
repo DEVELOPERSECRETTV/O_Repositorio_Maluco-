@@ -729,7 +729,7 @@ def CMC_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
 		try:
                         fonte_id = '(Videomega)'+url
                         if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
 		except: pass
         if "vidto.me" in url:
 		try:

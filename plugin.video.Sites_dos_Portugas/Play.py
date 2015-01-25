@@ -21,7 +21,8 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,urlparse
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,urlparse,HTMLParser,json
+h = HTMLParser.HTMLParser()
 from array import array
 import TugaFilmesTV,TopPt,TugaFilmesCom,MovieTuga,FilmesAnima,Pesquisar,Mashup,Funcoes,CinematugaEu,Cinematuga,CinemaEmCasa,PesquisaExterna
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
@@ -659,35 +660,32 @@ def PLAY_movie_url(url,name,iconimage,checker,fanart):#,nomeAddon):
     		except:pass
     	if "videomega" in url:
 		try:
-                        if "iframe" not in url:
-                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
-                                iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
-                        else: iframe_url = url
-                        print iframe_url
-                        link3 = abrir_url(iframe_url)
-                        match=re.compile('document.write\(unescape\("(.+?)"\)').findall(link3)
-                        print match
-                        tit=re.compile('<div id="title">&nbsp;&nbsp;&nbsp;(.+?)</div>').findall(link3)
-                        video_url_escape = urllib.unquote(match[0])
-                        match=re.compile('file: "(.+?)"').findall(video_url_escape)
-                        subtitle=re.compile('"file": "(.+?)"').findall(video_url_escape)
-                        if subtitle==[]:
-                                subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)      
-                        if subtitle == []:
-                                checker = ''
-                                url = match[0]
-                        else:
-                                checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
-                                url = match[0]
-                        #addLink(checker,match[0],'')
-		except:
-                        sources = []
-                        hosted_media = urlresolver.HostedMediaFile(url)
-                        sources.append(hosted_media)
-                        source = urlresolver.choose_source(sources)
-                        if source: 
-                                url = source.resolve()
-                        else: url = ''
+                        urli,checker = videomega_resolver(iframe_url)
+                        uli=re.compile('(.+?)[|]Host=').findall(urli)
+                        if uli: url=uli[0]
+                        else: url=urli
+##                        if "iframe" not in url:
+##                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
+##                                iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
+##                        else: iframe_url = url
+##                        print iframe_url
+##                        link3 = abrir_url(iframe_url)
+##                        match=re.compile('document.write\(unescape\("(.+?)"\)').findall(link3)
+##                        print match
+##                        tit=re.compile('<div id="title">&nbsp;&nbsp;&nbsp;(.+?)</div>').findall(link3)
+##                        video_url_escape = urllib.unquote(match[0])
+##                        match=re.compile('file: "(.+?)"').findall(video_url_escape)
+##                        subtitle=re.compile('"file": "(.+?)"').findall(video_url_escape)
+##                        if subtitle==[]:
+##                                subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)      
+##                        if subtitle == []:
+##                                checker = ''
+##                                url = match[0]
+##                        else:
+##                                checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
+##                                url = match[0]
+##                        #addLink(checker,match[0],'')
+		except: pass
         #addLink(url,url,'','')
         #if 'vk.com' not in iframe_url and 'video.mail.ru' not in iframe_url and 'videoapi.my.mail' not in iframe_url and 'vidzi.tv' not in iframe_url and 'playfreehd' not in iframe_url  and 'thevideo.me' not in iframe_url:# and 'iiiiiiiiii' in url:
         try:
@@ -1333,32 +1331,36 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                         #addLink(vlink,vlink,'')
 			#addLink(url,'','')
     		except:pass
-    	elif "videomega" in url:
+    	elif "videomega" in url or '(Videomega)' in name:
 		try:
-                        if "iframe" not in url:
-                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
-                                iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
-                        else: iframe_url = url
-                        print iframe_url
-                        link3 = abrir_url(iframe_url)
-                        match=re.compile('document.write\(unescape\("(.+?)"\)').findall(link3)
-                        print match
-                        tit=re.compile('<div id="title">&nbsp;&nbsp;&nbsp;(.+?)</div>').findall(link3)
-                        video_url_escape = urllib.unquote(match[0])
-                        match=re.compile('file: "(.+?)"').findall(video_url_escape)
-                        subtitle=re.compile('"file": "(.+?)"').findall(video_url_escape)
-                        if subtitle==[]:
-                                subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)      
-                        if subtitle == []:
-                                checker = ''
-                                url = match[0]
-                        else:
-                                checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
-                                url = match[0]
-                        #addLink(checker,match[0],'')
+                        urli,checker = videomega_resolver(iframe_url)
+                        uli=re.compile('(.+?)[|]Host=').findall(urli)
+                        if uli: url=uli[0]
+                        else: url=urli
+##                        if "iframe" not in url:
+##                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
+##                                iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
+##                        else: iframe_url = url
+##                        print iframe_url
+##                        link3 = abrir_url(iframe_url)
+##                        match=re.compile('document.write\(unescape\("(.+?)"\)').findall(link3)
+##                        print match
+##                        tit=re.compile('<div id="title">&nbsp;&nbsp;&nbsp;(.+?)</div>').findall(link3)
+##                        video_url_escape = urllib.unquote(match[0])
+##                        match=re.compile('file: "(.+?)"').findall(video_url_escape)
+##                        subtitle=re.compile('"file": "(.+?)"').findall(video_url_escape)
+##                        if subtitle==[]:
+##                                subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)      
+##                        if subtitle == []:
+##                                checker = ''
+##                                url = match[0]
+##                        else:
+##                                checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
+##                                url = match[0]
+##                        #addLink(checker,match[0],'')
 		except: pass
 	nome_addon = nomeAddon
-	#addLink(iframe_url,'','','')
+	#addLink(url,'','','')
 	#return
         #if 'vk.com' not in url and 'video.mail.ru' not in url and 'video.tt' not in url:
         if 'vk.com' not in iframe_url and 'video.mail.ru' not in iframe_url and 'videoapi.my.mail' not in iframe_url and 'vidzi.tv' not in iframe_url and 'playfreehd' not in iframe_url  and 'thevideo.me' not in iframe_url:# and 'iiiiiiiiii' in url:
@@ -2033,27 +2035,31 @@ def PLAY_episodes(url,name,iconimage,checker,fanart):#,nomeAddon):
     		except:pass
     	elif "videomega" in url:
 		try:
-                        if "iframe" not in url:
-                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
-                                iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
-                        else: iframe_url = url
-                        print iframe_url
-                        link3 = abrir_url(iframe_url)
-                        match=re.compile('document.write\(unescape\("(.+?)"\)').findall(link3)
-                        print match
-                        tit=re.compile('<div id="title">&nbsp;&nbsp;&nbsp;(.+?)</div>').findall(link3)
-                        video_url_escape = urllib.unquote(match[0])
-                        match=re.compile('file: "(.+?)"').findall(video_url_escape)
-                        subtitle=re.compile('"file": "(.+?)"').findall(video_url_escape)
-                        if subtitle==[]:
-                                subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)      
-                        if subtitle == []:
-                                checker = ''
-                                url = match[0]
-                        else:
-                                checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
-                                url = match[0]
-                        #addLink(checker,match[0],'','')
+                        urli,checker = videomega_resolver(iframe_url)
+                        uli=re.compile('(.+?)[|]Host=').findall(urli)
+                        if uli: url=uli[0]
+                        else: url=urli
+##                        if "iframe" not in url:
+##                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
+##                                iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
+##                        else: iframe_url = url
+##                        print iframe_url
+##                        link3 = abrir_url(iframe_url)
+##                        match=re.compile('document.write\(unescape\("(.+?)"\)').findall(link3)
+##                        print match
+##                        tit=re.compile('<div id="title">&nbsp;&nbsp;&nbsp;(.+?)</div>').findall(link3)
+##                        video_url_escape = urllib.unquote(match[0])
+##                        match=re.compile('file: "(.+?)"').findall(video_url_escape)
+##                        subtitle=re.compile('"file": "(.+?)"').findall(video_url_escape)
+##                        if subtitle==[]:
+##                                subtitle=re.compile('[[][{]file: "(.+?)"').findall(video_url_escape)      
+##                        if subtitle == []:
+##                                checker = ''
+##                                url = match[0]
+##                        else:
+##                                checker = subtitle[0].replace('http://videomega.tv/servesrt.php?s=','')
+##                                url = match[0]
+##                        #addLink(checker,match[0],'','')
 		except: pass
 	nome_addon = nomeAddon
 	#addLink(url,'','','')
@@ -2077,6 +2083,92 @@ def PLAY_episodes(url,name,iconimage,checker,fanart):#,nomeAddon):
 ##                        MyPlayer(nome_addon=nome_addon,checker=checker).PlayStream(playlist)
                 except: pass
         #return
+
+def abrir_url_tommy(url,referencia,form_data=None,erro=True):
+	print "A fazer request tommy de: " + url
+	from t0mm0.common.net import Net
+	net = Net()
+	try:
+		if form_data==None:link = net.http_GET(url,referencia).content
+		else:link= net.http_POST(url,form_data=form_data,headers=referencia).content.encode('latin-1','ignore')
+		return link
+
+	except urllib2.HTTPError, e:
+		return "Erro"
+	except urllib2.URLError, e:
+		return "Erro"
+	
+def videomega_resolver(referer):
+        #referer='http://toppt.net/penguins-of-madagascar-os-pinguins-de-madagascar/'
+	html = abrir_url(referer)
+	if re.search('http://videomega.tv/iframe.js',html):
+		lines = html.splitlines()
+		aux = ''
+		for line in lines:
+			if re.search('http://videomega.tv/iframe.js',line):
+				aux = line
+				break;
+		ref = re.compile('ref="(.+?)"').findall(line)[0]
+	else:
+		try:
+			hash = re.compile('"http://videomega.tv/validatehash.php\?hashkey\=(.+?)"').findall(html)[0]
+			ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+hash))[0]
+		except:
+			try:
+				hash = re.compile("'http://videomega.tv/validatehash.php\?hashkey\=(.+?)'").findall(html)[0]
+				ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+hash))[0]
+			except:
+				try:
+                                        iframe = re.compile('"http://videomega.tv/iframe.php\?(.+?)"').findall(html)[0] + '&'
+                                        ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+				except:
+                                        try:
+                                                iframe = re.compile('"http://videomega.tv/cdn.php\?(.+?)"').findall(html)[0] + '&'
+                                                ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+                                        except:
+                                                iframe = re.compile('<iframe.+?src=http://videomega.tv/cdn.php\?(.+?) frameborder.+?</iframe>').findall(html)[0] + '&'
+                                                ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+	
+	ref_data={'Host':'videomega.tv',
+			  'Connection':'Keep-alive',
+			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+			  'Referer':referer}
+	url = 'http://videomega.tv/iframe.php?ref=' + ref
+	iframe_html = abrir_url_tommy(url,ref_data)
+	code = re.compile('document.write\(unescape\("(.+?)"\)\)\;').findall(iframe_html)
+	id = re.compile('<div id="(.+?)" name="adblock"').findall(iframe_html)[0]
+	texto = ''
+	for c in code:
+		aux = urllib.unquote(c)
+		if re.search(id,aux):
+			texto = aux
+			break
+	if texto == '': return ['-','-']
+	try: url_video = re.compile('file:"(.+?)"').findall(texto)[0]
+	except: 
+		try: url_video = re.compile('file: "(.+?)"').findall(texto)[0]
+		except: url_video = '-'
+	if not 'mp4' in url_video: return ['-','-']
+	try: url_legendas = re.compile('http://videomega.tv/servesrt.php\?s=(.+?).srt').findall(texto)[0] + '.srt'
+	except: url_legendas = '-'
+	ref_data={'Host':url_video.split('/')[2],
+			  'Connection':'Keep-alive',
+			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+			  'Referer':'http://videomega.tv/player/jwplayer.flash.swf'}
+	#addLink(urltrailer+url_video+headers_str(ref_data),'','','')
+	return url_video+headers_str(ref_data),url_legendas
+
+def headers_str(headers):
+	start = True
+	headers_str = ''
+	for k,v in headers.items():
+		if start:
+			headers_str += '|'+urllib.quote_plus(k)+'='+urllib.quote_plus(v)
+			start = False
+		else: headers_str += '&'+urllib.quote_plus(k)+'='+urllib.quote_plus(v)
+	return headers_str
                 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------------------------------------------------------#

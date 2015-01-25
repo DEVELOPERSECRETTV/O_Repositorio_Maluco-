@@ -448,7 +448,7 @@ def MVT_encontrar_videos_filmes(name,url,mvoutv):
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                                                         fonte_serv = '(Videomega)'
                                                         #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,100,iconimage,'',fanart)
                                                 except:pass
                                         elif 'vidto' in fonte_id:
                                                 try:
@@ -477,7 +477,7 @@ def MVT_encontrar_videos_filmes(name,url,mvoutv):
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                                                         fonte_serv = '(Videomega)'
                                                         #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,100,iconimage,'',fanart)
                                                 except:pass
                                         elif 'vidto' in fonte_ids:
                                                 try:
@@ -564,7 +564,7 @@ def MVT_links(name,url,iconimage,fanart):
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                                                         fonte_serv = '(Videomega)'
                                                         #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,100,iconimage,'',fanart)
                                                 except:pass
                                         elif 'vidto' in fonte_id:
                                                 try:
@@ -593,7 +593,7 @@ def MVT_links(name,url,iconimage,fanart):
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                                                         fonte_serv = '(Videomega)'
                                                         #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,100,iconimage,'',fanart)
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,100,iconimage,'',fanart)
                                                 except:pass
                                         elif 'vidto' in fonte_ids:
                                                 try:
@@ -616,7 +616,7 @@ def MVT_encontrar_streams(url,nomeescolha,iconimage,fanart,conta_id_video):
 		try:
                         fonte_id = '(Videomega)'+url
                         if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
 		except: pass
         if "vidto.me" in url:
 		try:
