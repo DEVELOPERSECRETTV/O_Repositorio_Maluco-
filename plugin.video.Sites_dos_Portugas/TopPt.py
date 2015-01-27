@@ -1963,6 +1963,11 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                                                                                 conta_id_video = conta_id_video + 1
                                                                                 conta_os_items = conta_os_items + 1
                                                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                        match = re.compile('<IFRAME.+?SRC="(.+?)"').findall(newmatch[0])
+                                                                        for url in match:
+                                                                                conta_id_video = conta_id_video + 1
+                                                                                conta_os_items = conta_os_items + 1
+                                                                                TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
                                                                         match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(newmatch[0])
                                                                         if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(newmatch[0])
                                                                         for url in match:
@@ -1986,6 +1991,11 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                                                 conta_os_items = conta_os_items + 1
 						addDir1('[COLOR blue] Parte '+parte1+'[/COLOR]',urlfinal,'',iconimage,False,'')					
 						match = re.compile('<iframe src="(.+?)"').findall(parte2)	
+						for url in match:
+                                                        conta_id_video = conta_id_video + 1
+							conta_os_items = conta_os_items + 1
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                match = re.compile('<IFRAME SRC="(.+?)"').findall(parte2)	
 						for url in match:
                                                         conta_id_video = conta_id_video + 1
 							conta_os_items = conta_os_items + 1
@@ -2079,7 +2089,13 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                                                                 addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
                                                         f_id = ''
 					else:
+                                                
 						match = re.compile('<iframe src="(.+?)"').findall(newmatch[0])	
+						for url in match:
+                                                        conta_id_video = conta_id_video + 1
+							conta_os_items = conta_os_items + 1
+                                                        TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                match = re.compile('<IFRAME SRC="(.+?)"').findall(newmatch[0])	
 						for url in match:
                                                         conta_id_video = conta_id_video + 1
 							conta_os_items = conta_os_items + 1
@@ -2806,6 +2822,13 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                                                 conta_os_items = conta_os_items + 1
                                                                                 streams.append(url+'|'+str(conta_id_video)+'|'+str(conta_os_items)+'|'+nomeescolha+'|'+iconimage+'|'+fanart)
                                                                                 #TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                        match = re.compile('<IFRAME.+?SRC="(.+?)"').findall(newmatch[0])
+                                                                        if not match: match = re.compile("<IFRAME.+?SRC='(.+?)'").findall(newmatch[0])
+                                                                        for url in match:
+                                                                                conta_id_video = conta_id_video + 1
+                                                                                conta_os_items = conta_os_items + 1
+                                                                                streams.append(url+'|'+str(conta_id_video)+'|'+str(conta_os_items)+'|'+nomeescolha+'|'+iconimage+'|'+fanart)
+                                                                                #TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
                                                                         match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(newmatch[0])
                                                                         if not match: match = re.compile('O: </b><a href="(.+?)" target="_blank">').findall(newmatch[0])
                                                                         for url in match:
@@ -2831,6 +2854,12 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                 conta_os_items = conta_os_items + 1
 						addDir1('[COLOR blue] Parte '+parte1+'[/COLOR]',urlfinal,'',iconimage,False,'')					
 						match = re.compile('<iframe src="(.+?)"').findall(parte2)	
+						for url in match:
+                                                        conta_id_video = conta_id_video + 1
+							conta_os_items = conta_os_items + 1
+							streams.append(url+'|'+str(conta_id_video)+'|'+str(conta_os_items)+'|'+nomeescolha+'|'+iconimage+'|'+fanart)
+                                                        #TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+						match = re.compile('<IFRAME SRC="(.+?)"').findall(parte2)	
 						for url in match:
                                                         conta_id_video = conta_id_video + 1
 							conta_os_items = conta_os_items + 1
@@ -2885,6 +2914,12 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                                                 #TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
 					else:
 						match = re.compile('<iframe src="(.+?)"').findall(newmatch[0])	
+						for url in match:
+                                                        conta_id_video = conta_id_video + 1
+							conta_os_items = conta_os_items + 1
+							streams.append(url+'|'+str(conta_id_video)+'|'+str(conta_os_items)+'|'+nomeescolha+'|'+iconimage+'|'+fanart)
+                                                        #TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+						match = re.compile('<IFRAME SRC="(.+?)"').findall(newmatch[0])	
 						for url in match:
                                                         conta_id_video = conta_id_video + 1
 							conta_os_items = conta_os_items + 1
