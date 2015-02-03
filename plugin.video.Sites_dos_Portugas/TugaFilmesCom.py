@@ -38,6 +38,8 @@ artfolder = addonfolder + '/resources/img/'
 perfil = xbmc.translatePath(selfAddon.getAddonInfo('profile'))
 
 filmes = []
+itemstotal = []
+itemsindividuais = []
 
 progress = xbmcgui.DialogProgress()
 
@@ -47,12 +49,15 @@ progress = xbmcgui.DialogProgress()
 def TFC_MenuPrincipal(artfolder):
         addDir('- Procurar','http://www.tuga-filmes.info/search?q=',1,artfolder + 'P1.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1003,artfolder + 'TFC1.png',False,'')
-	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.info/',72,artfolder + 'FT.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20',72,artfolder + 'FA.png','nao','')
+	#addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.info/',72,artfolder + 'FT.png','nao','')
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://www.tuga-filmes.com/page/1/',72,artfolder + 'FT.png','nao','')
+	#addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20',72,artfolder + 'FA.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://www.tuga-filmes.com/category/animacao/',72,artfolder + 'FA.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',78,artfolder + 'CT.png','nao','')
 	addDir('[COLOR yellow]- Por Ano[/COLOR]','http://www.tuga-filmes.info/search/label/-%20Filmes%202013',90,artfolder + 'ANO.png','nao','')
-	addDir('[COLOR yellow]- Destaques[/COLOR]','http://www.tuga-filmes.info/search/label/destaque',72,artfolder + 'DTS.png','nao','')
-        addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://www.tuga-filmes.info/',72,artfolder + 'TPF.png','nao','')
+	#addDir('[COLOR yellow]- Destaques[/COLOR]','http://www.tuga-filmes.info/search/label/destaque',72,artfolder + 'DTS.png','nao','')
+	addDir('[COLOR yellow]- Destaques[/COLOR]','http://www.tuga-filmes.com/category/destaque/',72,artfolder + 'DTS.png','nao','')
+        #addDir('[COLOR yellow]- Top Filmes[/COLOR]','http://www.tuga-filmes.info/',72,artfolder + 'TPF.png','nao','')
 	#if selfAddon.getSetting('hide-porno') == "false":                        #79
                 #addDir('[B][COLOR red]M+18[/B][/COLOR]','url',86,artfolder + 'TFC1.png','nao','')	
 
@@ -220,17 +225,20 @@ def TFC_Menu_Filmes_Por_Categorias(artfolder):
         url_categorias = 'http://www.tuga-filmes.info/'
         html_categorias_source = abrir_url(url_categorias)
 	html_items_categorias = re.findall("<div id=\'nav-cat\'>(.*?)</div>", html_categorias_source, re.DOTALL)
+	if not html_items_categorias: html_items_categorias = re.findall("<div id=\'nav-cat\'>(.*?)</div>", html_categorias_source, re.DOTALL)
+	if not html_items_categorias: html_items_categorias = re.findall('<li id="menu-item-2238"(.*?)<li id="menu-item-2236"', html_categorias_source, re.DOTALL)
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<a href=\'/(.+?)\'>(.+?)</a>").findall(item_categorias)
+                if not filmes_por_categoria: filmes_por_categoria = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                        categoria_endereco = url_categorias + endereco_categoria
+                        categoria_endereco = endereco_categoria
                         addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',categoria_endereco,72,artfolder + 'TFC1.png','nao','')
 
 def TFC_Menu_Filmes_Por_Ano(artfolder):
-        ano = 2014
+        ano = 2015
         for x in range(46):
-                categoria_endereco = 'http://www.tuga-filmes.info/search/label/-%20Filmes%20' + str(ano)
+                categoria_endereco = 'http://www.tuga-filmes.com/category/filmes-' + str(ano) + '/'
                 addDir('[COLOR yellow]' + str(ano) + '[/COLOR]',categoria_endereco,72,artfolder + 'TFC1.png','nao','')
                 ano = ano - 1
         
@@ -239,14 +247,90 @@ def TFC_Menu_Filmes_Por_Ano(artfolder):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 #-------------------------------------------------------------------  Filmes  -----------------------------------------------------------------#
 
-		
+def cleanTitle(title):
+	title = title.replace('&#8211;',"-").replace('&#8230;',"...").replace('&#8217;',"'").replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").replace("&#39;", "'").replace("&quot;", "\"").replace("&ndash;", "-").replace('"',"").replace("â€™","'")
+	title = title.strip()
+	return title
+
+def clean(text):
+      command={'\r':'','\n':'','\t':'','\xC0':'À','\xC1':'Á','\xC2':'Â','\xC3':'Ã','\xC7':'Ç','\xC8':'È','\xC9':'É','\xCA':'Ê','\xCC':'Ì','\xCD':'Í','\xCE':'Î','\xD2':'Ò','\xD3':'Ó','\xD4':'Ô','\xDA':'Ú','\xDB':'Û','\xE0':'à','\xE1':'á','\xE2':'â','\xE3':'ã','\xE7':'ç','\xE8':'è','\xE9':'é','\xEA':'ê','\xEC':'ì','\xED':'í','\xEE':'î','\xF3':'ó','\xF5':'õ','\xFA':'ú'}
+      regex = re.compile("|".join(map(re.escape, command.keys())))
+      return regex.sub(lambda mo: command[mo.group(0)], text)
+
+def IFilmes_TFC(ordem,urle,titulo,itemsindividuais):
+        #itemsindividuais = []
+        try:
+		html_source = abrir_url(urle)
+	except: html_source = ''
+	ano = ''
+	thumb = ''
+	versao = ''
+	nome = cleanTitle(titulo)
+	imdb = re.compile('imdb.com/title/(.+?)/').findall(html_source)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = '---'
+	pt_en_f = re.compile('<iframe (.+?)</iframe>').findall(html_source)
+        if ('---------------------------------------' in html_source or '&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;' in html_source) and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
+        assist = re.findall(">ASSISTIR.+?", html_source, re.DOTALL)
+        if len(assist) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
+	item=re.findall('<div class="post-heading">(.*?)ASSISTIR O FILME', html_source, re.DOTALL)[0]
+	try:sinopse = cleanTitle(re.compile('<b>SINOPSE.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
+	except:
+                try:sinopse = cleanTitle(re.compile('<b>Sinopse.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
+                except:
+                        try:sinopse = cleanTitle(re.compile('<b>Sinopse.+?</b>(.+?)\n').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
+                        except:sinopse='---'
+	try:
+                try:qualidade = cleanTitle(re.compile('<b>VERS\xc3\x83O.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
+                except:
+                        try:qualidade = cleanTitle(re.compile('<b>Vers\xc3\x83o.+?</b>(.+?)\n').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
+                        except: qualidade = ''
+                #addLink(qualidade+nome,'','','')
+                tn = re.compile('\w+')
+                tt = tn.findall(nome)
+                for tt_tt in tt:
+                        tira_nome=tt_tt
+                qualidade = re.compile(tira_nome+'(.*)').findall(qualidade.replace('.',' '))[0]	
+                a_q = re.compile('\d+')
+                qq_aa = a_q.findall(qualidade)
+                for q_a_q_a in qq_aa:
+                        if len(q_a_q_a) == 4:
+                                ano = q_a_q_a
+                                break
+                        else: ano = ''
+                qualidade = qualidade.replace(ano,'').replace('  ','')
+        except: qualidade = '---'
+        
+        if ano == '':
+                #addLink('sim'+nome,'','','')
+                try:ano = re.compile('<b>Estreia em Portugal.+?</b>.+?[-].+?[-](.+?)</p>').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">','').replace(' ','')
+                except:
+                        try:ano = re.compile('<b>Ano.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">','').replace(' ','')
+                        except:pass
+	
+	try:thumb = re.compile('<img.+?src="(.+?)"').findall(item)[0]
+	except:thumb=''
+
+	nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
+        #if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+        #if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
+        if nnnn: nome_pesquisa = nnnn[0]
+        else: nome_pesquisa = nome
+        try:fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano)
+        except: fanart = '';tmdb_id='';poster=''
+        if thumb == '':thumb = poster
+	if ano == '': ano = '---'
+
+	#addLink(nome+'-'+ano+'-'+qualidade+'-'+sinopse,'',poster,fanart)
+	#itemsindividuais.append(str(ordem)+'|'+urle+'|'+titulo+'|'+str(item))
+	nome_final = '[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]'+ versao
+        itemsindividuais.append(str(ordem)+'NOME|'+str(nome_final)+'|IMDBCODE|'+str(urle)+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace('s1600','s320').replace('.gif','.jpg'))+'|ANO|'+str(ano.replace('(','').replace(')',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(qualidade)+'|ONOME|'+str(nome_pesquisa)+'|SINOPSE|'+str(sinopse)+'|END|\n')
+
 
 def TFC_encontrar_fontes_filmes(url):
 
-##        percent = 0
-##        message = 'Por favor aguarde.'
-##        progress.create('Progresso', 'A Procurar')
-##        progress.update( percent, 'A Procurar Filmes ...', message, "" )
+        itemstotal = []
+        itemsindividuais = []
 
         if name != '[COLOR yellow]- Top Filmes[/COLOR]':
                 try: xbmcgui.Dialog().notification('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'TFC1.png', 3000, sound=False)
@@ -256,29 +340,52 @@ def TFC_encontrar_fontes_filmes(url):
                 try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'TFC1.png', 3000, sound=False)
                 except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'TFC1.png'))
         
+        #addLink(url,'','','')
         try:
 		html_source = abrir_url(url)
 	except: html_source = ''
 	if name != '[COLOR yellow]- Top Filmes[/COLOR]':
                 items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
+                if not items: items = re.findall("<article(.*?)</article>", html_source, re.DOTALL)
         if name == '[COLOR yellow]- Top Filmes[/COLOR]':
                 items = re.compile("<img alt=\'\' border=\'0\' height=\'72\' src=\'.+?\' width=\'72\'/>\n</a>\n</div>\n<div class=\'item-title\'><a href=\'(.+?)\'>.+?</a></div>\n</div>\n<div style=\'clear: both;\'>").findall(html_source)
 
+        for item in items:
+                urletitulo = re.compile('<a href="(.+?)" class="thumbnail-wrapper" title="(.+?)">').findall(item)
+                itemstotal.append(urletitulo[0][0]+'|'+urletitulo[0][1])
+
         threads = []
         i = 0
-        for item in items:
-                if name != '[COLOR yellow]- Top Filmes[/COLOR]':
-                        i = i + 1
-                        a = str(i)
-                        if i < 10: a = '0'+a
-                        Filmes_TFC = threading.Thread(name='Filmes_TFC', target=Fontes_Filmes_TFC , args=('FILME'+str(a)+'FILME'+item,))
-                if name == '[COLOR yellow]- Top Filmes[/COLOR]':
-                        Filmes_TFC = threading.Thread(name='Filmes_TFC', target=TFC_Menu_Filmes_Top_10 , args=(item,))
+        for it in itemstotal:
+                dads = re.compile('(.+?)[|](.*)').findall(it)
+                i = i + 1
+                a = str(i)
+                if i < 10: a = '0'+a
+                Filmes_TFC = threading.Thread(name='Filmes_TFC'+str(i), target=IFilmes_TFC , args=(str(a),dads[0][0],dads[0][1],itemsindividuais,))
                 threads.append(Filmes_TFC)
-
         [i.start() for i in threads]
-
         [i.join() for i in threads]
+
+        itemsindividuais.sort()
+        #addLink(str(len(itemsindividuais))+str(len(threads)),'','','')
+##        threads = []
+##        i = 0
+##        for itemi in itemsindividuais:
+##                if name != '[COLOR yellow]- Top Filmes[/COLOR]':
+##                        item=re.compile('.+?[|](.+?)[|](.+?)[|](.*)').findall(itemi)
+##                        #addLink(item[0][0],'','','')
+##                        #addLink(item[0][1],'','','')
+##                        i = i + 1
+##                        a = str(i)
+##                        if i < 10: a = '0'+a
+##                        Filmes_TFC = threading.Thread(name='Filmes_TFC'+str(i), target=Fontes_Filmes_TFC , args=(item[0][0],item[0][1],'FILME'+str(a)+'FILME'+item[0][2],))
+##                if name == '[COLOR yellow]- Top Filmes[/COLOR]':
+##                        Filmes_TFC = threading.Thread(name='Filmes_TFC'+str(i), target=TFC_Menu_Filmes_Top_10 , args=(item,))
+##                threads.append(Filmes_TFC)
+##
+##        [i.start() for i in threads]
+##
+##        [i.join() for i in threads]
         
         if name != '[COLOR yellow]- Top Filmes[/COLOR]':
                 _sites_ = ['filmesTFC.txt']
@@ -287,12 +394,14 @@ def TFC_encontrar_fontes_filmes(url):
                 num_filmes = len(threads)
                 for site in _sites_:
                         _filmes_ = []
-                        Filmes_Fi = open(folder + site, 'r')
-                        read_Filmes_File = ''
-                        for line in Filmes_Fi:
-                                read_Filmes_File = read_Filmes_File + line
-                                if line!='':_filmes_.append(line)
-
+##                        Filmes_Fi = open(folder + site, 'r')
+##                        read_Filmes_File = ''
+##                        for line in Filmes_Fi:
+##                                read_Filmes_File = read_Filmes_File + line
+##                                if line!='':_filmes_.append(line)
+                        _filmes_=itemsindividuais
+##                        addLink(str(len(_filmes_)),'','','')
+                        
                         for x in range(len(_filmes_)):
         ##                        _nfil = re.compile('(.+?)NOME[|]').findall(_filmes_[x])
         ##                        if _nfil: nfilme = _nfil[0]
@@ -332,27 +441,20 @@ def TFC_encontrar_fontes_filmes(url):
                                         si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
                                         if si: sinopse = si[0][0] + ' ' + si[0][1]
                                         else: sinopse = '---'
-                                if 'tuga-filmes.info'  in imdbcode: num_mode = 73
+                                if 'tuga-filmes.info' in imdbcode or 'tuga-filmes.com' in imdbcode: num_mode = 73
                                 if nome != '---':
                                         #num_filmes = num_filmes + 1
                                         addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
                                 xbmc.sleep(20)
-                        Filmes_Fi.close()
+##                        Filmes_Fi.close()
 
-##                num_total = num_filmes + 0.0
-##                for a in range(num_filmes):
-##                        percent = int( ( a / num_total ) * 100)
-##                        message = str(a+1) + " de " + str(num_filmes)
-##                        progress.update( percent, 'A Finalizar ...', message, "" )
-##                        xbmc.sleep(20)
-
-                proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
+                proxima = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
+                if not proxima: proxima = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">').findall(html_source)
                 try:
                         addDir("[B]Página Seguinte >>[/B]",proxima[0].replace('&amp;','&'),72,artfolder + 'PAGS1.png','','')
                 except: pass
-##	progress.close()
                 
-def Fontes_Filmes_TFC(item):        
+def Fontes_Filmes_TFC(urlen,titulo,item):        
 
         folder = perfil
         Filmes_File = open(folder + 'filmesTFC.txt', 'w')
@@ -378,13 +480,17 @@ def Fontes_Filmes_TFC(item):
                         assist = re.findall(">ASSISTIR.+?", item, re.DOTALL)
                         if len(assist) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
 			urletitulo = re.compile("<a href=\'(.+?)\' title=\'(.+?)\'>").findall(item)
-			qualidade_ano = re.compile('<b>VERS\xc3\x83O:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
+			if not urletitulo:
+                                nome = titulo
+			qualidade_ano = re.compile('<b>VERS\xc3\x83O.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
 			snpse = re.compile('<b>SINOPSE:.+?</b><span style="font-size: x-small;">(.+?)<').findall(item)
+			if not snpse: snpse = re.compile('<b>SINOPSE:.+?</b><span style="font-size: x-small;">(.+?)</span></p>').findall(item)
 			if snpse: sinopse = snpse[0]
 			else: sinopse = ''
 			thumbnail = re.compile('<img alt="" border="0" src="(.+?)"').findall(item)
+			if not thumbnail: thumbnail = re.compile('src="(.+?)"').findall(item)
 			if thumbnail: thumb = thumbnail[0]
-			print urletitulo,thumbnail
+			#print urletitulo,thumbnail
 			ano = 'Ano'
 			qualidade = ''
 			e_qua = 'nao'
@@ -414,11 +520,11 @@ def Fontes_Filmes_TFC(item):
                                 if qualidade == 'PT PT':
                                         qualidade = 'PT-PT'
                                 if qualidade == '':
-                                        quali_titi = urletitulo[0][1].replace('á','a')
-                                        quali_titi = urletitulo[0][1].replace('é','e')
-                                        quali_titi = urletitulo[0][1].replace('í','i')
-                                        quali_titi = urletitulo[0][1].replace('ó','o')
-                                        quali_titi = urletitulo[0][1].replace('ú','u')
+                                        quali_titi = nome.replace('á','a')
+                                        quali_titi = nome.replace('é','e')
+                                        quali_titi = nome.replace('í','i')
+                                        quali_titi = nome.replace('ó','o')
+                                        quali_titi = nome.replace('ú','u')
                                         quali = re.compile('\w+')
                                         qualid = quali.findall(q_a)
                                         for qua_qua in qualid:
@@ -454,7 +560,7 @@ def Fontes_Filmes_TFC(item):
                                 qualidade = qualidade.replace('Pt Pt','PT-PT')
                         if 'PT PT' in qualidade:
                                 qualidade = qualidade.replace('PT PT','PT-PT')
-                        nome = urletitulo[0][1]
+                        
                         nome = nome.replace('&#8216;',"'")
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
@@ -486,9 +592,20 @@ def Fontes_Filmes_TFC(item):
                         if thumb == '': thumb = '---'
                         if qualidade == '': qualidade = '---'
 			try:
-				if 'ASSISTIR O FILME' in item:
+				if 'ASSISTIR O FILME' not in item:
+                                        addLink(FILMEN,'',thumb,fanart)
+                                        addLink(urlen,'','','')
+                                        addLink(nome,'','','')
+                                        addLink(ano,'','','')
+                                        addLink(qualidade,'','','')
+                                        addLink(thumb,'','','')
+                                        addLink(versao,'','','')
+                                        addLink(fanart,'','','')
+                                        addLink(sinopse,'','','')
+                                        addLink(genero,'','','')
+                                        addLink('------------------','','','')
                                         nome_final = '[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR][COLOR red] (' + qualidade + ')[/COLOR]' + versao
-                                        filmes.append(FILMEN+'NOME|'+str(nome_final)+'|IMDBCODE|'+urletitulo[0][0]+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace('s1600','s320').replace('.gif','.jpg'))+'|ANO|'+str(ano.replace('(','').replace(')',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(qualidade)+'|ONOME|'+str(nome_pesquisa)+'|SINOPSE|'+str(sinopse)+'|END|\n')
+                                        filmes.append(FILMEN+'NOME|'+str(nome_final)+'|IMDBCODE|'+str(urlen)+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb.replace('s1600','s320').replace('.gif','.jpg'))+'|ANO|'+str(ano.replace('(','').replace(')',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(qualidade)+'|ONOME|'+str(nome_pesquisa)+'|SINOPSE|'+str(sinopse)+'|END|\n')
 			except: pass
 		except: pass
 	else: pass
@@ -560,6 +677,7 @@ def TFC_resolve_not_videomega_filmesll(name,url,id_video,conta_id_video,conta_os
 def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart):
         if 'videomega' in url: vidv = url
         url = url + '///' + name
+        #addLink(urltrailer,'','','')
         if "videomega" in url:
 		try:
                         if 'hashkey' in url:
@@ -570,7 +688,7 @@ def TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_i
                                         urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
                                         if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
                         fonte_id = '(Videomega)'
-			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+			addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer + '///' + name,30,iconimage,'',fanart)
 		except: pass
         if "vidto.me" in url:
 		try:
@@ -730,10 +848,14 @@ def TFC_encontrar_videos_filmes(name,url,mvoutv):
                         #addDir1('1','url',1003,artfolder,False,'')
                         #return
                         assistir_fontes = re.findall('>ASSISTIR(.*?)------------------------------', fonte, re.DOTALL)
+                        if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;', fonte, re.DOTALL)
+                        #addLink(str(len(assistir_fontes)),'','','')
+                        #return
                         if assistir_fontes:
                                 for ass_fon in assistir_fontes:
                                         match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
+                                        if not assis: assis = re.compile('ONLINE(.+?)</b><br').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
@@ -764,11 +886,14 @@ def TFC_encontrar_videos_filmes(name,url,mvoutv):
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                                 assistir_fontes = re.findall("------------------------------<br />(.*?)='postmeta'>", fonte, re.DOTALL)
-                                assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
+                                if not assistir_fontes: assistir_fontes = re.findall('&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;(.*?)<div class="views">', fonte, re.DOTALL)
+                                if not assistir_fontes: assistir_fontes = re.findall('&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;(.*?)<div class="clear">', fonte, re.DOTALL)
+                                #assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
                                 conta_id_video = 0
                                 for ass_fon in assistir_fontes:
                                         match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
+                                        if not assis: assis = re.compile('ONLINE(.+?)</b><br').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
@@ -800,10 +925,13 @@ def TFC_encontrar_videos_filmes(name,url,mvoutv):
                                         conta_os_items = conta_os_items + 1
                         else:
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
+                                if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="views">', fonte, re.DOTALL)
+                                if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="clear">', fonte, re.DOTALL)
                                 conta_id_video = 0
                                 for ass_fon in assistir_fontes:
                                         match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
+                                        if not assis: assis = re.compile('ONLINE(.+?)</b><br').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
@@ -834,7 +962,10 @@ def TFC_encontrar_videos_filmes(name,url,mvoutv):
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                 else:
+                        assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="views">', fonte, re.DOTALL)
+                        if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="clear">', fonte, re.DOTALL)
                         match = re.compile('www.videowood(.+?)" target="_blank">.+?[(]Online').findall(fonte)
+                        #if not match: match = re.compile('www.videowood(.+?)" target="_blank">.+?[(]Online').findall(fonte)
                         if not match: match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
                         for url in match:
                                 url = 'http://www.videowood'+url
@@ -845,6 +976,7 @@ def TFC_encontrar_videos_filmes(name,url,mvoutv):
                         #return
                         match = re.compile('<iframe .+? src="(.+?)"').findall(fonte)
                         if match:
+                                
                                 conta_video = len(match)
                                 for url in match:
                                         id_video = ''
@@ -852,8 +984,11 @@ def TFC_encontrar_videos_filmes(name,url,mvoutv):
                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                         else:
-                                match = re.compile("<script type='text/javascript' src='(.+?)'></script>").findall(fonte)
+                                
+                                match = re.compile("<script type='text/javascript' src='(.+?)'></script>").findall(assistir_fontes[0])
+                                if not match: match = re.compile('<script type="text/javascript" src="(.+?)"></script>').findall(assistir_fontes[0])
                                 conta_video = len(match)
+                                #addLink(str(conta_video),'','','')
                                 for url in match:
                                         if 'hashkey' in url:
                                                 id_video = ''
@@ -901,10 +1036,10 @@ def TFC_links(name,url,iconimage,fanart):
         except: fonte = ''
         items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", fonte, re.DOTALL)
         if not items: items = re.findall("<div id='postagem'>(.*?)<div class='postmeta'>", fonte, re.DOTALL)
-	if items != []:
-                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
-                if imdb: imdbcode = imdb[0]
-                else: imdbcode = ''
+##	if items != []:
+##                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
+##                if imdb: imdbcode = imdb[0]
+##                else: imdbcode = ''
         assist = re.findall(">ASSISTIR.+?", fonte, re.DOTALL)
         fontes = re.findall("Ver Aqui.+?", fonte, re.DOTALL)
         numero_de_fontes = len(fontes)
@@ -912,10 +1047,12 @@ def TFC_links(name,url,iconimage,fanart):
 	if fonte:
                 if len(assist) > 1:
                         assistir_fontes = re.findall('>ASSISTIR(.*?)------------------------------', fonte, re.DOTALL)
+                        if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;', fonte, re.DOTALL)
                         if assistir_fontes:
                                 for ass_fon in assistir_fontes:
                                         match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
+                                        if not assis: assis = re.compile('ONLINE(.+?)</b><br').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
@@ -940,11 +1077,14 @@ def TFC_links(name,url,iconimage,fanart):
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                                 assistir_fontes = re.findall("------------------------------<br />(.*?)='postmeta'>", fonte, re.DOTALL)
-                                assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
+                                if not assistir_fontes: assistir_fontes = re.findall('&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;(.*?)<div class="views">', fonte, re.DOTALL)
+                                if not assistir_fontes: assistir_fontes = re.findall('&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;(.*?)<div class="clear">', fonte, re.DOTALL)
+                                #assistir_fontes = re.findall(">ASSISTIR(.*?)<div class", assistir_fontes[0], re.DOTALL)
                                 conta_id_video = 0
                                 for ass_fon in assistir_fontes:
                                         match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
+                                        if not assis: assis = re.compile('ONLINE(.+?)</b><br').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
@@ -970,10 +1110,13 @@ def TFC_links(name,url,iconimage,fanart):
                                         conta_os_items = conta_os_items + 1
                         else:
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
+                                if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="views">', fonte, re.DOTALL)
+                                if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="clear">', fonte, re.DOTALL)
                                 conta_id_video = 0
                                 for ass_fon in assistir_fontes:
                                         match = re.compile('<iframe .+? src="(.+?)"').findall(ass_fon)
                                         assis = re.compile('ONLINE(.+?)</span>').findall(ass_fon)
+                                        if not assis: assis = re.compile('ONLINE(.+?)</b><br').findall(ass_fon)
                                         conta_video = len(match)
                                         if assis:
                                                 if 'LEGENDADO' in assis[0]:
@@ -998,6 +1141,8 @@ def TFC_links(name,url,iconimage,fanart):
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                 else:
+                        assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="views">', fonte, re.DOTALL)
+                        if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="clear">', fonte, re.DOTALL)
                         match = re.compile('www.videowood(.+?)" target="_blank">.+?[(]Online').findall(fonte)
                         if not match: match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
                         for url in match:
@@ -1015,7 +1160,8 @@ def TFC_links(name,url,iconimage,fanart):
                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                         else:
-                                match = re.compile("<script type='text/javascript' src='(.+?)'></script>").findall(fonte)
+                                match = re.compile("<script type='text/javascript' src='(.+?)'></script>").findall(assistir_fontes[0])
+                                if not match: match = re.compile('<script type="text/javascript" src="(.+?)"></script>').findall(assistir_fontes[0])
                                 conta_video = len(match)
                                 for url in match:
                                         if 'hashkey' in url:

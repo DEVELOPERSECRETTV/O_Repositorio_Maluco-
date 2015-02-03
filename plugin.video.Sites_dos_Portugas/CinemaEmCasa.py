@@ -58,10 +58,11 @@ def CMC_Menu_Filmes_Por_Categorias(artfolder):
         print len(html_items_categorias)
         for item_categorias in html_items_categorias:
                 filmes_por_categoria = re.compile("<a dir='ltr' href='(.+?)'>\n(.+?)\n</a>").findall(item_categorias)
+                if not filmes_por_categoria: filmes_por_categoria = re.compile("<a dir='ltr' href='(.+?)'>(.+?)</a>").findall(item_categorias)
                 for endereco_categoria,nome_categoria in filmes_por_categoria:
                         addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria,902,artfolder + 'CMC1.png','nao','')
 
-def CMC_Menu_Filmes_Por_Ano(artfolder):
+def CMC_Menu_Filmes_Por_Ano_antiga(artfolder):
         i = 0
         url_categorias = 'http://www.cinemaemcasa.pt/'
         html_categorias_source = abrir_url(url_categorias)
@@ -80,6 +81,13 @@ def CMC_Menu_Filmes_Por_Ano(artfolder):
                         A = re.compile('(.+?)[|](.+?)[|]').findall(Anos[x])
                         if A:
                                 addDir('[COLOR yellow]' + A[0][0] + '[/COLOR]',A[0][1],902,artfolder + 'FTT1.png','nao','')
+
+def CMC_Menu_Filmes_Por_Ano(artfolder):
+        ano = 2015
+        for x in range(46):
+                categoria_endereco = 'http://www.cinemaemcasa.pt/search/label/' + str(ano)
+                addDir('[COLOR yellow]' + str(ano) + '[/COLOR]',categoria_endereco,902,artfolder + 'TFC1.png','nao','')
+                ano = ano - 1
 
 def CMC_Menu_Filmes_Top_Semanal(artfolder):
         progress = xbmcgui.DialogProgress()
@@ -109,9 +117,19 @@ def CMC_Menu_Filmes_Top_Semanal(artfolder):
                 except: html_source = ''
                 
                 items = re.findall("<h1 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                if not items: items = re.findall("<div class='post bar hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                if not items: items = re.findall("<h1 class='post-title entry-title'>(.+?)<div style='clear: both;'>", html_source, re.DOTALL)
                 if items != []:
-                        
+                        #addLink(str(len(items)),'','','')
+
                         for item in items:
+##                        for itemi in items:
+##                                urletitulo = re.compile("<a href='(.+?)'").findall(itemi)
+##                                #itemstotal.append(urletitulo[0])
+##                                try:
+##                                        html_source_1 = abrir_url(urletitulo[0])
+##                                except: html_source_1 = ''
+##                                item = re.findall("<h1 class='post-title entry-title'>(.+?)<div style='clear: both;'>", html_source_1, re.DOTALL)[0]
                                 
                                 
                                 thumb = ''
@@ -125,6 +143,7 @@ def CMC_Menu_Filmes_Top_Semanal(artfolder):
                                 else: imdbcode = ''
                                 
                                 urltitulo = re.compile("<a href='(.+?)'>\n(.+?)\n</a>").findall(item)
+                                if not urltitulo: urltitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                                 if urltitulo:
                                         urlfilme = urltitulo[0][0]
                                         nome = urltitulo[0][1]
@@ -142,18 +161,23 @@ def CMC_Menu_Filmes_Top_Semanal(artfolder):
                                 sinopse = sinopse.replace('&#39;',"'")
                                 sinopse = sinopse.replace('&amp;','&')
                                 
-                                gen = re.compile('nero: </span><span style="color: white;">(.+?)</span></b></span>').findall(item)
+                                gen = re.compile('nero: </span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                                if not gen: gen = re.compile('nero.+?</span>(.+?)</b></span></div>').findall(item)
                                 if gen: genero = gen[0]
                                 
-                                qualidade = re.compile("<strong>Qualidade:</strong>(.+?)</div>").findall(item)
+                                qualidade = re.compile("<strong>Qualidade.+?</strong>(.+?)</div>").findall(item)
+                                if not qualidade: qualidade = re.compile('Qualidade.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                                if not qualidade: qualidade = re.compile('Qualidade.+?</span>(.+?)</b></span></div>').findall(item)
                                 if qualidade: qualidade_filme = qualidade[0].replace('&#8211;',"-")
                                 else: qualidade_filme = ''
 
-                                audio = re.compile('Audio: </span><span style="color: white;">(.+?)</span></b></span>').findall(item)
+                                audio = re.compile('Audio.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                                if not audio: audio = re.compile('Audio.+?</span>(.+?)</b></span></div>').findall(item)
                                 if audio and qualidade_filme == '': qualidade_filme = audio[0]
                                         
-                                ano = re.compile('>Ano: </span><span style="color: white;">(.+?)</span></b></span>').findall(item)
-                                if ano: ano_filme = ano[0]
+                                ano = re.compile('>Ano.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                                if not ano: ano = re.compile('>Ano.+?</span>(.+?)</b></span></div>').findall(item)
+                                if ano: ano_filme = ano[0].replace('<u>','').replace('</u>','')
                                 else: ano_filme = ''
                                 
                                 thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
@@ -259,10 +283,18 @@ def CMC_encontrar_fontes_filmes(url):
 		html_source = abrir_url(url)
 	except: html_source = ''
 	items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<div class='post bar hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)	
 	if items != []:
-		print len(items)
+                print len(items)
 		num = len(items) + 0.0
-		for item in items:
+                for itemi in items:
+                        urletitulo = re.compile("<a href='(.+?)'").findall(itemi)
+                        #itemstotal.append(urletitulo[0])
+                        try:
+                                html_source_1 = abrir_url(urletitulo[0])
+                        except: html_source_1 = ''
+                        item = re.findall("<h1 class='post-title entry-title'>(.+?)<div style='clear: both;'>", html_source_1, re.DOTALL)[0]
+
                         percent = int( ( i / num ) * 100)
                         message = str(i) + " de " + str(len(items))
                         progress.update( percent, "", message, "" )
@@ -281,6 +313,7 @@ def CMC_encontrar_fontes_filmes(url):
                         else: imdbcode = ''
                         
                         urltitulo = re.compile("<a href='(.+?)'>\n(.+?)\n</a>").findall(item)
+                        if not urltitulo: urltitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if urltitulo:
                                 urlfilme = urltitulo[0][0]
                                 nome = urltitulo[0][1]
@@ -298,17 +331,22 @@ def CMC_encontrar_fontes_filmes(url):
                         sinopse = sinopse.replace('&#39;',"'")
                         sinopse = sinopse.replace('&amp;','&')
                         
-                        gen = re.compile('nero: </span><span style="color: white;">(.+?)</span></b></span>').findall(item)
+                        gen = re.compile('nero: </span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                        if not gen: gen = re.compile('nero.+?</span>(.+?)</b></span></div>').findall(item)
                         if gen: genero = gen[0]
                         
-                        qualidade = re.compile("<strong>Qualidade:</strong>(.+?)</div>").findall(item)
+                        qualidade = re.compile("<strong>Qualidade.+?</strong>(.+?)</div>").findall(item)
+                        if not qualidade: qualidade = re.compile('Qualidade.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                        if not qualidade: qualidade = re.compile('Qualidade.+?</span>(.+?)</b></span></div>').findall(item)
                         if qualidade: qualidade_filme = qualidade[0].replace('&#8211;',"-")
                         else: qualidade_filme = ''
 
-                        audio = re.compile('Audio: </span><span style="color: white;">(.+?)</span></b></span>').findall(item)
+                        audio = re.compile('Audio.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                        if not audio: audio = re.compile('Audio.+?</span>(.+?)</b></span></div>').findall(item)
                         if audio and qualidade_filme == '': qualidade_filme = audio[0]
                                 
-                        ano = re.compile('>Ano: </span><span style="color: white;">(.+?)</span></b></span>').findall(item)
+                        ano = re.compile('>Ano.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                        if not ano: ano = re.compile('>Ano.+?</span>(.+?)</b></span></div>').findall(item)
                         if ano: ano_filme = ano[0]
                         else: ano_filme = ''
                         
@@ -504,6 +542,7 @@ def CMC_encontrar_videos_filmes(name,url,mvoutv):
         except: fonte_video = ''
         
         fontes_video = re.findall("<div class='post-body entry-content'>(.+?)<div class='post-footer'>", fonte_video, re.DOTALL)
+        if not fontes_video: fontes_video = re.findall("<h1 class='post-title entry-title'>(.+?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         if imdbcode == '':
                 imdb = re.compile('imdb.com/title/(.+?)/').findall(fonte_video)
                 if imdb: imdbcode = imdb[0]
@@ -705,6 +744,7 @@ def CMC_links(name,url,iconimage,fanart):
         except: fonte_video = ''
         
         fontes_video = re.findall("<div class='post-body entry-content'>(.+?)<div class='post-footer'>", fonte_video, re.DOTALL)
+        if not fontes_video: fontes_video = re.findall("<h1 class='post-title entry-title'>(.+?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         if imdbcode == '':
                 imdb = re.compile('imdb.com/title/(.+?)/').findall(fonte_video)
                 if imdb: imdbcode = imdb[0]

@@ -201,6 +201,8 @@ def pesquisar():
                         except: html_source = ''
                         i = 0
                         items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                        if not items: items = re.findall("<div class='post bar hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                        if not items: items = re.findall("<h1 class='post-title entry-title'>(.+?)<div style='clear: both;'>", html_source, re.DOTALL)
                         for item in items:
                                 i = i + 1
                                 a = str(i)
@@ -1321,6 +1323,7 @@ def encontrar_fontes_pesquisa_CMC(url,pesquisou,FS,item):
                         else: imdbcode = ''
                         
                         urltitulo = re.compile("<a href='(.+?)'>\n(.+?)\n</a>").findall(item)
+                        if not urltitulo: urltitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if urltitulo:
                                 urlfilme = urltitulo[0][0]
                                 nome = urltitulo[0][1]
@@ -1338,17 +1341,22 @@ def encontrar_fontes_pesquisa_CMC(url,pesquisou,FS,item):
                         sinopse = sinopse.replace('&#39;',"'")
                         sinopse = sinopse.replace('&amp;','&')
                         
-                        gen = re.compile('nero: </span><span style="color: white;">(.+?)</span></b></span>').findall(item)
+                        gen = re.compile('nero: </span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                        if not gen: gen = re.compile('nero.+?</span>(.+?)</b></span></div>').findall(item)
                         if gen: genero = gen[0]
                         
-                        qualidade = re.compile("<strong>Qualidade:</strong>(.+?)</div>").findall(item)
+                        qualidade = re.compile("<strong>Qualidade.+?</strong>(.+?)</div>").findall(item)
+                        if not qualidade: qualidade = re.compile('Qualidade.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                        if not qualidade: qualidade = re.compile('Qualidade.+?</span>(.+?)</b></span></div>').findall(item)
                         if qualidade: qualidade_filme = qualidade[0].replace('&#8211;',"-")
                         else: qualidade_filme = ''
 
-                        audio = re.compile('Audio: </span><span style="color: white;">(.+?)</span></b></span>').findall(item)
+                        audio = re.compile('Audio.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                        if not audio: audio = re.compile('Audio.+?</span>(.+?)</b></span></div>').findall(item)
                         if audio and qualidade_filme == '': qualidade_filme = audio[0]
                                 
-                        ano = re.compile('>Ano: </span><span style="color: white;">(.+?)</span></b></span>').findall(item)
+                        ano = re.compile('>Ano.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
+                        if not ano: ano = re.compile('>Ano.+?</span>(.+?)</b></span></div>').findall(item)
                         if ano: ano_filme = ano[0]
                         else: ano_filme = ''
                         

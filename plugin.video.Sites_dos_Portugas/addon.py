@@ -56,6 +56,8 @@ resultos = []
 resul = []
 resulo = []
 _imdbcode_ = []
+itemstotal = []
+itemsindividuais = []
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
@@ -195,6 +197,7 @@ def TFCONOFF(url_TFC):
 		html_source = abrir_url(url_TFC)
 	except: html_source = ''
 	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<article(.*?)</article>", html_source, re.DOTALL)
 	if items != []: TFC_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: TFC_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 def MVTONOFF(url_MVT):
@@ -239,6 +242,7 @@ def CMCONOFF(url_CMC):
 		html_source = abrir_url(url_CMC)
 	except: html_source = ''
 	items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<div class='post bar hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
 	if items != []: CMC_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: CMC_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 	#########################################
@@ -333,7 +337,7 @@ def qualtodos(name):
 def chamaUltimos(name):
         if name == 'TFV' or name == 'TODOS': url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
         else: url_TFV = 'http:'
-        if name == 'TFC' or name == 'TODOS': url_TFC = 'http://www.tuga-filmes.info/'
+        if name == 'TFC' or name == 'TODOS': url_TFC = 'http://www.tuga-filmes.com/'#'http://www.tuga-filmes.info/'
         else: url_TFC = 'http:'
         if name == 'MVT' or name == 'TODOS': url_MVT = 'http://www.movie-tuga.blogspot.pt'
         else: url_MVT = 'http:'
@@ -403,6 +407,9 @@ def dirtodos(url):
         url_CME = urls[0][6]
         url_CMC = urls[0][4]
 
+        itemstotal = []
+        itemsindividuais = []
+
         threads = []
         i = 0
         try:
@@ -470,19 +477,33 @@ def dirtodos(url):
                         html_source = abrir_url(url_TFC)
                 except: html_source = ''
                 itemsTFC = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
+                if not itemsTFC: itemsTFC = re.findall("<article(.*?)</article>", html_source, re.DOTALL)
+                for item in itemsTFC:
+                        urletitulo = re.compile('<a href="(.+?)" class="thumbnail-wrapper" title="(.+?)">').findall(item)
+                        itemstotal.append(urletitulo[0][0]+'|'+urletitulo[0][1])
+
+                for it in itemstotal:
+                        dads = re.compile('(.+?)[|](.*)').findall(it)
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        TFC = threading.Thread(name='TFC'+str(i), target=Mashup.TFCMASHUP , args=(str(a),dads[0][0],dads[0][1],itemsindividuais,))
+                        threads.append(TFC)
+                
                 if itemsTFC != []:
                         try:
-                                proxima_TFC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
+                                proxima_TFC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)
+                                if not proxima_TFC: proxima_TFC = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">').findall(html_source)
                                 url_TFC = proxima_TFC[0].replace('&amp;','&')
                         except: pass
                 else: url_TFC = 'http:'
 
-                for item in itemsTFC:
-                        i = i + 1
-                        a = str(i)
-                        if i < 10: a = '0'+a
-                        TFC = threading.Thread(name='TFC'+str(i), target=Mashup.TFCMASHUP , args=('FILME'+str(a)+'FILME'+item,))
-                        threads.append(TFC)
+##                for item in itemsTFC:
+##                        i = i + 1
+##                        a = str(i)
+##                        if i < 10: a = '0'+a
+##                        TFC = threading.Thread(name='TFC'+str(i), target=Mashup.TFCMASHUP , args=('FILME'+str(a)+'FILME'+item,))
+##                        threads.append(TFC)
         except: pass
         i = 0
         try:
@@ -553,7 +574,21 @@ def dirtodos(url):
                 try:
                         html_source = abrir_url(url_CMC)
                 except: html_source = ''
+                itemstotal=[]
                 itemsCMC = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                if not itemsCMC: itemsCMC = re.findall("<div class='post bar hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                for item in itemsCMC:
+                        urletitulo = re.compile("<a href='(.+?)'").findall(item)
+                        #itemstotal.append(urletitulo[0])
+                        try:
+                                html_source_1 = abrir_url(urletitulo[0])
+                        except: html_source_1 = ''
+                        items = re.findall("<h1 class='post-title entry-title'>(.+?)<div style='clear: both;'>", html_source_1, re.DOTALL)[0]
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        CMC = threading.Thread(name='CMC'+str(i), target=Mashup.CMCMASHUP , args=('FILME'+str(a)+'FILME'+items,))
+                        threads.append(CMC)
                 if itemsCMC != []:
                         proxima_CMC = re.compile("<a class=\'blog-pager-older-link\' href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_source)	
                         try:
@@ -561,12 +596,12 @@ def dirtodos(url):
                         except: pass
                 else: url_CMC = 'http:'
 
-                for item in itemsCMC:
-                        i = i + 1
-                        a = str(i)
-                        if i < 10: a = '0'+a
-                        CMC = threading.Thread(name='CMC'+str(i), target=Mashup.CMCMASHUP , args=('FILME'+str(a)+'FILME'+item,))
-                        threads.append(CMC)
+##                for item in itemsCMC:
+##                        i = i + 1
+##                        a = str(i)
+##                        if i < 10: a = '0'+a
+##                        CMC = threading.Thread(name='CMC'+str(i), target=Mashup.CMCMASHUP , args=('FILME'+str(a)+'FILME'+item,))
+##                        threads.append(CMC)
         except: pass
 
         [i.start() for i in threads]
@@ -627,7 +662,7 @@ def dirtodos(url):
                                 if 'toppt.net'         in imdbcode:
                                         num_mode = 233
                                         site = 'TPT'
-                                if 'tuga-filmes.info'  in imdbcode:
+                                if 'tuga-filmes.info'  in imdbcode or 'tuga-filmes.com'  in imdbcode:
                                         num_mode = 73
                                         site = 'TFC'
                                 if 'tuga-filmes.us'    in imdbcode:
@@ -655,7 +690,7 @@ def dirtodos(url):
                                         #addDir_trailer1_filmes(nome,imdbcode,7,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
                                 else:
                                         if 'toppt.net'         in P_url: url_TPT = P_url
-                                        if 'tuga-filmes.info'  in P_url: url_TFC = P_url
+                                        if 'tuga-filmes.info'  in P_url or 'tuga-filmes.com'  in P_url: url_TFC = P_url
                                         if 'tuga-filmes.us'    in P_url: url_TFV = P_url
                                         if 'cinematuga.eu'     in P_url: url_CME = P_url
                                         if 'cinematuga.net'    in P_url: url_CMT = P_url
@@ -3739,7 +3774,9 @@ def INDEX(url,name):
                 i = i + 1
         indexservidores = xbmcgui.Dialog().select
         index = indexservidores('Escolha o Stream', _nomeservidor_)
-        if index > -1: Play.PLAY_episodes(_linkservidor_[index],name,iconimage,'',fanart)
+        if index > -1:
+                if 'Videomega' in _nomeservidor_[index]: name=str(name)+'(Videomega)'
+                Play.PLAY_episodes(_linkservidor_[index],name,iconimage,'',fanart)
 ##                item = xbmcgui.ListItem(path=_linkservidor_[index])
 ##                item.setProperty("IsPlayable", "true")
 ##                xbmc.Player().play('plugin://plugin.video.Sites_dos_Portugas/?url='+_linkservidor_[index]+'&mode=6000&name='+name+'&iconimage='+iconimage+'&checker='+checker+'&fanart='+fanart, item)

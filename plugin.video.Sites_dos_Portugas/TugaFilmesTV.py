@@ -1460,7 +1460,7 @@ def TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_hr
         if "videomega" in url:
 		try:
                         url = 'http://videomega.tv/iframe.php?ref=' + id_video #+ '///' + name
-                        fonte_id ='(Videomega)'+urltrailer
+                        fonte_id ='(Videomega)'+url#trailer
                         print url
 			#addDir('[COLOR blue]' + nome_cada_episodio + '[/COLOR][B] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
@@ -1724,8 +1724,9 @@ def TFV_encontrar_videos_series(name,url):
                                 qq_aa = a_q.findall(episodio)
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) == 1:
-                                                episodiot = '0'+episodio                                        
-
+                                                episodiot = '0'+episodio
+                                                
+                                if "videomega" in url: fonte_id = '(Videomega)'+not_videomega_video_url[0]
                                 if f_id == '': f_id = fonte_id
                                 else: f_id = f_id + '|' + fonte_id
                                 
@@ -2055,7 +2056,8 @@ def TFV_encontrar_videos_series1(name,url):
                                 for q_a_q_a in qq_aa:
                                         if len(q_a_q_a) == 1:
                                                 episodiot = '0'+episodio
-
+                                                
+                                if "videomega" in url: fonte_id = '(Videomega)'+not_videomega_video_url[0]
                                 if f_id == '': f_id = fonte_id
                                 else: f_id = f_id + '|' + fonte_id
 
@@ -2283,7 +2285,8 @@ def TFV_Ultimos(fanart,name,url,item,tvdbid,n_items):
                                                         except:pass
                                                                                         
                                         except:pass
-
+                                        
+                                        if "videomega" in url: fonte_id = '(Videomega)'+not_videomega_video_url[0]
                                         if f_id == '': f_id = fonte_id
                                         else: f_id = f_id + '|' + fonte_id
 

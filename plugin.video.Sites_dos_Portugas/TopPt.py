@@ -984,12 +984,12 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
                 if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-serie' not in nometitulo and 'Minisérie' not in nometitulo and 'Miniserie' not in nometitulo:
-                        newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
+                        newmatch = re.findall('<span id=.+?DOWNLOAD POR',link2,re.DOTALL)
                         l=1
                 else:
                         #newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
-                        newmatch1 = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
-                        newmatch = re.findall('<img style="height: 90px; width: 200px;".+?DOWNLOAD',link2,re.DOTALL)
+                        newmatch1 = re.findall('<span id=.+?DOWNLOAD POR',link2,re.DOTALL)
+                        newmatch = re.findall('<img style="height: 90px; width: 200px;".+?DOWNLOAD POR',link2,re.DOTALL)
                         l=5
                 if not newmatch:
                         newmatch = re.findall('<span id=.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
@@ -1074,11 +1074,15 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                 if newmatch:
                         if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-serie' not in nometitulo and 'Minisérie' not in nometitulo and 'Miniserie' not in nometitulo:
                                 match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(newmatch[0])
+                                if not match: match = re.compile('src="(.+?)"').findall(newmatch[0])
+                                #addLink(str(len(match)),'','','')
                                 for url in match:
+                                        #addLink(url,'','','')
                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                 conta_id_video = conta_id_video + 1
                                                 conta_os_items = conta_os_items + 1
                                                 TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                        
                         else:
                                 lin = re.findall('.+?EPIS',newmatch1[0],re.DOTALL)
                                 num = len(lin) + 0.0 - 1
@@ -2336,12 +2340,12 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
                 if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-serie' not in nometitulo and 'Minisérie' not in nometitulo and 'Miniserie' not in nometitulo:
-                        newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
+                        newmatch = re.findall('<span id=.+?DOWNLOAD POR',link2,re.DOTALL)
                         l=1
                 else:
                         #newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
-                        newmatch1 = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
-                        newmatch = re.findall('<img style="height: 90px; width: 200px;".+?DOWNLOAD',link2,re.DOTALL)
+                        newmatch1 = re.findall('<span id=.+?DOWNLOAD POR',link2,re.DOTALL)
+                        newmatch = re.findall('<img style="height: 90px; width: 200px;".+?DOWNLOAD POR',link2,re.DOTALL)
                         l=5
                 if not newmatch:
                         newmatch = re.findall('<span id=.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
@@ -2378,6 +2382,7 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                 if newmatch:
                         if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-serie' not in nometitulo and 'Minisérie' not in nometitulo and 'Miniserie' not in nometitulo:
                                 match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(newmatch[0])
+                                if not match: match = re.compile('src="(.+?)"').findall(newmatch[0])
                                 for url in match:
                                         if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
                                                 conta_id_video = conta_id_video + 1
@@ -3095,7 +3100,7 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
                                 url = url + '///' + nomeescolha
                         fonte_id = '(Video.tt)'+url
                         if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
-                                addDir('1[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',url,30,iconimage,'',fanart)
     		except:pass
     	if "videowood" in url:
                 try:
@@ -3567,6 +3572,7 @@ def TPT_Ultimos(name,url,iconimage,fanart,item):
                                                 conta_id_video = conta_id_video + 1
                                                 conta_os_items = conta_os_items + 1
                                                 fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                if "videomega" in url: fonte_id = '(Videomega)'+urltrailer
                                                 if f_id == '': f_id = fonte_id
                                                 else: f_id = f_id + '|' + fonte_id
                                 match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(linkseries[0][1])
@@ -3575,6 +3581,7 @@ def TPT_Ultimos(name,url,iconimage,fanart,item):
                                                 conta_id_video = conta_id_video + 1
                                                 conta_os_items = conta_os_items + 1
                                                 fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                if "videomega" in url: fonte_id = '(Videomega)'+urltrailer
                                                 if f_id == '': f_id = fonte_id
                                                 else: f_id = f_id + '|' + fonte_id
                                 match = re.compile('"window.open(.+?)"').findall(linkseries[0][1])
@@ -3584,6 +3591,7 @@ def TPT_Ultimos(name,url,iconimage,fanart,item):
                                                 url = url.replace("'","").replace("(","").replace(")","")
                                                 conta_os_items = conta_os_items + 1
                                                 fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                if "videomega" in url: fonte_id = '(Videomega)'+urltrailer
                                                 if f_id == '': f_id = fonte_id
                                                 else: f_id = f_id + '|' + fonte_id
                                 try:
