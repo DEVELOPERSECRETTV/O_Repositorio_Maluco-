@@ -615,8 +615,10 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(ordem,urle,titulo,pesquisou,imdb
                                 try:
                                         try:qualidade = cleanTitle(re.compile('<b>VERS\xc3\x83O.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
                                         except:
-                                                try:qualidade = cleanTitle(re.compile('<b>Vers\xc3\x83o.+?</b>(.+?)\n').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
-                                                except: qualidade = ''
+                                                try:qualidade = cleanTitle(re.compile('<b>Versão.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
+                                                except: 
+                                                        try:qualidade = cleanTitle(re.compile('<b>Vers\xc3\x83o.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
+                                                        except: qualidade = ''
                                         #addLink(qualidade+nome,'','','')
                                         tn = re.compile('\w+')
                                         tt = tn.findall(nome)
@@ -643,16 +645,16 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(ordem,urle,titulo,pesquisou,imdb
                                 try:thumb = re.compile('<img.+?src="(.+?)"').findall(item)[0]
                                 except:thumb=''
 
-                        ##	nnnn = re.compile('(.+?)[[].+?[]]').findall(titulo)
-                        ##        #if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
-                        ##        #if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
-                        ##        if nnnn: nome_pesquisa = nnnn[0]
-                        ##        else: nome_pesquisa = titulo
+                        	nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
+                                #if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+                                #if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
+                                if nnnn: nome_pesquisa = nnnn[0]
+                                else: nome_pesquisa = nome
                         ##        try:fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano)
                         ##        except: fanart = '';tmdb_id='';poster=''
                         ##        if thumb == '':thumb = poster
-                                if ano == '': ano = '---'
-                                if imdbcode == '':
+                                if ano == '': ano = ''
+                                if imdbcode == '---':
                                         conta = 0
                                         nome_pesquisa = nome_pesquisa.replace('é','e')
                                         nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -680,11 +682,12 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(ordem,urle,titulo,pesquisou,imdb
                                         url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
                                         html_imdbcode = abrir_url(url_imdb)
                                         filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                                        imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                                        imdbcode = imdbcd[0]
+                                        if filmes_imdb:
+                                                imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                                imdbcode = imdbcd[0]
                                 
                                 try:
-                                        if imdbc != '' and imdbcode != '' and 'BREVEMENTE' not in item:
+                                        if imdbc != '' and imdbcode != '':
                                                 if imdbcode == imdbc:
                                                         nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
                                                         if not nnnn: nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
@@ -704,7 +707,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(ordem,urle,titulo,pesquisou,imdb
                                                         TFC_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',urle+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                         num_f = num_f + 1
                                         else:
-                                                if 'BREVEMENTE' not in item:
+                                                try:
                                                         nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
                                                         if not nnnn: nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
                                                         if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
@@ -722,6 +725,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(ordem,urle,titulo,pesquisou,imdb
                                                         #addDir1(name,'url',1001,iconimage,False,fanart)
                                                         TFC_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',urle+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                         num_f = num_f + 1
+                                                except: pass
                                 except: pass
                         except: pass
         else: return
@@ -1001,8 +1005,9 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_MVT(FILMEN,url,pesquisou,imdbc,ite
                                         url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
                                         html_imdbcode = abrir_url(url_imdb)
                                         filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                                        imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                                        if imdbcd: imdbcode = imdbcd[0]
+                                        if filmes_imdb:
+                                                imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                                if imdbcd: imdbcode = imdbcd[0]
                                 
                                 try:
                                         if imdbc != '' and imdbcode != '':
@@ -1904,8 +1909,9 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(FILMEN,url,pesquisou,imdbc,item)
                                 url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
                                 html_imdbcode = abrir_url(url_imdb)
                                 filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                                imdb_c = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                                if imdb_c: imdbcode = imdb_c[0]
+                                if filmes_imdb:
+                                        imdb_c = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                        if imdb_c: imdbcode = imdb_c[0]
                         
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
@@ -6021,7 +6027,7 @@ def abrir_url_tommy(url,referencia,form_data=None,erro=True):
 		return "Erro"
 	
 def videomega_resolver(referer):
-        #referer='http://toppt.net/penguins-of-madagascar-os-pinguins-de-madagascar/'
+        ref = '---'
 	html = abrir_url(referer)
 	if re.search('http://videomega.tv/iframe.js',html):
 		lines = html.splitlines()
@@ -6048,14 +6054,32 @@ def videomega_resolver(referer):
                                                 iframe = re.compile('"http://videomega.tv/cdn.php\?(.+?)"').findall(html)[0] + '&'
                                                 ref = re.compile('ref=(.+?)&').findall(iframe)[0]
                                         except:
-                                                iframe = re.compile('<iframe.+?src=http://videomega.tv/cdn.php\?(.+?) frameborder.+?</iframe>').findall(html)[0] + '&'
-                                                ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+                                                try:
+                                                        iframe = re.compile('<iframe.+?src=http://videomega.tv/cdn.php\?(.+?) frameborder.+?</iframe>').findall(html)[0] + '&'
+                                                        ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+                                                except:
+                                                        try:
+                                                                #iframe = re.compile('=(.*)').findall(referer)[0] + '&'
+                                                                ref = re.compile('=(.*)').findall(referer)[0]
+                                                        except: pass
+
+        if '+link+' in ref: ref = re.compile('=(.*)').findall(referer)[0]
+
+        if ref=='---':
+                url = 'http://videomega.tv/validatehash.php?hashkey='+hashk
+                ref_data={'Host':'videomega.tv',
+			  'Connection':'Keep-alive',
+			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+			  'Referer':referer}
+                ref = re.compile('ref="(.+?)"').findall(abrir_url_tommy(url,ref_data))[0]
 	
 	ref_data={'Host':'videomega.tv',
 			  'Connection':'Keep-alive',
 			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
 			  'Referer':referer}
+	
 	url = 'http://videomega.tv/iframe.php?ref=' + ref
 	iframe_html = abrir_url_tommy(url,ref_data)
 	code = re.compile('document.write\(unescape\("(.+?)"\)\)\;').findall(iframe_html)

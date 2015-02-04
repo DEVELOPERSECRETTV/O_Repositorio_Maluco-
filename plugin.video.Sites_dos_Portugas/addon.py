@@ -1513,10 +1513,17 @@ def WlinksF(url):
                 xbmc.sleep(12)
                 
         if 'onclick="paginationScroll();"' in html_source:
-                pags = re.compile('p=(.+?)&order').findall(pgat)
+                pags = re.compile('p=(.+?)&order').findall(pgat)#
+                #if pags: addLink(pags[0],'','','')
                 if pags:
-                        numpag = int(pags[0]) + 1
-                        pseg = pgat.replace('p='+pags[0]+'&order','p='+str(numpag)+'&order')
+                        if '&mediaType=movies' in pags[0]:
+                                pagsi = pags[0].replace('&mediaType=movies','')
+                                pagsii = '&mediaType=movies'
+                        else:
+                                pagsi = pags[0]
+                                pagsii = ''
+                        numpag = int(pagsi) + 1
+                        pseg = pgat.replace('p='+pagsi+pagsii+'&order','p='+str(numpag)+pagsii+'&order')
                         addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pseg,30000,artfolder + 'PAGS1.png','','')
 
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')

@@ -283,9 +283,11 @@ def IFilmes_TFC(ordem,urle,titulo,itemsindividuais):
 	try:
                 try:qualidade = cleanTitle(re.compile('<b>VERS\xc3\x83O.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
                 except:
-                        try:qualidade = cleanTitle(re.compile('<b>Vers\xc3\x83o.+?</b>(.+?)\n').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
-                        except: qualidade = ''
-                #addLink(qualidade+nome,'','','')
+                        try:qualidade = cleanTitle(re.compile('<b>Vers\xc3\x83.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
+                        except:
+                                try:qualidade = cleanTitle(re.compile('<b>Versão.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
+                                except: qualidade = ''
+                #if 'Versão' in html_source: addLink(qualidade+nome,'','','')
                 tn = re.compile('\w+')
                 tt = tn.findall(nome)
                 for tt_tt in tt:
@@ -319,7 +321,7 @@ def IFilmes_TFC(ordem,urle,titulo,itemsindividuais):
         try:fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano)
         except: fanart = '';tmdb_id='';poster=''
         if thumb == '':thumb = poster
-	if ano == '': ano = '---'
+	if ano == '': ano = ''
 
 	#addLink(nome+'-'+ano+'-'+qualidade+'-'+sinopse,'',poster,fanart)
 	#itemsindividuais.append(str(ordem)+'|'+urle+'|'+titulo+'|'+str(item))

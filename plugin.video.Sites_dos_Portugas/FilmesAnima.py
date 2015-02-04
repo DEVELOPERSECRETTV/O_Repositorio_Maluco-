@@ -141,6 +141,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
                         i=0
                         items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
                         if not items: items = re.findall("<article(.*?)</article>", html_source, re.DOTALL)
+                        #addLink(str(len(items)),'','','')
                         for item in items:
                                 urletitulo = re.compile('<a href="(.+?)" class="thumbnail-wrapper" title="(.+?)">').findall(item)
                                 itemstotal.append(urletitulo[0][0]+'|'+urletitulo[0][1])
@@ -428,8 +429,10 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(ordem,urle,titulo,pesquisou,imdb
 	try:
                 try:qualidade = cleanTitle(re.compile('<b>VERS\xc3\x83O.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
                 except:
-                        try:qualidade = cleanTitle(re.compile('<b>Vers\xc3\x83o.+?</b>(.+?)\n').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
-                        except: qualidade = ''
+                        try:qualidade = cleanTitle(re.compile('<b>Versão.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
+                        except: 
+                                try:qualidade = cleanTitle(re.compile('<b>Vers\xc3\x83o.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
+                                except: qualidade = ''
                 #addLink(qualidade+nome,'','','')
                 tn = re.compile('\w+')
                 tt = tn.findall(nome)
@@ -456,17 +459,17 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(ordem,urle,titulo,pesquisou,imdb
 	try:thumb = re.compile('<img.+?src="(.+?)"').findall(item)[0]
 	except:thumb=''
 
-##	nnnn = re.compile('(.+?)[[].+?[]]').findall(titulo)
-##        #if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
-##        #if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
-##        if nnnn: nome_pesquisa = nnnn[0]
-##        else: nome_pesquisa = titulo
+	nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
+        #if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
+        #if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome)
+        if nnnn: nome_pesquisa = nnnn[0]
+        else: nome_pesquisa = nome
 ##        try:fanart,tmdb_id,poster = themoviedb_api().fanart_and_id(nome_pesquisa,ano)
 ##        except: fanart = '';tmdb_id='';poster=''
 ##        if thumb == '':thumb = poster
-	if ano == '': ano = '---'
+	if ano == '': ano = ''
 
-	if imdbcode == '':
+	if imdbcode == '---':
                 conta = 0
                 nome_pesquisa = nome_pesquisa.replace('é','e')
                 nome_pesquisa = nome_pesquisa.replace('ê','e')
@@ -493,12 +496,13 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(ordem,urle,titulo,pesquisou,imdb
                                 nome_p = nome_p + '+' + q_a_q_a
                 url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
                 html_imdbcode = abrir_url(url_imdb)
-                filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                imdbcode = imdbcd[0]
+                filmes_imdb = re.findall('<div class="findSection">(.*?)<td class="result_text">', html_imdbcode, re.DOTALL)
+                if filmes_imdb:
+                        imdbcd = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                        imdbcode = imdbcd[0]
                                 
         try:
-                if imdbc != '' and imdbcode != '' and 'BREVEMENTE' not in item:
+                if imdbc != '' and imdbcode != '':
                         if imdbcode == imdbc:
                                 nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
                                 if not nnnn: nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
@@ -517,7 +521,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(ordem,urle,titulo,pesquisou,imdb
                                 TugaFilmesCom.TFC_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',urle+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
                                                         
                 else:
-                        if 'BREVEMENTE' not in item:
+                        try:
                                 nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
                                 if not nnnn: nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
                                 if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
@@ -533,7 +537,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(ordem,urle,titulo,pesquisou,imdb
                                 iconimage = thumb.replace('s1600','s320').replace('.gif','.jpg')
                                 addDir1(name,'url',1001,iconimage,False,fanart)
                                 TugaFilmesCom.TFC_links('[B][COLOR green]' + nome  + '[/COLOR][/B][COLOR yellow] (' + ano + ')[/COLOR]',urle+'IMDB'+imdbcode+'IMDB',iconimage,fanart)
-                                                        
+                        except: pass                            
         except: pass
 
 def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC_antiga(FILMEN,url,pesquisou,imdbc,item):
@@ -1790,8 +1794,9 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CMC(FILMEN,url,pesquisou,imdbc,item)
                                 url_imdb = 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + nome_p + '&s=all#tt'
                                 html_imdbcode = abrir_url(url_imdb)
                                 filmes_imdb = re.findall('<div class="findSection">(.*?)<div class="findMoreMatches">', html_imdbcode, re.DOTALL)
-                                imdb_c = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
-                                if imdb_c: imdbcode = imdb_c[0]
+                                if filmes_imdb:
+                                        imdb_c = re.compile('/title/(.+?)/[?]ref').findall(filmes_imdb[0])
+                                        if imdb_c: imdbcode = imdb_c[0]
                         
                         if genero == '': genero = '---'
                         if sinopse == '': sinopse = '---'
