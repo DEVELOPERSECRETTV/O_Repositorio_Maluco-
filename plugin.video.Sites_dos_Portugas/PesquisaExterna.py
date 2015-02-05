@@ -6081,6 +6081,7 @@ def videomega_resolver(referer):
 			  'Referer':referer}
 	
 	url = 'http://videomega.tv/iframe.php?ref=' + ref
+	url = 'http://videomega.tv/cdn.php?ref='+ref
 	iframe_html = abrir_url_tommy(url,ref_data)
 	code = re.compile('document.write\(unescape\("(.+?)"\)\)\;').findall(iframe_html)
 	id = re.compile('<div id="(.+?)" name="adblock"').findall(iframe_html)[0]

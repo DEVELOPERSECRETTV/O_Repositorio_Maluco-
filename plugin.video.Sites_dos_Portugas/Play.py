@@ -1972,6 +1972,7 @@ def PLAY_episodes(url,name,iconimage,checker,fanart):#,nomeAddon):
                         #addLink(url,url,'')
     		except:pass
     	elif "videowood" in url:
+                #addLink(url,'','','')
                 try:
                         iframe_url = url
 			print iframe_url
@@ -2104,7 +2105,7 @@ def abrir_url_tommy(url,referencia,form_data=None,erro=True):
 	
 def videomega_resolver(referer):
         #referer='http://www.tuga-filmes.com/toy-story-perdidos-no-tempo/'
-        #addLink(referer,'','','')
+        
         ref = '---'
         #return
 	html = abrir_url(referer)
@@ -2145,23 +2146,25 @@ def videomega_resolver(referer):
                                                         except: pass
 
         if '+link+' in ref: ref = re.compile('=(.*)').findall(referer)[0]
-
+        #addLink(referer+'-'+ref,'','','')
         if ref=='---':
-                url = 'http://videomega.tv/validatehash.php?hashkey='+hashk
+                url = 'http://videomega.tv/validatehash.php?hashkey='+hashk#+'&width=650&height=480&val=1'
+                #url = 'http://videomega.tv/cdn.php?ref='+hashk+'&width=650&height=480&val=1'
                 ref_data={'Host':'videomega.tv',
 			  'Connection':'Keep-alive',
 			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
 			  'Referer':referer}
                 ref = re.compile('ref="(.+?)"').findall(abrir_url_tommy(url,ref_data))[0]
-
+        #addLink(referer+'-'+ref,'','','')
 	
 	ref_data={'Host':'videomega.tv',
 			  'Connection':'Keep-alive',
 			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
 			  'Referer':referer}
-	url = 'http://videomega.tv/iframe.php?ref=' + ref
+	url = 'http://videomega.tv/iframe.php?ref=' + ref #anterior
+	url = 'http://videomega.tv/cdn.php?ref='+ref #agora
 	iframe_html = abrir_url_tommy(url,ref_data)
 	code = re.compile('document.write\(unescape\("(.+?)"\)\)\;').findall(iframe_html)
 	id = re.compile('<div id="(.+?)" name="adblock"').findall(iframe_html)[0]

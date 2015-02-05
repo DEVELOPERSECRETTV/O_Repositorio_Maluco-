@@ -75,7 +75,7 @@ def TPT_MenuPrincipal(artfolder):
         except:pass
 
 def TPT_Menu_Filmes_Por_Ano(artfolder):
-        ano = 2014
+        ano = 2015
         for x in range(46):
                 categoria_endereco = 'http://toppt.net/category/' + str(ano) + '/'
                 addDir('[COLOR yellow]' + str(ano) + '[/COLOR]',categoria_endereco,232,artfolder + 'TPT1.png','nao','')
@@ -99,9 +99,7 @@ def TPT_Menu_Filmes_Por_Categorias(artfolder):
 
 
 def TPT_Menu_Top_Filmes(item):
-
         if item != '':
-
                 try:
                         try:
                                 html_source = abrir_url(item)
