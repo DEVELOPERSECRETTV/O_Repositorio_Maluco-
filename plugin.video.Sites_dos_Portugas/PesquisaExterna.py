@@ -2162,8 +2162,8 @@ def TFV_links(name,url,qualidade,iconimage,fanart):
                 if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)Clique aqui para ver', items[0], re.DOTALL)
                 if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)</p>', items[0], re.DOTALL)
                 if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)\n</p>', items[0], re.DOTALL)
-                if matchvideo:
-                        for parte in matchvideo:
+                if matchvid:
+                        for servidor,parte in matchvid:
                                 nome_video = re.compile('(.+?)</div></h3><p>').findall(parte)
                                 if nome_video: nome = nome_video[0]
                                 else: nome = ''
@@ -2418,7 +2418,8 @@ def TFC_links(name,url,iconimage,fanart):
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart,urlvideomega)
                                         conta_os_items = conta_os_items + 1
                 else:
-                        assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="views">', fonte, re.DOTALL)
+                        assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
+                        if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="views">', fonte, re.DOTALL)
                         if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="clear">', fonte, re.DOTALL)
                         match = re.compile('www.videowood(.+?)" target="_blank">.+?[(]Online').findall(fonte)
                         if not match: match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
@@ -2632,11 +2633,14 @@ def TPT_links(nomeescolha,urlescolha,iconimage,fanart):#,genre,plot,year):
                                 else: imdbcode = ''
                 if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-Serie' not in nometitulo:
                         newmatch = re.findall('<span id=.+?DOWNLOAD POR',link2,re.DOTALL)
+                        if not newmatch: newmatch = re.findall('<span id=.+?BAIXAR',link2,re.DOTALL)
                         l=1
                 else:
                         #newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
                         newmatch1 = re.findall('<span id=.+?DOWNLOAD POR',link2,re.DOTALL)
+                        if not newmatch1: newmatch1 = re.findall('<span id=.+?BAIXAR',link2,re.DOTALL)
                         newmatch = re.findall('<img style="height: 90px; width: 200px;".+?DOWNLOAD POR',link2,re.DOTALL)
+                        if not newmatch: newmatch = re.findall('<img style="height: 90px; width: 200px;".+?BAIXAR',link2,re.DOTALL)
                         l=5
                 if not newmatch:
                         newmatch = re.findall('<span id=.+?<nav class="navigation post-navigation"',link2,re.DOTALL)

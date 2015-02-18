@@ -922,8 +922,8 @@ def TFV_encontrar_videos_filmes(name,url,mvoutv):
                 if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)Clique aqui para ver', items[0], re.DOTALL)
                 if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)</p>', items[0], re.DOTALL)
                 if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)\n</p>', items[0], re.DOTALL)
-                if matchvideo:
-                        for servidor,parte in matchvideo:
+                if matchvid:
+                        for servidor,parte in matchvid:
                                 nome_video = re.compile('(.+?)</div></h3><p>').findall(parte)
                                 if nome_video: nome = nome_video[0]
                                 else: nome = ''
@@ -1265,8 +1265,8 @@ def TFV_links(name,url,iconimage,fanart):
                 if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)Clique aqui para ver', items[0], re.DOTALL)
                 if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)</p>', items[0], re.DOTALL)
                 if not matchvid: matchvid = re.findall('<div class="id(.+?)"> Assistir(.+?)\n</p>', items[0], re.DOTALL)
-                if matchvideo:
-                        for parte in matchvideo:
+                if matchvid:
+                        for servidor,parte in matchvid:
                                 nome_video = re.compile('(.+?)</div></h3><p>').findall(parte)
                                 if nome_video: nome = nome_video[0]
                                 else: nome = ''

@@ -964,7 +964,8 @@ def TFC_encontrar_videos_filmes(name,url,mvoutv):
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                 else:
-                        assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="views">', fonte, re.DOTALL)
+                        assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
+                        if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="views">', fonte, re.DOTALL)
                         if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="clear">', fonte, re.DOTALL)
                         match = re.compile('www.videowood(.+?)" target="_blank">.+?[(]Online').findall(fonte)
                         #if not match: match = re.compile('www.videowood(.+?)" target="_blank">.+?[(]Online').findall(fonte)
@@ -985,7 +986,7 @@ def TFC_encontrar_videos_filmes(name,url,mvoutv):
                                         conta_id_video = conta_id_video + 1
                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
-                        else:
+                        elif assistir_fontes:
                                 
                                 match = re.compile("<script type='text/javascript' src='(.+?)'></script>").findall(assistir_fontes[0])
                                 if not match: match = re.compile('<script type="text/javascript" src="(.+?)"></script>').findall(assistir_fontes[0])
@@ -1019,6 +1020,44 @@ def TFC_encontrar_videos_filmes(name,url,mvoutv):
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
+def TFC_links111111111111111(name,url,iconimage,fanart):
+        iconimage = iconimage
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
+        if not urlimdb: url = url.replace('IMDBIMDB','')
+        else: url = urlimdb[0]
+                
+        nomeescolha = name
+        conta_os_items = 0
+        conta_os_items = conta_os_items + 1
+        conta_id_video = 0
+        try:
+                fonte = abrir_url(url)
+        except: fonte = ''
+        items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", fonte, re.DOTALL)
+        if not items: items = re.findall("<div id='postagem'>(.*?)<div class='postmeta'>", fonte, re.DOTALL)
+##	if items != []:
+##                imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
+##                if imdb: imdbcode = imdb[0]
+##                else: imdbcode = ''
+        assist = re.findall(">ASSISTIR.+?", fonte, re.DOTALL)
+        fontes = re.findall("Ver Aqui.+?", fonte, re.DOTALL)
+        numero_de_fontes = len(fontes)
+        #addLink(str(len(assist)),'','','')
+	if fonte:        
+                try: url_video = re.compile('frameborder=".+?" height=".+?" scrolling=".+?" src="(.+?)"').findall(fonte)
+		except: 
+			try: url_video = re.compile("width='.+?' height='.+?' scrolling='.+?' frameborder='.+?' src='(.+?)'").findall(fonte)
+			except:
+				try: url_video = re.compile('width=".+?" height=".+?".+?frameborder=".+?" src="(.+?)"').findall(fonte)
+				except: pass
+		for url in url_video:
+                        id_video = ''
+                        conta_id_video = conta_id_video + 1
+                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+
 
 def TFC_links(name,url,iconimage,fanart):
         iconimage = iconimage
@@ -1143,7 +1182,8 @@ def TFC_links(name,url,iconimage,fanart):
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                 else:
-                        assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="views">', fonte, re.DOTALL)
+                        assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
+                        if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="views">', fonte, re.DOTALL)
                         if not assistir_fontes: assistir_fontes = re.findall('>ASSISTIR(.*?)<div class="clear">', fonte, re.DOTALL)
                         match = re.compile('www.videowood(.+?)" target="_blank">.+?[(]Online').findall(fonte)
                         if not match: match = re.compile('<a href="(.+?)" target="_blank">.+?[(]Online').findall(fonte)
@@ -1161,7 +1201,7 @@ def TFC_links(name,url,iconimage,fanart):
                                         conta_id_video = conta_id_video + 1
                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
-                        else:
+                        elif assistir_fontes:
                                 match = re.compile("<script type='text/javascript' src='(.+?)'></script>").findall(assistir_fontes[0])
                                 if not match: match = re.compile('<script type="text/javascript" src="(.+?)"></script>').findall(assistir_fontes[0])
                                 conta_video = len(match)

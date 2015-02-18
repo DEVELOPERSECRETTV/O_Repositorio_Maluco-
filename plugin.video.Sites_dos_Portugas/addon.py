@@ -139,7 +139,7 @@ def SITESdosPORTUGAS():
         #####################################
         url_TPT = 'http://toppt.net/'
         url_TFV = 'http://www.tuga-filmes.us/'
-        url_TFC = 'http://www.tuga-filmes.info/'
+        url_TFC = 'http://www.tuga-filmes.com/'#'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
         url_CMT = 'http://www.cinematuga.net/'#'http://www.tugafilmes.org'#'http://www.cinematuga.net/'
@@ -364,7 +364,7 @@ def chamaUltimos(name):
 def chamaUltimosA(name):
         if name == 'TFV' or name == 'TODOS': url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
         else: url_TFV = 'http:'
-        if name == 'TFC' or name == 'TODOS': url_TFC = 'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
+        if name == 'TFC' or name == 'TODOS': url_TFC = 'http://www.tuga-filmes.com/category/animacao/'#'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
         else: url_TFC = 'http:'
         if name == 'MVT' or name == 'TODOS': url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
         else: url_MVT = 'http:'
@@ -372,7 +372,7 @@ def chamaUltimosA(name):
         else: url_FTT = 'http:'
         if name == 'CMT' or name == 'TODOS': url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'#'http://www.tugafilmes.org/search/label/Filmes'
         else: url_CMT = 'http:'
-        if name == 'CME' or name == 'TODOS': url_CME = 'http://www.cinematuga.eu/search/label/Filmes'
+        if name == 'CME' or name == 'TODOS': url_CME = 'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
         else: url_CME = 'http:'
         if name == 'CMC' or name == 'TODOS': url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
         else: url_CMC = 'http:'
