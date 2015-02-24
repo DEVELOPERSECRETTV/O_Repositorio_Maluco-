@@ -1540,7 +1540,9 @@ def tmdbW(nomefilme,ano,resulo,ordem):
 
         try: id_tmdb = data['results'][0]['id']
         except: id_tmdb=''
-        try: fanart = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w780' + str(data['results'][0]['backdrop_path'])
+        try:
+                fanart = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w780' + str(data['results'][0]['backdrop_path'])
+                fanart = 'http://image.tmdb.org/t/p/w1280' + str(data['results'][0]['backdrop_path'])
         except: fanart=''
 
         url_t = 'http://api.themoviedb.org/3/movie/'+str(id_tmdb)+'?api_key='+api_key
@@ -2101,6 +2103,7 @@ def ratoTV(name,url):
 def dadosImdbcode(title, Otitle, url, year, ordem, results, imdbcode, sinopse):
         api_key = '3e7807c4a01f18298f64662b257d7059'
         tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        tmdb_base_url = 'http://image.tmdb.org/t/p/w1280'
         thumb=''
         fanart = ''
         try:

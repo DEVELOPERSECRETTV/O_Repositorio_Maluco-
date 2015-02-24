@@ -47,6 +47,7 @@ class themoviedb_api_pagina:
 
         api_key = '3e7807c4a01f18298f64662b257d7059'
         tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        tmdb_base_url = 'http://image.tmdb.org/t/p/w1280'
         def fanart_and_id(self,movie_tv,num_mode,items,pagina):
                 a = 1
                 i = 0
@@ -339,6 +340,7 @@ class thetvdb_api_IMDB:
 class themoviedb_api_IMDB1:
         api_key = '3e7807c4a01f18298f64662b257d7059'
         tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        tmdb_base_url = 'http://image.tmdb.org/t/p/w1280'
         
         def fanart_and_id(self,movie_info_imdb_code):
                 try:
@@ -416,6 +418,7 @@ class themoviedb_api_search_imdbcode:
 class themoviedb_api_IMDB:
         api_key = '3e7807c4a01f18298f64662b257d7059'
         tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        tmdb_base_url = 'http://image.tmdb.org/t/p/w1280'
         
         def fanart_and_id(self,movie_info_imdb_code,movie_info_year):
                 try:
@@ -472,6 +475,7 @@ class themoviedb_api_IMDB:
 class themoviedb_api_IMDB_episodios:
         api_key = '3e7807c4a01f18298f64662b257d7059'
         tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        tmdb_base_url = 'http://image.tmdb.org/t/p/w1280'
         
         def fanart_and_id(self,movie_info_imdb_code,season,episode):
 ##                addLink('d','','')
@@ -526,6 +530,7 @@ class themoviedb_api_IMDB_episodios:
 class themoviedb_api:
         api_key = '3e7807c4a01f18298f64662b257d7059'
         tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        tmdb_base_url = 'http://image.tmdb.org/t/p/w1280'
         def fanart_and_id(self,movie_info_original_title,movie_info_year):
                 url_tmdb = 'http://api.themoviedb.org/3/search/movie?api_key=' + self.api_key + '&query=' + urllib.quote_plus(movie_info_original_title) + '&year=' + movie_info_year
                 try: data = json_get(url_tmdb)
@@ -557,6 +562,7 @@ class themoviedb_api:
 class themoviedb_api_tv:
         api_key = '3e7807c4a01f18298f64662b257d7059'
         tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
+        tmdb_base_url = 'http://image.tmdb.org/t/p/w1280'
         def fanart_and_id(self,movie_info_original_title,movie_info_year):
                 url_tmdb = 'http://api.themoviedb.org/3/search/tv?api_key=' + self.api_key + '&query=' + urllib.quote_plus(movie_info_original_title) + '&year=' + movie_info_year
                 try: data = json_get(url_tmdb)
