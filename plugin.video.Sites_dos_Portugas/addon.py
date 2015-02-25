@@ -141,7 +141,7 @@ def SITESdosPORTUGAS():
         url_TFV = 'http://www.tuga-filmes.us/'
         url_TFC = 'http://www.tuga-filmes.com/'#'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
-        url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
+        url_FTT = 'http://foitatugadownload.blogspot.pt/'#'http://foitatugacinemaonline.blogspot.pt/'
         url_CMT = 'http://www.cinematuga.net/'#'http://www.tugafilmes.org'#'http://www.cinematuga.net/'
         url_CME = 'http://www.cinematuga.eu/'
         url_CMC = 'http://www.cinemaemcasa.pt/'
@@ -220,6 +220,7 @@ def FTTONOFF(url_FTT):
 	except: html_source = ''
 	items = re.findall("<div class='post-body entry-content'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
 	if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
 	if items != []: FTT_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: FTT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 def CMTONOFF(url_CMT):
@@ -341,7 +342,7 @@ def chamaUltimos(name):
         else: url_TFC = 'http:'
         if name == 'MVT' or name == 'TODOS': url_MVT = 'http://www.movie-tuga.blogspot.pt'
         else: url_MVT = 'http:'
-        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatugacinemaonline.blogspot.pt/'
+        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatugadownload.blogspot.pt/'#'http://foitatugacinemaonline.blogspot.pt/'
         else: url_FTT = 'http:'
         if name == 'CMT' or name == 'TODOS': url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
         else: url_CMT = 'http:'
@@ -368,7 +369,7 @@ def chamaUltimosA(name):
         else: url_TFC = 'http:'
         if name == 'MVT' or name == 'TODOS': url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
         else: url_MVT = 'http:'
-        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
+        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatugadownload.blogspot.pt/search/label/Anima%C3%A7%C3%A3o'#'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
         else: url_FTT = 'http:'
         if name == 'CMT' or name == 'TODOS': url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'#'http://www.tugafilmes.org/search/label/Filmes'
         else: url_CMT = 'http:'
@@ -531,8 +532,10 @@ def dirtodos(url):
                 try:
                         html_source = abrir_url(url_FTT)
                 except: html_source = ''
-                itemsFTT = re.findall("<a class='comment-link'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+                itemsFTT = re.findall("<h3 class='post-title entry-title'>(.*?)<div class='post-footer'>", html_source, re.DOTALL)
+                if not itemsFTT: itemsFTT = re.findall("<a class='comment-link'(.*?)<div class='post-outer'>", html_source, re.DOTALL)
                 if not itemsFTT: itemsFTT = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
+                
                 if itemsFTT != []:
                         try:
                                 proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)

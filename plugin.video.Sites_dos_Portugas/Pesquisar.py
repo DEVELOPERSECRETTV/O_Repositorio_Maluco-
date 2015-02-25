@@ -151,12 +151,13 @@ def pesquisar():
                                 threads.append(TPT)
                         #num_f_TPT,num_s_TPT = encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou,FSS)
                         
-                        url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar'
+                        url_pesquisa = 'http://foitatugadownload.blogspot.pt/search/?sitesearch=' + str(encode) #+ '&submit=Buscar'
                         try:
                                 html_source = abrir_url(url_pesquisa)
                         except: html_source = ''
                         i=0
-                        items = re.findall("<a class='comment-link'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                        items = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", html_source, re.DOTALL)
+                        if not items: items = re.findall("<a class='comment-link'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
                         if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
                         for item in items:
                                 i = i + 1
@@ -904,18 +905,25 @@ def encontrar_fontes_pesquisa_FTT(url,pesquisou,FS,item):
                                 urlvideo = ''
                                 nome = ''
 
-                        try:
-                                fonte_video = abrir_url(urlvideo)
-                        except: fonte_video = ''
-                        fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
-                        if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
-                        if fontes_video != []:
-                                qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
-                                if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')
-                                else:
-                                        qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
-                                        if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')
-
+##                        try:
+##                                fonte_video = abrir_url(urlvideo)
+##                        except: fonte_video = ''
+##                        fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+##                        if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
+##                        if fontes_video != []:
+##                                qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
+##                                if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')
+##                                else:
+##                                        qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
+##                                        if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')
+##
+                        qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(item)
+                        if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','') + audio_filme
+                        else:
+                                qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(item)
+                                if not qualid: qualid = re.compile('VERS.+?:(.+?)[[]').findall(item)
+                                if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','').replace(' ','') + audio_filme
+                                else: qualidade_filme = '---'
                                 
                         snpse = re.compile('Sinopse.png"></a></div>\n(.+?)\n').findall(item)
                         if snpse: sinopse = snpse[0]

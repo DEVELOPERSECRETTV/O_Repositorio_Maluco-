@@ -1456,11 +1456,12 @@ def FTTMASHUP(item):
                         imdbcode = ''
                         audio_filme = ''
 
-                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        imdb = re.compile('www.imdb.com/title/(.+?)/"').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
 
-                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>Ler mais").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
                         if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if urletitulo:
                                 urlvideo = urletitulo[0][0]
@@ -1613,21 +1614,31 @@ def FTTMASHUP(item):
                         nome = nome.replace('[]','')
 
                         O_Nome = nome
+                        #if 'Temporada' not in O_Nome and 'temporada' not in O_Nome and 'Season' not in O_Nome and 'season' not in O_Nome:
+                                #addLink(sinopse,'','','')
                         
 
                         try:
-                                try:
-                                        fonte_video = abrir_url(urlvideo)
-                                except: fonte_video = ''
-                                fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
-                                if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
-                                if fontes_video != []:
-                                        qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
-                                        if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','') + audio_filme
-                                        else:
-                                                qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
-                                                if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','') + audio_filme
-                                                else: qualidade_filme = '---'
+##                                try:
+##                                        fonte_video = abrir_url(urlvideo)
+##                                except: fonte_video = ''
+##                                fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+##                                if not fontes_video: fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+##                                if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
+##                                if fontes_video != []:
+##                                        qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
+##                                        if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','') + audio_filme
+##                                        else:
+##                                                qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
+##                                                if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','') + audio_filme
+##                                                else: qualidade_filme = '---'
+                                qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(item)
+                                if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','') + audio_filme
+                                else:
+                                        qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(item)
+                                        if not qualid: qualid = re.compile('VERS.+?:(.+?)[[]').findall(item)
+                                        if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','').replace(' ','') + audio_filme
+                                        else: qualidade_filme = '---'
                                 nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
                                 if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
                                 if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
@@ -1661,7 +1672,7 @@ def FTTMASHUP(item):
                         if thumb == '': thumb = '---'
                         
                         try:
-                                if 'Temporada' not in O_Nome and 'temporada' not in O_Nome:
+                                if 'Temporada' not in O_Nome and 'temporada' not in O_Nome and 'Season' not in O_Nome and 'season' not in O_Nome:
 ##                                        progress.update( percent, 'A Procurar Filmes '+pontos, '[COLOR green]'+O_Nome+'[/COLOR]', "" )
 ##                                        pontos = pontos+'.'
                                         nome_final = '[COLOR orange]FTT | [/COLOR][B][COLOR green]' + O_Nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]'

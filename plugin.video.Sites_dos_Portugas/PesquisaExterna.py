@@ -190,7 +190,7 @@ def pesquisar(nome_pesquisa,url,automatico):
                         CME.start()
                         CME.join()
 
-	url_pesquisa = 'http://foitatugacinemaonline.blogspot.pt/search?q=' + str(encode) + '&submit=Buscar'	
+	url_pesquisa = 'http://foitatugadownload.blogspot.pt/search/?sitesearch=' + str(encode) #+ '&submit=Buscar'	
 	if nomesite != 'FTT':
                 try:
                         html_source = abrir_url(url_pesquisa)
@@ -1207,19 +1207,26 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                 nome = nome.replace(' - []','')
                                 nome = nome.replace('[]','')
 
-                                try:
-                                        fonte_video = abrir_url(urlvideo)
-                                except: fonte_video = ''
-                                fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
-                                if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
-                                if fontes_video != []:
-                                        qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
-                                        if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')+audio_filme
-                                        else:
-                                                qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
-                                                if qualid:
-                                                        qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')+audio_filme
-                                                        if audio_filme not in qualidade_filme: qualidade_filme = qualidade_filme+audio_filme
+##                                try:
+##                                        fonte_video = abrir_url(urlvideo)
+##                                except: fonte_video = ''
+##                                fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+##                                if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
+##                                if fontes_video != []:
+##                                        qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(fontes_video[0])
+##                                        if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','')+audio_filme
+##                                        else:
+##                                                qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
+##                                                if qualid:
+##                                                        qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')+audio_filme
+##                                                        if audio_filme not in qualidade_filme: qualidade_filme = qualidade_filme+audio_filme
+                                qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(item)
+                                if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','') + audio_filme
+                                else:
+                                        qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(item)
+                                        if not qualid: qualid = re.compile('VERS.+?:(.+?)[[]').findall(item)
+                                        if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','').replace(' ','') + audio_filme
+                                        else: qualidade_filme = '---'
 
                                 if imdbcode == '':
                                         conta = 0
@@ -4246,7 +4253,8 @@ def FTT_links(name,url,iconimage,fanart):
         try:
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
-        fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+        fontes_video = re.findall("<h3 class='post-title entry-title'>(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
+        if not fontes_video: fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
         if 'BREVEMENTE ONLINE' in fonte_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
@@ -4282,6 +4290,8 @@ def FTT_links(name,url,iconimage,fanart):
                                 except:pass
                 match2 = re.compile('<iframe.+?src="(.+?)".+?></iframe>').findall(fonte_e_url)
                 if not match2: match2 = re.compile('<iframe.+?src="(.+?)".+?>').findall(fonte_e_url)
+                if not match2: match2 = re.compile('<a href="(.+?)" target="_blank"><img border="0" src="http://1.bp.blogspot.com/-_yTINh6ZYdo/VNIWCpRm93I/AAAAAAAAAQk/akx68KoQ2VA/s1600/1.png"').findall(fonte_e_url)
+
                 for fonte_id in match2:
                         if 'videomega' in fonte_id:
                                 try:
