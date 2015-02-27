@@ -190,7 +190,8 @@ def pesquisar(nome_pesquisa,url,automatico):
                         CME.start()
                         CME.join()
 
-	url_pesquisa = 'http://foitatugadownload.blogspot.pt/search/?sitesearch=' + str(encode) #+ '&submit=Buscar'	
+	url_pesquisa = 'http://foitatugadownload.blogspot.pt/search/?sitesearch=' + str(encode) #+ '&submit=Buscar'
+	url_pesquisa = 'http://foitatugadownload.blogspot.pt/search?q=' + str(encode)
 	if nomesite != 'FTT':
                 try:
                         html_source = abrir_url(url_pesquisa)
@@ -1075,7 +1076,9 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
 
-                                urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                                urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                                if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>Ler mais").findall(item)
+                                if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
                                 if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                                 if urletitulo:
                                         urlvideo = urletitulo[0][0]
@@ -4253,7 +4256,7 @@ def FTT_links(name,url,iconimage,fanart):
         try:
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
-        fontes_video = re.findall("<h3 class='post-title entry-title'>(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
+        fontes_video = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)

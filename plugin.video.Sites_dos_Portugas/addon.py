@@ -221,6 +221,7 @@ def FTTONOFF(url_FTT):
 	items = re.findall("<div class='post-body entry-content'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
 	if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
 	if not items: items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
 	if items != []: FTT_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: FTT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 def CMTONOFF(url_CMT):
@@ -533,9 +534,10 @@ def dirtodos(url):
                         html_source = abrir_url(url_FTT)
                 except: html_source = ''
                 itemsFTT = re.findall("<h3 class='post-title entry-title'>(.*?)<div class='post-footer'>", html_source, re.DOTALL)
+                if not itemsFTT: itemsFTT = re.findall("<h3 class='post-title entry-title' itemprop='name'>(.*?)<div class='post-footer'>", html_source, re.DOTALL)
                 if not itemsFTT: itemsFTT = re.findall("<a class='comment-link'(.*?)<div class='post-outer'>", html_source, re.DOTALL)
                 if not itemsFTT: itemsFTT = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
-                
+                                
                 if itemsFTT != []:
                         try:
                                 proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)

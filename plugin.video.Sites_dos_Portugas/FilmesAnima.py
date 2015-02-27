@@ -193,7 +193,8 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
         ##                        CME = threading.Thread(name='CME'+str(i), target=FILMES_ANIMACAO_encontrar_fontes_filmes_CME , args=(str(a),url_pesquisa,pesquisou,imdbcode,item,))
         ##                        threads.append(CME)
 
-	url_pesquisa = 'http://foitatugadownload.blogspot.pt/search/?sitesearch=' + str(encode) #+ '&submit=Buscar'# + 'IMDB'+imdbcode+'IMDB'	
+	url_pesquisa = 'http://foitatugadownload.blogspot.pt/search/?sitesearch=' + str(encode) #+ '&submit=Buscar'# + 'IMDB'+imdbcode+'IMDB'
+	url_pesquisa = 'http://foitatugadownload.blogspot.pt/search?q=' + str(encode)
 	if nomesite != 'FTT': #FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url_pesquisa)
                 if nomesite == 'siteFTT' or nomesite == '' or nomesite=='TFV' or nomesite=='TFC' or nomesite=='TPT' or nomesite=='MVT' or nomesite=='CME' or nomesite=='CMT' or nomesite=='CMC':
                         try:
@@ -928,7 +929,9 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
 
-                                urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                                urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                                if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>Ler mais").findall(item)
+                                if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
                                 if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                                 if urletitulo:
                                         urlvideo = urletitulo[0][0]

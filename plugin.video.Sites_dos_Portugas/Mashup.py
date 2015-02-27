@@ -1459,8 +1459,9 @@ def FTTMASHUP(item):
                         imdb = re.compile('www.imdb.com/title/(.+?)/"').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
-
-                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>Ler mais").findall(item)
+                        
+                        urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>Ler mais").findall(item)
                         if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
                         if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if urletitulo:

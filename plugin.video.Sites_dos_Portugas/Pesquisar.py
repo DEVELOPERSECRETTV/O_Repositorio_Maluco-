@@ -152,6 +152,7 @@ def pesquisar():
                         #num_f_TPT,num_s_TPT = encontrar_fontes_filmes_TPT(url_pesquisa,pesquisou,FSS)
                         
                         url_pesquisa = 'http://foitatugadownload.blogspot.pt/search/?sitesearch=' + str(encode) #+ '&submit=Buscar'
+                        url_pesquisa = 'http://foitatugadownload.blogspot.pt/search?q=' + str(encode)
                         try:
                                 html_source = abrir_url(url_pesquisa)
                         except: html_source = ''
@@ -896,7 +897,9 @@ def encontrar_fontes_pesquisa_FTT(url,pesquisou,FS,item):
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
 
-                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                        urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>Ler mais").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
                         if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if urletitulo:
                                 urlvideo = urletitulo[0][0]

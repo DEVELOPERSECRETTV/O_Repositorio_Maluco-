@@ -51,7 +51,7 @@ def FTT_MenuPrincipal(artfolder):
 	addDir('[COLOR yellow]- Animação[/COLOR]','http://foitatugadownload.blogspot.pt/search/label/Anima%C3%A7%C3%A3o',602,artfolder + 'FA.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',606,artfolder + 'CT.png','nao','')
 	addDir('[COLOR yellow]- Por Ano[/COLOR]','url',606,artfolder + 'ANO.png','nao','')          #608
-	addDir('[COLOR yellow]- Top 10 + Vistos[/COLOR]','http://foitatugadownload.blogspot.pt/',602,artfolder + 'T10V.png','nao','')
+	addDir('[COLOR yellow]- Top + Vistos[/COLOR]','http://foitatugadownload.blogspot.pt/',602,artfolder + 'T10V.png','nao','')
 
 def FTT_Menu_Filmes_Por_Categorias(artfolder):
         i = 0
@@ -60,6 +60,7 @@ def FTT_Menu_Filmes_Por_Categorias(artfolder):
 	if name == '[COLOR yellow]- Categorias[/COLOR]':
                 html_items_categorias = re.findall("'http://foitatugadownload.blogspot.pt/search/label/2014'>2014(.*?)<div id='searchbarright'>", html_categorias_source, re.DOTALL)
                 if not html_items_categorias: html_items_categorias = re.findall(">CATEGORIAS</a>(.*?)<div id='searchbarright'>", html_categorias_source, re.DOTALL)
+                if not html_items_categorias: html_items_categorias = re.findall(">FILMES</a>(.*?)<div style='clear:both;'>", html_categorias_source, re.DOTALL)
                 if not html_items_categorias: html_items_categorias = re.findall("<h2>CATEGORIAS</h2>(.*?)<div class='clear'>", html_categorias_source, re.DOTALL)
                 print len(html_items_categorias)
                 for item_categorias in html_items_categorias:
@@ -74,7 +75,7 @@ def FTT_Menu_Filmes_Por_Categorias(artfolder):
 	if name == '[COLOR yellow]- Por Ano[/COLOR]':
                 ano = 2015
                 for x in range(46):
-                        categoria_endereco = 'http://foitatugadownload.blogspot.pt/search/label/' + str(ano) + '#_'
+                        categoria_endereco = 'http://foitatugadownload.blogspot.pt/search/label/' + str(ano) #+ '#_'
                         addDir('[COLOR yellow]' + str(ano) + '[/COLOR]',categoria_endereco,602,artfolder + 'FTT1.png','nao','')
                         ano = ano - 1
 ##                html_items_categorias = re.findall("<option>ESCOLHA A CATEGORIA</option>(.*?)='http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'", html_categorias_source, re.DOTALL)
@@ -134,11 +135,12 @@ def FTT_Top_Vistos(item_categorias):
                         fonte_video = abrir_url(url_titulo[0][0])
                 except: fonte_video = ''
                 fontes_video = re.findall("<h3 class='post-title entry-title'>(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
-                if not fontes_video: fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+                if not fontes_video: fontes_video = re.findall("<div class='post-body entry-content'(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
                 if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
                 if fontes_video != []:
                         snpse = re.compile('Sinopse.png"></a></div>\n(.+?)\n').findall(fontes_video[0])
                         if not snpse: snpse = re.compile('Sinopse.png" /></a></div>\n(.+?)\n').findall(fontes_video[0])
+                        if not snpse: snpse = re.compile('<div class="separator" style="clear: both; text-align: center;">\n(.+?)\n</div>\n<div class="separator" style="clear: both; text-align: center;">').findall(fontes_video[0])
                         if snpse: sinopse = snpse[0]
                         sinopse = sinopse.replace('&#8216;',"'")
                         sinopse = sinopse.replace('&#8217;',"'")
@@ -148,7 +150,9 @@ def FTT_Top_Vistos(item_categorias):
                         sinopse = sinopse.replace('&#39;',"'")
                         sinopse = sinopse.replace('&amp;','&')
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(fontes_video[0])
-                        if imdb: imdbcode = imdb[0]
+                        if imdb:
+                                imdbcode = imdb[0]
+                                #addLink(imdbcode,'','','')
                         else: imdbcode = ''
                         
                 nome_f = nome_f.replace('&#8217;',"'")
@@ -206,33 +210,33 @@ def FTT_encontrar_fontes_filmes(url):
 ##        progress.create('Progresso', 'A Procurar')
 ##        progress.update( percent, 'A Procurar Filmes ...', message, "" )
         
-        if name != '[COLOR yellow]- Top 10 + Vistos[/COLOR]':
+        if name != '[COLOR yellow]- Top + Vistos[/COLOR]':
                 try: xbmcgui.Dialog().notification('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'FTT1.png', 3000, sound=False)
                 except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'FTT1.png'))
-        if name == '[COLOR yellow]- Top 10 + Vistos[/COLOR]':
+        if name == '[COLOR yellow]- Top + Vistos[/COLOR]':
                 try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'FTT1.png', 3000, sound=False)
                 except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'FTT1.png'))
         
         try:
 		html_source = abrir_url(url)
 	except: html_source = ''
-	if name != '[COLOR yellow]- Top 10 + Vistos[/COLOR]':#'[COLOR yellow]- Todos[/COLOR]' or name == "[B]Página Seguinte >>[/B]":
-                items = re.findall("<h3 class='post-title entry-title'>(.*?)<div class='post-footer'>", html_source, re.DOTALL)
+	if name != '[COLOR yellow]- Top + Vistos[/COLOR]':#'[COLOR yellow]- Todos[/COLOR]' or name == "[B]Página Seguinte >>[/B]":
+                items = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", html_source, re.DOTALL)
                 if not items: items = re.findall("<a class='comment-link'(.*?)<div class='post-outer'>", html_source, re.DOTALL)
                 if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
-        if name == '[COLOR yellow]- Top 10 + Vistos[/COLOR]':
+        if name == '[COLOR yellow]- Top + Vistos[/COLOR]':
                 html_items_categorias = re.findall("<div class='widget-content popular-posts'>(.*?)<div class='clear'>", html_source, re.DOTALL)
                 items = re.findall("<div class='item-thumbnail'>(.*?)<div style='clear: both;'>", html_items_categorias[0], re.DOTALL)
 
         threads = []
         i = 0
         for item in items:
-                if name != '[COLOR yellow]- Top 10 + Vistos[/COLOR]':
+                if name != '[COLOR yellow]- Top + Vistos[/COLOR]':
                         i = i + 1
                         a = str(i)
                         if i < 10: a = '0'+a
                         Filmes_FTT = threading.Thread(name='Filmes_FTT'+str(i), target=Fontes_Filmes_FTT , args=('FILME'+str(a)+'FILME'+item,))
-                if name == '[COLOR yellow]- Top 10 + Vistos[/COLOR]':
+                if name == '[COLOR yellow]- Top + Vistos[/COLOR]':
                         Filmes_FTT = threading.Thread(name='Filmes_FTT'+str(i), target=FTT_Top_Vistos , args=(item,))
                 threads.append(Filmes_FTT)
 
@@ -240,7 +244,7 @@ def FTT_encontrar_fontes_filmes(url):
 
         [i.join() for i in threads]
 
-        if name != '[COLOR yellow]- Top 10 + Vistos[/COLOR]':
+        if name != '[COLOR yellow]- Top + Vistos[/COLOR]':
                 _sites_ = ['filmesFTT.txt']
                 folder = perfil
                 num_filmes = 0
@@ -332,7 +336,9 @@ def Fontes_Filmes_FTT(item):
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
 
-                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                        urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>Ler mais").findall(item)
+                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
                         if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if urletitulo:
                                 urlvideo = urletitulo[0][0]
@@ -628,7 +634,7 @@ def FTT_encontrar_videos_filmes(name,url,mvoutv):
         try:
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
-        fontes_video = re.findall("<h3 class='post-title entry-title'>(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
+        fontes_video = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
@@ -738,7 +744,7 @@ def FTT_links(name,url,iconimage,fanart):
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
         #addDir1(url+name,'url',1001,iconimage,False,fanart)
-        fontes_video = re.findall("<h3 class='post-title entry-title'>(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
+        fontes_video = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
