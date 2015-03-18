@@ -638,6 +638,7 @@ def FTT_encontrar_videos_filmes(name,url,mvoutv):
         if not fontes_video: fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
+        addLink(str(numero_de_fontes),'','','')
         #if 'BREVEMENTE ONLINE' in fonte_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
         for fonte_e_url in fontes_video:
                 if imdbcode == '':
@@ -672,6 +673,7 @@ def FTT_encontrar_videos_filmes(name,url,mvoutv):
                 match2 = re.compile('<iframe.+?src="(.+?)" .+?</iframe>').findall(fonte_e_url)
                 if not match2: match2 = re.compile('<iframe.+?src="(.+?)".+?>').findall(fonte_e_url)
                 if not match2: match2 = re.compile('<a href="(.+?)" target="_blank"><img border="0" src="http://1.bp.blogspot.com/-_yTINh6ZYdo/VNIWCpRm93I/AAAAAAAAAQk/akx68KoQ2VA/s1600/1.png"').findall(fonte_e_url)
+                if not match2: match2 = re.compile('<a href="(.+?)" target="_blank"><img border="0" src=".+?VER%2BONLINE.jpg"').findall(fonte_e_url)
 
                 for fonte_id in match2:
                         if 'videomega' in fonte_id:
@@ -782,6 +784,7 @@ def FTT_links(name,url,iconimage,fanart):
                 match2 = re.compile('<iframe.+?src="(.+?)".+?></iframe>').findall(fonte_e_url)
                 if not match2: match2 = re.compile('<iframe.+?src="(.+?)".+?>').findall(fonte_e_url)
                 if not match2: match2 = re.compile('<a href="(.+?)" target="_blank"><img border="0" src="http://1.bp.blogspot.com/-_yTINh6ZYdo/VNIWCpRm93I/AAAAAAAAAQk/akx68KoQ2VA/s1600/1.png"').findall(fonte_e_url)
+                if not match2: match2 = re.compile('<a href="(.+?)" target="_blank"><img border="0" src=".+?VER%2BONLINE.jpg"').findall(fonte_e_url)
 
                 for fonte_id in match2:
                         if 'videomega' in fonte_id:

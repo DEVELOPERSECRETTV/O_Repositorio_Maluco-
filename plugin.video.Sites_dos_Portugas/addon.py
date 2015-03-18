@@ -76,23 +76,27 @@ def MAIN_MENU():
 ##                d.doModal()
 ##                del d
 ##                selfAddon.setSetting('AvisoFanart',value='false')
-        addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','url',20100,artfolder,'nao','')
-        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','http://direct',3012,artfolder,'nao','')
-        addDir('[B][COLOR green]RA[/COLOR][COLOR yellow]T[/COLOR][COLOR red]OTV[/COLOR][/B] (Filmes/Séries)','url',20001,artfolder,'nao','')
-        addDir('[B][COLOR green]WAR[/COLOR][COLOR yellow]E[/COLOR][COLOR red]ZTUGA[/COLOR][/B] (Filmes/Séries)','url',30001,artfolder,'nao','')
-        addDir1('','url',1004,artfolder,False,'')
-        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (A/Z)','urlTODAS',26,artfolder + 'ST.png','nao','')                
+        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (A/Z) (SITESdosPORTUGAS)','urlTODAS',26,artfolder + 'ST.png','nao','')                
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
         url_TPT = 'http://toppt.net/category/series/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_ultimos_episodios = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B]',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B] (SITESdosPORTUGAS)',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
         addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','url',9006,artfolder + 'UF.png','nao','')
         addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]ANIMAÇÃO[/COLOR][/B]','url',9006,artfolder + 'FA.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (SITESdosPORTUGAS)','url',7500,artfolder + 'P1.png','nao','')
+        #addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (SITESdosPORTUGAS)','url',7500,artfolder + 'P1.png','nao','')
+        #addDir1('','url',1004,artfolder,False,'')
+        
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','url',7500,artfolder + 'P1.png','nao','')
+        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','url',7500,artfolder + 'P1.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
+        addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','url',20100,artfolder,'nao','')
+        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','http://direct',3012,artfolder,'nao','')
+        addDir('[B][COLOR green]RA[/COLOR][COLOR yellow]T[/COLOR][COLOR red]OTV[/COLOR][/B] (Filmes/Séries)','url',20001,artfolder,'nao','')
+        addDir('[B][COLOR green]WAR[/COLOR][COLOR yellow]E[/COLOR][COLOR red]ZTUGA[/COLOR][/B] (Filmes/Séries)','url',30001,artfolder,'nao','')
+        #addDir1('','url',1004,artfolder,False,'')
         
         addDir('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B] (Filmes/Séries)','url',10000,artfolder + 'SDPI.png','nao','')
         addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDB.png','nao','')
@@ -100,10 +104,56 @@ def MAIN_MENU():
         #addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF1.png','nao','')#'ze-icon3.png'
         
 def ProcurarFilmesSeries():
+##        addDir1('[B][COLOR blue]SITESdosPORTUGAS:[/COLOR][/B]','url',1004,artfolder,False,'')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
+##        addDir1('[B][COLOR blue]IMDB:[/COLOR][/B]','url',1004,artfolder,False,'')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,short,tv_movie,tv_special,video&sort=moviemeter,asc&count=25&start=1&title=',20110,artfolder + 'P1.png','nao','')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=50&start=1&title=',20110,artfolder + 'P1.png','nao','')
+##        addDir1('[B][COLOR blue]TMDB:[/COLOR][/B]','url',1004,artfolder,False,'')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','1',2998,artfolder + 'P1.png','nao','')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','1',3011,artfolder + 'P1.png','nao','')
+##        addDir1('[B][COLOR blue]WAREZTUGA:[/COLOR][/B]','url',1004,artfolder,False,'')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.wareztuga.tv/',30009,artfolder + 'P1.png','nao','')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.wareztuga.tv/',30009,artfolder + 'P1.png','nao','')
+##        addDir1('[B][COLOR blue]RATOTV:[/COLOR][/B]','url',1004,artfolder,False,'')
+##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.ratotv.net/',20006,artfolder + 'P1.png','nao','')
+        
+        _nomeproc_ = []
+        _nomeproc_.append('[B][COLOR white]IMDB[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]TMDB[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B]')
+        
+        if 'Filmes' in name: FS = 'Filmes'
+        elif 'Séries' in name: FS = 'Séries'
+
+        indexservidores = xbmcgui.Dialog().select
+        index = indexservidores('Procurar '+FS+' em:', _nomeproc_)
+        if index > -1:
+                if 'RATOTV' in _nomeproc_[index]:
+                        procurarRato(name,'http://www.ratotv.net/')
+                elif 'WAREZTUGA' in _nomeproc_[index]:
+                        if 'Filmes' in name: procurarW(name,'http://www.wareztuga.tv/')
+                        elif 'Séries' in name: procurarW(name,'http://www.wareztuga.tv/')
+                elif 'IMDB' in _nomeproc_[index]:
+                        if 'Filmes' in name: procurarIMDB('http://akas.imdb.com/search/title?title_type=feature,short,tv_movie,tv_special,video&sort=moviemeter,asc&count=25&start=1&title=')
+                        elif 'Séries' in name: procurarIMDB('http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=50&start=1&title=')
+                elif 'TMDB' in _nomeproc_[index]:
+                        if 'Filmes' in name: SEARCHTMDBMOVIES()
+                        elif 'Séries' in name: SEARCHTMDBTV()
+                elif 'SITESdosPORTUGAS' in _nomeproc_[index]:
+                        if 'Filmes/Séries' in name: Pesquisar.pesquisar()
+                        elif 'Filmes' in name: Pesquisar.pesquisar()
+                        elif 'Séries' in name: Pesquisar.pesquisar()
+
+
+def ProcurarFilmesSeries1():
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
-
 
 def TMDBmenu():
         addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','1',3002,artfolder + 'NC.png','nao','')

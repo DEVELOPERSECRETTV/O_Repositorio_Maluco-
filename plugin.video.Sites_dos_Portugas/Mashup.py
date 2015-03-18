@@ -744,6 +744,7 @@ def TPT_Ultimos(name,url,iconimage,fanart,item,tvdbid):
                         newmatch = re.findall('EM PT/PT:.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
 
                 linkseries = re.findall('<span class="su-spoiler-icon"></span>(.+?)</div>(.+?)BAIXAR',link2,re.DOTALL)
+                if (linkseries and 'VER ONLINE' in linkseries[0][0]) or not linkseries: linkseries = re.findall('border-top-right-radius:2px;">(.+?)º EPISODIO LEGENDADO(.+?)DOWNLOAD POR',link2,re.DOTALL)
                 if not linkseries: linkseries = re.findall('<h2>(.+?)</h2>\n(.+?)DOWNLOAD POR',link2,re.DOTALL)
                 #if linkseries: addLink(linkseries[0][1],'','','')
                 if not linkseries: linkseries = re.findall('<h2>(.+?)</h2>(.+?)BAIXAR',link2,re.DOTALL)
@@ -754,6 +755,7 @@ def TPT_Ultimos(name,url,iconimage,fanart,item,tvdbid):
                 if not linkseries: linkseries = re.findall('ODIO (.+?)<.+?>\n(.+?)EPIS',newmatch[0],re.DOTALL)
                 if not linkseries: linkseries = re.findall('<p>(.+?)EPISODIO<br/>(.+?)</iframe>',newmatch[0],re.DOTALL)
                 if not linkseries: linkseries = re.findall('EPISODIO (.+?)<br.+?\n(.+?)</p>',newmatch[0],re.DOTALL)
+                #if not linkseries: linkseries = re.findall('border-top-right-radius:2px;">(.+?)EPISODIO LEGENDADO</div>(.+?)DOWNLOAD POR',link2,re.DOTALL)
                                                         #linksseccaoultimo = re.findall('ODIO (.+?)<.+?>\n(.+?)</p>',newmatch[0],re.DOTALL)
                 if '<h2 class="title">Sleepy Hollow[Season 1][Completa]</h2>' in link2:
                         linkseries = re.findall('<p>(.+?)<br/>(.+?)</p>',newmatch[0],re.DOTALL)

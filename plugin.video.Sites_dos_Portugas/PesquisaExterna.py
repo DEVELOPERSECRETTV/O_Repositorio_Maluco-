@@ -4294,6 +4294,7 @@ def FTT_links(name,url,iconimage,fanart):
                 match2 = re.compile('<iframe.+?src="(.+?)".+?></iframe>').findall(fonte_e_url)
                 if not match2: match2 = re.compile('<iframe.+?src="(.+?)".+?>').findall(fonte_e_url)
                 if not match2: match2 = re.compile('<a href="(.+?)" target="_blank"><img border="0" src="http://1.bp.blogspot.com/-_yTINh6ZYdo/VNIWCpRm93I/AAAAAAAAAQk/akx68KoQ2VA/s1600/1.png"').findall(fonte_e_url)
+                if not match2: match2 = re.compile('<a href="(.+?)" target="_blank"><img border="0" src=".+?VER%2BONLINE.jpg"').findall(fonte_e_url)
 
                 for fonte_id in match2:
                         if 'videomega' in fonte_id:
@@ -6090,39 +6091,51 @@ def videomega_resolver(referer):
 			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
 			  'Referer':referer}
                 ref = re.compile('ref="(.+?)"').findall(abrir_url_tommy(url,ref_data))[0]
-	
-	ref_data={'Host':'videomega.tv',
-			  'Connection':'Keep-alive',
-			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-			  'Referer':referer}
-	
-	url = 'http://videomega.tv/iframe.php?ref=' + ref
-	url = 'http://videomega.tv/cdn.php?ref='+ref
+
+        ref_data={'Host':'videomega.tv',
+                  'Connection':'Keep-alive',
+		  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+		  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+		  'Referer':referer}
+        url = 'http://videomega.tv/cdn.php?ref='+ref+'&width=638&height=431&val=1'
 	iframe_html = abrir_url_tommy(url,ref_data)
-	code = re.compile('document.write\(unescape\("(.+?)"\)\)\;').findall(iframe_html)
-	id = re.compile('<div id="(.+?)" name="adblock"').findall(iframe_html)[0]
-	texto = ''
-	for c in code:
-		aux = urllib.unquote(c)
-		if re.search(id,aux):
-			texto = aux
-			break
-	if texto == '': return ['-','-']
-	try: url_video = re.compile('file:"(.+?)"').findall(texto)[0]
-	except: 
-		try: url_video = re.compile('file: "(.+?)"').findall(texto)[0]
-		except: url_video = '-'
-	if not 'mp4' in url_video: return ['-','-']
-	try: url_legendas = re.compile('http://videomega.tv/servesrt.php\?s=(.+?).srt').findall(texto)[0] + '.srt'
+	url_video = re.compile('<source src="(.+?)"').findall(iframe_html)[0]
+	try: url_legendas = re.compile('<track kind="captions" src="(.+?)"').findall(iframe_html)[0]
 	except: url_legendas = '-'
-	ref_data={'Host':url_video.split('/')[2],
-			  'Connection':'Keep-alive',
-			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-			  'Referer':'http://videomega.tv/player/jwplayer.flash.swf'}
-	#addLink(urltrailer+url_video+headers_str(ref_data),'','','')
-	return url_video+headers_str(ref_data),url_legendas
+        return url_video,url_legendas
+	
+##	ref_data={'Host':'videomega.tv',
+##			  'Connection':'Keep-alive',
+##			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+##			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+##			  'Referer':referer}
+##	
+##	url = 'http://videomega.tv/iframe.php?ref=' + ref
+##	url = 'http://videomega.tv/cdn.php?ref='+ref
+##	iframe_html = abrir_url_tommy(url,ref_data)
+##	code = re.compile('document.write\(unescape\("(.+?)"\)\)\;').findall(iframe_html)
+##	id = re.compile('<div id="(.+?)" name="adblock"').findall(iframe_html)[0]
+##	texto = ''
+##	for c in code:
+##		aux = urllib.unquote(c)
+##		if re.search(id,aux):
+##			texto = aux
+##			break
+##	if texto == '': return ['-','-']
+##	try: url_video = re.compile('file:"(.+?)"').findall(texto)[0]
+##	except: 
+##		try: url_video = re.compile('file: "(.+?)"').findall(texto)[0]
+##		except: url_video = '-'
+##	if not 'mp4' in url_video: return ['-','-']
+##	try: url_legendas = re.compile('http://videomega.tv/servesrt.php\?s=(.+?).srt').findall(texto)[0] + '.srt'
+##	except: url_legendas = '-'
+##	ref_data={'Host':url_video.split('/')[2],
+##			  'Connection':'Keep-alive',
+##			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+##			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+##			  'Referer':'http://videomega.tv/player/jwplayer.flash.swf'}
+##	#addLink(urltrailer+url_video+headers_str(ref_data),'','','')
+##	return url_video+headers_str(ref_data),url_legendas
 
 def headers_str(headers):
 	start = True
