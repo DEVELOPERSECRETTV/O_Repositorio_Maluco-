@@ -638,7 +638,7 @@ def FTT_encontrar_videos_filmes(name,url,mvoutv):
         if not fontes_video: fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
-        addLink(str(numero_de_fontes),'','','')
+        #addLink(str(numero_de_fontes),'','','')
         #if 'BREVEMENTE ONLINE' in fonte_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
         for fonte_e_url in fontes_video:
                 if imdbcode == '':

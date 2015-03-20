@@ -119,7 +119,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
                                 html_source = abrir_url(url_pesquisa)
                         except: html_source = ''
                         i=0
-                        items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                        items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
                         if not items: items = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', html_source, re.DOTALL)
                         for item in items:                        
                                 i = i + 1
@@ -1372,7 +1372,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                 else: imdbcode = ''
 
                                 urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
-                                if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
+                                if not urletitulo or 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                                 url = urletitulo[0][0]
                                 try:
                                         html_source = abrir_url(url)

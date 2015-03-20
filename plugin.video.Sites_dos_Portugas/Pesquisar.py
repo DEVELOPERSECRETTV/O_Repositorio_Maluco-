@@ -142,7 +142,7 @@ def pesquisar():
                                 html_source = abrir_url(url_pesquisa)
                         except: html_source = ''
                         i=0
-                        items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                        items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
                         for item in items:
                                 i = i + 1
                                 a = str(i)
@@ -238,7 +238,7 @@ def pesquisar():
                                 html_source = abrir_url(url_pesquisa)
                         except: html_source = ''
                         i=0
-                        items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                        items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
                         for item in items:
                                 i = i + 1
                                 a = str(i)
@@ -705,7 +705,7 @@ def encontrar_fontes_filmes_TPT(url,pesquisou,FS,item):
                         else: imdbcode = ''
                         
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
-                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
+                        if not urletitulo or 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         
                         qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br").findall(item)
                         if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br").findall(item)

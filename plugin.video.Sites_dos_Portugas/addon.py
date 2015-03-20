@@ -261,7 +261,7 @@ def TPTONOFF(url_TPT):
 	try:
 		html_source = abrir_url(url_TPT)
 	except: html_source = ''
-	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+	items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
 	if items != []: TPT_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: TPT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 def FTTONOFF(url_FTT):
@@ -468,7 +468,7 @@ def dirtodos(url):
                 try:
                         html_source = abrir_url(url_TPT)
                 except: html_source = ''
-                itemsTPT = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                itemsTPT = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
                 if itemsTPT != []:
                         proxima_TPT = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
                         try:
@@ -3548,7 +3548,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
 	try:
 		html_source = abrir_url(url)
 	except: html_source = ''
-	items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+	items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
 	if items != []:
                 num_f = 0
 		print len(items)
@@ -3566,7 +3566,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                         else: imdbcode = ''
                         
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
-                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
+                        if not urletitulo or 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         
                         qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br").findall(item)
                         if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br").findall(item)

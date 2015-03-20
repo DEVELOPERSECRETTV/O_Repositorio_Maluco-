@@ -109,7 +109,7 @@ def ultimos_episodios(url):
                 try:
                         html_source = abrir_url(url_TPT)
                 except: html_source = ''
-                itemsTPT = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                itemsTPT = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
                 if itemsTPT != []:
                         proxima_TPT = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
                         try:
@@ -249,7 +249,7 @@ def ultimos_ep_TPT(item):
                         if urltr: urltrailer = 'https://www.youtube.com/'+urltr[0]
                         
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
-                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
+                        if not urletitulo or 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
                         if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br").findall(item)
                         if qualid:
@@ -1032,7 +1032,7 @@ def TPTMASHUP(item):
                         audio_filme = ''
                                 
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
-                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
+                        if not urletitulo or 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         ano = re.compile("<b>ANO:.+?/b>(.+?)<br").findall(item)
                         audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br").findall(item)
                         thumbnail = re.compile('src="(.+?)"').findall(item)
@@ -2433,6 +2433,7 @@ def Series_Series_M(url):
                 html_source = abrir_url('http://toppt.net/')
         except: html_source = ''
         html_items_series = re.findall('<a href="http://toppt.net/category/series/">SÈRIES NOVAS</a>(.*?)<div class="clearfix">', html_source, re.DOTALL)
+        if not html_items_series: html_items_series = re.findall('15845"><a href="http://toppt.net/category/series/">SÈRIES</a>(.*?)<div class="span-24">', html_source, re.DOTALL)
         num_series = re.compile('<a href="(.+?)">(.+?)</a>').findall(html_items_series[0])
         #addLink(str(len(num_series)),'','','')
         for endereco_series,nome_series in num_series:
@@ -2447,7 +2448,8 @@ def Series_Series_M(url):
                         SERIES = threading.Thread(name='SERIES'+str(i), target=s_TPT, args=(str(a),str(nome_series),endereco_series,_imdbcode_,))
                         threads.append(SERIES)
                         i = i + 1
-        html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main">', html_source, re.DOTALL)
+        html_items_series = re.findall('15686"><a href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main"', html_source, re.DOTALL)
+        if not html_items_series: html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main">', html_source, re.DOTALL)
         num_series = re.compile('<a href="(.+?)">(.+?)</a>').findall(html_items_series[0])
         #addLink(str(len(num_series)),'','','')
         for endereco_series,nome_series in num_series:
@@ -2598,7 +2600,7 @@ def s_TPT(ordem,nome_series,endereco_series,_imdbcode_):
         sinopse = '---'
         genero = '---'
         
-        item = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_s, re.DOTALL)[0]
+        item = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_s, re.DOTALL)[0]
         ano = re.compile("<b>ANO:.+?/b>(.+?)<br").findall(item)
         if ano: ano_filme = ano[0].replace(' ','')
         else: ano_filme = '---'

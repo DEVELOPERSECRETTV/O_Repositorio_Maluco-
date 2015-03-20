@@ -105,6 +105,7 @@ def TPT_Menu_Top_Filmes(item):
                                 html_source = abrir_url(item)
                         except: html_source = ''
                         items = re.findall('<div id="content">(.*?)<span id="more', html_source, re.DOTALL)
+                        if not items: items = re.findall('<div class="post-wrap(.*?)<span id="more', html_source, re.DOTALL)
                         if items != []:
                                 urletitulo = re.compile('class="title">(.+?)<').findall(items[0])
                         try:
@@ -189,6 +190,7 @@ def TPT_Menu_Top_Series(item):
                                 html_source = abrir_url(item)
                         except: html_source = ''
                         items = re.findall('<div id="content">(.*?)<span id="more', html_source, re.DOTALL)
+                        if not items: items = re.findall('<div class="post-wrap(.*?)<span id="more', html_source, re.DOTALL)
                         if items != []:
                                 imdb = re.compile('imdb.com/title/(.+?)/').findall(items[0])
                                 if imdb: imdbcode = imdb[0]
@@ -293,6 +295,7 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                         html_source = abrir_url('http://toppt.net/')
                 except: html_source = ''
                 html_items_series = re.findall('<a href="http://toppt.net/category/series/">SÈRIES NOVAS</a>(.*?)<div class="clearfix">', html_source, re.DOTALL)
+                if not html_items_series: html_items_series = re.findall('15845"><a href="http://toppt.net/category/series/">SÈRIES</a>(.*?)<div class="span-24">', html_source, re.DOTALL)
                 for item_series in html_items_series:
                         series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
                         for endereco_series,nome_series in series:
@@ -313,7 +316,8 @@ def TPT_Menu_Series_A_a_Z(artfolder,url):
                                         if i < 100 and i > 9: a = '0'+a
                                         TPT = threading.Thread(name='TPT'+str(i), target=Series_TPT, args=('FILME'+str(a)+'FILME',endereco_series,nome_series,))
                                         threads.append(TPT)
-                html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main">', html_source, re.DOTALL)
+                html_items_series = re.findall('15686"><a href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main"', html_source, re.DOTALL)
+                if not html_items_series: html_items_series = re.findall('href="http://toppt.net/category/series/">SÉRIES</a>(.*?)<div id="main">', html_source, re.DOTALL)
                 for item_series in html_items_series:
                         series = re.compile('<a href="(.+?)">(.+?)</a>').findall(item_series)
                         for endereco_series,nome_series in series:
@@ -441,7 +445,7 @@ def Series_TPT(FILMN,endereco_series,nome_series):
         try:
                 html_source = abrir_url(endereco_series)
         except: html_source = ''
-        items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+        items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
         if items != '':
                 try:
                         FILMEN = re.compile('FILME(.+?)FILME').findall(FILMN)
@@ -533,12 +537,12 @@ def TPT_encontrar_fontes_filmes(url):
 		html_source = abrir_url(url)
 	except: html_source = ''
 	if name != '[COLOR yellow]- Top Séries[/COLOR]' and name != '[COLOR yellow]- Top Filmes[/COLOR]':
-                items = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
         if name == '[COLOR yellow]- Top Séries[/COLOR]':
-                tp_series = re.findall('<h3 class="widgettitle">TOP SÉRIES</h3>(.+?)<ul class="widget-container">', html_source, re.DOTALL)
+                tp_series = re.findall('<h3 class="widgettitle">TOP SÉRIES</h3>(.+?)<ul class="widget-wrap">', html_source, re.DOTALL)
                 items = re.compile('<a href="(.+?)".+?<img.+?src=".+?"').findall(tp_series[0])
         if name == '[COLOR yellow]- Top Filmes[/COLOR]':
-                tp_filmes = re.findall('<h3 class="widgettitle">TOP FILMES</h3>(.+?)<ul class="widget-container">', html_source, re.DOTALL)
+                tp_filmes = re.findall('<h3 class="widgettitle">TOP FILMES</h3>(.+?)<ul class="widget-wrap">', html_source, re.DOTALL)
                 items = re.compile('<a href="(.+?)".+?<img.+?src=".+?"').findall(tp_filmes[0])
 
         threads = []
@@ -657,7 +661,7 @@ def Fontes_Filmes_TPT(item):
                         else: imdbcode = ''
                         
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
-                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
+                        if not urletitulo or 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         
                         qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
                         if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br").findall(item)
@@ -3525,7 +3529,7 @@ def ultimos_episodios_TPT_ultimos(url):
                 try:
                         html_source = abrir_url(url)
                 except: html_source = ''
-                itemsTPT = re.findall('<div class="postmeta-primary">(.*?)<div class="readmore">', html_source, re.DOTALL)
+                itemsTPT = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
                 #addLink(str(len(itemsTPT)),'','','')
                 if itemsTPT != []:
                         proxima_TPT = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
@@ -3657,7 +3661,7 @@ def ultimos_ep_TPT(item):
                         if urltr: urltrailer = 'https://www.youtube.com/'+urltr[0]
                         
                         urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
-                        if 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
+                        if not urletitulo or 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
                         qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br").findall(item)
                         if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br").findall(item)
                         if qualid:
