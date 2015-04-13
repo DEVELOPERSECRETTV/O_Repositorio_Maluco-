@@ -1332,6 +1332,16 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 			#addLink(url,'','')
     		except:pass
     	elif "videomega" in url or '(Videomega)' in name:
+##                try:
+##                        sources = []
+##                        hosted_media = urlresolver.HostedMediaFile(iframe_url)
+##                        sources.append(hosted_media)
+##                        source = urlresolver.choose_source(sources)
+##                        if source: 
+##                                url = source.resolve()
+##                        else: url = ''
+##                        addLink(iframe_url,'','','')
+##    		except:pass
 		try:
                         #addLink(url,'','','')
                         urli,checker = videomega_resolver(iframe_url)
@@ -1394,7 +1404,7 @@ class MyPlayer(xbmc.Player):
         def PlayStream(self, playlist):  
                 self.play(playlist)
                 progress.close()
-                if self.checkerSubs == '' or self.checkerSubs == None: pass
+                if self.checkerSubs == '' or self.checkerSubs == None or self.checkerSubs == '-': pass
                 else: self.setSubtitles(self.checkerSubs)
                 if not self.isPlaying() and self.Playable == 'Nao':
                         xbmcgui.Dialog().ok('SITES dos PORTUGAS', 'Este stream está offline.', 'Tente outro stream.')
@@ -2138,13 +2148,17 @@ def videomega_resolver(referer):
                                                 ref = re.compile('ref=(.+?)&').findall(iframe)[0]
                                         except:
                                                 try:
-                                                        iframe = re.compile('<iframe.+?src=http://videomega.tv/cdn.php\?(.+?) frameborder.+?</iframe>').findall(html)[0] + '&'
+                                                        iframe = re.compile('"http://videomega.tv/view.php?(.+?)"').findall(html)[0] + '&'
                                                         ref = re.compile('ref=(.+?)&').findall(iframe)[0]
                                                 except:
                                                         try:
-                                                                #iframe = re.compile('=(.*)').findall(referer)[0] + '&'
-                                                                ref = re.compile('=(.*)').findall(referer)[0]
-                                                        except: pass
+                                                                iframe = re.compile('<iframe.+?src=http://videomega.tv/cdn.php\?(.+?) frameborder.+?</iframe>').findall(html)[0] + '&'
+                                                                ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+                                                        except:
+                                                                try:
+                                                                        #iframe = re.compile('=(.*)').findall(referer)[0] + '&'
+                                                                        ref = re.compile('=(.*)').findall(referer)[0]
+                                                                except: pass
 
 
 
@@ -2159,7 +2173,9 @@ def videomega_resolver(referer):
 			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
 			  'Referer':referer}
                 ref = re.compile('ref="(.+?)"').findall(abrir_url_tommy(url,ref_data))[0]
-        #addLink(referer+'-'+ref,'','','')
+       # addLink(referer+'-'+ref,'','','')
+
+       # referer = 'http://videomega.tv/view.php?ref='+ref ###############
 
         ref_data={'Host':'videomega.tv',
                   'Connection':'Keep-alive',
@@ -2167,8 +2183,23 @@ def videomega_resolver(referer):
 		  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
 		  'Referer':referer}
         url = 'http://videomega.tv/cdn.php?ref='+ref+'&width=638&height=431&val=1'
+        url = 'http://videomega.tv/view.php?ref='+ref
+
+    #    url = 'http://videomega.tv/upd_views.php' ################
+        
 	iframe_html = abrir_url_tommy(url,ref_data)
+
+##	ref_data={'Host':'videomega.tv',########################
+##                  'Connection':'Keep-alive',
+##		  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+##		  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+##		  'Referer':referer}
+	iframe_html = abrir_url_tommy(url,ref_data)
+	iframe_html = abrir_url_tommy(url,ref_data)##################
+
 	url_video = re.compile('<source src="(.+?)"').findall(iframe_html)[0]
+	#url_video = re.compile('videojs[(]"container"[)][.]src[(]"(.+?)"').findall(iframe_html)[0]
+	#addLink(url_video,'','','')
 	try: url_legendas = re.compile('<track kind="captions" src="(.+?)"').findall(iframe_html)[0]
 	except: url_legendas = '-'
         return url_video,url_legendas

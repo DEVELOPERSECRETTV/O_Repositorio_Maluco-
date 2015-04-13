@@ -1633,6 +1633,7 @@ def WlinksS(url):
                 items = re.findall('<div class="thumb-and-episodes">(.*)', html_source, re.DOTALL)
         for item in items:
                 Otitle = re.compile('<span class="original-name">[-](.+?)</span>').findall(item)
+                if not Otitle:Otitle = re.compile('<div class="thumb-effect2" title="(.+?)">').findall(item)
                 title = re.compile('class="movie-name">(.+?)</a>').findall(item)                
                 link = re.compile('<a href="(.+?)"><img src=').findall(item)
                 anos = re.compile('[(]</span>(.+?)<span>[)]').findall(item)
@@ -1651,6 +1652,7 @@ def WlinksS(url):
         if not items and umS == '': items = re.findall('<div class="thumb-and-episodes">(.*)', html_source, re.DOTALL)
         for item in items:
                 Otitle = re.compile('<span class="original-name">[-](.+?)</span>').findall(item)
+                if not Otitle:Otitle = re.compile('<div class="thumb-effect2" title="(.+?)">').findall(item)
                 title = re.compile('class="movie-name">(.+?)</a>').findall(item)                
                 link = re.compile('<a href="(.+?)"><img src=').findall(item)                        
                 anos = re.compile('[(]</span>(.+?)<span>[)]').findall(item)
@@ -1742,7 +1744,10 @@ def WlinksS(url):
 def imdbimdbW(ordem,l,_imdbcode_):
         try: html_so = clean(abrir_url(l))
 	except: html_so = ''
-        imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(html_so)[0]
+        try:imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(html_so)[0]
+        except:
+                try:imdb = re.compile('"http://www.imdb.com/title/(.+?)"').findall(html_so)[0]
+                except: imdb='---'
         _imdbcode_.append(ordem+'|'+imdb)
 
 def seasonsW(name,url):
