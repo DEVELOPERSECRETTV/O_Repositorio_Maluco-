@@ -152,7 +152,9 @@ def CMC_Menu_Filmes_Top_Semanal(artfolder):
                                         nome = ''
 
                                 snpse = re.compile("<div id='imgsinopse'>(.+?)</div>").findall(item)
-                                if snpse: sinopse = snpse[0]
+                                if not snpse: snpse = re.compile('SINOPSE:&nbsp;</span></b><span style="text-align: justify;">(.+?)</span><br />').findall(item)
+                                if snpse: sinopse = snpse[0].replace('&nbsp;','')
+                                else: sinopse = ''
                                 sinopse = sinopse.replace('&#8216;',"'")
                                 sinopse = sinopse.replace('&#8217;',"'")
                                 sinopse = sinopse.replace('&#8211;',"-")
@@ -168,19 +170,28 @@ def CMC_Menu_Filmes_Top_Semanal(artfolder):
                                 qualidade = re.compile("<strong>Qualidade.+?</strong>(.+?)</div>").findall(item)
                                 if not qualidade: qualidade = re.compile('Qualidade.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
                                 if not qualidade: qualidade = re.compile('Qualidade.+?</span>(.+?)</b></span></div>').findall(item)
-                                if qualidade: qualidade_filme = qualidade[0].replace('&#8211;',"-")
+                                if not qualidade: qualidade = re.compile('<b>Vers.+?</b>:(.+?)<b>G').findall(item)
+                                if qualidade:
+                                        qualidade_filme = qualidade[0].replace('<span style="color: #666666;"><span style="font-family: Arial,Helvetica,sans-serif;">','')
+                                        qualidade_filme = qualidade_filme.replace('</span></span>','').replace('</b></span><span style="color: #333333; font-family: Verdana, Arial, Helvetica, sans-serif;"><b><i>','')
+                                        qualidade_filme = qualidade_filme.replace('&#8211;',"-").replace('&nbsp;','').replace(' ','').replace('</i>','')
                                 else: qualidade_filme = ''
 
                                 audio = re.compile('Audio.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
                                 if not audio: audio = re.compile('Audio.+?</span>(.+?)</b></span></div>').findall(item)
-                                if audio and qualidade_filme == '': qualidade_filme = audio[0]
+                                if not audio: audio = re.compile('<b>Audio</b>:(.+?)<b>').findall(item)
+                                if audio and qualidade_filme == '': qualidade_filme = audio[0].replace('&nbsp;','').replace(' ','')
                                         
                                 ano = re.compile('>Ano.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
                                 if not ano: ano = re.compile('>Ano.+?</span>(.+?)</b></span></div>').findall(item)
-                                if ano: ano_filme = ano[0].replace('<u>','').replace('</u>','')
+                                if not ano: ano = re.compile('<b>Ano</b>:(.+?)<b>Audio').findall(item)
+                                if ano:
+                                        ano_filme = ano[0].replace('<span style="font-family: Arial, Helvetica, sans-serif;">','').replace('</span>','')
+                                        ano_filme = ano_filme.replace('&nbsp;','').replace(' ','').replace('<b>','').replace('</b>','')
                                 else: ano_filme = ''
                                 
-                                thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                                thumbnail = re.compile('<img border="0" src="(.+?)" .+? /></strike>').findall(item)
+                                if not thumbnail: thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
                                 if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
                                 else: thumb = ''
 
@@ -311,6 +322,7 @@ def CMC_encontrar_fontes_filmes(url):
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
+                        #addLink(imdbcode,'','','')
                         
                         urltitulo = re.compile("<a href='(.+?)'>\n(.+?)\n</a>").findall(item)
                         if not urltitulo: urltitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
@@ -322,7 +334,9 @@ def CMC_encontrar_fontes_filmes(url):
                                 nome = ''
 
                         snpse = re.compile("<div id='imgsinopse'>(.+?)</div>").findall(item)
-                        if snpse: sinopse = snpse[0]
+                        if not snpse: snpse = re.compile('SINOPSE:&nbsp;</span></b><span style="text-align: justify;">(.+?)</span><br />').findall(item)
+                        if snpse: sinopse = snpse[0].replace('&nbsp;','')
+                        else: sinopse = ''
                         sinopse = sinopse.replace('&#8216;',"'")
                         sinopse = sinopse.replace('&#8217;',"'")
                         sinopse = sinopse.replace('&#8211;',"-")
@@ -338,19 +352,28 @@ def CMC_encontrar_fontes_filmes(url):
                         qualidade = re.compile("<strong>Qualidade.+?</strong>(.+?)</div>").findall(item)
                         if not qualidade: qualidade = re.compile('Qualidade.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
                         if not qualidade: qualidade = re.compile('Qualidade.+?</span>(.+?)</b></span></div>').findall(item)
-                        if qualidade: qualidade_filme = qualidade[0].replace('&#8211;',"-")
+                        if not qualidade: qualidade = re.compile('<b>Vers.+?</b>:(.+?)<b>G').findall(item)
+                        if qualidade:
+                                qualidade_filme = qualidade[0].replace('<span style="color: #666666;"><span style="font-family: Arial,Helvetica,sans-serif;">','')
+                                qualidade_filme = qualidade_filme.replace('</span></span>','').replace('</b></span><span style="color: #333333; font-family: Verdana, Arial, Helvetica, sans-serif;"><b><i>','')
+                                qualidade_filme = qualidade_filme.replace('&#8211;',"-").replace('&nbsp;','').replace(' ','').replace('</i>','')
                         else: qualidade_filme = ''
 
                         audio = re.compile('Audio.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
                         if not audio: audio = re.compile('Audio.+?</span>(.+?)</b></span></div>').findall(item)
-                        if audio and qualidade_filme == '': qualidade_filme = audio[0]
+                        if not audio: audio = re.compile('<b>Audio</b>:(.+?)<b>').findall(item)
+                        if audio and qualidade_filme == '': qualidade_filme = audio[0].replace('&nbsp;','').replace(' ','')
                                 
                         ano = re.compile('>Ano.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
                         if not ano: ano = re.compile('>Ano.+?</span>(.+?)</b></span></div>').findall(item)
-                        if ano: ano_filme = ano[0]
+                        if not ano: ano = re.compile('<b>Ano</b>:(.+?)<b>Audio').findall(item)
+                        if ano:
+                                ano_filme = ano[0].replace('<span style="font-family: Arial, Helvetica, sans-serif;">','').replace('</span>','')
+                                ano_filme = ano_filme.replace('&nbsp;','').replace(' ','').replace('<b>','').replace('</b>','')
                         else: ano_filme = ''
                         
-                        thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                        thumbnail = re.compile('<img border="0" src="(.+?)" .+? /></strike>').findall(item)
+                        if not thumbnail: thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
                         else: thumb = ''
 
@@ -551,10 +574,12 @@ def CMC_encontrar_videos_filmes(name,url,mvoutv):
         for fonte_e_url in fontes_video:
                 matchs = re.compile('<iframe.+?src="(.+?)".+?></iframe>').findall(fonte_e_url)
                 for match in matchs:
-                        conta_id_video = conta_id_video + 1
-                        url = match
-                        conta_os_items = conta_os_items + 1
-                        CMC_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                        if 'youtube' not in match:
+                                conta_id_video = conta_id_video + 1
+                                url = match
+                                #addLink(match,'','','')
+                                conta_os_items = conta_os_items + 1
+                                CMC_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
 
 ##        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
 ##        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
@@ -753,14 +778,15 @@ def CMC_links(name,url,iconimage,fanart):
         for fonte_e_url in fontes_video:
                 matchs = re.compile('<iframe.+?src="(.+?)".+?></iframe>').findall(fonte_e_url)
                 for match in matchs:
-                        conta_id_video = conta_id_video + 1
-                        url = match
-                        conta_os_items = conta_os_items + 1
-                        CMC_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                        if 'youtube' not in match:
+                                conta_id_video = conta_id_video + 1
+                                url = match
+                                conta_os_items = conta_os_items + 1
+                                CMC_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
 
 
 def CMC_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart):
-        
+        fonte_id=''
         
         if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-Serie' not in nomeescolha:
                 url = url + '///' + nomeescolha

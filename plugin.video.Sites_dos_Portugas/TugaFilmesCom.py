@@ -1084,7 +1084,7 @@ def TFC_links(name,url,iconimage,fanart):
         assist = re.findall(">ASSISTIR.+?", fonte, re.DOTALL)
         fontes = re.findall("Ver Aqui.+?", fonte, re.DOTALL)
         numero_de_fontes = len(fontes)
-        #addLink(str(len(assist)),'','','')
+        addLink(str(len(assist)),'','','')
 	if fonte:
                 if len(assist) > 1:
                         assistir_fontes = re.findall('>ASSISTIR(.*?)------------------------------', fonte, re.DOTALL)
@@ -1113,6 +1113,12 @@ def TFC_links(name,url,iconimage,fanart):
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                        matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
+                                        if matchi:
+                                                for url in matchi:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
@@ -1148,6 +1154,12 @@ def TFC_links(name,url,iconimage,fanart):
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                        matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
+                                        if matchi:
+                                                for url in matchi:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
                                         conta_os_items = conta_os_items + 1
                         else:
                                 assistir_fontes = re.findall('>ASSISTIR(.*?)</iframe>', fonte, re.DOTALL)
@@ -1177,6 +1189,12 @@ def TFC_links(name,url,iconimage,fanart):
                                         match = re.compile('<a href="(.+?)" target=".+?">Ver Aqui</a>').findall(ass_fon)
                                         if match:
                                                 for url in match:
+                                                        id_video = ''
+                                                        conta_id_video = conta_id_video + 1
+                                                        TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)
+                                        matchi = re.compile('<script type="text/javascript" src="(.+?)"></script><script').findall(ass_fon)
+                                        if matchi:
+                                                for url in matchi:
                                                         id_video = ''
                                                         conta_id_video = conta_id_video + 1
                                                         TFC_resolve_not_videomega_filmes(name,url,id_video,conta_id_video,conta_os_items,iconimage,fanart)

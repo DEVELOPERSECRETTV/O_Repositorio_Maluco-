@@ -2051,10 +2051,13 @@ def PLAY_episodes(url,name,iconimage,checker,fanart):#,nomeAddon):
     	elif "videomega" in url or '(Videomega)' in nomeserver:
 		try:
                         #addLink(nomeserver,'','','')
+                        #addLink(url,'','','')
+                        #addLink(iframe_url,'','','')
                         urli,checker = videomega_resolver(iframe_url)
                         uli=re.compile('(.+?)[|]Host=').findall(urli)
                         if uli: url=uli[0]
                         else: url=urli
+                        #addLink(url,'','','')
 ##                        if "iframe" not in url:
 ##                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
 ##                                iframe_url = 'http://videomega.tv/iframe.php?ref=' + id_videomega
@@ -2119,61 +2122,71 @@ def videomega_resolver(referer):
         
         ref = '---'
         #return
-	html = abrir_url(referer)
-	if re.search('http://videomega.tv/iframe.js',html):
-		lines = html.splitlines()
-		aux = ''
-		for line in lines:
-			if re.search('http://videomega.tv/iframe.js',line):
-				aux = line
-				break;
-		ref = re.compile('ref="(.+?)"').findall(line)[0]
+
+	if 'videomega' in referer or 'tuga-filmes.us' in referer or 'tuga-filmes.tv' in referer:
+                ref=re.compile('=(.*)').findall(referer)[0]
+                if len(ref)>35:ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+ref))[0]
+                #addLink(referer,'','','')
 	else:
-		try:
-			hashk = re.compile('"http://videomega.tv/validatehash.php\?hashkey\=(.+?)"').findall(html)[0]
-			ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+hashk))[0]
-			#addLink(ref,'','','')
-		except:
-			try:
-				hashk = re.compile("'http://videomega.tv/validatehash.php\?hashkey\=(.+?)'").findall(html)[0]
-				ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+hashk))[0]
-				#addLink(ref,'','','')
-			except:
-				try:
-                                        iframe = re.compile('"http://videomega.tv/iframe.php\?(.+?)"').findall(html)[0] + '&'
-                                        ref = re.compile('ref=(.+?)&').findall(iframe)[0]
-				except:
+                html = abrir_url(referer)
+                if re.search('http://videomega.tv/iframe.js',html):
+                        lines = html.splitlines()
+                        aux = ''
+                        for line in lines:
+                                if re.search('http://videomega.tv/iframe.js',line):
+                                        aux = line
+                                        break;
+                        ref = re.compile('ref="(.+?)"').findall(line)[0]
+                else:
+                        try:
+                                hashk = re.compile('"http://videomega.tv/validatehash.php\?hashkey\=(.+?)"').findall(html)[0]
+                                ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+hashk))[0]
+                                #addLink(ref,'','','')
+                        except:
+                                try:
+                                        hashk = re.compile("'http://videomega.tv/validatehash.php\?hashkey\=(.+?)'").findall(html)[0]
+                                        ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+hashk))[0]
+                                        #addLink(ref,'','','')
+                                except:
                                         try:
-                                                iframe = re.compile('"http://videomega.tv/cdn.php\?(.+?)"').findall(html)[0] + '&'
+                                                iframe = re.compile('"http://videomega.tv/iframe.php\?(.+?)"').findall(html)[0] + '&'
                                                 ref = re.compile('ref=(.+?)&').findall(iframe)[0]
                                         except:
                                                 try:
-                                                        iframe = re.compile('"http://videomega.tv/view.php?(.+?)"').findall(html)[0] + '&'
+                                                        iframe = re.compile('"http://videomega.tv/cdn.php\?(.+?)"').findall(html)[0] + '&'
                                                         ref = re.compile('ref=(.+?)&').findall(iframe)[0]
                                                 except:
                                                         try:
-                                                                iframe = re.compile('<iframe.+?src=http://videomega.tv/cdn.php\?(.+?) frameborder.+?</iframe>').findall(html)[0] + '&'
+                                                                iframe = re.compile('"http://videomega.tv/view.php?(.+?)"').findall(html)[0] + '&'
                                                                 ref = re.compile('ref=(.+?)&').findall(iframe)[0]
                                                         except:
                                                                 try:
-                                                                        #iframe = re.compile('=(.*)').findall(referer)[0] + '&'
-                                                                        ref = re.compile('=(.*)').findall(referer)[0]
-                                                                except: pass
+                                                                        iframe = re.compile('<iframe.+?src=http://videomega.tv/cdn.php\?(.+?) frameborder.+?</iframe>').findall(html)[0] + '&'
+                                                                        ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+                                                                except:
+                                                                        try:
+                                                                                #iframe = re.compile('=(.*)').findall(referer)[0] + '&'
+                                                                                ref = re.compile('=(.*)').findall(referer)[0]
+                                                                        except: pass
 
 
 
         if '+link+' in ref: ref = re.compile('=(.*)').findall(referer)[0]
         #addLink(referer+'-'+ref,'','','')
+        #addLink(referer+'-'+ref,'','','')
         if ref=='---':
-                url = 'http://videomega.tv/validatehash.php?hashkey='+hashk#+'&width=650&height=480&val=1'
-                #url = 'http://videomega.tv/cdn.php?ref='+hashk+'&width=650&height=480&val=1'
-                ref_data={'Host':'videomega.tv',
-			  'Connection':'Keep-alive',
-			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-			  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-			  'Referer':referer}
-                ref = re.compile('ref="(.+?)"').findall(abrir_url_tommy(url,ref_data))[0]
-       # addLink(referer+'-'+ref,'','','')
+                try:
+                        url = 'http://videomega.tv/validatehash.php?hashkey='+hashk#+'&width=650&height=480&val=1'
+                        #url = 'http://videomega.tv/cdn.php?ref='+hashk+'&width=650&height=480&val=1'
+                        ref_data={'Host':'videomega.tv',
+                                  'Connection':'Keep-alive',
+                                  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                                  'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+                                  'Referer':referer}
+                
+                        ref = re.compile('ref="(.+?)"').findall(abrir_url_tommy(url,ref_data))[0]
+                except: pass
+        #addLink(referer+'-'+ref,'','','')
 
        # referer = 'http://videomega.tv/view.php?ref='+ref ###############
 

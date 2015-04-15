@@ -975,6 +975,11 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                 addDir1(name,'url',1004,iconimage,False,fanart)
         #addDir(name+url,'url',9999,iconimage,'',fanart)
         l= 0
+        num = 0
+        #return
+        episodiostotais = []
+        episimnao = 'sim'
+        newmatch1 = []
 	try:
 		link2=abrir_url(url)
 	except: link2 = ''
@@ -1007,21 +1012,121 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                         newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
                         l=4
                 #if not newmatch:addDir1(str(l),'url',1001,iconimage,False,'')
+                #return
                 if not newmatch:
                         if newmatch1 != [] and 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
-                                #lin1 = re.findall('<b>ANO:(.+?)<div id="comments">',link2,re.DOTALL)
-                                lin = re.findall('.+?EPIS',newmatch1[0],re.DOTALL)
-                                if not lin: lin = re.findall('.+?EPISODIO LEGENDADO',newmatch1[0],re.DOTALL)
+                                lin1 = re.findall('<div class="postmeta-primary">(.+?)<div id="comments">',link2,re.DOTALL)
+                                lin = re.compile('>(.+?)EPISODIO<').findall(lin1[0])
+                                #lin = re.findall('.+?EPIS',link2,re.DOTALL)
+                                lin = re.findall('EPISODIO(.*?)BAIXAR',link2,re.DOTALL)
+                                num = len(lin) + 0.0
+                                lin = re.findall('EPISODIO(.*?)DOWNLOAD',link2,re.DOTALL)
+                                #if not lin: lin = re.findall('.+?EPISODIO LEGENDADO',link2,re.DOTALL)
                                 #addDir1(str(l),'url',1001,iconimage,False,'')
-                                num = len(lin) + 0.0# - 1.0
-                                #addLink(str(num),'','','')
+                                num = num + len(lin) + 0.0# - 1.0
+                                #addLink(str(len(lin)),'','','')
                                 #return
+                                linkseries1 = re.findall('border-top-right-radius:2px;">(.+?)EPISODIO LEGENDADO</div>(.+?)DOWNLOAD POR',link2,re.DOTALL)
+                                for parte1,parte2 in linkseries1:                                        
+                                        #addLink('1','','','')
+                                        try:
+                                                episodio = re.compile('(\d+)').findall(parte1)
+                                                if episodio:
+                                                        episodiot = episodio[0]
+                                                        episodio = episodio[0]
+                                                a_q = re.compile('\d+')
+                                                qq_aa = a_q.findall(episodio)
+                                                for q_a_q_a in qq_aa:
+                                                        if len(q_a_q_a) == 1:
+                                                                episodiot = '%02d' % int(episodio)#'0'+episodio
+                                                #addLink(str(episodiot),'','','')
+                                                if episodiot not in episodiostotais:
+                                                        episimnao = 'nao'
+                                                        episodiostotais.append(episodiot)
+                                                else: episimnao = 'sim'
+                                        except: pass
+                                        
+                                        if episimnao == 'nao':
+                                        
+                                                
+                                                try:
+                                                        epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
+                                                        iconimage = th
+                                                except: pass
+                                                conta_id_video = 0
+                                                
+        ##                                        match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
+        ##                                        for url in match:
+        ##                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+        ##                                                        conta_id_video = conta_id_video + 1
+        ##                                                        conta_os_items = conta_os_items + 1
+        ##                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+        ##                                                        if f_id == '': f_id = fonte_id
+        ##                                                        else: f_id = f_id + '|' + fonte_id
+                                                match = re.compile('src="(.+?)"').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
+                                                
+                                                match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
+                                                match = re.compile('SRC="(.+?)"').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
+                                                try:
+                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
+                                                                percent = int( ( i / num ) * 100)
+                                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
+                                                                progress.update( percent, "", message, "" )
+                                                                print str(i) + " de " + str(int(num))
+                                                                
+                                                                if progress.iscanceled():
+                                                                        break
+                                                        #episod = episodiot
+                                                        #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
+                                                        mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                                        addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
+                                                except:
+                                                        if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
+                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
+                                                                percent = int( ( i / num ) * 100)
+                                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]'
+                                                                progress.update( percent, "", message, "" )
+                                                                print str(i) + " de " + str(int(num))
+                                                                
+                                                                if progress.iscanceled():
+                                                                        break
+                                                        mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                                        addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
+
+                                        f_id = ''
+                                        i = i + 1
+                                episimnao = 'sim'
+                                episodio = ''
+                                episodiot = ''
                                 #linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div><',newmatch1[0],re.DOTALL)
-                                linkseriesssss = re.findall('<span class="su-spoiler-icon"></span>(.+?)</div>(.+?)BAIXAR',link2,re.DOTALL)
+                                linkseries2 = re.findall('<p></div></div>\n<h2></h2>\n.+?<span class="su-spoiler-icon"></span>(.+?)</div><div class="su-spoiler-content su-clearfix"(.+?)BAIXAR',link2,re.DOTALL)
 ##                                if not linkseriesssss: linkseriesssss = re.findall('<h2>(.+?)</h2>\n(.+?)DOWNLOAD POR',newmatch1[0],re.DOTALL)
 ##                                if not linkseriesssss: linkseriesssss = re.findall('<h2>(.+?)</h2>(.+?)BAIXAR',newmatch1[0],re.DOTALL)
-                                for parte1,parte2 in linkseriesssss:                                        
-                                        
+                               # if 'VER ONLINE LIEGENDADO' in linkseries2:
+                                for parte1,parte2 in linkseries2:
+                                        #episodio = re.compile('(\d+)').findall(parte1)
+                                        #addLink('2 '+'-'+str(len(linkseries2)),'','','')
                                         try:
                                                 episodio = re.compile('(\d+)').findall(parte1)
                                                 if episodio:
@@ -1032,81 +1137,89 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                                                 for q_a_q_a in qq_aa:
                                                         if len(q_a_q_a) == 1:
                                                                 episodiot = '%02d' % int(episodio)#'0'+episodio
+                                                #addLink(str(episodiot),'','','')
+                                                if episodiot not in episodiostotais:
+                                                        episimnao = 'nao'
+                                                        episodiostotais.append(episodiot)
+                                                else: episimnao = 'sim'
                                         except: pass
                                         
+                                        if episimnao == 'nao':    
+                                                try:
+                                                        epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
+                                                        iconimage = th
+                                                except: pass
+                                                conta_id_video = 0
                                                 
-                                        try:
-                                                epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
-                                                iconimage = th
-                                        except: pass
-                                        conta_id_video = 0
+        ##                                        match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
+        ##                                        for url in match:
+        ##                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+        ##                                                        conta_id_video = conta_id_video + 1
+        ##                                                        conta_os_items = conta_os_items + 1
+        ##                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+        ##                                                        if f_id == '': f_id = fonte_id
+        ##                                                        else: f_id = f_id + '|' + fonte_id
+                                                match = re.compile('src="(.+?)"').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
+                                                
+                                                match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
+                                                match = re.compile('SRC="(.+?)"').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
                                         
-##                                        match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
-##                                        for url in match:
-##                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-##                                                        conta_id_video = conta_id_video + 1
-##                                                        conta_os_items = conta_os_items + 1
-##                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-##                                                        if f_id == '': f_id = fonte_id
-##                                                        else: f_id = f_id + '|' + fonte_id
-                                        match = re.compile('src="(.+?)"').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        
-                                        match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        match = re.compile('SRC="(.+?)"').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        try:
-                                                if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
-                                                        percent = int( ( i / num ) * 100)
-                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
-                                                        progress.update( percent, "", message, "" )
-                                                        print str(i) + " de " + str(int(num))
-                                                        
-                                                        if progress.iscanceled():
-                                                                break
-                                                #episod = episodiot
-                                                #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
-                                                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
-                                                addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
-                                        except:
-                                                if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
-                                                if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
-                                                        percent = int( ( i / num ) * 100)
-                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]'
-                                                        progress.update( percent, "", message, "" )
-                                                        print str(i) + " de " + str(int(num))
-                                                        
-                                                        if progress.iscanceled():
-                                                                break
-                                                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
-                                                addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
+                                                try:
+                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
+                                                                percent = int( ( i / num ) * 100)
+                                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
+                                                                progress.update( percent, "", message, "" )
+                                                                print str(i) + " de " + str(int(num))
+                                                                
+                                                                if progress.iscanceled():
+                                                                        break
+                                                        #episod = episodiot
+                                                        #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
+                                                        mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                                        addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
+                                                except:
+                                                        if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
+                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
+                                                                percent = int( ( i / num ) * 100)
+                                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]'
+                                                                progress.update( percent, "", message, "" )
+                                                                print str(i) + " de " + str(int(num))
+                                                                
+                                                                if progress.iscanceled():
+                                                                        break
+                                                        mvoutv = str(temporada)+'|'+str(episodio)+'|'+str(namet)+'|'+str(tvdbid)+'|'+str(imdbcode)+'|'+str(anne)
+                                                        addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
 
                                         f_id = ''
                                         i = i + 1
+
+                                episimnao = 'sim'
         
-                                linkseriesssss = re.findall('<h2></h2>.+?<h2>(.+?)EPIS.+?</h2>\n(.+?)DOWNLOAD POR',link2,re.DOTALL)
+                                linkseries3 = re.findall('<h2></h2>.+?<h2>(.+?)EPIS.+?</h2>\n(.+?)DOWNLOAD POR',link2,re.DOTALL)
                                 
-                                for parte1,parte2 in linkseriesssss:                                        
-                                        
+                                for parte1,parte2 in linkseries3:                                        
+                                        #addLink('3','','','')
                                         try:
                                                 episodio = re.compile('(\d+)').findall(parte1)
                                                 if episodio:
@@ -1117,82 +1230,90 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                                                 for q_a_q_a in qq_aa:
                                                         if len(q_a_q_a) == 1:
                                                                 episodiot = '%02d' % int(episodio)#'0'+episodio
+                                                #addLink(str(episodiot),'','','')
+                                                if episodiot not in episodiostotais:
+                                                        episimnao = 'nao'
+                                                        episodiostotais.append(episodiot)
+                                                else: episimnao = 'sim'
                                         except: pass
                                         #addLink(parte1,'','','')
+                                        if episimnao == 'nao':      
+                                                try:
+                                                        epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
+                                                        iconimage = th
+                                                except: pass
+                                                conta_id_video = 0
                                                 
-                                        try:
-                                                epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
-                                                iconimage = th
-                                        except: pass
-                                        conta_id_video = 0
+        ##                                        match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
+        ##                                        for url in match:
+        ##                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+        ##                                                        conta_id_video = conta_id_video + 1
+        ##                                                        conta_os_items = conta_os_items + 1
+        ##                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+        ##                                                        if f_id == '': f_id = fonte_id
+        ##                                                        else: f_id = f_id + '|' + fonte_id
+                                                match = re.compile('src="(.+?)"').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
+                                                
+                                                match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
+                                                match = re.compile('SRC="(.+?)"').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
                                         
-##                                        match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
-##                                        for url in match:
-##                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-##                                                        conta_id_video = conta_id_video + 1
-##                                                        conta_os_items = conta_os_items + 1
-##                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-##                                                        if f_id == '': f_id = fonte_id
-##                                                        else: f_id = f_id + '|' + fonte_id
-                                        match = re.compile('src="(.+?)"').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        
-                                        match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        match = re.compile('SRC="(.+?)"').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        try:
-                                                if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
-                                                        percent = int( ( i / num ) * 100)
-                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
-                                                        progress.update( percent, "", message, "" )
-                                                        print str(i) + " de " + str(int(num))
-                                                        
-                                                        if progress.iscanceled():
-                                                                break
-                                                #episod = episodiot
-                                                #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
-                                                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
-                                                addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
-                                        except:
-                                                if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
-                                                if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
-                                                        percent = int( ( i / num ) * 100)
-                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]'
-                                                        progress.update( percent, "", message, "" )
-                                                        print str(i) + " de " + str(int(num))
-                                                        
-                                                        if progress.iscanceled():
-                                                                break
-                                                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
-                                                addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
+                                                try:
+                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
+                                                                percent = int( ( i / num ) * 100)
+                                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
+                                                                progress.update( percent, "", message, "" )
+                                                                print str(i) + " de " + str(int(num))
+                                                                
+                                                                if progress.iscanceled():
+                                                                        break
+                                                        #episod = episodiot
+                                                        #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
+                                                        mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                                        addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
+                                                except:
+                                                        if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
+                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
+                                                                percent = int( ( i / num ) * 100)
+                                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]'
+                                                                progress.update( percent, "", message, "" )
+                                                                print str(i) + " de " + str(int(num))
+                                                                
+                                                                if progress.iscanceled():
+                                                                        break
+                                                        mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                                        addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
 
                                         f_id = ''
                                         i = i + 1
+                                episimnao = 'sim'
                                 #linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div><',newmatch1[0],re.DOTALL)
                                 #linkseriesssss = re.findall('<span class="su-spoiler-icon"></span>(.+?)</div>(.+?)BAIXAR',newmatch1[0],re.DOTALL)
                                 #linkseriesssss = re.findall('<h2>(.+?)</h2>\n(.+?)DOWNLOAD POR',newmatch1[0],re.DOTALL)
-                                linkseriesssss = re.findall('<h2>(.+?)</h2>(.+?)BAIXAR',link2,re.DOTALL)
-                                for parte1,parte2 in linkseriesssss:                                        
-                                        
+                                linkseries4 = re.findall('<h2>(.+?)</h2>(.+?)BAIXAR',link2,re.DOTALL)
+                                #if not linkseries4: linkseries4 = re.findall('<h2>(.+?)</h2>(.+?)DOWNLOAD POR',link2,re.DOTALL)
+                                for parte1,parte2 in linkseries4:                                        
+                                        #addLink('4','','','')
                                         try:
                                                 episodio = re.compile('(\d+)').findall(parte1)
                                                 if episodio:
@@ -1203,82 +1324,89 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                                                 for q_a_q_a in qq_aa:
                                                         if len(q_a_q_a) == 1:
                                                                 episodiot = '%02d' % int(episodio)#'0'+episodio
+                                                #addLink(str(episodiot),'','','')
+                                                if episodiot not in episodiostotais:
+                                                        episimnao = 'nao'
+                                                        episodiostotais.append(episodiot)
+                                                else: episimnao = 'sim'
                                         except: pass
                                         
+                                        if episimnao == 'nao':     
+                                                try:
+                                                        epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
+                                                        iconimage = th
+                                                except: pass
+                                                conta_id_video = 0
                                                 
-                                        try:
-                                                epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
-                                                iconimage = th
-                                        except: pass
-                                        conta_id_video = 0
+        ##                                        match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
+        ##                                        for url in match:
+        ##                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+        ##                                                        conta_id_video = conta_id_video + 1
+        ##                                                        conta_os_items = conta_os_items + 1
+        ##                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+        ##                                                        if f_id == '': f_id = fonte_id
+        ##                                                        else: f_id = f_id + '|' + fonte_id
+                                                match = re.compile('src="(.+?)"').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
+                                                
+                                                match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
+                                                match = re.compile('SRC="(.+?)"').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
                                         
-##                                        match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
-##                                        for url in match:
-##                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-##                                                        conta_id_video = conta_id_video + 1
-##                                                        conta_os_items = conta_os_items + 1
-##                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-##                                                        if f_id == '': f_id = fonte_id
-##                                                        else: f_id = f_id + '|' + fonte_id
-                                        match = re.compile('src="(.+?)"').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        
-                                        match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        match = re.compile('SRC="(.+?)"').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        try:
-                                                if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
-                                                        percent = int( ( i / num ) * 100)
-                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
-                                                        progress.update( percent, "", message, "" )
-                                                        print str(i) + " de " + str(int(num))
-                                                        
-                                                        if progress.iscanceled():
-                                                                break
-                                                #episod = episodiot
-                                                #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
-                                                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
-                                                addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
-                                        except:
-                                                if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
-                                                if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
-                                                        percent = int( ( i / num ) * 100)
-                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]'
-                                                        progress.update( percent, "", message, "" )
-                                                        print str(i) + " de " + str(int(num))
-                                                        
-                                                        if progress.iscanceled():
-                                                                break
-                                                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
-                                                addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
+                                                try:
+                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
+                                                                percent = int( ( i / num ) * 100)
+                                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
+                                                                progress.update( percent, "", message, "" )
+                                                                print str(i) + " de " + str(int(num))
+                                                                
+                                                                if progress.iscanceled():
+                                                                        break
+                                                        #episod = episodiot
+                                                        #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
+                                                        mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                                        addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
+                                                except:
+                                                        if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
+                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
+                                                                percent = int( ( i / num ) * 100)
+                                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]'
+                                                                progress.update( percent, "", message, "" )
+                                                                print str(i) + " de " + str(int(num))
+                                                                
+                                                                if progress.iscanceled():
+                                                                        break
+                                                        mvoutv = str(temporada)+'|'+str(episodio)+'|'+str(namet)+'|'+str(tvdbid)+'|'+str(imdbcode)+'|'+str(anne)
+                                                        addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
 
                                         f_id = ''
                                         i = i + 1
-                                linkseriesssss = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div><',link2,re.DOTALL)
+                                episimnao = 'sim'
+                                linkseries5 = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div><',link2,re.DOTALL)
                                 #linkseriesssss = re.findall('<span class="su-spoiler-icon"></span>(.+?)</div>(.+?)BAIXAR',newmatch1[0],re.DOTALL)
                                 #linkseriesssss = re.findall('<h2>(.+?)</h2>\n(.+?)DOWNLOAD POR',newmatch1[0],re.DOTALL)
                                 #linkseriesssss = re.findall('<h2>(.+?)</h2>(.+?)BAIXAR',newmatch1[0],re.DOTALL)
-                                for parte1,parte2 in linkseriesssss:                                        
-                                        
+                                for parte1,parte2 in linkseries5:                                        
+                                        #addLink('5','','','')
                                         try:
                                                 episodio = re.compile('(\d+)').findall(parte1)
                                                 if episodio:
@@ -1289,73 +1417,79 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                                                 for q_a_q_a in qq_aa:
                                                         if len(q_a_q_a) == 1:
                                                                 episodiot = '%02d' % int(episodio)#'0'+episodio
+                                                #addLink(str(episodiot),'','','')
+                                                if episodiot not in episodiostotais:
+                                                        episimnao = 'nao'
+                                                        episodiostotais.append(episodiot)
+                                                else: episimnao = 'sim'
                                         except: pass
                                         
+                                        if episimnao == 'nao':      
+                                                try:
+                                                        epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
+                                                        iconimage = th
+                                                except: pass
+                                                conta_id_video = 0
                                                 
-                                        try:
-                                                epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
-                                                iconimage = th
-                                        except: pass
-                                        conta_id_video = 0
+        ##                                        match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
+        ##                                        for url in match:
+        ##                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+        ##                                                        conta_id_video = conta_id_video + 1
+        ##                                                        conta_os_items = conta_os_items + 1
+        ##                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+        ##                                                        if f_id == '': f_id = fonte_id
+        ##                                                        else: f_id = f_id + '|' + fonte_id
+                                                match = re.compile('src="(.+?)"').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
+                                                
+                                                match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
+                                                match = re.compile('SRC="(.+?)"').findall(parte2)
+                                                for url in match:
+                                                        if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
+                                                                conta_id_video = conta_id_video + 1
+                                                                conta_os_items = conta_os_items + 1
+                                                                fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
+                                                                if f_id == '': f_id = fonte_id
+                                                                else: f_id = f_id + '|' + fonte_id
                                         
-##                                        match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
-##                                        for url in match:
-##                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-##                                                        conta_id_video = conta_id_video + 1
-##                                                        conta_os_items = conta_os_items + 1
-##                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-##                                                        if f_id == '': f_id = fonte_id
-##                                                        else: f_id = f_id + '|' + fonte_id
-                                        match = re.compile('src="(.+?)"').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        
-                                        match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        match = re.compile('SRC="(.+?)"').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        try:
-                                                if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
-                                                        percent = int( ( i / num ) * 100)
-                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
-                                                        progress.update( percent, "", message, "" )
-                                                        print str(i) + " de " + str(int(num))
-                                                        
-                                                        if progress.iscanceled():
-                                                                break
-                                                #episod = episodiot
-                                                #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
-                                                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
-                                                addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
-                                        except:
-                                                if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
-                                                if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
-                                                        percent = int( ( i / num ) * 100)
-                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]'
-                                                        progress.update( percent, "", message, "" )
-                                                        print str(i) + " de " + str(int(num))
-                                                        
-                                                        if progress.iscanceled():
-                                                                break
-                                                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
-                                                addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
+                                                try:
+                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
+                                                                percent = int( ( i / num ) * 100)
+                                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
+                                                                progress.update( percent, "", message, "" )
+                                                                print str(i) + " de " + str(int(num))
+                                                                
+                                                                if progress.iscanceled():
+                                                                        break
+                                                        #episod = episodiot
+                                                        #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
+                                                        mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                                        addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
+                                                except:
+                                                        if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
+                                                        if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
+                                                                percent = int( ( i / num ) * 100)
+                                                                message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]'
+                                                                progress.update( percent, "", message, "" )
+                                                                print str(i) + " de " + str(int(num))
+                                                                
+                                                                if progress.iscanceled():
+                                                                        break
+                                                        mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
+                                                        addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
 
                                         f_id = ''
                                         i = i + 1
@@ -1363,89 +1497,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                                 #linkseriesssss = re.findall('<span class="su-spoiler-icon"></span>(.+?)</div>(.+?)BAIXAR',newmatch1[0],re.DOTALL)
                                 #linkseriesssss = re.findall('<h2>(.+?)</h2>\n(.+?)DOWNLOAD POR',newmatch1[0],re.DOTALL)
                                 #linkseriesssss = re.findall('<h2>(.+?)</h2>(.+?)BAIXAR',newmatch1[0],re.DOTALL)
-                                linkseriesssss = re.findall('border-top-right-radius:2px;">(.+?)EPISODIO LEGENDADO</div>(.+?)DOWNLOAD POR',link2,re.DOTALL)
-                                for parte1,parte2 in linkseriesssss:                                        
-                                        
-                                        try:
-                                                episodio = re.compile('(\d+)').findall(parte1)
-                                                if episodio:
-                                                        episodiot = episodio[0]
-                                                        episodio = episodio[0]
-                                                a_q = re.compile('\d+')
-                                                qq_aa = a_q.findall(episodio)
-                                                for q_a_q_a in qq_aa:
-                                                        if len(q_a_q_a) == 1:
-                                                                episodiot = '%02d' % int(episodio)#'0'+episodio
-                                        except: pass
-                                        
-                                                
-                                        try:
-                                                epi_nome,air,sin,th = thetvdb_api_episodes()._id(str(tvdbid),str(temporada),str(episodio))
-                                                iconimage = th
-                                        except: pass
-                                        conta_id_video = 0
-                                        
-##                                        match = re.compile('<span class="su-lightbox" data-mfp-src="(.+?)" data-mfp-type="iframe">').findall(parte2)
-##                                        for url in match:
-##                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-##                                                        conta_id_video = conta_id_video + 1
-##                                                        conta_os_items = conta_os_items + 1
-##                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-##                                                        if f_id == '': f_id = fonte_id
-##                                                        else: f_id = f_id + '|' + fonte_id
-                                        match = re.compile('src="(.+?)"').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        
-                                        match = re.compile('<a href="(.+?)" target="_blank">.+?</a>').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        match = re.compile('SRC="(.+?)"').findall(parte2)
-                                        for url in match:
-                                                if "videomega" in url or "vidto.me" in url or "video.pw" in url or "thevideo.me" in url or "dropvideo" in url or "vodlocker" in url or "played.to" in url or "cloudzilla" in url or "vidzen" in url or "vidzi.tv" in url or "divxstage" in url or "streamin.to" in url or "putlocker" in url or "nowvideo" in url or "primeshare" in url or "videoslasher" in url or "sockshare" in url or "firedrive" in url or "movshare" in url or "video.tt" in url or "videowood" in url:
-                                                        conta_id_video = conta_id_video + 1
-                                                        conta_os_items = conta_os_items + 1
-                                                        fonte_id = TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,iconimage,fanart)
-                                                        if f_id == '': f_id = fonte_id
-                                                        else: f_id = f_id + '|' + fonte_id
-                                        try:
-                                                if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
-                                                        percent = int( ( i / num ) * 100)
-                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]'
-                                                        progress.update( percent, "", message, "" )
-                                                        print str(i) + " de " + str(int(num))
-                                                        
-                                                        if progress.iscanceled():
-                                                                break
-                                                #episod = episodiot
-                                                #label = temporada + 'x' + '%02d' % int(episodiot) + ' . ' + epi_nome
-                                                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
-                                                addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,iconimage,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
-                                        except:
-                                                if 'EPI' not in parte1 and 'Epi' not in parte1: parte1 = parte1+'ºEPISÓDIO'
-                                                if 'Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo:
-                                                        percent = int( ( i / num ) * 100)
-                                                        message = '[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]'
-                                                        progress.update( percent, "", message, "" )
-                                                        print str(i) + " de " + str(int(num))
-                                                        
-                                                        if progress.iscanceled():
-                                                                break
-                                                mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+anne
-                                                addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+parte1+'[/COLOR]',7000,fanart,'',fanart,episodiot,'',temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,0)
-
-                                        f_id = ''
-                                        i = i + 1
+                                
                                 
                 if newmatch:
                         if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-serie' not in nometitulo and 'Minisérie' not in nometitulo and 'Miniserie' not in nometitulo:
@@ -3356,9 +3408,9 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
         
         if "videomega" in url:
 		try:
-                        fonte_id = '(Videomega)'+url
+                        fonte_id = '(Videomega)'+urltrailer
                         if 'Season' not in nomeescolha and 'Temporada' not in nomeescolha and 'Mini-Série' not in nomeescolha and 'Mini-serie' not in nomeescolha and 'Minisérie' not in nomeescolha and 'Miniserie' not in nomeescolha:
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'')+'[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(urltrailer,'')+'[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
 		except: pass
         if "vidto.me" in url:
 		try:

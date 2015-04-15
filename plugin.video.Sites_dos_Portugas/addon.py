@@ -82,8 +82,9 @@ def MAIN_MENU():
         url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
         url_TPT = 'http://toppt.net/category/series/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
-        url_ultimos_episodios = urllib.urlencode(parameters)
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B] (SITESdosPORTUGAS)',url_ultimos_episodios,508,artfolder + 'UEP.png','nao','')
+        url_ultimos_episodios = urllib.urlencode(parameters)                                                                                    #508
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B] (SITESdosPORTUGAS)',url_ultimos_episodios,9009,artfolder + 'UEP.png','nao','')
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','url',9007,artfolder + 'UF.png','nao','')
         addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','url',9006,artfolder + 'UF.png','nao','')
         addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]ANIMAÇÃO[/COLOR][/B]','url',9006,artfolder + 'FA.png','nao','')
         #addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (SITESdosPORTUGAS)','url',7500,artfolder + 'P1.png','nao','')
@@ -91,7 +92,7 @@ def MAIN_MENU():
         
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','url',7500,artfolder + 'P1.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','url',7500,artfolder + 'P1.png','nao','')
-        addDir1('','url',1004,artfolder,False,'')
+        #addDir1('','url',1004,artfolder,False,'')
         addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','url',20100,artfolder,'nao','')
         addDir('[B][COLOR green]T[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','http://direct',3012,artfolder,'nao','')
         addDir('[B][COLOR green]RA[/COLOR][COLOR yellow]T[/COLOR][COLOR red]OTV[/COLOR][/B] (Filmes/Séries)','url',20001,artfolder,'nao','')
@@ -149,6 +150,336 @@ def ProcurarFilmesSeries():
                         elif 'Filmes' in name: Pesquisar.pesquisar()
                         elif 'Séries' in name: Pesquisar.pesquisar()
 
+def Ultimos_Episodios_Geral():
+        url_TFC = 'http://www.tuga-filmes.info/'
+        url_MVT = 'http://www.movie-tuga.blogspot.pt'
+        
+        _nomeproc_ = []
+##        _nomeproc_.append('[B][COLOR white]IMDB[/COLOR][/B]')
+##        _nomeproc_.append('[B][COLOR white]TMDB[/COLOR][/B]')
+##        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]')
+##        _nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TOPPT.NET')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.TV')
+
+        indexservidores = xbmcgui.Dialog().select
+        index = indexservidores('Últimas Episódios', _nomeproc_)
+        if index > -1:
+                if 'RATOTV' in _nomeproc_[index]: ratoTVTV('http://www.ratotv.net/tvshows/page/1/')
+                elif 'WAREZTUGA' in _nomeproc_[index]: WlinksS('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series')
+                elif 'IMDB' in _nomeproc_[index]: LinksIMDB1('http://akas.imdb.com/search/title?title_type=tv_series,mini_series&production_status=active&sort=moviemeter,asc&count=12&start=1')
+                elif 'TMDB' in _nomeproc_[index]: EMEXIBICAO('1')
+                elif 'TODOS' in _nomeproc_[index]:
+                        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
+                        url_TPT = 'http://toppt.net/category/series/'
+                        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+                        url_ultimos_episodios = urllib.urlencode(parameters)
+                        Mashup.ultimos_episodios(url_ultimos_episodios)
+                elif 'TOPPT.NET' in _nomeproc_[index]:
+                        url_TFV = 'http://'
+                        url_TPT = 'http://toppt.net/category/series/'
+                        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+                        url_ultimos_episodios = urllib.urlencode(parameters)
+                        Mashup.ultimos_episodios(url_ultimos_episodios)
+                elif 'TUGA-FILMES.TV' in _nomeproc_[index]:
+                        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
+                        url_TPT = 'http://'
+                        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+                        url_ultimos_episodios = urllib.urlencode(parameters)
+                        Mashup.ultimos_episodios(url_ultimos_episodios)
+        xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+        xbmc.executebuiltin("Container.SetViewMode(504)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+                        
+def Ultimas_Series_Geral():        
+        _nomeproc_ = []
+        _nomeproc_.append('[B][COLOR white]IMDB[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]TMDB[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TOPPT.NET')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.TV')
+
+        indexservidores = xbmcgui.Dialog().select
+        index = indexservidores('Últimas Séries', _nomeproc_)
+        if index > -1:
+                if 'RATOTV' in _nomeproc_[index]: ratoTVTV('http://www.ratotv.net/tvshows/page/1/')
+                elif 'WAREZTUGA' in _nomeproc_[index]: WlinksS('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series')
+                elif 'IMDB' in _nomeproc_[index]: LinksIMDB1('http://akas.imdb.com/search/title?title_type=tv_series,mini_series&production_status=active&sort=moviemeter,asc&count=12&start=1')
+                elif 'TMDB' in _nomeproc_[index]: EMEXIBICAO('1')
+                elif 'TODOS' in _nomeproc_[index]: Fontes_ultimas_Series('http://toppt.net/category/series/'+'|'+'http://www.tuga-filmes.us/search/label/Séries')
+                elif 'TOPPT.NET' in _nomeproc_[index]: Fontes_ultimas_Series('http://toppt.net/category/series/'+'|'+'http://')
+                elif 'TUGA-FILMES.TV' in _nomeproc_[index]: Fontes_ultimas_Series('http://'+'|'+'http://www.tuga-filmes.us/search/label/Séries')
+
+def Fontes_ultimas_Series(url):
+        urlTPT = re.compile('(.+?)[|].+?').findall(url)[0]
+        urlTFV = re.compile('.+?[|](.*)').findall(url)[0]
+        i = 1
+        num = 0
+        percent = 0
+        message = ''
+        titulomensagem = 'A Procurar Últimas Séries em [B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B]'
+        progress.create( 'Progresso', titulomensagem )
+        progress.update( percent, titulomensagem, message, "" )
+        try:
+		html_sourceTFV = abrir_url(urlTFV)
+	except: html_sourceTFV = ''
+	itemsTFV = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_sourceTFV, re.DOTALL)
+	if itemsTFV != []: num = num + len(itemsTFV) + 0.0
+        try:
+		html_sourceTPT = abrir_url(urlTPT)
+	except: html_sourceTPT = ''
+        itemsTPT = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_sourceTPT, re.DOTALL)
+	if itemsTPT != []: num = num + len(itemsTPT) + 0.0
+        if itemsTPT != []:                
+                for item in itemsTPT:
+                        sinopse = ''
+                        fanart = ''
+                        thumb = ''
+                        genero = ''
+                        qualidade = ''
+                        audio_filme = ''
+                        imdbcode = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)/').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        
+                        urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a>').findall(item)
+                        if not urletitulo or 'title=' in urletitulo[0][0]: urletitulo = re.compile('<a href="(.+?)" title=".+?" rel="bookmark">(.+?)</a>').findall(item)
+                        
+                        qualid = re.compile("<b>QUALIDADE:.+?/b>(.+?)<br/>").findall(item)
+                        if not qualid: qualid = re.compile("<b>VERSÃO:.+?</b>(.+?)<br").findall(item)
+                        if qualid:
+                                qualidade = qualid[0]
+                                qualidade = qualidade.replace('[',' - ')
+                                qualidade = qualidade.replace(']','')
+                        else:
+                                qualid = re.compile("\nQUALIDADE:\xc2\xa0(.+?)<br").findall(item)
+                                if qualid:
+                                        qualidade = qualid[0]
+                                        qualidade = qualidade.replace('[',' - ')
+                                        qualidade = qualidade.replace(']','')
+                                else:
+                                        qualid = re.compile("<b>VERS.+?</b>(.+?)<br").findall(item)
+                                        if qualid:
+                                                qualidade = qualid[0]
+                                                qualidade = qualidade.replace('[',' - ')
+                                                qualidade = qualidade.replace(']','')
+                                        else:
+                                                qualidade = ''
+                                        
+                        genr = re.compile("NERO:.+?/b>(.+?)<br/>").findall(item)
+                        if genr: genero = genr[0]
+                        
+                        ano = re.compile("<b>ANO:.+?/b>(.+?)<br").findall(item)
+                        audio = re.compile("<b>AUDIO:.+?/b>(.+?)<br").findall(item)
+                        thumbnail = re.compile('src="(.+?)"').findall(item)
+                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
+                        print urletitulo,thumbnail
+                        nome = urletitulo[0][1]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#038;',"&")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        nome = nome.replace('(PT-PT)',"")
+                        nome = nome.replace('(PT/PT)',"")
+                        nome = nome.replace('[PT-PT]',"")
+                        nome = nome.replace('[PT/PT]',"")
+                        nome = nome.replace('[PT-BR]',"")
+                        nome = nome.replace('[PT/BR]',"")
+                        nome = nome.replace(' (PT-PT)',"")
+                        nome = nome.replace(' (PT/PT)',"")
+                        nome = nome.replace(' [PT-PT]',"")
+                        nome = nome.replace(' [PT/PT]',"")
+                        nome = nome.replace(' [PT-BR]',"")
+                        nome = nome.replace(' [PT/BR]',"")
+                        nome = nome.replace('  '," ")
+                        if audio:
+                                if len(audio[0]) > 15:
+                                        audio = re.compile('<b>AUDIO: </b>(.+?)<span style="color: red;"><b>(.+?)</b></span><br/>').findall(item)
+                                        if audio:
+                                                audio_filme = ': ' + audio[0][0] + audio[0][1]
+                                        else:
+                                                audio = re.compile('<b>AUDIO: </b> <b><span style="color: red;">(.+?)</span> <span style="color: #38761d;">(.+?)</span></b><br/>').findall(item)
+                                                if audio:
+                                                        audio_filme = audio[0][0] + audio[0][1]
+                                                        if 'Portug' or 'PORTUG' in audio_filme:
+                                                                audio_filme = ': PT-PT'
+                                                else:
+                                                        audio = re.compile('<b>AUDIO:.+?<strong>(.+?)</strong>').findall(item)
+                                                        if audio:
+                                                                audio_filme = audio[0][0] + audio[0][1]
+                                                                if 'Portug' or 'PORTUG' in audio_filme:
+                                                                        audio_filme = ': PT-PT'
+                                else:
+                                        audio_filme = ': ' + audio[0]
+                        if not audio:
+                                audio = re.compile("\nAUDIO:\xc2\xa0(.+?)<br/>").findall(item)
+                                if audio:
+                                        audio_filme = ': ' + audio[0]
+                                else:
+                                        audio_filme = ''
+                        if not ano:
+                                ano = re.compile("\nANO:\xc2\xa0(.+?)<br/>").findall(item)
+                                if ano:
+                                        ano_filme = ': ' + ano[0].replace(' ','')
+                                else:
+                                        ano_filme = ''     
+                        if ano:
+                                ano_filme = ano[0].replace(' ','')
+                                a_q = re.compile('\d+')
+                                qq_aa = a_q.findall(nome)
+                                for q_a_q_a in qq_aa:
+                                        if len(q_a_q_a) == 4:
+                                                tirar_ano = '(' + str(q_a_q_a) + ')'
+                                                nome = nome.replace(tirar_ano,'')
+                        
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+                                        
+                        ###############################
+                                        
+                        n = re.compile('(.+?)[[].+?[]]').findall(nome)
+                        if n: nome_pesquisa = n[0]
+                        else: nome_pesquisa = nome
+                        try:
+                                thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano_filme)
+                                ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                                if ftart:
+                                        fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                        if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'                                       
+                                snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                                if snpse: sinopse = snpse[0]
+                        except: pass
+
+
+                        ano_filme = '('+ano_filme+')'
+                        qualidade = '('+qualidade
+                        audio_filme = audio_filme+')'
+                        
+##                        n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(nome)
+##                        if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(nome)
+##                        if n: nome = n[0][0]+' - '+n[0][1]
+##                        else:
+##                                n = re.compile('[(](.+?)[)][(](.+?)[)]').findall(nome)
+##                                if not n: n = re.compile('[(](.+?)[)] [(](.+?)[)]').findall(nome)
+##                                if n: nome = n[0][0]+' - '+n[0][1]
+##                                else:
+##                                        n = re.compile('[[](.+?)[]]').findall(nome)
+##                                        if n: nome = n[0]
+##                                        else:
+##                                                n = re.compile('[(](.+?)[)]').findall(nome)
+##                                                if n: nome = n[0]
+##                        qualidade = ''
+##                        ano_filme = ''
+##                        audio_filme = ''
+                        #addLink(nome,'','','')        
+                        try:
+                                if genero == '':
+                                        genre = '---'
+                                        genero = '---'
+                                if sinopse == '':
+                                        plot = '---'
+                                        sinopse = '---'
+                                if fanart == '---': fanart = ''
+                                if imdbcode == '': imdbcode = '---'
+                                if thumb == '': thumb = '---'
+                                nome_final = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' +ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]'
+                                #filmes.append(FILMEN+'NOME|'+str(nome_final)+'|IMDBCODE|'+str(urletitulo[0][0])+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb)+'|ANO|'+str(ano_filme.replace('(','').replace(')',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|ONOME|'+str(nome_pesquisa)+'|SINOPSE|'+str(sinopse)+'|END|\n')
+                                addDir_trailer(nome_final,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0])
+                                #addDir_teste('[B][COLOR green]' + n1 + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]'+'[COLOR nnn]'+n2+'[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
+                        except: pass
+                        percent = int( ( i / num ) * 100)
+                        message = nome
+                        progress.update( percent, "", message, "" )
+                        if progress.iscanceled():
+                                break
+			i = i + 1
+	proximaTPT = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_sourceTPT)
+        try:
+                proxTPT = proximaTPT[0].replace('#038;','').replace('&amp;','&')
+        except: proxTPT = 'http://'
+			
+        titulomensagem = 'A Procurar Últimas Séries em [B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B]'
+        progress.update( percent, titulomensagem, "", "" )
+
+	if itemsTFV != []:
+		
+		for item in itemsTFV:
+                        thumb = ''
+                        fanart = ''
+                        genero = ''
+                        sinopse = ''
+                        
+                        imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+                        if imdb: imdbcode = imdb[0]
+                        else: imdbcode = ''
+                        gene = re.compile("nero</b>:(.+?)<br />").findall(item)
+                        if gene: genero = gene[0]
+                        else: genero = ''
+                        resumo = re.compile("<b>Resumo</b>:(.+?)<br />").findall(item)
+                        if resumo: sinopse = resumo[0]
+                        else: sinopse = ''
+			urletitulo = re.compile("<a href=\'(.+?)' title=\'.+?'>(.+?)</a>").findall(item)
+			ano = re.compile("<b>Ano</b>: (.+?)<br />").findall(item)
+			if ano: ano = '('+ano[0]+')'
+			qualidade = re.compile("<b>Qualidade</b>: (.+?)<br />").findall(item)
+			if qualidade: qualidade = '('+qualidade[0]+')'
+			thumbnail = re.compile('src="(.+?)"').findall(item)
+			if thumbnail: thumb = thumbnail[0]
+                        else: thumb = ''
+			print urletitulo,thumbnail
+			nome = urletitulo[0][1]
+                        nome = nome.replace('&#8217;',"'")
+                        nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#39;',"'")
+                        nome = nome.replace('&amp;','&')
+                        a_q = re.compile('\d+')
+                        qq_aa = a_q.findall(nome)
+                        for q_a_q_a in qq_aa:
+                                if len(q_a_q_a) == 4:
+                                        tirar_ano = '(' + str(q_a_q_a) + ')'
+                                        nome = nome.replace(tirar_ano,'')
+                                        
+                        nnnn = re.compile('(.+?)[(].+?[)]').findall(nome)
+                        if not nnnn: nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
+                        if nnnn : nome_pesquisa = nnnn[0]
+                        else: nome_pesquisa = nome
+                        thetvdb_id = thetvdb_api()._id(nome_pesquisa,ano)
+                        ftart = re.compile('(.+?)[|].+?').findall(thetvdb_id)
+                        if ftart:
+                                fanart = 'http://thetvdb.com/banners/fanart/original/' + ftart[0] + '-1.jpg'
+                                if thumb == '': thumb = 'http://thetvdb.com/banners/posters/' + ftart[0] + '-1.jpg'                                       
+                        snpse = re.compile('.+?[|](.*)').findall(thetvdb_id)
+                        if snpse: sinopse = snpse[0]
+          
+			try:
+				addDir_trailer('[COLOR orange]TFV | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano + '[/COLOR][COLOR red] ' + qualidade + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',42,thumb.replace('s72-c','s320'),sinopse,fanart,ano,genero,nome_pesquisa,urletitulo[0][0])
+			except: pass
+			percent = int( ( i / num ) * 100)
+                        message = nome
+                        progress.update( percent, titulomensagem, message, "" )
+                        if progress.iscanceled():
+                                break
+			i = i + 1
+	proximaTFV = re.compile(".*href=\'(.+?)\' id=\'Blog1_blog-pager-older-link\'").findall(html_sourceTFV)
+	try:
+                proxTFV = proximaTFV[0]
+        except: proxTFV = 'http://'
+        try:
+                addDir("Página Seguinte >>",proxTPT+'|'+proxTFV,9008,artfolder + 'PAGS1.png','','')
+        except: pass
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 def ProcurarFilmesSeries1():
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
@@ -3125,7 +3456,7 @@ def SEARCHTMDBMOVIES():
 
 ###############################   SÉRIES TMDB
 
-def EMEXIBICAO():
+def EMEXIBICAO(url):
         num_pag = urllib.quote(url)
         conta = 0
         num_mode = 3007
@@ -3134,6 +3465,9 @@ def EMEXIBICAO():
         numpag = '('+str(npag)+'/22)'
         npseg = int(npag) + 1
 	addDir('[B][COLOR blue]'+numpag+'[/COLOR] Seguinte > [COLOR blue]'+str(npseg)+'[/COLOR][/B]',str(npseg),3008,artfolder + 'PAGS1.png','','')
+	xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(515)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 def MVOTADAS():
         num_pag = urllib.quote(url)
@@ -4496,7 +4830,7 @@ elif mode == 3006:
 elif mode == 3007:
         passar_nome_SERIES_IMDB(name)
 elif mode == 3008:
-        EMEXIBICAO()
+        EMEXIBICAO(url)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(515)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
@@ -4572,6 +4906,15 @@ elif mode == 9005:
 
 elif mode == 9006:
         qualtodos(name)
+
+elif mode == 9007:
+        Ultimas_Series_Geral()
+
+elif mode == 9008:
+        Fontes_ultimas_Series(url)
+        
+elif mode == 9009:
+        Ultimos_Episodios_Geral()
 
 elif mode == 10000:
         SITESdosPORTUGAS()

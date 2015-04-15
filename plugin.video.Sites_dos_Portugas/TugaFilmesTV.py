@@ -25,7 +25,7 @@ import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,ti
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB, thetvdb_api_IMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
 from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode, addDir_trailer1, addDir_episode1, addDir_episode1_false
-from Funcoes import get_params,abrir_url
+from Funcoes import get_params,abrir_url, addDir_episode1_true
 
 addon_id = 'plugin.video.Sites_dos_Portugas'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -883,7 +883,7 @@ def TFV_encontrar_videos_filmes(name,url,mvoutv):
                                                 conta_id_video = conta_id_video + 1
                                                 fonte_id = '(Videomega)'
                                                 #Play.PLAY_movie_url(videomeg[0],'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id+'[/COLOR][/B]',iconimage,'',fanart)
-                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'',fanart)
                                 match = re.compile('href="(.+?)"').findall(matchsvids)
                                 url = match[0] 
                                 if url != '':
@@ -907,7 +907,7 @@ def TFV_encontrar_videos_filmes(name,url,mvoutv):
                                 conta_id_video = conta_id_video + 1
                                 fonte_id = '(Videomega)'
                                 #Play.PLAY_movie_url(videomeg[0],'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id+'[/COLOR][/B]',iconimage,'',fanart)
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'',fanart)
 
         if 'Parte 1' and 'Parte 2' in link2:
                 matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", items[0], re.DOTALL)
@@ -956,10 +956,10 @@ def TFV_encontrar_videos_filmes(name,url,mvoutv):
 ##                                        url=match[0]
                                         if "videomega" in url:
                                                 try:
-                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video# + '///' + name
+                                                        url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                                                         print url
                                                         fonte_id = '(Videomega)'
-                                                        addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+                                                        addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                                 except: pass
                                         if "vidto.me" in url:
                                                 try:
@@ -1114,7 +1114,7 @@ def TFV_resolve_not_videomega_filmes(name,url,id_video,conta_id_video):
                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                         print url
                         fonte_id = '(Videomega)'
-                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                 except: pass
         if "vidto.me" in url:
                 try:
@@ -1227,7 +1227,7 @@ def TFV_links(name,url,iconimage,fanart):
                                         videomeg = re.compile('<iframe frameborder="0" height="400" scrolling="no" src="(.+?)"').findall(matchsvids)
                                         if videomeg:
                                                 conta_id_video = conta_id_video + 1
-                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'',fanart)
                                 match = re.compile('href="(.+?)"').findall(matchsvids)
                                 url = match[0] 
                                 if url != '':
@@ -1250,7 +1250,7 @@ def TFV_links(name,url,iconimage,fanart):
                                 conta_id_video = conta_id_video + 1
                                 fonte_id = '(Videomega)'
                                 #Play.PLAY_movie_url(videomeg[0],'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id+'[/COLOR][/B]',iconimage,'',fanart)
-                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',videomeg[0],30,iconimage,'',fanart)
 
         if 'Parte 1' and 'Parte 2' in link2:
                 matchvid = re.findall("<div class='id(.+?)'>Assistir(.+?)Clique aqui para ver", items[0], re.DOTALL)
@@ -1302,7 +1302,7 @@ def TFV_links(name,url,iconimage,fanart):
                                                         url = 'http://videomega.tv/iframe.php?ref=' + id_video + '///' + name
                                                         print url
                                                         fonte_id = '(Videomega)'
-                                                        addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+                                                        addDir('[B][COLOR blue]'+nome+'[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
                                                 except: pass
                                         if "vidto.me" in url:
                                                 try:
@@ -1460,7 +1460,7 @@ def TFV_resolve_not_videomega_series(name,url,id_video,nome_cada_episodio,src_hr
         if "videomega" in url:
 		try:
                         url = 'http://videomega.tv/iframe.php?ref=' + id_video #+ '///' + name
-                        fonte_id ='(Videomega)'+url#trailer
+                        fonte_id ='(Videomega)'+url
                         print url
 			#addDir('[COLOR blue]' + nome_cada_episodio + '[/COLOR][B] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',url,30,iconimage,'',fanart)
 		except: pass
@@ -1638,8 +1638,8 @@ def TFV_encontrar_videos_series(name,url):
                                                         nome = nome.replace('&#8217;',"'")
                                                         nome = nome.replace('&#8211;',"-")
                                                         nome = nome.replace('&#39;',"'")
-                                                        nome = nome.replace('&amp;','&')
-                                                        addDir('[B][COLOR green]' + nome + '[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]',videomega_video_url[0],30,iconimage,'',fanart)
+                                                        nome = nome.replace('&amp;','&')                                                               #videomega_video_url[0] 
+                                                        addDir('[B][COLOR green]' + nome + '[/COLOR] - Fonte : [COLOR yellow](Videomega)[/COLOR][/B]','(Videomega)'+videomega_video_url[0],30,iconimage,'',fanart)
                                                 except:pass
                                                 
                                         if 'ep' and 'src' and 'iframe' in item_vid_series:
@@ -1800,7 +1800,7 @@ def TFV_encontrar_videos_series(name,url):
                 episodio = episodio[0]
                 #addLink(episodio,'','','')
                 mvoutv = temporada+'|'+episodio+'|'+namet+'|'+tvdbid+'|'+imdbcode+'|'+year
-                addDir_episode1_false('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,n_items)
+                addDir_episode1_true('[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namet,urltrailer,mvoutv,n_items)
                 xbmc.sleep(12)
                 
         xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
@@ -2547,7 +2547,7 @@ def ultimos_episodios_TFV_ultimos(url):
                 #sin = ''
                 try:
                         mvoutv = temporada+'|'+episodio+'|'+namett+'|'+tvdbid+'|'+imdbcode+'|'+anne
-                        addDir_episode1_false(nome_antes+'[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namett,urltrailer,mvoutv,num_total)
+                        addDir_episode1_true(nome_antes+'[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',f_id+'//[COLOR grey]S'+temporadat+' x E'+episodiot+' - [/COLOR][COLOR blue]'+epi_nome+'[/COLOR]',7000,th,str(sin),fanart,episodiot,air,temporada+'x'+episodiot+' '+namett,urltrailer,mvoutv,num_total)
                 except: pass
                 xbmc.sleep(20)
 ##        percent = 0

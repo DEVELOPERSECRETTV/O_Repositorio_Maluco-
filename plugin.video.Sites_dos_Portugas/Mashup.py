@@ -720,46 +720,48 @@ def TPT_Ultimos(name,url,iconimage,fanart,item,tvdbid):
         episodioanterior = ''
 	nome_antes = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + namet + '[/COLOR][/B] | '
 	if link2:
-                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-Serie' not in nometitulo and 'Minisérie' not in nometitulo and 'Miniserie' not in nometitulo:
-                        newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
-                        if not newmatch: newmatch = re.findall('<span id=.+?BAIXAR',link2,re.DOTALL)
-                        l=1
-                else:
-                        #newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
-                        newmatch1 = re.findall('<span id=.+?DOWNLOAD POR',link2,re.DOTALL)
-                        if not newmatch1: newmatch1 = re.findall('<span id=.+?BAIXAR',link2,re.DOTALL)
-                        newmatch = re.findall('<img style="height: 90px; width: 200px;".+?DOWNLOAD POR',link2,re.DOTALL)
-                        if not newmatch: newmatch = re.findall('<img style="height: 90px; width: 200px;".+?BAIXAR',link2,re.DOTALL)
-                        l=5
-                if not newmatch:
-                        newmatch = re.findall('<span id=.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
-                        l=2
-                if not newmatch:
-                        newmatch = re.findall('<span id=.+?<br/>\n<img',link2,re.DOTALL)
-                        l=3
-                if not newmatch:
-                        newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
-                        l=4
-                if not newmatch:
-                        newmatch = re.findall('EM PT/PT:.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
-
-                linkseries = re.findall('<span class="su-spoiler-icon"></span>(.+?)</div>(.+?)BAIXAR',link2,re.DOTALL)
-                if (linkseries and 'VER ONLINE' in linkseries[0][0]) or not linkseries: linkseries = re.findall('border-top-right-radius:2px;">(.+?)º EPISODIO LEGENDADO(.+?)DOWNLOAD POR',link2,re.DOTALL)
-                if not linkseries: linkseries = re.findall('<h2>(.+?)</h2>\n(.+?)DOWNLOAD POR',link2,re.DOTALL)
-                #if linkseries: addLink(linkseries[0][1],'','','')
-                if not linkseries: linkseries = re.findall('<h2>(.+?)</h2>(.+?)BAIXAR',link2,re.DOTALL)
-                if not linkseries: linkseries = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div>',link2,re.DOTALL)
-                if not linkseries: linkseries = re.findall('<span style="color:.+?">(.+?)</span><br.+?>(.+?)Ver Aqui</a></p>',link2,re.DOTALL)
-                if not linkseries: linkseries = re.findall('<span style="color:.+?"><strong>(.+?)</strong></span><br.+?>(.+?)Ver Aqui</a></p>',link2,re.DOTALL)
-                if not linkseries: linkseries = re.findall('ODIO (.+?)<.+?>(.+?)<img',newmatch[0],re.DOTALL)
-                if not linkseries: linkseries = re.findall('ODIO (.+?)<.+?>\n(.+?)EPIS',newmatch[0],re.DOTALL)
-                if not linkseries: linkseries = re.findall('<p>(.+?)EPISODIO<br/>(.+?)</iframe>',newmatch[0],re.DOTALL)
-                if not linkseries: linkseries = re.findall('EPISODIO (.+?)<br.+?\n(.+?)</p>',newmatch[0],re.DOTALL)
-                #if not linkseries: linkseries = re.findall('border-top-right-radius:2px;">(.+?)EPISODIO LEGENDADO</div>(.+?)DOWNLOAD POR',link2,re.DOTALL)
-                                                        #linksseccaoultimo = re.findall('ODIO (.+?)<.+?>\n(.+?)</p>',newmatch[0],re.DOTALL)
-                if '<h2 class="title">Sleepy Hollow[Season 1][Completa]</h2>' in link2:
-                        linkseries = re.findall('<p>(.+?)<br/>(.+?)</p>',newmatch[0],re.DOTALL)
-                #for parte1,parte2 in linkseries:
+##                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-Serie' not in nometitulo and 'Minisérie' not in nometitulo and 'Miniserie' not in nometitulo:
+##                        newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
+##                        if not newmatch: newmatch = re.findall('<span id=.+?BAIXAR',link2,re.DOTALL)
+##                        l=1
+##                else:
+##                        #newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
+##                        newmatch1 = re.findall('<span id=.+?DOWNLOAD POR',link2,re.DOTALL)
+##                        if not newmatch1: newmatch1 = re.findall('<span id=.+?BAIXAR',link2,re.DOTALL)
+##                        newmatch = re.findall('<img style="height: 90px; width: 200px;".+?DOWNLOAD POR',link2,re.DOTALL)
+##                        if not newmatch: newmatch = re.findall('<img style="height: 90px; width: 200px;".+?BAIXAR',link2,re.DOTALL)
+##                        l=5
+##                if not newmatch:
+##                        newmatch = re.findall('<span id=.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
+##                        l=2
+##                if not newmatch:
+##                        newmatch = re.findall('<span id=.+?<br/>\n<img',link2,re.DOTALL)
+##                        l=3
+##                if not newmatch:
+##                        newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
+##                        l=4
+##                if not newmatch:
+##                        newmatch = re.findall('EM PT/PT:.+?<nav class="navigation post-navigation"',link2,re.DOTALL)
+##
+##                linkseries = re.findall('<span class="su-spoiler-icon"></span>(.+?)</div>(.+?)BAIXAR',link2,re.DOTALL)
+##                if (linkseries and 'VER ONLINE' in linkseries[0][0]) or not linkseries: linkseries = re.findall('border-top-right-radius:2px;">(.+?)º EPISODIO LEGENDADO(.+?)DOWNLOAD POR',link2,re.DOTALL)
+##                if not linkseries: linkseries = re.findall('<h2>(.+?)</h2>\n(.+?)DOWNLOAD POR',link2,re.DOTALL)
+##                #if linkseries: addLink(linkseries[0][1],'','','')
+##                if not linkseries: linkseries = re.findall('<h2>(.+?)</h2>(.+?)BAIXAR',link2,re.DOTALL)
+##                if not linkseries: linkseries = re.findall('</span>CLIQUE AQUI PARA VER O (.+?)</div>(.+?)</div></div>',link2,re.DOTALL)
+##                if not linkseries: linkseries = re.findall('<span style="color:.+?">(.+?)</span><br.+?>(.+?)Ver Aqui</a></p>',link2,re.DOTALL)
+##                if not linkseries: linkseries = re.findall('<span style="color:.+?"><strong>(.+?)</strong></span><br.+?>(.+?)Ver Aqui</a></p>',link2,re.DOTALL)
+##                if not linkseries: linkseries = re.findall('ODIO (.+?)<.+?>(.+?)<img',newmatch[0],re.DOTALL)
+##                if not linkseries: linkseries = re.findall('ODIO (.+?)<.+?>\n(.+?)EPIS',newmatch[0],re.DOTALL)
+##                if not linkseries: linkseries = re.findall('<p>(.+?)EPISODIO<br/>(.+?)</iframe>',newmatch[0],re.DOTALL)
+##                if not linkseries: linkseries = re.findall('EPISODIO (.+?)<br.+?\n(.+?)</p>',newmatch[0],re.DOTALL)
+##                #if not linkseries: linkseries = re.findall('border-top-right-radius:2px;">(.+?)EPISODIO LEGENDADO</div>(.+?)DOWNLOAD POR',link2,re.DOTALL)
+##                                                        #linksseccaoultimo = re.findall('ODIO (.+?)<.+?>\n(.+?)</p>',newmatch[0],re.DOTALL)
+##                if '<h2 class="title">Sleepy Hollow[Season 1][Completa]</h2>' in link2:
+##                        linkseries = re.findall('<p>(.+?)<br/>(.+?)</p>',newmatch[0],re.DOTALL)
+##                #for parte1,parte2 in linkseries:
+                linkseries = re.findall('border-top-right-radius:2px;">(.+?)EPISODIO LEGENDADO</div>(.+?)DOWNLOAD POR',link2,re.DOTALL)
+                #return
                 if linkseries:
                         parte1 = linkseries[0][0]
                         try:
@@ -2258,7 +2260,9 @@ def CMCMASHUP(item):
                                 nome = ''
 
                         snpse = re.compile("<div id='imgsinopse'>(.+?)</div>").findall(item)
-                        if snpse: sinopse = snpse[0]
+                        if not snpse: snpse = re.compile('SINOPSE:&nbsp;</span></b><span style="text-align: justify;">(.+?)</span><br />').findall(item)
+                        if snpse: sinopse = snpse[0].replace('&nbsp;','')
+                        else: sinopse = ''
                         sinopse = sinopse.replace('&#8216;',"'")
                         sinopse = sinopse.replace('&#8217;',"'")
                         sinopse = sinopse.replace('&#8211;',"-")
@@ -2274,19 +2278,28 @@ def CMCMASHUP(item):
                         qualidade = re.compile("<strong>Qualidade.+?</strong>(.+?)</div>").findall(item)
                         if not qualidade: qualidade = re.compile('Qualidade.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
                         if not qualidade: qualidade = re.compile('Qualidade.+?</span>(.+?)</b></span></div>').findall(item)
-                        if qualidade: qualidade_filme = qualidade[0].replace('&#8211;',"-")
+                        if not qualidade: qualidade = re.compile('<b>Vers.+?</b>:(.+?)<b>G').findall(item)
+                        if qualidade:
+                                qualidade_filme = qualidade[0].replace('<span style="color: #666666;"><span style="font-family: Arial,Helvetica,sans-serif;">','')
+                                qualidade_filme = qualidade_filme.replace('</span></span>','').replace('</b></span><span style="color: #333333; font-family: Verdana, Arial, Helvetica, sans-serif;"><b><i>','')
+                                qualidade_filme = qualidade_filme.replace('&#8211;',"-").replace('&nbsp;','').replace(' ','').replace('</i>','')
                         else: qualidade_filme = ''
 
                         audio = re.compile('Audio.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
                         if not audio: audio = re.compile('Audio.+?</span>(.+?)</b></span></div>').findall(item)
-                        if audio and qualidade_filme == '': qualidade_filme = audio[0]
+                        if not audio: audio = re.compile('<b>Audio</b>:(.+?)<b>').findall(item)
+                        if audio and qualidade_filme == '': qualidade_filme = audio[0].replace('&nbsp;','').replace(' ','')
                                 
                         ano = re.compile('>Ano.+?</span><span style=".+?">(.+?)</span></b></span>').findall(item)
                         if not ano: ano = re.compile('>Ano.+?</span>(.+?)</b></span></div>').findall(item)
-                        if ano: ano_filme = ano[0]
+                        if not ano: ano = re.compile('<b>Ano</b>:(.+?)<b>Audio').findall(item)
+                        if ano:
+                                ano_filme = ano[0].replace('<span style="font-family: Arial, Helvetica, sans-serif;">','').replace('</span>','')
+                                ano_filme = ano_filme.replace('&nbsp;','').replace(' ','').replace('<b>','').replace('</b>','')
                         else: ano_filme = ''
-                        
-                        thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
+                                                
+                        thumbnail = re.compile('<img border="0" src="(.+?)" .+? /></strike>').findall(item)
+                        if not thumbnail: thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
                         else: thumb = ''
 
