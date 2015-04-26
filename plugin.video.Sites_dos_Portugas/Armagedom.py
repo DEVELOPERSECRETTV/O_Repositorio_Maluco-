@@ -288,8 +288,10 @@ def ARM_encontrar_fontes_filmes(url):
                         try:
                                 addDir('[B][COLOR yellow]' + nome + '[/COLOR][COLOR blue][/B]' + ano + '[/COLOR][COLOR green]' + dubleg + '[/COLOR]',urlfilme,333,thumb,'nao','')
                         except: pass
-	proxima = re.compile('<link rel="next" href="(.+?)"/>').findall(html_source)
-	if not proxima: proxima = re.compile("span class='current'>.+?</span><a href='(.+?)' class='page larger'>").findall(html_source)
+	try: proxima = re.compile('<link rel="next" href="(.+?)"').findall(html_source)
+        except:
+                try: proxima = re.compile("span class='current'>.+?</span><a href='(.+?)' class='page larger'>").findall(html_source)
+                except: pass                
 	try:
                 #addDir1('','url',1005,artfolder + 'SDB.png',False,'')
 		addDir("Página Seguinte >>",proxima[0].replace('#038;',''),332,artfolder + 'PAGS2.png','nao','')
@@ -377,6 +379,7 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
                         if thumbnail:
                                 thumb = thumbnail[0].replace('http://static.filmesonlinegratis.net/thumb.php?src=','')
                                 thumb = thumbnail[0].replace('http://megafilmeshd.tv/wp-content/themes/MEGA.tv/timthumb.php?src=','')
+                                thumb = thumbnail[0].replace('http://www.megafilmeshd.tv/wp-content/themes/MEGA.tv/timthumb.php?src=','')
                         else: thumb = ''
                         if 'Legendado' not in nome and 'Dublado' not in nome: dubleg = ''
                         if ' Dublado ou Legendado' in nome:
@@ -625,6 +628,7 @@ def ARM_encontrar_videos_filmes(name,url):
 		link2=ARM_abrir_url(url)
 	except: link2 = '' 
 	if link2:
+                #addLink('1','','','')
                 if 'ASSISTIR: LEGENDADO' in link2: addDir1('[COLOR orange]Dublado:[/COLOR]','','',iconimage,False,'')
                 urls_video = re.findall('<div id="ver-filme-user">(.*?)<div id="box-embed"', link2, re.DOTALL)
                 if not urls_video: urls_video = re.findall('<ul class="bp-videos">(.*?)</ul>', link2, re.DOTALL)
@@ -757,6 +761,7 @@ def ARM_encontrar_videos_filmes(name,url):
                         matchvideo = re.findall('<div id="HOTWordsTxt" name="HOTWordsTxt">(.+?)<a href="https://twitter.com/share"',link2,re.DOTALL)
                         if not matchvideo: matchvideo = re.findall('<div id="HOTWordsTxt" name="HOTWordsTxt">(.+?)<div class="geral-extra">',link2,re.DOTALL)
                         if not matchvideo: matchvideo = re.findall('<div class="conteudo">(.+?)<a href="https://twitter.com/share"',link2,re.DOTALL)
+                        if not matchvideo: matchvideo = re.findall('<ul class="bp-series">(.+?)<div class="bl-titulo">Relacionados</div>',link2,re.DOTALL)
                         if matchvideo:
                                 #addDir('ca estou eu','',342,iconimage,'','')
                                 #return
@@ -1318,9 +1323,17 @@ def ARM_encontrar_videos_series(name,url):
         num_fonte = 0
 	addDir1(name,'url',1005,iconimage,False,'')
         addDir1('','url',1005,artfolder,False,'')
-	try:
-		link2=ARM_abrir_url(url)
-	except: link2 = '' 
+        if 'seriadosonline' not in url:
+                id_video = re.compile('id=(.*)').findall(url)
+                if id_video: id_video = id_video[0]
+                else: id_video = ''
+                num_fonte = num_fonte + 1
+                ARM_resolve_not_videomega_filmes(url,id_video,num_fonte)
+                link2 = ''
+        else:
+                try:
+                        link2=ARM_abrir_url(url)
+                except: link2 = '' 
 	if link2:         
                 matchvideo = re.findall("<div class=\'post-header\'>(.*?)<div class=\'post-footer\'>", link2, re.DOTALL)
                 for match in matchvideo:
@@ -1476,7 +1489,8 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
 		except: pass
         if "dropvideo" in url or 'drop' in url:
 		try:
-                        url = 'http://dropvideo.com/embed/' + id_video
+                        #url = 'http://dropvideo.com/embed/' + id_video
+                        url = url.replace('/video/','/embed/')
 			print url
 			url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](DropVideo)[/COLOR][/B]',url,30,iconimage,'','')

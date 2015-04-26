@@ -109,6 +109,8 @@ def pesquisar(nome_pesquisa,url,automatico):
                 i=0
                 items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
                 if not items: items = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', html_source, re.DOTALL)
+                if not items: items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
+                if not items: items = re.findall('<div class="post-wrap(.*?)<span id="more', html_source, re.DOTALL)
                 for item in items:                        
                         i = i + 1
                         a = str(i)
@@ -1510,7 +1512,8 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                 try:
                                         html_source = abrir_url(url)
                                 except: html_source = ''
-                                items = re.findall('<div class="post-(.*?)<span id="more-', html_source, re.DOTALL)
+                                items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
+                                if not items: items = re.findall('<div class="post-(.*?)<span id="more-', html_source, re.DOTALL)
                                 if items != []:
                                         print len(items)
                                         for item in items:
