@@ -1489,8 +1489,8 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
 		except: pass
         if "dropvideo" in url or 'drop' in url:
 		try:
-                        #url = 'http://dropvideo.com/embed/' + id_video
-                        url = url.replace('/video/','/embed/')
+                        if id_video != '': url = 'http://dropvideo.com/embed/' + id_video
+                        else: url = url.replace('/video/','/embed/')
 			print url
 			url = url + '///' + name
 			addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](DropVideo)[/COLOR][/B]',url,30,iconimage,'','')

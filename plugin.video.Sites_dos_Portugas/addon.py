@@ -76,7 +76,7 @@ def MAIN_MENU():
 ##                d.doModal()
 ##                del d
 ##                selfAddon.setSetting('AvisoFanart',value='false')
-        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (A/Z) (SITESdosPORTUGAS)','urlTODAS',26,artfolder + 'ST.png','nao','')                
+        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (A/Z) (SITESdosPORTUGAS)','urlTODAS',26,artfolder + 'SAZ1.png','nao','')                
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
@@ -84,19 +84,19 @@ def MAIN_MENU():
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
         url_ultimos_episodios = urllib.urlencode(parameters)                                                                                    #508
         addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B] (SITESdosPORTUGAS)',url_ultimos_episodios,9009,artfolder + 'UEP.png','nao','')
-        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','url',9007,artfolder + 'UF.png','nao','')
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','url',9007,artfolder + 'US.png','nao','')
         addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','url',9006,artfolder + 'UF.png','nao','')
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]ANIMAÇÃO[/COLOR][/B]','url',9006,artfolder + 'FA.png','nao','')
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]ANIMAÇÃO[/COLOR][/B]','url',9006,artfolder + 'UAN.png','nao','')
         #addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (SITESdosPORTUGAS)','url',7500,artfolder + 'P1.png','nao','')
         #addDir1('','url',1004,artfolder,False,'')
         
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','url',7500,artfolder + 'P1.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','url',7500,artfolder + 'P1.png','nao','')
         #addDir1('','url',1004,artfolder,False,'')
-        addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','url',20100,artfolder,'nao','')
-        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','http://direct',3012,artfolder,'nao','')
-        addDir('[B][COLOR green]RA[/COLOR][COLOR yellow]T[/COLOR][COLOR red]OTV[/COLOR][/B] (Filmes/Séries)','url',20001,artfolder,'nao','')
-        addDir('[B][COLOR green]WAR[/COLOR][COLOR yellow]E[/COLOR][COLOR red]ZTUGA[/COLOR][/B] (Filmes/Séries)','url',30001,artfolder,'nao','')
+        addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','url',20100,artfolder + 'IMDB.png','nao','')
+        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','http://direct',3012,artfolder + 'TMDB.png','nao','')
+        addDir('[B][COLOR green]RA[/COLOR][COLOR yellow]T[/COLOR][COLOR red]OTV[/COLOR][/B] (Filmes/Séries)','url',20001,artfolder + 'RTV.png','nao','')
+        addDir('[B][COLOR green]WAR[/COLOR][COLOR yellow]E[/COLOR][COLOR red]ZTUGA[/COLOR][/B] (Filmes/Séries)','url',30001,artfolder + 'WZT.png','nao','')
         #addDir1('','url',1004,artfolder,False,'')
         
         addDir('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B] (Filmes/Séries)','url',10000,artfolder + 'SDPI.png','nao','')
@@ -490,7 +490,7 @@ def TMDBmenu():
         addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','1',3002,artfolder + 'NC.png','nao','')
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','1',3001,artfolder + 'FMV.png','nao','')
         addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','1',3000,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]BREV[/COLOR][COLOR yellow]E[/COLOR][COLOR red]MENTE[/COLOR][/B] (Filmes)','1',2999,artfolder,'nao','')
+        addDir('[B][COLOR green]BREV[/COLOR][COLOR yellow]E[/COLOR][COLOR red]MENTE[/COLOR][/B] (Filmes)','1',2999,artfolder + 'BREV.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','1',2998,artfolder + 'P1.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
         addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (Séries)','1',3008,artfolder + 'EE.png','nao','')
@@ -500,20 +500,20 @@ def TMDBmenu():
 
 def IMDBmenu():
         addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','http://www.imdb.com/movies-in-theaters/?ref_=nv_tp_inth_1',20101,artfolder + 'NC.png','nao','')
-        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B] (Filmes)','http://www.imdb.com/genre/animation/',20102,artfolder,'nao','')
+        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B] (Filmes)','http://www.imdb.com/genre/animation/',20102,artfolder + 'FA.png','nao','')
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?sort=num_votes&title_type=feature,tv_movie&count=12&start=1',20102,artfolder + 'FMV.png','nao','')
         addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?sort=moviemeter,asc&title_type=feature,tv_movie&count=12&start=1',20102,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]BOX[/COLOR][COLOR yellow]O[/COLOR][COLOR red]FFICE[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?sort=boxoffice_gross_us&title_type=feature,tv_movie&count=12&start=1',20102,artfolder,'nao','')
-        addDir('[B][COLOR green]ÓS[/COLOR][COLOR yellow]C[/COLOR][COLOR red]ARES[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?count=12&groups=oscar_best_picture_winners&sort=year,desc&start=1',20102,artfolder,'nao','')
-        addDir('[B][COLOR green]GÉ[/COLOR][COLOR yellow]N[/COLOR][COLOR red]EROS[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,tv_movie&sort=boxoffice_gross_us&count=12&start=1&genres=',20103,artfolder,'nao','')
-        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,tv_movie&sort=boxoffice_gross_us&count=12&start=1&year=',20104,artfolder,'nao','')
+        addDir('[B][COLOR green]BOX[/COLOR][COLOR yellow]O[/COLOR][COLOR red]FFICE[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?sort=boxoffice_gross_us&title_type=feature,tv_movie&count=12&start=1',20102,artfolder + 'BO.png','nao','')
+        addDir('[B][COLOR green]ÓS[/COLOR][COLOR yellow]C[/COLOR][COLOR red]ARES[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?count=12&groups=oscar_best_picture_winners&sort=year,desc&start=1',20102,artfolder + 'OS.png','nao','')
+        addDir('[B][COLOR green]GÉ[/COLOR][COLOR yellow]N[/COLOR][COLOR red]EROS[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,tv_movie&sort=boxoffice_gross_us&count=12&start=1&genres=',20103,artfolder + 'GEN.png','nao','')
+        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,tv_movie&sort=boxoffice_gross_us&count=12&start=1&year=',20104,artfolder + 'ANO.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,short,tv_movie,tv_special,video&sort=moviemeter,asc&count=25&start=1&title=',20110,artfolder + 'P1.png','nao','')
         addDir1('','url',1004,artfolder,False,'')
         addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&production_status=active&sort=moviemeter,asc&count=12&start=1',20102,artfolder + 'EE.png','nao','')
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=num_votes,desc&count=12&start=1',20102,artfolder + 'SMV.png','nao','')
         addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=12&start=1',20102,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]GÉ[/COLOR][COLOR yellow]N[/COLOR][COLOR red]EROS[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=25&start=1&genres=',20103,artfolder,'nao','')
-        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter&count=12&start=1&year=',20104,artfolder,'nao','')
+        addDir('[B][COLOR green]GÉ[/COLOR][COLOR yellow]N[/COLOR][COLOR red]EROS[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=25&start=1&genres=',20103,artfolder + 'GEN.png','nao','')
+        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter&count=12&start=1&year=',20104,artfolder + 'ANO.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=50&start=1&title=',20110,artfolder + 'P1.png','nao','')
 
 def SITESdosPORTUGAS():
@@ -647,7 +647,7 @@ def FILMES_MENU():
         addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','1',3002,artfolder + 'NC.png','nao','')
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','1',3001,artfolder + 'FMV.png','nao','')
         addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','1',3000,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]BREV[/COLOR][COLOR yellow]E[/COLOR][COLOR red]MENTE[/COLOR][/B] (Filmes)','1',2999,artfolder,'nao','')
+        addDir('[B][COLOR green]BREV[/COLOR][COLOR yellow]E[/COLOR][COLOR red]MENTE[/COLOR][/B] (Filmes)','1',2999,artfolder + 'BREV.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','1',2998,artfolder + 'P1.png','nao','')
 
 def SERIES_MENU():
@@ -1717,36 +1717,37 @@ def episodeTMDB(name,url):
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
                 
 def MenuW():
-        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','url',30003,artfolder,'nao','')
-        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','url',30004,artfolder,'nao','')
-        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=movies',30000,artfolder,'nao','')
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S[/COLOR][COLOR red] ANIMAÇÃO[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&genres=17&mediaType=movies',30000,artfolder,'nao','')
-        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series',30002,artfolder,'nao','')
+        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','url',30003,artfolder + 'filmes1.png','nao','')
+        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','url',30004,artfolder + 'series1.png','nao','')
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=movies',30000,artfolder + 'UF.png','nao','')
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S[/COLOR][COLOR red] ANIMAÇÃO[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&genres=17&mediaType=movies',30000,artfolder + 'UAN.png','nao','')
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series',30002,artfolder + 'US.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.wareztuga.tv/',30009,artfolder + 'P1.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.wareztuga.tv/',30009,artfolder + 'P1.png','nao','')
 
 def MenuWFilmes():
-        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=movies',30000,artfolder,'nao','')
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=movies',30000,artfolder + 'UF.png','nao','')
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S[/COLOR][COLOR red] ANIMAÇÃO[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&genres=17&mediaType=movies',30000,artfolder + 'UAN.png','nao','')
         addDir('[B][COLOR green]T[/COLOR][COLOR yellow]O[/COLOR][COLOR red]DOS[/COLOR][/B] (A/Z)','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=name&mediaType=movies',30000,artfolder + 'FT.png','nao','')        
-        addDir('[B][COLOR green]EM D[/COLOR][COLOR yellow]E[/COLOR][COLOR red]STAQUE[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&btn=moviesfeatured&mediaType=movies',30000,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=rate&mediaType=movies',30000,artfolder,'nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]ISTOS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=views&mediaType=movies',30000,artfolder,'nao','')
-        addDir('[B][COLOR green]RECO[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ENDADOS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&btn=moviesrecommended&mediaType=movies',30000,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B]','http://www.wareztuga.tv/movies.php?p=1&mediaType=movies&order=year',30000,artfolder,'nao','')
-        addDir('[B][COLOR green]CAT[/COLOR][COLOR yellow]E[/COLOR][COLOR red]GORIAS[/COLOR][/B]','http://www.wareztuga.tv/movies.php?p=1',30007,artfolder,'nao','')
-        addDir('[B][COLOR green]A[/COLOR][COLOR yellow]N[/COLOR][COLOR red]OS[/COLOR][/B]','http://www.wareztuga.tv/movies.php?p=1',30008,artfolder,'nao','')
+        addDir('[B][COLOR green]EM D[/COLOR][COLOR yellow]E[/COLOR][COLOR red]STAQUE[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&btn=moviesfeatured&mediaType=movies',30000,artfolder + 'DTS.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=rate&mediaType=movies',30000,artfolder + 'FMV.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]ISTOS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=views&mediaType=movies',30000,artfolder + 'FMVI1.png','nao','')
+        addDir('[B][COLOR green]RECO[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ENDADOS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&btn=moviesrecommended&mediaType=movies',30000,artfolder + 'REC1.png','nao','')
+        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B]','http://www.wareztuga.tv/movies.php?p=1&mediaType=movies&order=year',30000,artfolder +'ANO.png','nao','')
+        addDir('[B][COLOR green]CAT[/COLOR][COLOR yellow]E[/COLOR][COLOR red]GORIAS[/COLOR][/B]','http://www.wareztuga.tv/movies.php?p=1',30007,artfolder + 'CT.png','nao','')
+        addDir('[B][COLOR green]A[/COLOR][COLOR yellow]N[/COLOR][COLOR red]OS[/COLOR][/B]','http://www.wareztuga.tv/movies.php?p=1',30008,artfolder + 'ANOS.png','nao','')
 
 def MenuWSeries():
-        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series',30002,artfolder,'nao','')
-        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]O[/COLOR][COLOR red]DAS[/COLOR][/B] (A/Z)','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=name&mediaType=series',30002,artfolder + 'FT.png','nao','')
-        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&btn=seriesrunning&mediaType=series',30002,artfolder + 'FMV.png','nao','')
-        addDir('[B][COLOR green]CO[/COLOR][COLOR yellow]M[/COLOR][COLOR red]PLETAS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&btn=seriescompleted&mediaType=series',30002,artfolder,'nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=rate&mediaType=series',30002,artfolder,'nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]ISTAS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=views&mediaType=series',30002,artfolder,'nao','')
-        addDir('[B][COLOR green]RECO[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ENDADAS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&btn=seriesrecommended&mediaType=series',30002,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B]','http://www.wareztuga.tv/series.php?p=1&mediaType=series&order=year',30002,artfolder,'nao','')
-        addDir('[B][COLOR green]CAT[/COLOR][COLOR yellow]E[/COLOR][COLOR red]GORIAS[/COLOR][/B]','http://www.wareztuga.tv/series.php?p=1',30007,artfolder,'nao','')
-        addDir('[B][COLOR green]A[/COLOR][COLOR yellow]N[/COLOR][COLOR red]OS[/COLOR][/B]','http://www.wareztuga.tv/series.php?p=1',30008,artfolder,'nao','')
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series',30002,artfolder + 'US.png','nao','')
+        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]O[/COLOR][COLOR red]DAS[/COLOR][/B] (A/Z)','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=name&mediaType=series',30002,artfolder + 'ST.png','nao','')
+        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&btn=seriesrunning&mediaType=series',30002,artfolder + 'EE.png','nao','')
+        addDir('[B][COLOR green]CO[/COLOR][COLOR yellow]M[/COLOR][COLOR red]PLETAS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&btn=seriescompleted&mediaType=series',30002,artfolder + 'CMP.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=rate&mediaType=series',30002,artfolder + 'SMV.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]ISTAS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&order=views&mediaType=series',30002,artfolder + 'FMVIS.png','nao','')
+        addDir('[B][COLOR green]RECO[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ENDADAS[/COLOR][/B]','http://www.wareztuga.tv/pagination.ajax.php?p=1&btn=seriesrecommended&mediaType=series',30002,artfolder + 'REC2.png','nao','')
+        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B]','http://www.wareztuga.tv/series.php?p=1&mediaType=series&order=year',30002,artfolder + 'ANO.png','nao','')
+        addDir('[B][COLOR green]CAT[/COLOR][COLOR yellow]E[/COLOR][COLOR red]GORIAS[/COLOR][/B]','http://www.wareztuga.tv/series.php?p=1',30007,artfolder + 'CT.png','nao','')
+        addDir('[B][COLOR green]A[/COLOR][COLOR yellow]N[/COLOR][COLOR red]OS[/COLOR][/B]','http://www.wareztuga.tv/series.php?p=1',30008,artfolder + 'ANOS.png','nao','')
         
         
 def MenuWSeriesE():
@@ -2164,24 +2165,24 @@ def MenuFilmesRato():
         addDir('[B][COLOR green]T[/COLOR][COLOR yellow]O[/COLOR][COLOR red]DOS[/COLOR][/B] (Filmes)','http://www.ratotv.net/movies/page/1/',20000,artfolder + 'FT.png','nao','')        
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','http://www.ratotv.net/',20002,artfolder + 'FMV.png','nao','')
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] P[/COLOR][COLOR red]OPULARES[/COLOR][/B] (Filmes)','http://www.ratotv.net/',20002,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] R[/COLOR][COLOR red]ECENTES[/COLOR][/B] (Filmes)','http://www.ratotv.net/',20002,artfolder,'nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]ISTOS[/COLOR][/B] (Filmes)','http://www.ratotv.net/',20002,artfolder,'nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] R[/COLOR][COLOR red]ECENTES[/COLOR][/B] (Filmes)','http://www.ratotv.net/',20002,artfolder + 'MRC.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]ISTOS[/COLOR][/B] (Filmes)','http://www.ratotv.net/',20002,artfolder + 'FMVI1.png','nao','')
         
 def MenuSeriesRato():  
-        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]O[/COLOR][COLOR red]DAS[/COLOR][/B] (Séries)','http://www.ratotv.net/tvshows/page/1/',20003,artfolder + 'FT.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','http://www.ratotv.net/',20002,artfolder + 'FMV.png','nao','')
+        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]O[/COLOR][COLOR red]DAS[/COLOR][/B] (Séries)','http://www.ratotv.net/tvshows/page/1/',20003,artfolder + 'TODAS.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','http://www.ratotv.net/',20002,artfolder + 'SMV.png','nao','')
         addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] P[/COLOR][COLOR red]OPULARES[/COLOR][/B] (Séries)','http://www.ratotv.net/',20002,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] R[/COLOR][COLOR red]ECENTES[/COLOR][/B] (Séries)','http://www.ratotv.net/',20002,artfolder,'nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]ISTAS[/COLOR][/B] (Séries)','http://www.ratotv.net/',20002,artfolder,'nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] R[/COLOR][COLOR red]ECENTES[/COLOR][/B] (Séries)','http://www.ratotv.net/',20002,artfolder + 'MRC.png','nao','')
+        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]ISTAS[/COLOR][/B] (Séries)','http://www.ratotv.net/',20002,artfolder + 'FMVIS.png','nao','')
 
 def MenuRato():
-        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://www.ratotv.net/',20007,artfolder,'nao','')
-        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://www.ratotv.net/',20008,artfolder,'nao','')
-        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','http://www.ratotv.net/movies/page/1/',20000,artfolder,'nao','')
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S[/COLOR][COLOR red] ANIMAÇÃO[/COLOR][/B]','http://www.ratotv.net/tags/Animação/page/1/',20000,artfolder,'nao','')
-        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','http://www.ratotv.net/tvshows/page/1/',20003,artfolder,'nao','')
-        addDir('[B][COLOR green]CAT[/COLOR][COLOR yellow]E[/COLOR][COLOR red]GORIAS[/COLOR][/B] (Filmes/Séries)','http://www.ratotv.net/',20004,artfolder,'nao','')
-        addDir('[B][COLOR green]A[/COLOR][COLOR yellow]N[/COLOR][COLOR red]OS[/COLOR][/B] (Filmes/Séries)','http://www.ratotv.net/',20005,artfolder,'nao','')
+        addDir('[B][COLOR green]FI[/COLOR][COLOR yellow]L[/COLOR][COLOR red]MES[/COLOR][/B]','http://www.ratotv.net/',20007,artfolder + 'filmes1.png','nao','')
+        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B]','http://www.ratotv.net/',20008,artfolder + 'series1.png','nao','')
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','http://www.ratotv.net/movies/page/1/',20000,artfolder + 'UF.png','nao','')
+        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S[/COLOR][COLOR red] ANIMAÇÃO[/COLOR][/B]','http://www.ratotv.net/tags/Animação/page/1/',20000,artfolder + 'UAN.png','nao','')
+        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','http://www.ratotv.net/tvshows/page/1/',20003,artfolder + 'US.png','nao','')
+        addDir('[B][COLOR green]CAT[/COLOR][COLOR yellow]E[/COLOR][COLOR red]GORIAS[/COLOR][/B] (Filmes/Séries)','http://www.ratotv.net/',20004,artfolder + 'CT.png','nao','')
+        addDir('[B][COLOR green]A[/COLOR][COLOR yellow]N[/COLOR][COLOR red]OS[/COLOR][/B] (Filmes/Séries)','http://www.ratotv.net/',20005,artfolder + 'ANOS.png','nao','')
         addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.ratotv.net/',20006,artfolder + 'P1.png','nao','')
         
 

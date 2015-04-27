@@ -1018,7 +1018,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                 if not newmatch:
                         if newmatch1 != [] and 'Movies' not in mvoutv and ('Season' in nometitulo or 'Temporada' in nometitulo or 'Mini-Série' in nometitulo or 'Mini-serie' in nometitulo or 'Minisérie' in nometitulo or 'Miniserie' in nometitulo):
                                 lin1 = re.findall('<div class="postmeta-primary">(.+?)<div id="comments">',link2,re.DOTALL)
-                                lin = re.compile('>(.+?)EPISODIO<').findall(lin1[0])
+                                if lin1: lin = re.compile('>(.+?)EPISODIO<').findall(lin1[0])
                                 #lin = re.findall('.+?EPIS',link2,re.DOTALL)
                                 lin = re.findall('EPISODIO(.*?)BAIXAR',link2,re.DOTALL)
                                 num = len(lin) + 0.0
