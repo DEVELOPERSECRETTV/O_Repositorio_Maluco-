@@ -121,6 +121,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
                         i=0
                         items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
                         if not items: items = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', html_source, re.DOTALL)
+                        #addLink(str(len(items)),'','','')
                         for item in items:                        
                                 i = i + 1
                                 a = str(i)
@@ -1378,6 +1379,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                         html_source = abrir_url(url)
                                 except: html_source = ''
                                 items = re.findall('<div class="post-(.*?)<span id="more-', html_source, re.DOTALL)
+                                #addLink(str(len(items))+imdbcode+imdbc,'','','')
                                 if items != []:
                                         print len(items)
                                         for item in items:
@@ -1474,7 +1476,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                                         nomecomp = nome.lower()
                                                         if imdbc != '' and imdbcode != '':
                                                                 if imdbcode == imdbc:
-                                                                        if 'online' in genero and not 'series' in genero and 'INDISPONIVEL' not in html_source:
+                                                                        if genero!='':#'online' in genero and not 'series' in genero and 'INDISPONIVEL' not in html_source:
                                                                         #if 'series' in genero:
                                                                                 #if 'OP\xc3\x87\xc3\x83O' in item:
                                                                                 nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
@@ -1501,7 +1503,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                                                                 TopPt.TPT_links('[B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] (' + ano_filme + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',iconimage,fanart)#,genero,sinopse,ano_filme)
                                                                                 num_f = num_f + 1
                                                         else:
-                                                                if 'online' in genero and not 'series' in genero and 'INDISPONIVEL' not in html_source:
+                                                                if 'series' not in genero and 'INDISPONIVEL' not in html_source:
                                                                         #if nomecomp in pesquisou:
                                                                 #if 'series' in genero:
                                                                         #if 'OP\xc3\x87\xc3\x83O' in item:
