@@ -721,6 +721,22 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                 name = nomefilme + ' ' + name
         #name = namet
         iframe_url = url
+        if "neodrive" in url :
+		try:
+                        #addLink(url,'','','')
+			iframe_url = url
+			print iframe_url
+			link3 = abrir_url(iframe_url)
+			imagem=re.compile('var vthumbnail = "(.+?)"').findall(link3)
+			if imagem: iconimage = imagem[0]
+			match=re.compile('var vurl = "(.+?)"').findall(link3)
+			if match: url = match[0]
+			else: url = ''
+			subtitle=re.compile('var vsubtitle = "(.+?)"').findall(link3)
+			if subtitle == []: checker = ''
+			else: checker = subtitle[0]
+
+		except: pass
 	if "clipstube" in url :
 		try:
 			iframe_url = url

@@ -353,15 +353,23 @@ def ARM_encontrar_fontes_filmes_MEGA_tv(url):
                 if not atualizados: atualizados = re.findall('title="Novo Filmes Adicionados">(.*?)<!--lista-filmes -->', html_source, re.DOTALL)
                 items = re.findall('<h2 class="titulo">(.*?)width="190" height="294"/>', atualizados[0], re.DOTALL)
         else:
-                items = re.findall('<h2 class="titulo">(.*?)width="190" height="294"/>', html_source, re.DOTALL)
+                itemshtml = re.findall('<div class="box">(.*?)<div id="footer">', html_source, re.DOTALL)
+                if itemshtml:
+                        items = re.findall('<li>(.*?)</li>', itemshtml[0], re.DOTALL)
+                else:
+                        items = re.findall('<li>(.*?)</li>', html_source, re.DOTALL)
+                        if not items: items = re.findall('<h2 class="titulo">(.*?)width="190" height="294"/>', html_source, re.DOTALL)
 	if not items: items = re.findall('<li class="create-tooltip"(.*?)</li>', html_source, re.DOTALL)
 	if not items: items = re.findall('class="link-tumb">(.*?)<!--capa-thumb -->', html_source, re.DOTALL)
 	if not items: items = re.findall('class="link-tumb">(.*?)<div class="mega-tarja">', html_source, re.DOTALL)
+	if not items: items = re.findall('class="link-tumb">(.*?)<div class="cat-dvd-rip">', html_source, re.DOTALL)
 	#addDir1(str(len(items)),'','',iconimage,False,'')
 	dubleg = ''
 	if items != []:
 		print len(items)
 		for item in items:
+                        ano=''
+                        dubleg=''
                         titulo = re.compile('alt="(.+?)"').findall(item)
                         if not titulo: titulo = re.compile('title="(.+?)"').findall(item)
                         if titulo:
@@ -897,9 +905,9 @@ def ARM_encontrar_videos_filmes(name,url):
                                         if 'megafilmes' in vidlink:
                                         #if '/ads/' not in vidlink and 'megafilmes' in vidlink and '<span' not in vidlink:
                                                 linkvmatch = re.compile('src="(.+?)"').findall(vidlink)
-                                                if linkvmatch and 'filmes-engracados.html' not in linkvmatch[0]:
+                                                if linkvmatch and 'filmes-engracados.html' not in linkvmatch[0] and 'filme-engracados' not in linkvmatch[0]:
                                                         #addDir1('1'+linkvmatch[0],'','',iconimage,False,'')
-                                                        if 'videoapi' in linkvmatch[0] or 'mailru.php' in linkvmatch[0]:
+                                                        if 'megafilmes' not in linkvmatch[0]:#'videoapi' in linkvmatch[0] or 'mailru.php' in linkvmatch[0]:
                                                                 num_fonte = num_fonte + 1
                                                                 ARM_resolve_not_videomega_filmes_telecine(linkvmatch[0],id_video,num_fonte)
                                                         else:
@@ -907,25 +915,19 @@ def ARM_encontrar_videos_filmes(name,url):
                                                                         link2v=ARM_abrir_url(linkvmatch[0])
                                                                 except: link2v = ''
                                                                 vlink = re.findall('<iframe(.*?)</iframe>', link2v, re.DOTALL)
-                                                                
+                                                                if not vlink: vlink = re.findall('<embed(.*?)</object>', link2v, re.DOTALL)
                                                                 for vidurl in vlink:
-                                                                        linkinho=vidurl
+                                                                        if 'anuncio' not in vidurl:
+                                                                                linkinho=vidurl
                                                                 #if vlink: addDir1(str(len(vlink))+'----'+linkinho,'','',iconimage,False,'')
-                                                                #return    ############                    
-                                                                linkv = re.compile('src="(.+?)"').findall(linkinho)
-                                                                if linkv:
-                                                                        if 'adsnewflut' not in linkv: url_video = linkv[0]
+                                                                #return    ############
+                                                                if vlink:
+                                                                        linkv = re.compile('src="(.+?)"').findall(linkinho)
+                                                                        if linkv:
+                                                                                if 'adsnewflut' not in linkv: url_video = linkv[0]
+                                                                        else: url_video = ''
                                                                 else: url_video = ''
-                                                                #return
-                                                                #addDir1(url_video+'----','','',iconimage,False,'')
-        ##                                                        if url_video == '':
-        ##                                                                linkv = re.compile("src='(.+?)'").findall(linkinho)
-        ##                                                                if linkv:
-        ##                                                                        if 'adsnewflut' not in linkv: url_video = linkv[0]
-        ##                                                                else: url_video = ''
-                                                                vlink = re.findall('<embed(.*?)</object>', link2v, re.DOTALL)
-                                                                if vlink: linkv = re.compile('src="(.+?)"').findall(vlink[0])
-                                                                if linkv: url_video = linkv[0]
+
                                                                 #return
                                                                 #addDir1(url_video+'----','','',iconimage,False,'')
                                                                 if 'adsnewflut' not in url_video and 'filmes-engracados.html' not in url_video: num_fonte = num_fonte + 1
@@ -1321,9 +1323,10 @@ def ARM_encontrar_videos_filmes_MEGA_NET(name,url):
                 
 def ARM_encontrar_videos_series(name,url):
         num_fonte = 0
+        #addLink(url,'','','')
 	addDir1(name,'url',1005,iconimage,False,'')
         addDir1('','url',1005,artfolder,False,'')
-        if 'seriadosonline' not in url:
+        if 'seriadosonline' not in url and 'megafilmeshd.net' not in url:
                 id_video = re.compile('id=(.*)').findall(url)
                 if id_video: id_video = id_video[0]
                 else: id_video = ''
@@ -1354,6 +1357,7 @@ def ARM_encontrar_videos_series(name,url):
                                         if '.jpg' not in url_video and '.png' not in url_video and 'images' not in url_video: num_fonte = num_fonte + 1
                                         ARM_resolve_not_videomega_filmes(url_video,id_video,num_fonte)
                 matchvideo = re.findall('<div class="post-content">(.*?)<!-- Post Content -->', link2, re.DOTALL)
+                if not matchvideo: matchvideo = re.findall('<div class="entry-content">(.*?)<footer class="entry-meta">', link2, re.DOTALL)
                 for match in matchvideo:
                         urls_video = re.compile('src="(.+?)"').findall(match)
                         if urls_video:
@@ -1422,6 +1426,11 @@ def ARM_encontrar_videos_series(name,url):
 
 def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
         #addDir1(url,'','',iconimage,False,'')
+        if "neodrive" in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Neodrive)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
         if "allmyvideos" in url:
 		try:
                         url = url + '///' + name
@@ -1620,6 +1629,11 @@ def ARM_resolve_not_videomega_filmes(url,id_video,num_fonte):
 
 def ARM_resolve_not_videomega_filmes_telecine(url,id_video,num_fonte):
         #addDir1(url,'','',iconimage,False,'')
+        if "neodrive" in url:
+                try:
+                        url = url + '///' + name
+                        addDir('[B]- Fonte ' + str(num_fonte) + ' : [COLOR blue](Neodrive)[/COLOR][/B]',url,30,iconimage,'','')
+    		except:pass
         if "filehoot" in url:
                 try:
                         url = url + '///' + name
