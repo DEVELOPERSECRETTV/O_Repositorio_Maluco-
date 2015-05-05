@@ -21,7 +21,7 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,urlparse,HTMLParser,json
+import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,time,os,urlparse,HTMLParser,json,requests
 h = HTMLParser.HTMLParser()
 from array import array
 import TugaFilmesTV,TopPt,TugaFilmesCom,MovieTuga,FilmesAnima,Pesquisar,Mashup,Funcoes,CinematugaEu,Cinematuga,CinemaEmCasa,PesquisaExterna
@@ -1345,9 +1345,10 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 		try:
                         #addLink(url,'','','')
                         urli,checker = videomega_resolver(iframe_url)
-                        uli=re.compile('(.+?)[|]Host=').findall(urli)
-                        if uli: url=uli[0]
-                        else: url=urli
+##                        uli=re.compile('(.+?)[|]Host=').findall(urli)
+##                        if uli: url=uli[0]
+##                        else: url=urli
+                        url=urli
                         #addLink(url,'','','')
 ##                        if "iframe" not in url:
 ##                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
@@ -2054,9 +2055,10 @@ def PLAY_episodes(url,name,iconimage,checker,fanart):#,nomeAddon):
                         #addLink(url,'','','')
                         #addLink(iframe_url,'','','')
                         urli,checker = videomega_resolver(iframe_url)
-                        uli=re.compile('(.+?)[|]Host=').findall(urli)
-                        if uli: url=uli[0]
-                        else: url=urli
+##                        uli=re.compile('(.+?)[|]Host=').findall(urli)
+##                        if uli: url=uli[0]
+##                        else: url=urli
+                        url=urli
                         #addLink(url,'','','')
 ##                        if "iframe" not in url:
 ##                                id_videomega = re.compile('ref=(.*)').findall(url)[0]
@@ -2117,7 +2119,7 @@ def abrir_url_tommy(url,referencia,form_data=None,erro=True):
 	except urllib2.URLError, e:
 		return "Erro"
 	
-def videomega_resolver(referer):
+def videomega_resolver1(referer):
         #referer='http://www.tuga-filmes.com/toy-story-perdidos-no-tempo/'
         
         ref = '---'
@@ -2212,9 +2214,11 @@ def videomega_resolver(referer):
 
 	url_video = re.compile('<source src="(.+?)"').findall(iframe_html)[0]
 	#url_video = re.compile('videojs[(]"container"[)][.]src[(]"(.+?)"').findall(iframe_html)[0]
-	#addLink(url_video,'','','')
+	addLink(url_video,'','','')
 	try: url_legendas = re.compile('<track kind="captions" src="(.+?)"').findall(iframe_html)[0]
 	except: url_legendas = '-'
+
+        #return url_video+headers_str(ref_data),url_legendas
         return url_video,url_legendas
 
 ##	
@@ -2249,6 +2253,96 @@ def videomega_resolver(referer):
 ##			  'Referer':'http://videomega.tv/player/jwplayer.flash.swf'}
 ##	#addLink(urltrailer+url_video+headers_str(ref_data),'','','')
 ##	return url_video+headers_str(ref_data),url_legendas
+
+def videomega_resolver(referer):
+	#html = abrir_url(referer)
+        #addLink(referer,'','','')
+	
+	ref_data={'Host':'videomega.tv',
+			  'Connection':'Keep-alive',
+			  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+			  'User-Agent':'stagefright/1.2 (Linux;Android 4.4.4)',
+			  'Referer':referer}
+	
+	ref = '---'
+        #return
+	if 'tuga-filmes.com' in referer:
+                html = abrir_url(referer)
+                if re.search('http://videomega.tv/iframe.js',html):
+                        lines = html.splitlines()
+                        aux = ''
+                        for line in lines:
+                                if re.search('http://videomega.tv/iframe.js',line):
+                                        aux = line
+                                        break;
+                        ref = re.compile('ref="(.+?)"').findall(line)[0]
+                else:
+                        try:
+                                hashk = re.compile('"http://videomega.tv/validatehash.php\?hashkey\=(.+?)"').findall(html)[0]
+                                ref = re.compile('ref="(.+?)"').findall(requests.get("http://videomega.tv/validatehash.php?hashkey="+hashk,headers=ref_data).text)[0]
+                        except:
+                                try:
+                                        hash = re.compile("'http://videomega.tv/validatehash.php\?hashkey\=(.+?)'").findall(html)[0]
+                                        ref = re.compile('ref="(.+?)"').findall(requests.get("http://videomega.tv/validatehash.php?hashkey="+hashk,headers=ref_data).text)[0]
+                                except:
+                                        iframe = re.compile('"http://videomega.tv/iframe.php\?(.+?)"').findall(html)[0] + '&'
+                                        ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+        else:
+                if 'videomega' in referer or 'tuga-filmes.us' in referer or 'tuga-filmes.tv' in referer:
+                        ref=re.compile('=(.*)').findall(referer)[0]
+                        if len(ref)>35:ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+ref))[0]
+                        #addLink(referer,'','','')
+                else:
+                        html = abrir_url(referer)
+                        if re.search('http://videomega.tv/iframe.js',html):
+                                lines = html.splitlines()
+                                aux = ''
+                                for line in lines:
+                                        if re.search('http://videomega.tv/iframe.js',line):
+                                                aux = line
+                                                break;
+                                ref = re.compile('ref="(.+?)"').findall(line)[0]
+                        else:
+                                try:
+                                        hashk = re.compile('"http://videomega.tv/validatehash.php\?hashkey\=(.+?)"').findall(html)[0]
+                                        ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+hashk))[0]
+                                        #addLink(ref,'','','')
+                                except:
+                                        try:
+                                                hashk = re.compile("'http://videomega.tv/validatehash.php\?hashkey\=(.+?)'").findall(html)[0]
+                                                ref = re.compile('ref="(.+?)"').findall(abrir_url("http://videomega.tv/validatehash.php?hashkey="+hashk))[0]
+                                                #addLink(ref,'','','')
+                                        except:
+                                                try:
+                                                        iframe = re.compile('"http://videomega.tv/iframe.php\?(.+?)"').findall(html)[0] + '&'
+                                                        ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+                                                except:
+                                                        try:
+                                                                iframe = re.compile('"http://videomega.tv/cdn.php\?(.+?)"').findall(html)[0] + '&'
+                                                                ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+                                                        except:
+                                                                try:
+                                                                        iframe = re.compile('"http://videomega.tv/view.php?(.+?)"').findall(html)[0] + '&'
+                                                                        ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+                                                                except:
+                                                                        try:
+                                                                                iframe = re.compile('<iframe.+?src=http://videomega.tv/cdn.php\?(.+?) frameborder.+?</iframe>').findall(html)[0] + '&'
+                                                                                ref = re.compile('ref=(.+?)&').findall(iframe)[0]
+                                                                        except:
+                                                                                try:
+                                                                                        #iframe = re.compile('=(.*)').findall(referer)[0] + '&'
+                                                                                        ref = re.compile('=(.*)').findall(referer)[0]
+                                                                                except: pass
+	
+	url = 'http://videomega.tv/cdn.php?ref='+ref+'&width=638&height=431&val=1'
+	iframe_html = requests.get(url,headers=ref_data).text
+	url_video = re.compile('<source src="(.+?)"').findall(iframe_html)[0]
+	try: url_legendas = re.compile('<track kind="captions" src="(.+?)"').findall(iframe_html)[0]
+	except: url_legendas = '-'
+	ref_data['Referer'] = url
+	#addLink(url_video+headers_str(ref_data),'','','')
+	#addLink(referer,'','','')
+	return [url_video+headers_str(ref_data),url_legendas]
 
 def headers_str(headers):
 	start = True

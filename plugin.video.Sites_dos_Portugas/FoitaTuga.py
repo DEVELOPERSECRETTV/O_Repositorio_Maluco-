@@ -751,6 +751,7 @@ def FTT_links(name,url,iconimage,fanart):
         if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
         #if 'BREVEMENTE ONLINE' in fonte_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
+        #addLink(str(len(fonte_e_video)),'','','')
         for fonte_e_url in fontes_video:
                 if imdbcode == '':
                         imdb = re.compile('imdb.com/title/(.+?)/').findall(fonte_e_url)

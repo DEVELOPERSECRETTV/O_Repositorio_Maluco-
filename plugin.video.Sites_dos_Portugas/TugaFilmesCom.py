@@ -1084,7 +1084,7 @@ def TFC_links(name,url,iconimage,fanart):
         assist = re.findall(">ASSISTIR.+?", fonte, re.DOTALL)
         fontes = re.findall("Ver Aqui.+?", fonte, re.DOTALL)
         numero_de_fontes = len(fontes)
-        addLink(str(len(assist)),'','','')
+        #addLink(str(len(assist)),'','','')
 	if fonte:
                 if len(assist) > 1:
                         assistir_fontes = re.findall('>ASSISTIR(.*?)------------------------------', fonte, re.DOTALL)

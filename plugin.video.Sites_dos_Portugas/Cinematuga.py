@@ -397,6 +397,7 @@ def CMT_encontrar_videos_filmes(name,url,mvoutv):
         nomeescolha = name
         conta_id_video = 0
         conta_os_items = 0
+        urlvideomega = url
 
         ######################################
         n1 = ''
@@ -460,10 +461,18 @@ def CMT_encontrar_videos_filmes(name,url,mvoutv):
                         #if nao == 0: addDir1('[COLOR blue]'+nome[0]+':[/COLOR]','url',1004,iconimage,False,fanart)
                         urlvideo = re.compile('<iframe.+?src="(.+?)"').findall(matchs)
                         if not urlvideo: urlvideo = re.compile('src="(.+?)"').findall(matchs)
-                        url = urlvideo[0]
-                        conta_id_video = conta_id_video + 1
-                        conta_os_items = conta_os_items + 1
-                        CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,fanart,iconimage)
+                        #url = urlvideo[0]
+                        for url in urlvideo:
+                                if 'youtube' not in url:
+                                        conta_id_video = conta_id_video + 1
+                                        conta_os_items = conta_os_items + 1
+                                        if 'videomega' in url:
+                                                try:
+                                                        fonte_id = '(Videomega)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urlvideomega,30,iconimage,'',fanart)
+                                                except: pass
+                                        else:
+                                                CMT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescolha,fanart,iconimage)
                 except: pass
 ##        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
 ##        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
@@ -477,6 +486,7 @@ def CMT_encontrar_videos_filmes(name,url,mvoutv):
 
 
 def CMT_links(name,url,iconimage,fanart):
+        
         iconimage = iconimage
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
@@ -486,7 +496,8 @@ def CMT_links(name,url,iconimage,fanart):
         else: url = urlimdb[0]
         nomeescolha = name
         conta_id_video = 0
-        conta_os_items = 0    
+        conta_os_items = 0
+        urlvideomega = url
 	try:
 		link2=abrir_url(url)
 	except: link2 = ''
@@ -501,6 +512,7 @@ def CMT_links(name,url,iconimage,fanart):
         if not matchvid:
                 nao = 1
                 matchvid = re.findall("<div class='video-item'>(.+?)<div class='clear'>", link2, re.DOTALL)
+        #addLink(str(len(matchvid))+url,'','','')
         for matchs in matchvid:
                 try:
                         nome = re.compile('(.+?)\n.+?').findall(matchs)
@@ -508,129 +520,132 @@ def CMT_links(name,url,iconimage,fanart):
                         #if nao == 0: addDir1('[COLOR blue]'+nome[0]+':[/COLOR]','url',1004,iconimage,False,fanart)
                         urlvideo = re.compile('<iframe.+?src="(.+?)"').findall(matchs)
                         if not urlvideo: urlvideo = re.compile('src="(.+?)"').findall(matchs)
-                        url = urlvideo[0]
-                        conta_id_video = conta_id_video + 1
-                        conta_os_items = conta_os_items + 1
-                        ##############################################
-                        url = url + '///' + nomeescolha
-                        if "videomega" in url:
-                                try:
-                                        fonte_id = '(Videomega)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
-                                except: pass
-                        if "vidto.me" in url:
-                                try:
-                                        match = re.compile('http://vidto.me/embed-(.+?).html').findall(url)
-                                        if match:
-                                                id_video = match[0]
-                                                url = 'http://vidto.me/' + id_video + '.html' + '///' + nomeescolha
-                                        fonte_id = '(Vidto.me)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except: pass
-                        if "dropvideo" in url:
-                                try:
-                                        url = url.replace('/video/','/embed/')
-                                        fonte_id = '(DropVideo)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "vidzi.tv" in url:
-                                try:
-                                        fonte_id = '(Vidzi.tv)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzi.tv)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "vodlocker" in url:
-                                try:
-                                        fonte_id = '(Vodlocker)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vodlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "played.to" in url:
-                                try:
-                                        fonte_id = '(Played.to)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Played.to)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "cloudzilla" in url:
-                                try:
-                                        fonte_id = '(Cloudzilla)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "divxstage" in url:
-                                try:
-                                        fonte_id = '(Divxstage)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Divxstage)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "vidzen" in url:
-                                try:
-                                        fonte_id = '(Vidzen)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzen)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "streamin.to" in url:
-                                try:
-                                        fonte_id = '(Streamin)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass                        
-                        if "nowvideo" in url:
-                                try:
-                                        fonte_id = '(Nowvideo)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "primeshare" in url:
-                                try:
-                                        fonte_id = '(Primeshare)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Primeshare.tv)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "videoslasher" in url:
-                                try:
-                                        fonte_id = '(VideoSlasher)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoSlasher)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "sockshare" in url:
-                                try:
-                                        fonte_id = '(Sockshare)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Sockshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "putlocker" in url:
-                                try:
-                                        url = url.replace('putlocker.com/embed/','firedrive.com/file/')
-                                        fonte_id = '(Firedrive)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        else:
-                                if "firedrive" in url:
-                                        try:
-                                                fonte_id = '(Firedrive)'
-                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                        except:pass
-                        if "movshare" in url:
-                                try:
-                                        fonte_id = '(Movshare)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Movshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "video.tt" in url:
-                                try:
-                                        url = url.replace('///' + nomeescolha,'')
-                                        url = url.replace('/video/','/e/')
-                                        url = url.replace('/video/','/e/')
-                                        url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
-                                        url = url.replace('http://www.video.tt/embed/','http://video.tt/e/')
-                                        url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
+                        #######url = urlvideo[0]
+                        for url in urlvideo:
+                                if 'youtube' not in url:
+                                        conta_id_video = conta_id_video + 1
+                                        conta_os_items = conta_os_items + 1
+                                        #addLink(str(len(matchvid))+url,'','','')
+                                        ##############################################
                                         url = url + '///' + nomeescolha
-                                        fonte_id = '(Video.tt)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-                        if "video.pw" in url:
-                                try:
-                                        print url
-                                        fonte_id = '(Video.pw)'
-                                except:pass
-                        if "videowood" in url:
-                                try:
-                                        if '/video/' in url: url = url.replace('/video/','/embed/')
-                                        print url
-                                        fonte_id = '(VideoWood)'
-                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
-                                except:pass
-##                        if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url and 'nowvideo' not in url:# and 'iiiiiiiiii' in url:
-##                                Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id+'[/COLOR][/B]',iconimage,'',fanart)
+                                        if "videomega" in url:
+                                                try:
+                                                        fonte_id = '(Videomega)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urlvideomega,30,iconimage,'',fanart)
+                                                except: pass
+                                        if "vidto.me" in url:
+                                                try:
+                                                        match = re.compile('http://vidto.me/embed-(.+?).html').findall(url)
+                                                        if match:
+                                                                id_video = match[0]
+                                                                url = 'http://vidto.me/' + id_video + '.html' + '///' + nomeescolha
+                                                        fonte_id = '(Vidto.me)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidto.me)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except: pass
+                                        if "dropvideo" in url:
+                                                try:
+                                                        url = url.replace('/video/','/embed/')
+                                                        fonte_id = '(DropVideo)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](DropVideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "vidzi.tv" in url:
+                                                try:
+                                                        fonte_id = '(Vidzi.tv)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzi.tv)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "vodlocker" in url:
+                                                try:
+                                                        fonte_id = '(Vodlocker)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vodlocker)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "played.to" in url:
+                                                try:
+                                                        fonte_id = '(Played.to)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Played.to)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "cloudzilla" in url:
+                                                try:
+                                                        fonte_id = '(Cloudzilla)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Cloudzilla)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "divxstage" in url:
+                                                try:
+                                                        fonte_id = '(Divxstage)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Divxstage)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "vidzen" in url:
+                                                try:
+                                                        fonte_id = '(Vidzen)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Vidzen)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "streamin.to" in url:
+                                                try:
+                                                        fonte_id = '(Streamin)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Streamin)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass                        
+                                        if "nowvideo" in url:
+                                                try:
+                                                        fonte_id = '(Nowvideo)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Nowvideo)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "primeshare" in url:
+                                                try:
+                                                        fonte_id = '(Primeshare)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Primeshare.tv)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "videoslasher" in url:
+                                                try:
+                                                        fonte_id = '(VideoSlasher)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoSlasher)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "sockshare" in url:
+                                                try:
+                                                        fonte_id = '(Sockshare)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Sockshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "putlocker" in url:
+                                                try:
+                                                        url = url.replace('putlocker.com/embed/','firedrive.com/file/')
+                                                        fonte_id = '(Firedrive)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        else:
+                                                if "firedrive" in url:
+                                                        try:
+                                                                fonte_id = '(Firedrive)'
+                                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Firedrive)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                        except:pass
+                                        if "movshare" in url:
+                                                try:
+                                                        fonte_id = '(Movshare)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Movshare)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "video.tt" in url:
+                                                try:
+                                                        url = url.replace('///' + nomeescolha,'')
+                                                        url = url.replace('/video/','/e/')
+                                                        url = url.replace('/video/','/e/')
+                                                        url = url.replace('http://www.video.tt/e/','http://video.tt/e/')
+                                                        url = url.replace('http://www.video.tt/embed/','http://video.tt/e/')
+                                                        url = url.replace('http://video.tt/e/','http://video.tt/player_control/settings.php?v=')+'&fv=v1.2.74'
+                                                        url = url + '///' + nomeescolha
+                                                        fonte_id = '(Video.tt)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Video.tt)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                                        if "video.pw" in url:
+                                                try:
+                                                        print url
+                                                        fonte_id = '(Video.pw)'
+                                                except:pass
+                                        if "videowood" in url:
+                                                try:
+                                                        if '/video/' in url: url = url.replace('/video/','/embed/')
+                                                        print url
+                                                        fonte_id = '(VideoWood)'
+                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](VideoWood)[/COLOR][/B]',url,30,iconimage,'',fanart)
+                                                except:pass
+                ##                        if 'vk.com' not in url and 'video.mail.ru' not in url and 'videoapi.my.mail' not in url and 'vidzi.tv' not in url and 'playfreehd' not in url  and 'thevideo.me' not in url and 'vidto.me' not in url and 'nowvideo' not in url:# and 'iiiiiiiiii' in url:
+                ##                                Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id+'[/COLOR][/B]',iconimage,'',fanart)
                 except: pass
 
 

@@ -190,7 +190,7 @@ def CMC_Menu_Filmes_Top_Semanal(artfolder):
                                         ano_filme = ano_filme.replace('&nbsp;','').replace(' ','').replace('<b>','').replace('</b>','')
                                 else: ano_filme = ''
                                 
-                                thumbnail = re.compile('<img border="0" src="(.+?)" .+? /></strike>').findall(item)
+                                thumbnail = re.compile('<img .+? src="(.+?)" .+?/></strike>').findall(item)
                                 if not thumbnail: thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
                                 if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
                                 else: thumb = ''
@@ -372,7 +372,7 @@ def CMC_encontrar_fontes_filmes(url):
                                 ano_filme = ano_filme.replace('&nbsp;','').replace(' ','').replace('<b>','').replace('</b>','')
                         else: ano_filme = ''
                         
-                        thumbnail = re.compile('<img border="0" src="(.+?)" .+? /></strike>').findall(item)
+                        thumbnail = re.compile('<img .+? src="(.+?)" .+?/></strike>').findall(item)
                         if not thumbnail: thumbnail = re.compile('<a href="(.+?)" imageanchor="1"').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320')
                         else: thumb = ''
