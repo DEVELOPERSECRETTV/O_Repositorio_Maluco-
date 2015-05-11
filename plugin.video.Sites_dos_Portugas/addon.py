@@ -618,6 +618,7 @@ def CMEONOFF(url_CME):
 		html_source = abrir_url(url_CME)
 	except: html_source = ''
 	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	if not items: items = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
 	if items != []: CME_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: CME_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 def CMCONOFF(url_CMC):
@@ -728,7 +729,7 @@ def chamaUltimos(name):
         else: url_FTT = 'http:'
         if name == 'CMT' or name == 'TODOS': url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
         else: url_CMT = 'http:'
-        if name == 'CME' or name == 'TODOS': url_CME = 'http://www.cinematuga.eu/search/label/Filmes'
+        if name == 'CME' or name == 'TODOS': url_CME = 'http://cinematuga.eu/category/filmes/'#'http://www.cinematuga.eu/search/label/Filmes'
         else: url_CME = 'http:'
         if name == 'CMC' or name == 'TODOS': url_CMC = 'http://www.cinemaemcasa.pt/'
         else: url_CMC = 'http:'
@@ -755,7 +756,7 @@ def chamaUltimosA(name):
         else: url_FTT = 'http:'
         if name == 'CMT' or name == 'TODOS': url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'#'http://www.tugafilmes.org/search/label/Filmes'
         else: url_CMT = 'http:'
-        if name == 'CME' or name == 'TODOS': url_CME = 'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
+        if name == 'CME' or name == 'TODOS': url_CME = 'http://cinematuga.eu/category/animacao/'#'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
         else: url_CME = 'http:'
         if name == 'CMC' or name == 'TODOS': url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
         else: url_CMC = 'http:'
@@ -840,8 +841,10 @@ def dirtodos(url):
                         html_source = abrir_url(url_CME)
                 except: html_source = ''
                 itemsCME = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+                if not itemsCME: itemsCME = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
                 if itemsCME != []:
-                        proxima_CME = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)	
+                        proxima_CME = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)
+                        if not proxima_CME: proxima_CME = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">').findall(html_source)
                         try:
                                 url_CME = proxima_CME[0].replace('&amp;','&')
                         except: pass

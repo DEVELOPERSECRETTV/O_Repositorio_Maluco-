@@ -2115,12 +2115,13 @@ def CMEMASHUP(item):
                         imdbcode = ''
                         audio_filme = ''
 
-                        imdb = re.compile('imdb.com/title/(.+?)"').findall(item)
+                        imdb = re.compile('imdb.com/title/(.+?)>iMDB</a>').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
 
                         urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
                         if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
                         if urletitulo:
                                 urlvideo = urletitulo[0][0].replace('#more','')
                                 nome = urletitulo[0][1]
@@ -2129,6 +2130,7 @@ def CMEMASHUP(item):
                                 nome = ''
                                 
                         snpse = re.compile('<b>sinopse</b><br>\n(.+?)<br>\n').findall(item)
+                        if not snpse: snpse = re.compile('<b>sinopse</b><br />\n(.+?)</span></p>').findall(item)
                         if snpse: sinopse = snpse[0]
                         sinopse = sinopse.replace('&#8216;',"'")
                         sinopse = sinopse.replace('&#8217;',"'")
@@ -2159,6 +2161,7 @@ def CMEMASHUP(item):
                                 genero = genero.replace(str(q_a_q_a)+'  ','')
 
                         thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+                        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
                         if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
                         else: thumb = ''

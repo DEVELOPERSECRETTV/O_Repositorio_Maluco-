@@ -634,6 +634,7 @@ def PLAY_movie_url(url,name,iconimage,checker,fanart):#,nomeAddon):
     		except:pass
     	if "video.tt" in url or "videott" in url:
                 try:
+
                         iframe_url = url
 			print iframe_url
 			link3 = abrir_url(iframe_url)
@@ -1323,6 +1324,15 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
     		except:pass
     	elif "video.tt" in url or "videott" in url:
                 try:
+                        #addLink(url,'','','')
+##                        sources = []
+##                        hosted_media = urlresolver.HostedMediaFile(url)
+##                        sources.append(hosted_media)
+##                        source = urlresolver.choose_source(sources)
+##                        if source: 
+##                                url = source.resolve()
+##                        else: url = ''
+                        
                         iframe_url = url
 			print iframe_url
 			link3 = abrir_url(iframe_url)
@@ -1345,7 +1355,8 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
                         #addLink(tt[0],vlink,'')
                         #addLink(v_key[0],vlink,'')
                         #addLink(vlink,vlink,'')
-			#addLink(url,'','')
+			#ddLink(url,'','','')
+			#return
     		except:pass
     	elif "videomega" in url or '(Videomega)' in name:
 ##                try:

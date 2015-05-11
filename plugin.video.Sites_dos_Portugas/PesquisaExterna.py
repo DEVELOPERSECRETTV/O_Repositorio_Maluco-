@@ -176,13 +176,14 @@ def pesquisar(nome_pesquisa,url,automatico):
                         TFV.start()
                         TFV.join()
 
-	url_pesquisa = 'http://www.cinematuga.eu/search?q=' + str(encode)
+	url_pesquisa = 'http://cinematuga.eu/?s=' + str(encode) + '&submit=Procurar'
 	if nomesite != 'CME':
                 try:
                         html_source = abrir_url(url_pesquisa)
                 except: html_source = ''
                 i=0
                 items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+                if not items: items = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
                 for item in items:                        
                         i = i + 1
                         a = str(i)
@@ -1694,12 +1695,13 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CME(FILMEN,url,pesquisou,imdbc,item)
                         imdbcode = ''
                         audio_filme = ''
 
-                        imdb = re.compile('imdb.com/title/(.+?)"').findall(item)
+                        imdb = re.compile('imdb.com/title/(.+?)>iMDB</a>').findall(item)
                         if imdb: imdbcode = imdb[0]
                         else: imdbcode = ''
 
                         urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
                         if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
                         if urletitulo:
                                 urlvideo = urletitulo[0][0].replace('#more','')
                                 nome = urletitulo[0][1]
@@ -1708,6 +1710,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CME(FILMEN,url,pesquisou,imdbc,item)
                                 nome = ''
 
                         snpse = re.compile('<b>sinopse</b><br>\n(.+?)<br>\n').findall(item)
+                        if not snpse: snpse = re.compile('<b>sinopse</b><br />\n(.+?)</span></p>').findall(item)
                         if snpse: sinopse = snpse[0]
                         sinopse = sinopse.replace('&#8216;',"'")
                         sinopse = sinopse.replace('&#8217;',"'")
@@ -1738,6 +1741,7 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CME(FILMEN,url,pesquisou,imdbc,item)
                                 genero = genero.replace(str(q_a_q_a)+'  ','')
 
                         thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+                        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
                         if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
                         else: thumb = ''
@@ -3402,6 +3406,7 @@ def CME_links(name,url,iconimage,fanart):
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
         fontes_video = re.findall("<h3 class='post-title entry-title(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
+        if not fontes_video: fontes_video = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
         #if 'BREVEMENTE ONLINE' in fonte_video: #addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
         for fonte_e_url in fontes_video:
