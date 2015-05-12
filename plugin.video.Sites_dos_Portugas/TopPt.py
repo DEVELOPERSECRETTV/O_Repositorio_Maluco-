@@ -71,7 +71,7 @@ def TPT_MenuPrincipal(artfolder):
                 addDir1('[COLOR blue]Séries:[/COLOR]','url',1001,artfolder + 'TPT1.png',False,'')
                 addDir('[COLOR yellow]- A a Z[/COLOR]','urlTPT',241,artfolder + 'SAZ1.png','nao','')#241
                 addDir('[COLOR yellow]- Últimos Episódios[/COLOR]',saber_url_series[0],260,artfolder + 'UE.png','nao','')#232
-                addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',232,artfolder + 'TPS.png','nao','')#259
+                #addDir('[COLOR yellow]- Top Séries[/COLOR]','http://toppt.net/',232,artfolder + 'TPS.png','nao','')#259
         except:pass
 
 def TPT_Menu_Filmes_Por_Ano(artfolder):
@@ -520,9 +520,11 @@ def TPT_encontrar_fontes_filmes(url):
 ##        percent = 0
 ##        message = 'Por favor aguarde.'
 ##        progress.create('Progresso', 'A Procurar')
+        mvoutv = 'Movies'
         if name == '[COLOR yellow]- Top Séries[/COLOR]' or name == '[COLOR yellow]- Top Filmes[/COLOR]':
                 try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'TPT1.png', 2000, sound=False)
                 except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'TPT1.png'))
+                mvoutv='TvShows'
 ##                progress.update( percent, 'A Procurar ...', message, "" )
         if name == '[COLOR yellow]- Últimos Episódios[/COLOR]' or name == '[B]Página Seguinte>>[/B]':
                 try: xbmcgui.Dialog().notification('A Procurar Últimos Episódios.', 'Por favor aguarde...', artfolder + 'TPT1.png', 2000, sound=False)
@@ -540,10 +542,12 @@ def TPT_encontrar_fontes_filmes(url):
                 items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
         if name == '[COLOR yellow]- Top Séries[/COLOR]':
                 tp_series = re.findall('<h3 class="widgettitle">TOP SÉRIES</h3>(.+?)<ul class="widget-wrap">', html_source, re.DOTALL)
-                items = re.compile('<a href="(.+?)".+?<img.+?src=".+?"').findall(tp_series[0])
+                if tp_series: items = re.compile('<a href="(.+?)".+?<img.+?src=".+?"').findall(tp_series[0])
+                else: items = ''
         if name == '[COLOR yellow]- Top Filmes[/COLOR]':
                 tp_filmes = re.findall('<h3 class="widgettitle">TOP FILMES</h3>(.+?)<ul class="widget-wrap">', html_source, re.DOTALL)
-                items = re.compile('<a href="(.+?)".+?<img.+?src=".+?"').findall(tp_filmes[0])
+                if tp_filmes: items = re.compile('<a href="(.+?)".+?<img.+?src=".+?"').findall(tp_filmes[0])
+                else: items = ''
 
         threads = []
         i = 0
@@ -617,7 +621,7 @@ def TPT_encontrar_fontes_filmes(url):
                                 
                                 if nome != '---':
                                         #num_filmes = num_filmes + 1
-                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
+                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,mvoutv,num_filmes)
                                 xbmc.sleep(20)
                         Filmes_Fi.close()
 
@@ -836,6 +840,7 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
         
 ##        return
         #if 'Movies' in mvoutv and Season in name:
+        #addLink(mvoutv,'','','')
         if mvoutv == None: mvoutv = 'Movies'
         else: mvoutv = str(mvoutv)
 
@@ -3590,7 +3595,18 @@ def TPT_resolve_not_videomega_filmes(url,conta_id_video,conta_os_items,nomeescol
 ##                        Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id.replace(url,'').replace(url+'///'+nomeescolha,'')+'[/COLOR][/B]',iconimage,'',fanart)
     	return fonte_id
 
+
 def ultimos_episodios_TPT_ultimos(url):
+        #addLink(name,'',iconimage,fanart)
+        url_TFC = 'http://www.tuga-filmes.info/'
+        url_MVT = 'http://www.movie-tuga.blogspot.pt'
+        url_TFV = 'http://'
+        url_TPT = 'http://toppt.net/category/series/'
+        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+        url_ultimos_episodios = urllib.urlencode(parameters)
+        Mashup.ultimos_episodios(url_ultimos_episodios)
+
+def ultimos_episodios_TPT_ultimos111111111111(url):
 
         try: xbmcgui.Dialog().notification('A Procurar Últimos Episódios.', 'Por favor aguarde...', artfolder + 'TPT1.png', 2000, sound=False)
         except: xbmc.executebuiltin("Notification(%s,%s, 2000, %s)" % ('A Procurar Últimos Episódios.', 'Por favor aguarde...', artfolder + 'TPT1.png'))
@@ -3880,10 +3896,12 @@ def ultimos_ep_TPT(item):
         Filmes_File.close()
 
         #----------------------------------------------------------------------------------------------------
+        
+
 
 def TPT_Ultimos(name,url,iconimage,fanart,item):
         #addLink(name,'',iconimage,fanart)
-        if 'Movies' not in mvoutv and 'Season' in name or 'Temporada' in name or 'Mini-Série' in name or 'Mini-serie' in name or 'Minisérie' in name or 'Miniserie' in name:
+        if 'Season' in name or 'Temporada' in name or 'Mini-Série' in name or 'Mini-serie' in name or 'Minisérie' in name or 'Miniserie' in name:
                 n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(name)
                 if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(name)
                 if n: nome = n[0][0]+' - '+n[0][1]
@@ -3974,7 +3992,7 @@ def TPT_Ultimos(name,url,iconimage,fanart,item):
         episodioanterior = ''
 	nome_antes = '[B][COLOR green]' + namet + '[/COLOR][/B] | '
 	if link2:
-                if 'Movies' in mvoutv and 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-serie' not in nometitulo and 'Minisérie' not in nometitulo and 'Miniserie' not in nometitulo:
+                if 'Season' not in nometitulo and 'Temporada' not in nometitulo and 'Mini-Série' not in nometitulo and 'Mini-serie' not in nometitulo and 'Minisérie' not in nometitulo and 'Miniserie' not in nometitulo:
                         newmatch = re.findall('<span id=.+?DOWNLOAD',link2,re.DOTALL)
                         if not newmatch: newmatch = re.findall('<span id=.+?BAIXAR',link2,re.DOTALL)
                         l=1
@@ -4014,7 +4032,7 @@ def TPT_Ultimos(name,url,iconimage,fanart,item):
                 if '<h2 class="title">Sleepy Hollow[Season 1][Completa]</h2>' in link2:
                         linkseries = re.findall('<p>(.+?)<br/>(.+?)</p>',newmatch[0],re.DOTALL)
                 #for parte1,parte2 in linkseries:
-                #addLink(str(l)+name+str(len(linkseries)),'','','')
+                addLink(str(l)+name+str(len(linkseries)),'','','')
                 if linkseries:
                         
                         parte1 = linkseries[0][0]

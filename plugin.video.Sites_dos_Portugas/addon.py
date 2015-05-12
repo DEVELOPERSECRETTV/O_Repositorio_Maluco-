@@ -26,7 +26,7 @@ from string import capwords
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
 from Funcoes import thetvdb_api_tvdbid, thetvdb_api_episodes, themoviedb_api_search_imdbcode, themoviedb_api_pagina, themoviedb_api_IMDB1, theomapi_api_nome
 from Funcoes import addDir, addDir1, addDir2, addLink, addLink1, addDir_teste, addDir_trailer, addDir_episode, addDir_trailer1, addDir_episode1,addDir_episode1_false
-from Funcoes import addDir_trailer1_filmes, addDir_trailer_filmes,addDir_episode1_true
+from Funcoes import addDir_trailer1_filmes, addDir_trailer_filmes,addDir_episode1_true, addDir_trailer1
 from Funcoes import get_params,abrir_url
 
 h = HTMLParser.HTMLParser()
@@ -394,7 +394,7 @@ def Fontes_ultimas_Series(url):
                                 if thumb == '': thumb = '---'
                                 nome_final = '[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' +ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]'
                                 #filmes.append(FILMEN+'NOME|'+str(nome_final)+'|IMDBCODE|'+str(urletitulo[0][0])+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb)+'|ANO|'+str(ano_filme.replace('(','').replace(')',''))+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|ONOME|'+str(nome_pesquisa)+'|SINOPSE|'+str(sinopse)+'|END|\n')
-                                addDir_trailer(nome_final,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0])
+                                addDir_trailer1(nome_final,urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0],'TvShows',len(itemsTPT))
                                 #addDir_teste('[B][COLOR green]' + n1 + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]'+'[COLOR nnn]'+n2+'[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB',233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero)
                         except: pass
                         percent = int( ( i / num ) * 100)
@@ -2092,12 +2092,15 @@ def seasonsW(name,url):
         url = ul[0]
         
         link=abrir_url(url)
-        idtv = re.compile('http://thetvdb.com/banners/fanart/original/(.+?)-1').findall(fanart)
+        try:
+                idtv = re.compile('http://thetvdb.com/banners/fanart/original/(.+?)-1').findall(fanart)[0]
+        except: idtv=''
+
         nomeserie=re.compile('<div class="thumb serie" title="(.+?)">').findall(link)[0]
         nomes = 'NOME'+nomeserie+'NOME'
         match=re.compile('<div id="season.+?" class="season"><a href=".+?">(.+?)</a></div>').findall(link)
         for numero in match:
-                thumbl = buscathumb(idtv[0],str(numero))
+                thumbl = buscathumb(idtv,str(numero))
                 if thumbl != '': thumb = thumbl
                 else: thumb = iconimage
                 addDir('Temporada ' + numero,url + "&season=" + numero + imdbcode + year + nomes,30011,thumb,'',fanart)
@@ -4081,7 +4084,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                                 else:
                                                                         n = re.compile('[(](.+?)[)]').findall(nome)
                                                                         if n: nome = n[0]
-                                                addDir_trailer('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB'+nome_pesquisa,233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0])
+                                                addDir_trailer1('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB'+nome_pesquisa,233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0],'TvShows',0)
                                                 num_f = num_f + 1
                                 else:
                                         if imdbcode_passado != imdbcode:
@@ -4119,7 +4122,7 @@ def encontrar_fontes_SERIES_TPT(url,pesquisou):
                                                         else:
                                                                 n = re.compile('[(](.+?)[)]').findall(nome)
                                                                 if n: nome = n[0]
-                                        addDir_trailer('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB'+nome_pesquisa,233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0])
+                                        addDir_trailer1('[COLOR orange]TPT | [/COLOR][B][COLOR green]' + nome + '[/COLOR][/B][COLOR yellow] ' + ano_filme + '[/COLOR][COLOR red] ' + qualidade + audio_filme + '[/COLOR]',urletitulo[0][0]+'IMDB'+imdbcode+'IMDB'+nome_pesquisa,233,thumb,sinopse,fanart,ano_filme.replace('(','').replace(')',''),genero,nome_pesquisa,urletitulo[0][0],'TvShows',0)
                                         num_f = num_f + 1
                         except: pass
 ##                        addLink(str(len(items)),'','')
