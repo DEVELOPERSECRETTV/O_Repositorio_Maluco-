@@ -1200,6 +1200,7 @@ def PLAY_movie(url,name,iconimage,checker,fanart):#,nomeAddon):
 				url = match[0]
 			#addLink(name+match[0],match[0],'')
 		except: pass
+		#addLink(url,'http://fs005.dropvideo.com/v2/a4eabf20bac1aef8eb27ab6c46aa2c83.mp4','','')
 	elif "putlocker" in url:
                 try:
                         url = url.replace('putlocker.com/embed/','firedrive.com/file/')

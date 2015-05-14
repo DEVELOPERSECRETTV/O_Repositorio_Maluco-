@@ -120,11 +120,47 @@ def CME_encontrar_fontes_filmes(url):
 	if name != '':
                 items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
                 if not items: items = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
+                if not items: items = re.findall('<div class="filmo">(.+?)</div>', html_source, re.DOTALL)
                 #addLink(str(len(items)),'','','')
 
+        itemss = []
         threads = []
         i = 0
         for item in items:
+                if name != '':
+                        i = i + 1
+                        a = str(i)
+                        if i < 10: a = '0'+a
+                        #FF_CME(str(a),item,itemss)
+                        Filmes_CME1 = threading.Thread(name='Filmes_CME1'+str(i), target=FF_CME , args=(str(a),item,itemss, ))
+                threads.append(Filmes_CME1)
+        for i in range(5):
+                threads[i].start()
+        for i in range(5):
+                threads[i].join()
+        for i in range(5,10):
+                threads[i].start()
+        for i in range(5,10):
+                threads[i].join()
+        for i in range(10,15):
+                threads[i].start()
+        for i in range(10,15):
+                threads[i].join()
+        for i in range(15,int(len(threads))):
+                threads[i].start()
+        for i in range(15,int(len(threads))):
+                threads[i].join()
+
+        #[i.start() for i in threads]
+        #[i.join() for i in threads]
+        itemss.sort()
+       # addLink(str(len(itemss)),'','','')
+       # return
+
+        threads = []
+        i = 0
+        #for item in items:
+        for item in itemss:
                 if name != '':
                         i = i + 1
                         a = str(i)
@@ -209,6 +245,32 @@ def CME_encontrar_fontes_filmes(url):
                         addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),802,artfolder + 'PAGS1.png','','')
                 except: pass
 
+def FF_CME(ordem,item,itemss):
+        thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
+        if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
+        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+        else: thumb = ''
+        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
+        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark" title="(.+?)">').findall(item)
+        if urletitulo:
+                urlvideo = urletitulo[0][0].replace('#more','')
+                nome = urletitulo[0][1]
+        else:
+                urlvideo = ''
+                nome = ''
+        try:
+                html_source1 = abrir_url(urlvideo)
+                items1 = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source1, re.DOTALL)
+                itemss.append(ordem+'|'+urlvideo+'|'+nome+'|'+thumb+'|'+items1[0])
+        except: items1 = ''
+        #addLink(nome,'','','')
+        return itemss
+
+        
+
 def Fontes_Filmes_CME(item):
 ##        progress = xbmcgui.DialogProgress()
 ##        i = 1
@@ -232,12 +294,35 @@ def Fontes_Filmes_CME(item):
 ##                                break
         folder = perfil
         Filmes_File = open(folder + 'filmesCME.txt', 'w')
-        
+
+        itemnum = item
+
+        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
+        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark" title="(.+?)">').findall(item)
+        if not urletitulo: urletitulo = re.compile('.+?[|](.+?)[|](.+?)[|](.+?)[|].+?').findall(item)
+        if urletitulo:
+                urlvideo = urletitulo[0][0].replace('#more','')
+                nome = urletitulo[0][1]
+                thumb = urletitulo[0][2]
+        else:
+                urlvideo = ''
+                nome = ''
+                thumb = ''
+##        try:
+##                html_source1 = abrir_url(urlvideo)
+##                items1 = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source1, re.DOTALL)
+##        except: items1 = ''
+
         if item != '':
+##        if items1:
+##                item = items1[0]
                 try:
-                        FILMEN = re.compile('FILME(.+?)FILME').findall(item)
+                        FILMEN = re.compile('FILME(.+?)FILME').findall(itemnum)
                         FILMEN = FILMEN[0]
-                        thumb = ''
+                        #addLink(FILMEN,'','','')
+                        #thumb = ''
                         genero = ''
                         sinopse = ''
                         fanart = ''
@@ -247,19 +332,20 @@ def Fontes_Filmes_CME(item):
                         audio_filme = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)>iMDB</a>').findall(item)
-                        if imdb: imdbcode = imdb[0]
+                        if imdb: imdbcode = imdb[0].replace("'","")
                         else: imdbcode = ''
 
-                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
-                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
-                        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
-                        if urletitulo:
-                                urlvideo = urletitulo[0][0].replace('#more','')
-                                nome = urletitulo[0][1]
-                        else:
-                                urlvideo = ''
-                                nome = ''
-
+##                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+##                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+##                        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
+##                        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark" title="(.+?)">').findall(item)
+##                        if urletitulo:
+##                                urlvideo = urletitulo[0][0].replace('#more','')
+##                                nome = urletitulo[0][1]                              
+##                        else:
+##                                urlvideo = ''
+##                                nome = ''
+                        
 ##                        try:
 ##                                fonte_video = abrir_url(urlvideo)
 ##                        except: fonte_video = ''
@@ -270,8 +356,7 @@ def Fontes_Filmes_CME(item):
 ##                                else:
 ##                                        qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
 ##                                        if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')
-
-                                
+     
                         snpse = re.compile('<b>sinopse</b><br>\n(.+?)<br>\n').findall(item)
                         if not snpse: snpse = re.compile('<b>sinopse</b><br />\n(.+?)</span></p>').findall(item)
                         if snpse: sinopse = snpse[0]
@@ -303,13 +388,11 @@ def Fontes_Filmes_CME(item):
                         for q_a_q_a in qq_aa:
                                 genero = genero.replace(str(q_a_q_a)+'  ','')
 
-                        thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
-                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
-                        else: thumb = ''
-               
-                                
+##                        thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+##                        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
+##                        if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
+##                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+##                        else: thumb = ''                                
 
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
@@ -339,6 +422,7 @@ def Fontes_Filmes_CME(item):
                                 try:
                                         fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),anofilme)
                                         if sinopse == '': sinopse = sin
+                                        #addLink(nome+'----'+sin,'','','')
                                         if fanart == '': fanart,tmb,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
                                         if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
                                 except:pass

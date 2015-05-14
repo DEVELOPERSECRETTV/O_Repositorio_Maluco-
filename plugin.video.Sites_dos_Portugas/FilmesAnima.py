@@ -187,6 +187,7 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
                         i=0
                         items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
                         if not items: items = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
+                        if not items: items = re.findall('<div class="filmo">(.+?)</div>', html_source, re.DOTALL)
                         for item in items:                        
                                 i = i + 1
                                 a = str(i)
@@ -422,7 +423,10 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TFC(ordem,urle,titulo,pesquisou,imdb
         if ('---------------------------------------' in html_source or '&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;' in html_source) and len(pt_en_f) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
         assist = re.findall(">ASSISTIR.+?", html_source, re.DOTALL)
         if len(assist) > 1: versao = '[COLOR blue] 2 VERSÕES[/COLOR]'
-	item=re.findall('<div class="post-heading">(.*?)ASSISTIR O FILME', html_source, re.DOTALL)[0]
+	items1=re.findall('<div class="post-heading">(.*?)ASSISTIR O FILME', html_source, re.DOTALL)
+	if items1: item = items1[0]
+	else: item = ''
+
 	try:sinopse = cleanTitle(re.compile('<b>SINOPSE.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
 	except:
                 try:sinopse = cleanTitle(re.compile('<b>Sinopse.+?</b>(.+?)<').findall(html_source)[0].replace('</span>','').replace('<span style="font-size: x-small;">',''))
@@ -1565,19 +1569,33 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CME(FILMEN,url,pesquisou,imdbc,item)
                         imdbcode = ''
                         audio_filme = ''
 
-                        imdb = re.compile('imdb.com/title/(.+?)>iMDB</a>').findall(item)
-                        if imdb: imdbcode = imdb[0]
-                        else: imdbcode = ''
+                        thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+                        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
+                        if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
+                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                        else: thumb = ''
 
                         urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
                         if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
+                        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark" title="(.+?)">').findall(item)
                         if urletitulo:
                                 urlvideo = urletitulo[0][0].replace('#more','')
                                 nome = urletitulo[0][1]
                         else:
                                 urlvideo = ''
                                 nome = ''
+
+                        try: htmlsource = abrir_url(urlvideo)
+                        except: htmlsource = ''
+
+                        items1 = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', htmlsource, re.DOTALL)
+                        if items1: item = items1[0]
+                        else: item = ''
+
+                        imdb = re.compile('imdb.com/title/(.+?)>iMDB</a>').findall(item)
+                        if imdb: imdbcode = imdb[0].replace("'","")
+                        else: imdbcode = ''
 
                         snpse = re.compile('<b>sinopse</b><br>\n(.+?)<br>\n').findall(item)
                         if not snpse: snpse = re.compile('<b>sinopse</b><br />\n(.+?)</span></p>').findall(item)
@@ -1609,12 +1627,6 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_CME(FILMEN,url,pesquisou,imdbc,item)
                         conta = 0
                         for q_a_q_a in qq_aa:
                                 genero = genero.replace(str(q_a_q_a)+'  ','')
-
-                        thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
-                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
-                        else: thumb = ''
 
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")

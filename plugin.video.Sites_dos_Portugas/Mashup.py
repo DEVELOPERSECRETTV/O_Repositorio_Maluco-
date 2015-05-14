@@ -2101,12 +2101,28 @@ def CMEMASHUP(item):
 
         folder = perfil
         Filmes_File = open(folder + 'filmesCME.txt', 'w')
+
+        itemnum = item
+
+        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
+        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark" title="(.+?)">').findall(item)
+        if not urletitulo: urletitulo = re.compile('.+?[|](.+?)[|](.+?)[|](.+?)[|].+?').findall(item)
+        if urletitulo:
+                urlvideo = urletitulo[0][0].replace('#more','')
+                nome = urletitulo[0][1]
+                thumb = urletitulo[0][2]
+        else:
+                urlvideo = ''
+                nome = ''
+                thumb = ''
         
         if item != '':
                 try:
-                        FILMEN = re.compile('FILME(.+?)FILME').findall(item)
+                        FILMEN = re.compile('FILME(.+?)FILME').findall(itemnum)
                         FILMEN = FILMEN[0]                                
-                        thumb = ''
+                        #thumb = ''
                         genero = ''
                         sinopse = ''
                         fanart = ''
@@ -2116,18 +2132,18 @@ def CMEMASHUP(item):
                         audio_filme = ''
 
                         imdb = re.compile('imdb.com/title/(.+?)>iMDB</a>').findall(item)
-                        if imdb: imdbcode = imdb[0]
+                        if imdb: imdbcode = imdb[0].replace("'","")
                         else: imdbcode = ''
 
-                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
-                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
-                        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
-                        if urletitulo:
-                                urlvideo = urletitulo[0][0].replace('#more','')
-                                nome = urletitulo[0][1]
-                        else:
-                                urlvideo = ''
-                                nome = ''
+##                        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+##                        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+##                        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
+##                        if urletitulo:
+##                                urlvideo = urletitulo[0][0].replace('#more','')
+##                                nome = urletitulo[0][1]
+##                        else:
+##                                urlvideo = ''
+##                                nome = ''
                                 
                         snpse = re.compile('<b>sinopse</b><br>\n(.+?)<br>\n').findall(item)
                         if not snpse: snpse = re.compile('<b>sinopse</b><br />\n(.+?)</span></p>').findall(item)
@@ -2160,11 +2176,11 @@ def CMEMASHUP(item):
                         for q_a_q_a in qq_aa:
                                 genero = genero.replace(str(q_a_q_a)+'  ','')
 
-                        thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
-                        if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
-                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
-                        else: thumb = ''
+##                        thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+##                        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
+##                        if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
+##                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+##                        else: thumb = ''
 
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")

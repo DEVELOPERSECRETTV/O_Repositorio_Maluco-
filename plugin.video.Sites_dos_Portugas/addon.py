@@ -619,6 +619,7 @@ def CMEONOFF(url_CME):
 	except: html_source = ''
 	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
 	if not items: items = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
+	if not items: items = re.findall('<div class="filmo">(.+?)</div>', html_source, re.DOTALL)
 	if items != []: CME_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: CME_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 def CMCONOFF(url_CMC):
@@ -842,6 +843,7 @@ def dirtodos(url):
                 except: html_source = ''
                 itemsCME = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
                 if not itemsCME: itemsCME = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
+                if not itemsCME: itemsCME = re.findall('<div class="filmo">(.+?)</div>', html_source, re.DOTALL)
                 if itemsCME != []:
                         proxima_CME = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)
                         if not proxima_CME: proxima_CME = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">').findall(html_source)
@@ -850,7 +852,37 @@ def dirtodos(url):
                         except: pass
                 else: url_CME = 'http:'
 
+                itemss = []
+                threads11 = []
+                ii = 0
                 for item in itemsCME:
+                        ii = ii + 1
+                        a = str(i)
+                        if ii < 10: a = '0'+a
+                        #FF_CME(str(a),item,itemss)
+                        Filmes_CME1 = threading.Thread(name='Filmes_CME1'+str(ii), target=FF_CME , args=(str(a),item,itemss, ))
+                        threads11.append(Filmes_CME1)
+                for i in range(5):
+                        threads11[i].start()
+                for i in range(5):
+                        threads11[i].join()
+                for i in range(5,10):
+                        threads11[i].start()
+                for i in range(5,10):
+                        threads11[i].join()
+                for i in range(10,15):
+                        threads11[i].start()
+                for i in range(10,15):
+                        threads11[i].join()
+                for i in range(15,int(len(threads11))):
+                        threads11[i].start()
+                for i in range(15,int(len(threads11))):
+                        threads11[i].join()
+
+                itemss.sort()
+
+                #for item in itemsCME:
+                for item in itemss:
                         i = i + 1
                         a = str(i)
                         if i < 10: a = '0'+a
@@ -1100,6 +1132,30 @@ def dirtodos(url):
         xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         #xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def FF_CME(ordem,item,itemss):
+        thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
+        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
+        if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
+        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+        else: thumb = ''
+        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
+        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark" title="(.+?)">').findall(item)
+        if urletitulo:
+                urlvideo = urletitulo[0][0].replace('#more','')
+                nome = urletitulo[0][1]
+        else:
+                urlvideo = ''
+                nome = ''
+        try:
+                html_source1 = abrir_url(urlvideo)
+                items1 = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source1, re.DOTALL)
+                itemss.append(ordem+'|'+urlvideo+'|'+nome+'|'+thumb+'|'+items1[0])
+        except: items1 = ''
+        #addLink(nome,'','','')
+        return itemss
 
 def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
         mv = mvoutv
@@ -2003,15 +2059,38 @@ def WlinksS(url):
                 
         i = 0                
         threads1 = []
+        #addLink(str(len(_imdbc_)),'','','')
         for l in _imdbc_:
+                #addLink(l,'','','')
                 i = i + 1
                 a = str(i)
                 if i < 10: a = '0'+a
                 D = threading.Thread(name='D'+str(i), target=imdbimdbW , args=(str(a), l, _imdbcode_, ))
                 threads1.append(D)
 
-        [i.start() for i in threads1]
-        [i.join() for i in threads1]
+        threads1[0].start()
+        threads1[0].join()
+        threads1[1].start()
+        threads1[1].join()
+        threads1[2].start()
+        threads1[2].join()
+        threads1[3].start()
+        threads1[3].join()
+        threads1[4].start()
+        threads1[4].join()
+        threads1[5].start()
+        threads1[5].join()
+        threads1[6].start()
+        threads1[6].join()
+        threads1[7].start()
+        threads1[7].join()
+        threads1[8].start()
+        threads1[8].join()
+        threads1[9].start()
+        threads1[9].join()
+        
+##        [i.start() for i in threads1]
+##        [i.join() for i in threads1]
         _imdbcode_.sort()
                 
         i = 0
@@ -2079,11 +2158,16 @@ def WlinksS(url):
 def imdbimdbW(ordem,l,_imdbcode_):
         try: html_so = clean(abrir_url(l))
 	except: html_so = ''
-        try:imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(html_so)[0]
+        try:
+                imdb = re.compile('imdb.com/title/(.+?)/"').findall(html_so)[0]
         except:
-                try:imdb = re.compile('"http://www.imdb.com/title/(.+?)"').findall(html_so)[0]
+                try:
+                        imdb = re.compile('imdb.com/title/(.+?)"').findall(html_so)[0]
                 except: imdb='---'
-        _imdbcode_.append(ordem+'|'+imdb)
+
+        _imdbcode_.append(ordem+'|'+imdb)        
+        #return _imdbcode_
+
 
 def seasonsW(name,url):
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
@@ -2109,6 +2193,8 @@ def seasonsW(name,url):
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
         
 def episodesW(name,url):
+##        addLink(fanart,'','','')
+##        return
         nomes = re.compile('.+?NOME(.+?)NOME').findall(url)
         nomeserie = nomes[0]
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
@@ -2438,7 +2524,7 @@ def ratoTV(name,url):
 
         [i.start() for i in threads]
         [i.join() for i in threads]
-        
+        #return        
         
         num_filmes = len(results)
         results.sort()
@@ -2566,31 +2652,48 @@ def ratoTVTV(url):
         except: html_source = ''
         i = 0
         x = 0
+        thumbns=[]
         items = re.findall('<div class="posthead">(.+?)<span class="more-btn">', html_source, re.DOTALL)
         for item in items:
-                Otitle = re.compile('tulo Original.+?/strong>(.+?)</li>\n').findall(item)
+                Otitle = re.compile('tulo Original.+?/strong>(.+?)</li>').findall(item)
 
-                title = re.compile('tulo Portugu.+?/strong>(.+?)</li>\n').findall(item)
+                title = re.compile('tulo Portugu.+?/strong>(.+?)</li>').findall(item)
                 
                 link = re.compile('<h1> <a href="(.+?)">.+?</a></h1>').findall(item)
                 if not link: link = re.compile('<h1> <a href="(.+?)".+?</h1>').findall(item)
                         
                 anos = re.compile('<li><strong>Ano: </strong>(.+?)</li>').findall(item)
 
+                thumbnail= re.compile('<img src="(.+?)" alt').findall(item)
+                if thumbnail:
+                        thumb=thumbnail[0]
+                        if 'ratotv.net' not in thumb: thumb = 'https://ratotv.net' + thumb
+                        thumbns.append(thumb)
+                else:
+                        thumb = ''
+                        thumbns.append(thumb)
+
                 sins = re.compile('style="display:inline;">(.+?)\n').findall(item)
+                if not sins: sins = re.compile('style="display:inline;">(.+?)<br style').findall(item)
+                if sins: sins = sins[0]
+                else: sins = ''
                         
-                imdb = re.compile('"http://www.imdb.com/title/(.+?)/"').findall(item)
+                imdb = re.compile('imdb.com/title/(.+?)/"').findall(item)
+                if imdb: imdb = imdb[0]
+                else: imdb = '---'
+
+                #addLink(imdb,'','','')
               
                 i = i + 1
                 a = str(i)
                 if i < 10: a = '0'+a
-                DADOS = threading.Thread(name='DADOS'+str(i), target=thetvdbIMDB , args=(title[0], Otitle[0], link[0], anos[0], str(a), results, imdb[0], sins[0], ))
+                DADOS = threading.Thread(name='DADOS'+str(i), target=thetvdbIMDB , args=(title[0], Otitle[0], link[0], anos[0], str(a), results, imdb, sins, ))
                 threads.append(DADOS)
                 x = x + 1
 
         [i.start() for i in threads]
         [i.join() for i in threads]
-
+        #return
         num_filmes = len(results)
         results.sort()
         for x in range(len(results)):
@@ -2607,7 +2710,8 @@ def ratoTVTV(url):
                 order = dads[0][0]
                 name = dads[0][1]
                 imdbcode = dads[0][2]
-                iconimage = dads[0][3]
+                #iconimage = dads[0][3]
+                iconimage = thumbns[x]
                 fanart = dads[0][4]
                 url = dads[0][5]
                 year = dads[0][6]
