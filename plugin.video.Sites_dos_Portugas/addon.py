@@ -20,7 +20,7 @@
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,sys,xbmc,xbmcaddon,xbmcvfs,socket,urlparse,time,os,threading,HTMLParser
 import MovieTuga,TugaFilmesTV,TugaFilmesCom,M18,Pesquisar,Play,TopPt,FilmesAnima,Mashup,Armagedom,FoitaTuga,Cinematuga,CinematugaEu,CinemaEmCasa,Funcoes
-import PesquisaExterna
+import GigaTuga,PesquisaExterna
 from array import array
 from string import capwords
 from Funcoes import thetvdb_api, themoviedb_api, themoviedb_api_tv, theomapi_api, themoviedb_api_IMDB, themoviedb_api_IMDB_episodios, themoviedb_api_TMDB
@@ -50,6 +50,7 @@ FTT_ONOFF = []
 CMC_ONOFF = []
 CME_ONOFF = []
 CMT_ONOFF = []
+GGT_ONOFF = []
 
 results = []
 resultos = []
@@ -518,14 +519,15 @@ def IMDBmenu():
 
 def SITESdosPORTUGAS():
         #####################################
-        url_TPT = 'http://toppt.net/'
+        url_TPT = 'http://toppt.net/'#moov7
         url_TFV = 'http://www.tuga-filmes.us/'
         url_TFC = 'http://www.tuga-filmes.com/'#'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
-        url_FTT = 'http://foitatugadownload.blogspot.pt/'#'http://foitatugacinemaonline.blogspot.pt/'
+        url_FTT = 'http://foitatoptuga.blogspot.pt/'#superfoitatuga#'http://foitatugadownload.blogspot.pt/'#'http://foitatugacinemaonline.blogspot.pt/'
         url_CMT = 'http://www.cinematuga.net/'#'http://www.tugafilmes.org'#'http://www.cinematuga.net/'
-        url_CME = 'http://www.cinematuga.eu/'
+        url_CME = 'http://www.cinematugahd.net/'#'http://www.cinematuga.eu/'
         url_CMC = 'http://www.cinemaemcasa.pt/'
+        url_GGT = 'http://gigatuga.com/'
 
         threads = []
 
@@ -553,6 +555,9 @@ def SITESdosPORTUGAS():
         CMC = threading.Thread(name='CMC', target=CMCONOFF , args=(url_CMC,))
         threads.append(CMC)
 
+        GGT = threading.Thread(name='GGT', target=GGTONOFF , args=(url_GGT,))
+        threads.append(GGT)
+
         [i.start() for i in threads]
         [i.join() for i in threads]
 
@@ -564,6 +569,7 @@ def SITESdosPORTUGAS():
         addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)'+TFC_ONOFF[0],'http://direct',71,artfolder + 'TFC1.png','nao','')
         addDir('[COLOR orange]CME | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B] (Filmes)'+CME_ONOFF[0],'http://direct',801,artfolder + 'CME1.png','nao','')
         addDir('[COLOR orange]CMC | [/COLOR][B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B] (Filmes)'+CMC_ONOFF[0],'http://direct',901,artfolder + 'CMC1.png','nao','')
+        addDir('[COLOR orange]GGT | [/COLOR][B][COLOR green]GIG[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)'+GGT_ONOFF[0]+' [COLOR blue](NOVO)[/COLOR]','http://direct',851,artfolder,'nao','')
 
 
 def TFVONOFF(url_TFV):
@@ -620,6 +626,7 @@ def CMEONOFF(url_CME):
 	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
 	if not items: items = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
 	if not items: items = re.findall('<div class="filmo">(.+?)</div>', html_source, re.DOTALL)
+	if not items: items = re.findall('<div class="col_maskolis">(.+?)</div>', html_source, re.DOTALL)
 	if items != []: CME_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: CME_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 def CMCONOFF(url_CMC):
@@ -630,6 +637,13 @@ def CMCONOFF(url_CMC):
 	if not items: items = re.findall("<div class='post bar hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
 	if items != []: CMC_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: CMC_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def GGTONOFF(url_GGT):
+	try:
+		html_source = abrir_url(url_GGT)
+	except: html_source = ''
+	items = re.findall("<article(.+?)</article>", html_source, re.DOTALL)
+	if items != []: GGT_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: GGT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 	#########################################
         
 class AvisoFanart(xbmcgui.WindowXMLDialog):
@@ -726,11 +740,11 @@ def chamaUltimos(name):
         else: url_TFC = 'http:'
         if name == 'MVT' or name == 'TODOS': url_MVT = 'http://www.movie-tuga.blogspot.pt'
         else: url_MVT = 'http:'
-        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatugadownload.blogspot.pt/'#'http://foitatugacinemaonline.blogspot.pt/'
+        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatoptuga.blogspot.pt/'#'http://foitatugadownload.blogspot.pt/'#'http://foitatugacinemaonline.blogspot.pt/'
         else: url_FTT = 'http:'
         if name == 'CMT' or name == 'TODOS': url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
         else: url_CMT = 'http:'
-        if name == 'CME' or name == 'TODOS': url_CME = 'http://cinematuga.eu/category/filmes/'#'http://www.cinematuga.eu/search/label/Filmes'
+        if name == 'CME' or name == 'TODOS': url_CME = 'http://cinematugahd.net/category/filmes/'#'http://www.cinematuga.eu/search/label/Filmes'
         else: url_CME = 'http:'
         if name == 'CMC' or name == 'TODOS': url_CMC = 'http://www.cinemaemcasa.pt/'
         else: url_CMC = 'http:'
@@ -753,11 +767,11 @@ def chamaUltimosA(name):
         else: url_TFC = 'http:'
         if name == 'MVT' or name == 'TODOS': url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
         else: url_MVT = 'http:'
-        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatugadownload.blogspot.pt/search/label/Anima%C3%A7%C3%A3o'#'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
+        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatoptuga.blogspot.pt/'#'http://foitatugadownload.blogspot.pt/search/label/Anima%C3%A7%C3%A3o'#'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
         else: url_FTT = 'http:'
         if name == 'CMT' or name == 'TODOS': url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'#'http://www.tugafilmes.org/search/label/Filmes'
         else: url_CMT = 'http:'
-        if name == 'CME' or name == 'TODOS': url_CME = 'http://cinematuga.eu/category/animacao/'#'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
+        if name == 'CME' or name == 'TODOS': url_CME = 'http://cinematugahd.net/category/animacao/'#'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
         else: url_CME = 'http:'
         if name == 'CMC' or name == 'TODOS': url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
         else: url_CMC = 'http:'
@@ -844,6 +858,7 @@ def dirtodos(url):
                 itemsCME = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
                 if not itemsCME: itemsCME = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
                 if not itemsCME: itemsCME = re.findall('<div class="filmo">(.+?)</div>', html_source, re.DOTALL)
+                if not itemsCME: itemsCME = re.findall('<div class="col_maskolis">(.+?)</div>', html_source, re.DOTALL)
                 if itemsCME != []:
                         proxima_CME = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)
                         if not proxima_CME: proxima_CME = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">').findall(html_source)
@@ -950,6 +965,7 @@ def dirtodos(url):
                         html_source = abrir_url(url_FTT)
                 except: html_source = ''
                 itemsFTT = re.findall("<h3 class='post-title entry-title'>(.*?)<div class='post-footer'>", html_source, re.DOTALL)
+                if not itemsFTT: itemsFTT = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
                 if not itemsFTT: itemsFTT = re.findall("<h3 class='post-title entry-title' itemprop='name'>(.*?)<div class='post-footer'>", html_source, re.DOTALL)
                 if not itemsFTT: itemsFTT = re.findall("<a class='comment-link'(.*?)<div class='post-outer'>", html_source, re.DOTALL)
                 if not itemsFTT: itemsFTT = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
@@ -1089,13 +1105,13 @@ def dirtodos(url):
                                 if 'tuga-filmes.us'    in imdbcode:
                                         num_mode = 33
                                         site = 'TFV'
-                                if 'cinematuga.eu'     in imdbcode:
+                                if 'cinematuga.eu' or 'cinematugahd.net'    in imdbcode:
                                         num_mode = 803
                                         site = 'CME'
                                 if 'cinematuga.net'    in imdbcode:
                                         num_mode = 703
                                         site = 'CMT'
-                                if 'foitatuga'         in imdbcode:
+                                if 'foitatuga' or 'foitatoptuga'        in imdbcode:
                                         num_mode = 603
                                         site = 'FTT'
                                 if 'cinemaemcasa.pt'   in imdbcode:
@@ -1113,9 +1129,9 @@ def dirtodos(url):
                                         if 'toppt.net'         in P_url: url_TPT = P_url
                                         if 'tuga-filmes.info'  in P_url or 'tuga-filmes.com'  in P_url: url_TFC = P_url
                                         if 'tuga-filmes.us'    in P_url: url_TFV = P_url
-                                        if 'cinematuga.eu'     in P_url: url_CME = P_url
+                                        if 'cinematuga.eu' or 'cinematugahd.net'     in P_url: url_CME = P_url
                                         if 'cinematuga.net'    in P_url: url_CMT = P_url
-                                        if 'foitatuga'         in P_url: url_FTT = P_url
+                                        if 'foitatuga' or 'foitatoptuga'        in P_url: url_FTT = P_url
                                         if 'cinemaemcasa.pt'   in P_url: url_CMC = P_url
                                         if 'movie-tuga'        in P_url: url_MVT = P_url
                                 xbmc.sleep(12)
@@ -1137,9 +1153,11 @@ def FF_CME(ordem,item,itemss):
         thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
         if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
         if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
+        if not thumbnail: thumbnail = re.compile('src="(.+?)"').findall(item)
         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
         else: thumb = ''
         urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" title="(.+?)"').findall(item)
         if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
         if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
         if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark" title="(.+?)">').findall(item)
@@ -4833,6 +4851,29 @@ elif mode == 806: CinematugaEu.CME_Menu_Filmes_Por_Categorias(artfolder)
 elif mode == 807: CinematugaEu.CME_Menu_Filmes_Brevemente(artfolder)
 elif mode == 808:
         CinematugaEu.CME_Top_Vistos(artfolder)
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(503)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+#----------------------------------------------  GIGATUGA  -------------------------------------------------------
+elif mode == 850: print ""; Play.PLAY_movie(url,name,iconimage,checker,fanart)
+elif mode == 851:
+        GigaTuga.GGT_MenuPrincipal(artfolder)
+        #setViewMode_menuFTT()
+        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+        xbmc.executebuiltin("Container.SetViewMode(502)")
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 852:
+        GigaTuga.GGT_encontrar_fontes_filmes(url)
+        xbmcplugin.setContent(int(sys.argv[1]), 'livetv')#movies
+        xbmc.executebuiltin("Container.SetViewMode(560)")#503
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+elif mode == 853: GigaTuga.GGT_encontrar_videos_filmes(name,url,mvoutv)
+elif mode == 854: GigaTuga.GGT_pesquisar_filmes()
+elif mode == 855: GigaTuga.GGT_Menu_Filmes(artfolder)
+elif mode == 856: GigaTuga.GGT_Menu_Filmes_Por_Categorias(artfolder)
+elif mode == 857: GigaTuga.GGT_Menu_Filmes_Brevemente(artfolder)
+elif mode == 858:
+        GigaTuga.GGT_Top_Vistos(artfolder)
         xbmcplugin.setContent(int(sys.argv[1]), 'movies')
         xbmc.executebuiltin("Container.SetViewMode(503)")
         xbmcplugin.endOfDirectory(int(sys.argv[1]))

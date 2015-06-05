@@ -47,19 +47,20 @@ filmes = []
 def FTT_MenuPrincipal(artfolder):
         addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'P1.png','nao','')
 	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'FTT1.png',False,'')
-	addDir('[COLOR yellow]- Todos[/COLOR]','http://foitatugadownload.blogspot.pt/',602,artfolder + 'FT.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://foitatugadownload.blogspot.pt/search/label/Anima%C3%A7%C3%A3o',602,artfolder + 'FA.png','nao','')
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://foitatoptuga.blogspot.pt/',602,artfolder + 'FT.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://foitatoptuga.blogspot.pt/search/label/Anima%C3%A7%C3%A3o',602,artfolder + 'FA.png','nao','')
 	addDir('[COLOR yellow]- Categorias[/COLOR]','url',606,artfolder + 'CT.png','nao','')
 	addDir('[COLOR yellow]- Por Ano[/COLOR]','url',606,artfolder + 'ANO.png','nao','')          #608
-	addDir('[COLOR yellow]- Top + Vistos[/COLOR]','http://foitatugadownload.blogspot.pt/',602,artfolder + 'T10V.png','nao','')
+	addDir('[COLOR yellow]- Top + Vistos[/COLOR]','http://foitatoptuga.blogspot.pt/',602,artfolder + 'T10V.png','nao','')
 
 def FTT_Menu_Filmes_Por_Categorias(artfolder):
         i = 0
-        url_categorias = 'http://foitatugadownload.blogspot.pt/'
+        url_categorias = 'http://foitatoptuga.blogspot.pt/'
         html_categorias_source = abrir_url(url_categorias)
 	if name == '[COLOR yellow]- Categorias[/COLOR]':
-                html_items_categorias = re.findall("'http://foitatugadownload.blogspot.pt/search/label/2014'>2014(.*?)<div id='searchbarright'>", html_categorias_source, re.DOTALL)
+                html_items_categorias = re.findall("'http://foitatoptuga.blogspot.pt/search/label/2014'>2014(.*?)<div id='searchbarright'>", html_categorias_source, re.DOTALL)
                 if not html_items_categorias: html_items_categorias = re.findall(">CATEGORIAS</a>(.*?)<div id='searchbarright'>", html_categorias_source, re.DOTALL)
+                if not html_items_categorias: html_items_categorias = re.findall(">CATEGORIAS</a>.+?>2015(.*?)</ul>", html_categorias_source, re.DOTALL)
                 if not html_items_categorias: html_items_categorias = re.findall(">FILMES</a>(.*?)<div style='clear:both;'>", html_categorias_source, re.DOTALL)
                 if not html_items_categorias: html_items_categorias = re.findall("<h2>CATEGORIAS</h2>(.*?)<div class='clear'>", html_categorias_source, re.DOTALL)
                 print len(html_items_categorias)
@@ -68,6 +69,7 @@ def FTT_Menu_Filmes_Por_Categorias(artfolder):
                         if not filmes_por_categoria: filmes_por_categoria = re.compile("<a dir='ltr' href='(.+?)'>(.+?)</a>").findall(item_categorias)
                         if not filmes_por_categoria: filmes_por_categoria = re.compile("<option value='(.+?)'>(.+?)\n</option>").findall(item_categorias)
                         if not filmes_por_categoria: filmes_por_categoria = re.compile("<li><a href='(.+?)'>(.+?)</a></li>").findall(item_categorias)
+                        if not filmes_por_categoria: filmes_por_categoria = re.compile("href='(.+?)'>(.+?)</a></li>").findall(item_categorias)
 ##                        for endereco_categoria,nome_categoria,total_categoria in filmes_por_categoria:
 ##                                addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] ('+total_categoria+')',endereco_categoria,602,artfolder + 'FTT1.png','nao','')
                         for endereco_categoria,nome_categoria in filmes_por_categoria:
@@ -75,7 +77,7 @@ def FTT_Menu_Filmes_Por_Categorias(artfolder):
 	if name == '[COLOR yellow]- Por Ano[/COLOR]':
                 ano = 2015
                 for x in range(46):
-                        categoria_endereco = 'http://foitatugadownload.blogspot.pt/search/label/' + str(ano) #+ '#_'
+                        categoria_endereco = 'http://foitatoptuga.blogspot.pt/search/label/' + str(ano) #+ '#_'
                         addDir('[COLOR yellow]' + str(ano) + '[/COLOR]',categoria_endereco,602,artfolder + 'FTT1.png','nao','')
                         ano = ano - 1
 ##                html_items_categorias = re.findall("<option>ESCOLHA A CATEGORIA</option>(.*?)='http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'", html_categorias_source, re.DOTALL)
@@ -222,6 +224,7 @@ def FTT_encontrar_fontes_filmes(url):
 	except: html_source = ''
 	if name != '[COLOR yellow]- Top + Vistos[/COLOR]':#'[COLOR yellow]- Todos[/COLOR]' or name == "[B]Página Seguinte >>[/B]":
                 items = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", html_source, re.DOTALL)
+                if not items: items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
                 if not items: items = re.findall("<a class='comment-link'(.*?)<div class='post-outer'>", html_source, re.DOTALL)
                 if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
         if name == '[COLOR yellow]- Top + Vistos[/COLOR]':
@@ -293,7 +296,7 @@ def FTT_encontrar_fontes_filmes(url):
                                         si = re.compile('SINOPSE[|](.+?)\n(.+?)[|]END[|]').findall(_filmes_[x])
                                         if si: sinopse = si[0][0] + ' ' + si[0][1]
                                         else: sinopse = '---'
-                                if 'foitatuga'         in imdbcode: num_mode = 603
+                                if 'foitatuga' or 'foitatoptuga'         in imdbcode: num_mode = 603
                                 if nome != '---':
                                         #num_filmes = num_filmes + 1
                                         addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
@@ -394,6 +397,9 @@ def Fontes_Filmes_FTT(item):
                                                 else:
                                                         thumbnail = re.compile('<img src="(.+?)" height=".+?" width=".+?"').findall(item)
                                                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+                                                        else:
+                                                                thumbnail = re.compile('document.write[(]sompret_image_creator[(]"(.+?)"').findall(item)
+                                                                if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
                         if 'container' in thumb:
                                 thumbnail = re.compile('url=(.+?)blogspot(.+?)&amp;container').findall(thumb)
                                 if thumbnail: thumb = thumbnail[0][0].replace('%3A',':').replace('%2F','/')+'blogspot'+thumbnail[0][1].replace('%3A',':').replace('%2F','/')
@@ -494,6 +500,7 @@ def Fontes_Filmes_FTT(item):
                         if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
                         if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome) 
                         if nnnn :
+                                #addLink(nnnn[0],'','','')
                                 if 'Trilogia' in nnnn[0]: nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
                                 nome_pesquisa = nnnn[0]
                         else: nome_pesquisa = nome
@@ -515,6 +522,7 @@ def Fontes_Filmes_FTT(item):
                         if fanart == '---': fanart = ''
                         if imdbcode == '': imdbcode = '---'
                         if thumb == '': thumb = '---'
+                        
                         try:
                                 if 'Temporada' not in nome and 'temporada' not in nome and 'Season' not in nome and 'season' not in nome:
                                         nome_final = '[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]'

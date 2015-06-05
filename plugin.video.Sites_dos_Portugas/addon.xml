@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.Sites_dos_Portugas" name="[COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR]" version="1.5.1" provider-name="OMaluco">
+<addon id="plugin.video.Sites_dos_Portugas" name="[COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR]" version="1.5.2" provider-name="OMaluco">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.t0mm0.common" version="1.0.0"/>
     <import addon="script.module.urlresolver" version="2.2.0"/>
+    <import addon="plugin.video.youtube" version="1.0.0"/>
     <import addon="script.module.requests"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
@@ -13,7 +14,7 @@
     <language>en</language>
     <platform>all</platform>
     <summary lang="en">Filmes dos Portugas</summary>
-    <description lang="en">Mashup dos sites Tuga-Filmes.com, Tuga-Filmes.tv, Movietuga, Toppt.net, Cinematuga.net, Foitatuga, Cinematuga.eu e Cinemaemcasa.pt. E ainda os SITESdosBRAZUCAS.</description>
+    <description lang="en">Mashup dos sites Tuga-Filmes.com, Tuga-Filmes.tv, Movietuga, Toppt.net, Cinematuga.net, Foitatuga, Cinematuga.eu, Cinemaemcasa.pt e Gigatuga.com. E ainda os SITESdosBRAZUCAS.</description>
     <platform>all</platform>
   </extension>
 </addon>

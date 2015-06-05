@@ -45,17 +45,17 @@ filmes = []
 
 ### http://cinematuga.eu
 
-def CME_MenuPrincipal(artfolder):
+def GGT_MenuPrincipal(artfolder):
         addDir('- Procurar','http://www.tuga-filmes.com/search?q=',1,artfolder + 'P1.png','nao','')
-	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder + 'CME1.png',False,'')
-	addDir('[COLOR yellow]- Todos[/COLOR]','http://cinematugahd.net/category/filmes/',802,artfolder + 'FT.png','nao','')
-	addDir('[COLOR yellow]- Animação[/COLOR]','http://cinematugahd.net/category/animacao/',802,artfolder + 'FA.png','nao','')
-	addDir('[COLOR yellow]- Categorias[/COLOR]','url',806,artfolder + 'CT.png','nao','')
-	#addDir('[COLOR yellow]- Por Ano[/COLOR]','url',806,artfolder + 'ANO.png','nao','')
-	addDir('[COLOR yellow]- Destaques[/COLOR]','http://cinematugahd.net/category/destaques/',802,artfolder + 'DTS.png','nao','')
-	addDir('[COLOR yellow]- Recomendados[/COLOR]','http://cinematugahd.net/category/recomendados/',802,artfolder + 'REC1.png','nao','')
+	addDir1('[COLOR blue]Filmes:[/COLOR]','url',1002,artfolder,False,'')
+	addDir('[COLOR yellow]- Todos[/COLOR]','http://gigatuga.com/category/filmes/',852,artfolder + 'FT.png','nao','')
+	addDir('[COLOR yellow]- Animação[/COLOR]','http://gigatuga.com/category/animacao/',852,artfolder + 'FA.png','nao','')
+##	addDir('[COLOR yellow]- Categorias[/COLOR]','url',856,artfolder + 'CT.png','nao','')
+##	#addDir('[COLOR yellow]- Por Ano[/COLOR]','url',856,artfolder + 'ANO.png','nao','')
+##	addDir('[COLOR yellow]- Destaques[/COLOR]','http://cinematugahd.net/category/destaques/',852,artfolder + 'DTS.png','nao','')
+##	addDir('[COLOR yellow]- Recomendados[/COLOR]','http://cinematugahd.net/category/recomendados/',852,artfolder + 'REC1.png','nao','')
 
-def CME_Menu_Filmes_Por_Categorias(artfolder):
+def GGT_Menu_Filmes_Por_Categorias(artfolder):
         i = 0
         url_categorias = 'http://www.cinematugahd.net/'
         html_categorias_source = abrir_url(url_categorias)
@@ -67,12 +67,12 @@ def CME_Menu_Filmes_Por_Categorias(artfolder):
                         if not filmes_por_categoria:
                                 filmes_por_categoria = re.compile('<a href="(.+?)">(.+?)</a></li>').findall(item_categorias)
                                 for endereco_categoria,nome_categoria in filmes_por_categoria:
-                                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria,802,artfolder + 'CME1.png','nao','')
+                                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria,852,artfolder + 'GGT_1.png','nao','')
                         else:
                                 for endereco_categoria,nome_categoria,total_categoria in filmes_por_categoria:
-                                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] '+total_categoria,endereco_categoria,802,artfolder + 'CME1.png','nao','')
+                                        addDir('[COLOR yellow]' + nome_categoria + '[/COLOR] '+total_categoria,endereco_categoria,852,artfolder + 'GGT_1.png','nao','')
 ##                              for endereco_categoria,nome_categoria in filmes_por_categoria:
-##                                      addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria,802,artfolder + 'CME1.png','nao','')
+##                                      addDir('[COLOR yellow]' + nome_categoria + '[/COLOR]',endereco_categoria,852,artfolder + 'GGT_1.png','nao','')
                                 
 	if name == '[COLOR yellow]- Por Ano[/COLOR]':
                 html_items_categorias = re.findall("<option>ESCOLHA A CATEGORIA</option>(.*?)='http://www.cinematuga.eu/search/label/ANIMA%C3%87%C3%83O'", html_categorias_source, re.DOTALL)
@@ -93,10 +93,10 @@ def CME_Menu_Filmes_Por_Categorias(artfolder):
                         if Anos[x] != '':
                                 A = re.compile('(.+?)[|](.+?)[|]').findall(Anos[x])
                                 if A:
-                                        addDir('[COLOR yellow]' + A[0][0] + '[/COLOR]',A[0][1],802,artfolder + 'CME1.png','nao','')
+                                        addDir('[COLOR yellow]' + A[0][0] + '[/COLOR]',A[0][1],852,artfolder + 'GGT_1.png','nao','')
 ##                                A = re.compile('(.+?)[|](.+?)[|](.*)').findall(Anos[x])
 ##                                if A:
-##                                        addDir('[COLOR yellow]' + A[0][0] + '[/COLOR] ('+A[0][2]+')',A[0][1],602,artfolder + 'CME1.png','nao','')                
+##                                        addDir('[COLOR yellow]' + A[0][0] + '[/COLOR] ('+A[0][2]+')',A[0][1],602,artfolder + 'GGT_1.png','nao','')                
 
 
 
@@ -105,24 +105,21 @@ def CME_Menu_Filmes_Por_Categorias(artfolder):
 
 		
 
-def CME_encontrar_fontes_filmes(url):
+def GGT_encontrar_fontes_filmes(url):
 ##        percent = 0
 ##        message = 'Por favor aguarde.'
 ##        progress.create('Progresso', 'A Procurar')
 ##        progress.update( percent, 'A Procurar Filmes ...', message, "" )
 
-        try: xbmcgui.Dialog().notification('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'CME1.png', 3000, sound=False)
-        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'CME1.png'))
+        try: xbmcgui.Dialog().notification('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'GGT_1.png', 3000, sound=False)
+        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'GGT_1.png'))
         
         try:
 		html_source = abrir_url(url)
 	except: html_source = ''
 	if name != '':
-                items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-                if not items: items = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
-                if not items: items = re.findall('<div class="filmo">(.+?)</div>', html_source, re.DOTALL)
-                if not items: items = re.findall('<div class="col_maskolis">(.+?)</div>', html_source, re.DOTALL)
-                #addLink(str(len(items)),'','','')
+                items = re.findall("<article(.+?)</article>", html_source, re.DOTALL)
+
 
         itemss = []
         threads = []
@@ -132,9 +129,9 @@ def CME_encontrar_fontes_filmes(url):
                         i = i + 1
                         a = str(i)
                         if i < 10: a = '0'+a
-                        #FF_CME(str(a),item,itemss)
-                        Filmes_CME1 = threading.Thread(name='Filmes_CME1'+str(i), target=FF_CME , args=(str(a),item,itemss, ))
-                threads.append(Filmes_CME1)
+                        #FF_GGT(str(a),item,itemss)
+                        Filmes_GGT1 = threading.Thread(name='Filmes_GGT1'+str(i), target=FF_GGT , args=(str(a),item,itemss, ))
+                threads.append(Filmes_GGT1)
         for i in range(5):
                 threads[i].start()
         for i in range(5):
@@ -166,15 +163,15 @@ def CME_encontrar_fontes_filmes(url):
                         i = i + 1
                         a = str(i)
                         if i < 10: a = '0'+a
-                        Filmes_CME = threading.Thread(name='Filmes_CME'+str(i), target=Fontes_Filmes_CME , args=('FILME'+str(a)+'FILME'+item,))
-                threads.append(Filmes_CME)
+                        Filmes_GGT = threading.Thread(name='Filmes_GGT'+str(i), target=Fontes_Filmes_GGT , args=('FILME'+str(a)+'FILME'+item,))
+                threads.append(Filmes_GGT)
 
         [i.start() for i in threads]
 
         [i.join() for i in threads]
 
         if name != '':
-                _sites_ = ['filmesCME.txt']
+                _sites_ = ['filmesGGT.txt']
                 folder = perfil
                 num_filmes = 0
                 num_filmes = len(threads)
@@ -223,8 +220,8 @@ def CME_encontrar_fontes_filmes(url):
                                         if si: sinopse = si[0][0] + ' ' + si[0][1]
                                         else: sinopse = '---'
                                         
-                                if 'cinematuga.eu'     in imdbcode: num_mode = 803
-                                else: num_mode = 803
+                                if 'gigatuga'     in imdbcode: num_mode = 853
+                                else: num_mode = 853
                                 
                                 if nome != '---':
                                         #num_filmes = num_filmes + 1
@@ -239,42 +236,32 @@ def CME_encontrar_fontes_filmes(url):
 ##                        progress.update( percent, 'A Finalizar ...', message, "" )
 ##                        xbmc.sleep(20)
 
-                proxima = re.compile("<a class='blog-pager-older-link' href='(.+?)' id='Blog1_blog-pager-older-link'").findall(html_source)
-                if not proxima: proxima = re.compile('<a class="nextpostslink" rel="next" href="(.+?)">').findall(html_source)
+                proxima = re.compile("<a rel='nofollow' href='(.+?)'").findall(html_source)
                 try:
                         proxima_p = proxima[0]#.replace('%3A',':').replace('%2B','+')
-                        addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),802,artfolder + 'PAGS1.png','','')
+                        addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),852,artfolder + 'PAGS1.png','','')
                 except: pass
 
-def FF_CME(ordem,item,itemss):
-        thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
-        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
-        if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
-        if not thumbnail: thumbnail = re.compile('src="(.+?)"').findall(item)
-        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
+def FF_GGT(ordem,item,itemss):
+        thumbnail = re.compile('src="(.+?)"').findall(item)
+        if thumbnail: thumb = thumbnail[0]
         else: thumb = ''
-        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
-        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" title="(.+?)"').findall(item)
-        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
-        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
-        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark" title="(.+?)">').findall(item)
+        urletitulo = re.compile('<a href="(.+?)" title="(.+?)"').findall(item)
         if urletitulo:
                 urlvideo = urletitulo[0][0].replace('#more','')
-                nome = urletitulo[0][1]
+                nome = re.compile('(.+?)[(].+?').findall(urletitulo[0][1])[0]
         else:
                 urlvideo = ''
                 nome = ''
         try:
                 html_source1 = abrir_url(urlvideo)
-                items1 = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source1, re.DOTALL)
+                items1 = re.findall('<div class="post-single-content(.+?)<div class="su-heading', html_source1, re.DOTALL)
                 itemss.append(ordem+'|'+urlvideo+'|'+nome+'|'+thumb+'|'+items1[0])
         except: items1 = ''
         #addLink(nome,'','','')
         return itemss
 
-        
-
-def Fontes_Filmes_CME(item):
+def Fontes_Filmes_GGT(item):
 ##        progress = xbmcgui.DialogProgress()
 ##        i = 1
 ##        percent = 0
@@ -296,15 +283,11 @@ def Fontes_Filmes_CME(item):
 ##                        if progress.iscanceled():
 ##                                break
         folder = perfil
-        Filmes_File = open(folder + 'filmesCME.txt', 'w')
+        Filmes_File = open(folder + 'filmesGGT.txt', 'w')
 
         itemnum = item
 
-        urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
-        if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
-        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
-        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark" title="(.+?)">').findall(item)
-        if not urletitulo: urletitulo = re.compile('.+?[|](.+?)[|](.+?)[|](.+?)[|].+?').findall(item)
+        urletitulo = re.compile('.+?[|](.+?)[|](.+?)[|](.+?)[|].+?').findall(item)
         if urletitulo:
                 urlvideo = urletitulo[0][0].replace('#more','')
                 nome = urletitulo[0][1]
@@ -334,7 +317,8 @@ def Fontes_Filmes_CME(item):
                         imdbcode = ''
                         audio_filme = ''
 
-                        imdb = re.compile('imdb.com/title/(.+?)>iMDB</a>').findall(item)
+                        imdb = re.compile('www.imdb.com/title/(.+?)[?]').findall(item)
+                        if not imdb: imdb = re.compile('www.imdb.com/title/(.+?)"').findall(item)
                         if imdb: imdbcode = imdb[0].replace("'","")
                         else: imdbcode = ''
 
@@ -360,8 +344,7 @@ def Fontes_Filmes_CME(item):
 ##                                        qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(fontes_video[0])
 ##                                        if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','')
      
-                        snpse = re.compile('<b>sinopse</b><br>\n(.+?)<br>\n').findall(item)
-                        if not snpse: snpse = re.compile('<b>sinopse</b><br />\n(.+?)</span></p>').findall(item)
+                        snpse = re.compile('Sinopse: </strong>(.+?)</p>').findall(item)
                         if snpse: sinopse = snpse[0]
                         sinopse = sinopse.replace('&#8216;',"'")
                         sinopse = sinopse.replace('&#8217;',"'")
@@ -371,11 +354,11 @@ def Fontes_Filmes_CME(item):
                         sinopse = sinopse.replace('&#39;',"'")
                         sinopse = sinopse.replace('&amp;','&')
                                 
-                        ano = re.compile('<strong>Lan\xc3\xa7amento:</strong>(.+?)</div>').findall(item)
-                        if ano: anofilme = ano[0]
+                        ano = re.compile('<strong>Ano:</strong>(.+?)</p>').findall(item)
+                        if ano: anofilme = ano[0].replace(' ','')
                         else: anofilme = ''
 
-                        generos = re.compile("rel='tag'>(.+?)</a>").findall(item)
+                        generos = re.compile("nero:</strong>(.+?)</p>").findall(item)
                         conta = 0
                         for gener in generos:
                                 if conta == 0:
@@ -391,14 +374,13 @@ def Fontes_Filmes_CME(item):
                         for q_a_q_a in qq_aa:
                                 genero = genero.replace(str(q_a_q_a)+'  ','')
 
-##                        thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
-##                        if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
-##                        if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
-##                        if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
-##                        else: thumb = ''                                
+                        qualid = re.compile('Qualidade:</strong.+?[(](.+?)[)].+?</p>').findall(item)
+                        if qualid: qualidade_filme = qualid[0]
 
                         nome = nome.replace('&#8217;',"'")
                         nome = nome.replace('&#8211;',"-")
+                        nome = nome.replace('&#8220;',"[")
+                        nome = nome.replace('&#8221;',"]")
                         nome = nome.replace('&#39;',"'")
                         nome = nome.replace('&amp;','&')
                         nome = nome.replace('(Pedido)',"").replace('[Pedido]','')
@@ -413,13 +395,8 @@ def Fontes_Filmes_CME(item):
 
                         if audio_filme != '': qualidade_filme = qualidade_filme# + ' - ' + audio_filme
                         
-                        nnnn = re.compile('.+?[(](.+?)[)]').findall(nome)
-                        if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
-                        if not nnnn: nnnn = re.compile('(.+?) [-] ').findall(nome)
-                        if not nnnn: nnnn = re.compile('(.+?)[:] ').findall(nome) 
-                        if nnnn :
-                                if 'Trilogia' in nnnn[0]: nnnn = re.compile('(.+?)[[].+?[]]').findall(nome)
-                                nome_pesquisa = nnnn[0]
+                        nnnn = re.compile('.+?[[](.+?)[]]').findall(nome)
+                        if nnnn : nome_pesquisa = nnnn[0]
                         else: nome_pesquisa = nome
                         if imdbcode != '':
                                 try:
@@ -444,7 +421,7 @@ def Fontes_Filmes_CME(item):
                         try:
                                 nome_final = '[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]'
                                 filmes.append(FILMEN+'NOME|'+str(nome_final)+'|IMDBCODE|'+urlvideo+'IMDB'+str(imdbcode)+'IMDB'+'|THUMB|'+str(thumb)+'|ANO|'+str(anofilme)+'|FANART|'+str(fanart)+'|GENERO|'+str(genero)+'|ONOME|'+str(nome)+'|SINOPSE|'+str(sinopse)+'|END|\n')
-                                #addDir_trailer('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',803,thumb,sinopse,fanart,anofilme,genero,nome,urlvideo)
+                                #addDir_trailer('[B][COLOR green]' + nome + ' [/COLOR][/B][COLOR yellow](' + anofilme + ')[/COLOR][COLOR red] (' + qualidade_filme.replace('</div>','') + ')[/COLOR]',urlvideo+'IMDB'+imdbcode+'IMDB',853,thumb,sinopse,fanart,anofilme,genero,nome,urlvideo)
                         except: pass
                 except: pass	
         else: pass
@@ -458,8 +435,8 @@ def Fontes_Filmes_CME(item):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------#
 
-def CME_encontrar_videos_filmes(name,url,mvoutv):
-        if mvoutv == 'MoviesCME':
+def GGT_encontrar_videos_filmes(name,url,mvoutv):
+        if mvoutv == 'MoviesGGT':
                 try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
                 except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
         else:
@@ -476,7 +453,7 @@ def CME_encontrar_videos_filmes(name,url,mvoutv):
         urlimdb = re.compile('(.+?)IMDB.+?IMDB').findall(url)
         if not urlimdb: url = url.replace('IMDBIMDB','')
         else: url = urlimdb[0]
-        if 'CME' not in name: name = '[COLOR orange]CME | [/COLOR]' + name
+        if 'GGT' not in name: name = '[COLOR orange]GGT | [/COLOR]' + name
         nomeescolha = name
         colecao = 'nao'
         n1 = ''
@@ -484,7 +461,7 @@ def CME_encontrar_videos_filmes(name,url,mvoutv):
         ################################################
         nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
         nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
-        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
         if nnnn:
                 n2 = nnnn[0][0]
                 n1 = nnnn[0][1]
@@ -504,7 +481,7 @@ def CME_encontrar_videos_filmes(name,url,mvoutv):
         if not nnnn : n1 = nnn[0]
 
 ##        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[COLOR orange]','').replace('[/COLOR][/B]','--').replace('[/COLOR]','').replace('[','---').replace(']','---')
-##        nn = nn.replace('(','---').replace(')','---').replace('CME | ','')
+##        nn = nn.replace('(','---').replace(')','---').replace('GGT_ | ','')
 ##        if '---' in nn:
 ##                n = re.compile('---(.+?)---').findall(nn)
 ##                n1 = re.compile('--(.+?)--').findall(nn)
@@ -560,9 +537,8 @@ def CME_encontrar_videos_filmes(name,url,mvoutv):
         try:
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
-        fontes_video = re.findall("<h3 class='post-title entry-title(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
-        if not fontes_video: fontes_video = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', fonte_video, re.DOTALL)
-        #if not fontes_video: fontes_video = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', fonte_video, re.DOTALL)
+        fontes_video = re.findall('<div class="post-single-content(.+?)<center>Download Links', fonte_video, re.DOTALL)
+
         numero_de_fontes = len(fontes_video)
         if 'BREVEMENTE ONLINE' in fonte_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
         for fonte_e_url in fontes_video:
@@ -595,7 +571,7 @@ def CME_encontrar_videos_filmes(name,url,mvoutv):
                                                 #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
                                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
                                 except:pass
-                match2 = re.compile('<iframe.+?src=(.+?) frameborder.+?</iframe>').findall(fonte_e_url)
+                match2 = re.compile('data-mfp-src="(.+?)"').findall(fonte_e_url)
                 for fonte_id in match2:
                         if 'videomega' in fonte_id:
                                 try:
@@ -624,11 +600,11 @@ def CME_encontrar_videos_filmes(name,url,mvoutv):
                                 except:pass
                         else:
                                 conta_id_video = conta_id_video + 1
-                                CME_resolve_not_videomega_filmes(fonte_id,nomeescolha,conta_id_video,fanart,iconimage)
+                                GGT_resolve_not_videomega_filmes(fonte_id,nomeescolha,conta_id_video,fanart,iconimage)
 ##        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(nomeescolha)
 ##        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
 ##        nn = nomeescolha.replace('[B][COLOR green]','--').replace('[COLOR orange]','').replace('[/COLOR][/B]','--').replace('[/COLOR]','').replace('[','---').replace(']','---')
-##        nn = nn.replace('(','---').replace(')','---').replace('CME | ','')
+##        nn = nn.replace('(','---').replace(')','---').replace('GGT_ | ','')
 ##
 ##        nnnn = re.compile('.+?[(](.+?)[)]').findall(nnn[0])
 ##        if not nnnn: nnnn = re.compile('.+?[[](.+?)[]]').findall(nnn[0])
@@ -638,21 +614,21 @@ def CME_encontrar_videos_filmes(name,url,mvoutv):
 ##        else: nome_pesquisa = nnn[0]
         #addLink(n1+imdbcode,'','')
         url = 'IMDB'+imdbcode+'IMDB'
-        if mvoutv != 'MoviesCME': FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'CME',url)
+        if mvoutv != 'MoviesGGT': FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'GGT_',url)
         
 ##        if '---' in nn:
 ##                n = re.compile('---(.+?)---').findall(nn)
 ##                n1 = re.compile('--(.+?)--').findall(nn)
 ##                url = 'IMDB'+imdbcode+'IMDB'
-##                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'CME',url)
+##                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n[0]),'GGT_',url)
 ##        else:
 ##                n1 = re.compile('--(.+?)--').findall(nn)
 ##                url = 'IMDB'+imdbcode+'IMDB'
-##                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'CME',url)
+##                FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1[0]),'GGT_',url)
 
 
 
-def CME_links(name,url,iconimage,fanart):
+def GGT_links(name,url,iconimage,fanart):
         iconimage = iconimage
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
@@ -666,8 +642,7 @@ def CME_links(name,url,iconimage,fanart):
         try:
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
-        fontes_video = re.findall("<h3 class='post-title entry-title(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
-        if not fontes_video: fontes_video = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', fonte_video, re.DOTALL)
+        fontes_video = re.findall('<div class="post-single-content(.+?)<center>Download Links', fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
         if 'BREVEMENTE ONLINE' in fonte_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
         for fonte_e_url in fontes_video:
@@ -700,7 +675,7 @@ def CME_links(name,url,iconimage,fanart):
                                                 #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
                                                 addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
                                 except:pass
-                match2 = re.compile('<iframe.+?src=(.+?) frameborder.+?</iframe>').findall(fonte_e_url)
+                match2 = re.compile('data-mfp-src="(.+?)"').findall(fonte_e_url)
                 for fonte_id in match2:
                         if 'videomega' in fonte_id:
                                 try:
@@ -729,9 +704,9 @@ def CME_links(name,url,iconimage,fanart):
                                 except:pass
                         else:
                                 conta_id_video = conta_id_video + 1
-                                CME_resolve_not_videomega_filmes(fonte_id,nomeescolha,conta_id_video,fanart,iconimage)
+                                GGT_resolve_not_videomega_filmes(fonte_id,nomeescolha,conta_id_video,fanart,iconimage)
 
-def CME_resolve_not_videomega_filmes(url,nomeescolha,conta_id_video,fanart,iconimage):
+def GGT_resolve_not_videomega_filmes(url,nomeescolha,conta_id_video,fanart,iconimage):
         url = url + '///' + nomeescolha
         if "videomega" in url:
 		try:
@@ -854,7 +829,7 @@ def CME_resolve_not_videomega_filmes(url,nomeescolha,conta_id_video,fanart,iconi
 ##                Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_id+'[/COLOR][/B]',iconimage,'',fanart)
     	return
 
-def CME_resolve_not_videomega_filmesll(url,nomeescolha,conta_id_video,fanart,iconimage):
+def GGT_resolve_not_videomega_filmesll(url,nomeescolha,conta_id_video,fanart,iconimage):
         url = url + '///' + nomeescolha
         if "videomega" in url:
 		try:

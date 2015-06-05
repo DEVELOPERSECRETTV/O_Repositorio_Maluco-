@@ -183,7 +183,7 @@ def pesquisar():
                                 threads.append(CMT)
                         #num_f_CMT,num_s_CMT = encontrar_fontes_pesquisa_CMT(url_pesquisa,pesquisou,FSS)
 
-                        url_pesquisa = 'http://cinematuga.eu/?s=' + str(encode) + '&submit=Procurar'
+                        url_pesquisa = 'http://cinematugahd.net/?s=' + str(encode) + '&submit=Search'
                         try:
                                 html_source = abrir_url(url_pesquisa)
                         except: html_source = ''
@@ -191,6 +191,7 @@ def pesquisar():
                         items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
                         if not items: items = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
                         if not items: items = re.findall('<div class="filmo">(.+?)</div>', html_source, re.DOTALL)
+                        if not items: items = re.findall('<div class="col_maskolis">(.+?)</div>', html_source, re.DOTALL)
 ##                        itemss = []
 ##                        threads1 = []
 ##                        ii = 0
@@ -1235,10 +1236,12 @@ def encontrar_fontes_pesquisa_CME(url,pesquisou,FS,item):
                         thumbnail = re.compile("<meta content='(.+?)' itemprop='image_url'/>").findall(item)
                         if not thumbnail: thumbnail = re.compile('<img class="imgfilmo" src="(.+?)"></a>').findall(item)
                         if not thumbnail: thumbnail = re.compile('<img class="alignleft" src="(.+?)">').findall(item)
+                        if not thumbnail: thumbnail = re.compile('src="(.+?)"').findall(item)
                         if thumbnail: thumb = thumbnail[0].replace('s72-c','s320').replace('s1600','s320')
                         else: thumb = ''
 
                         urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                        if not urletitulo: urletitulo = re.compile('<a href="(.+?)" title="(.+?)"').findall(item)
                         if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                         if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark">(.+?)</a></h1>').findall(item)
                         if not urletitulo: urletitulo = re.compile('<a href="(.+?)" rel="bookmark" title="(.+?)">').findall(item)

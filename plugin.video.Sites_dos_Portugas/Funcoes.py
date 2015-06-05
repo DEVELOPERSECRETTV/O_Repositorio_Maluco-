@@ -38,6 +38,8 @@ tmdb_base_url = 'http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1280'
 
 progress = xbmcgui.DialogProgress()
 
+debug = False
+
 res = []
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
@@ -643,12 +645,48 @@ def playparser(namet, url, year, urltrailer):
 
 def trailer(namet, url):
 	print namet,url
-	url = trailer2().run(namet, url)
+	#url = trailer2().run(namet, url)
+	###
+	vid = searchtrailer(namet)
+	url = 'plugin://plugin.video.youtube/?action=play_video&videoid=' + vid
+	###
 	if url == None: return
 	item = xbmcgui.ListItem(path=url)
 	item.setProperty("IsPlayable", "true")
 	xbmc.Player().play(url, item)
+###
+def searchtrailer(nm):
+        nm = nm.replace(' ','+')
+        rl = 'https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&q='+nm+'-Trailer&maxResults=1&key=AIzaSyCtxrgktLdk4Y6dTcqeYw3U9-3H_wvtP6E'
+	ytpage = open_url(rl)
+	youtubeid = re.compile('"videoId": "(.+?)"').findall(ytpage)
+        return str(youtubeid[0])
 
+def open_url(url,post=None):
+	if post == None: req = urllib2.Request(url)
+	else: req = urllib2.Request(url,post)
+	#addLink(req,'','','')
+
+	req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1')
+	req.add_header('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
+	try: 
+		response = urllib2.urlopen(req)
+		link=response.read()
+		response.close()
+		return link
+
+	except BaseException as e: log(u"open_url ERROR: %s - %s" % (str(url),str(e).decode('ascii','ignore')))
+	except urllib2.HTTPError, e: log(u"open_url HTTPERROR: %s - %s" % (str(url),str(e.code)))
+	except urllib2.URLError, e: log(u"open_url URLERROR: %s - %s" % (str(url),str(e.reason)))
+	except httplib.HTTPException, e: log(u"open_url HTTPException: %s" % (str(url)))
+
+def _log(module, msg):
+	s = u"#[%s] - %s" % (module, msg)
+	xbmc.log(s.encode('utf-8'), level=xbmc.LOGDEBUG)
+
+def log(msg):
+	if debug == 'true': _log('SITESdosPORTUGAS', msg)
+###
 class trailer2:
         def __init__(self):
                 self.youtube_base = 'http://www.youtube.com'
@@ -671,6 +709,7 @@ class trailer2:
                                 raise Exception()
                 except:
                         url = self.youtube_query + name + ' trailer'
+                        #url = 'https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&q='+name+'-Trailer&maxResults=1&key=AIzaSyCtxrgktLdk4Y6dTcqeYw3U9-3H_wvtP6E'
                         url = self.youtube_search(url)
                         if url == None: return
                         return url
@@ -713,6 +752,8 @@ class trailer2:
                         return url
                 except:
                         return
+
+#https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&q=%s-Trailer&maxResults=1&key=AIzaSyCtxrgktLdk4Y6dTcqeYw3U9-3H_wvtP6E'
 
 
 class getUrl(object):
@@ -1005,6 +1046,8 @@ def addDir_trailer1(name,url,mode,iconimage,plot,fanart,year,genre,namet,urltrai
 	liz.setProperty('fanart_image',fanart)
         #liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
         liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot, "Year": year, "Genre": genre } )
+
+        #trailerid = searchtrailer(namet)
         
         cm = []
   	#cm.append(('Sinopse', 'XBMC.Action(Info)'))
