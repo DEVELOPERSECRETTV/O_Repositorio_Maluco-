@@ -233,6 +233,7 @@ def Fontes_ultimas_Series(url):
 		html_sourceTPT = abrir_url(urlTPT)
 	except: html_sourceTPT = ''
         itemsTPT = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_sourceTPT, re.DOTALL)
+        if not itemsTPT: itemsTPT = re.findall('<h2 class="title">(.*?)<div class="readmore">', html_sourceTPT, re.DOTALL)
 	if itemsTPT != []: num = num + len(itemsTPT) + 0.0
         if itemsTPT != []:                
                 for item in itemsTPT:
@@ -525,7 +526,7 @@ def SITESdosPORTUGAS():
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_FTT = 'http://foitatoptuga.blogspot.pt/'#superfoitatuga#'http://foitatugadownload.blogspot.pt/'#'http://foitatugacinemaonline.blogspot.pt/'
         url_CMT = 'http://www.cinematuga.net/'#'http://www.tugafilmes.org'#'http://www.cinematuga.net/'
-        url_CME = 'http://www.cinematugahd.net/'#'http://www.cinematuga.eu/'
+        url_CME = 'http://cinematugahd.net/'#'http://www.cinematuga.eu/'
         url_CMC = 'http://www.cinemaemcasa.pt/'
         url_GGT = 'http://gigatuga.com/'
 
@@ -599,6 +600,7 @@ def TPTONOFF(url_TPT):
 		html_source = abrir_url(url_TPT)
 	except: html_source = ''
 	items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
+	if not items: items = re.findall('<h2 class="title">(.*?)<div class="readmore">', html_source, re.DOTALL)
 	if items != []: TPT_ONOFF.append('[COLOR green] | UP[/COLOR]')
 	else: TPT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
 def FTTONOFF(url_FTT):
@@ -816,6 +818,7 @@ def dirtodos(url):
                         html_source = abrir_url(url_TPT)
                 except: html_source = ''
                 itemsTPT = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
+                if not itemsTPT: itemsTPT = re.findall('<h2 class="title">(.*?)<div class="readmore">', html_source, re.DOTALL)
                 if itemsTPT != []:
                         proxima_TPT = re.compile('</span><a class="nextpostslink" rel="next" href="(.+?)">&raquo;</a><a class="last"').findall(html_source)
                         try:
@@ -1099,25 +1102,25 @@ def dirtodos(url):
                                 if 'toppt.net'         in imdbcode:
                                         num_mode = 233
                                         site = 'TPT'
-                                if 'tuga-filmes.info'  in imdbcode or 'tuga-filmes.com'  in imdbcode:
+                                elif 'tuga-filmes.info'  in imdbcode or 'tuga-filmes.com'  in imdbcode:
                                         num_mode = 73
                                         site = 'TFC'
-                                if 'tuga-filmes.us'    in imdbcode:
+                                elif 'tuga-filmes.us'    in imdbcode:
                                         num_mode = 33
                                         site = 'TFV'
-                                if 'cinematuga.eu' or 'cinematugahd.net'    in imdbcode:
+                                elif 'cinematuga.eu' or 'cinematugahd.net'    in imdbcode:
                                         num_mode = 803
                                         site = 'CME'
-                                if 'cinematuga.net'    in imdbcode:
+                                elif 'cinematuga.net'    in imdbcode:
                                         num_mode = 703
                                         site = 'CMT'
-                                if 'foitatuga' or 'foitatoptuga'        in imdbcode:
+                                elif 'foitatuga' or 'foitatoptuga'        in imdbcode:
                                         num_mode = 603
                                         site = 'FTT'
-                                if 'cinemaemcasa.pt'   in imdbcode:
+                                elif 'cinemaemcasa.pt'   in imdbcode:
                                         num_mode = 903
                                         site = 'CMC'
-                                if 'movietuga'         in imdbcode:
+                                elif 'movietuga'         in imdbcode:
                                         num_mode = 103
                                         site = 'MVT'
                                 if nome != '---':
@@ -1228,6 +1231,7 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                         elif mvoutv == 'MoviesRTV':
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(namet,'',url)
                 elif 'TOPPT.NET' in _nomeproc_[index]:
+                        #addLink(str(mvoutv),'','','')
                         if mvoutv != 'MoviesTPT':
                                 if mvoutv=='MoviesTFC':
                                         strstr,url = TFCmovies(name,url)

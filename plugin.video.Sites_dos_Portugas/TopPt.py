@@ -837,8 +837,7 @@ def Fontes_Filmes_TPT(item):
 #----------------------------------------------------------------------------------------------------------------------------------------------#
                 
 def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
-        
-##        return
+
         #if 'Movies' in mvoutv and Season in name:
         #addLink(mvoutv,'','','')
         if mvoutv == None: mvoutv = 'Movies'
@@ -1006,6 +1005,9 @@ def TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv):
                                 l=0
                                 newmatch = re.findall('<span id=.+?BAIXAR',link2,re.DOTALL)
                         else:l=1
+                        if not newmatch:
+                                l=1111
+                                newmatch = re.findall('<h2>VER ONLINE</h2>.+?DOWNLOAD POR',link2,re.DOTALL)
                 else:
                         #newmatch = re.findall('<span id=.+?<img style="height: 40px; width: 465px;"',link2,re.DOTALL)
                         newmatch1 = re.findall('<span id=.+?DOWNLOAD POR',link2,re.DOTALL)
