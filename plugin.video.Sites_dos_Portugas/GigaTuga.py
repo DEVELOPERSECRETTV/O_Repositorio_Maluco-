@@ -225,7 +225,7 @@ def GGT_encontrar_fontes_filmes(url):
                                 
                                 if nome != '---':
                                         #num_filmes = num_filmes + 1
-                                        addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
+                                        addDir_trailer1('[COLOR orange]GGT | [/COLOR]'+nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
                                 xbmc.sleep(20)
                         Filmes_Fi.close()
 

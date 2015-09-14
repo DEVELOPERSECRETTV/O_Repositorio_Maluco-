@@ -52,11 +52,11 @@ artfolder = addonfolder + '/resources/img/'
 
 def pesquisar():
         
-        if name == '[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)' or name == '- Procurar':
+        if name == 'Procurar (Filmes/Séries)' or name == '- Procurar':
                 FS = 'FS'
-        if name == '[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)':
+        if name == 'Procurar (Filmes)':
                 FS = 'F'
-        if name == '[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)':
+        if name == 'Procurar (Séries)':
                 FS = 'S'
 	keyb = xbmc.Keyboard('', 'Escreva o parâmetro de pesquisa')
 	keyb.doModal()

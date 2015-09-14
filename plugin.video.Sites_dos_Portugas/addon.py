@@ -51,6 +51,8 @@ CMC_ONOFF = []
 CME_ONOFF = []
 CMT_ONOFF = []
 GGT_ONOFF = []
+RTV_ONOFF = []
+TGI_ONOFF = []
 
 results = []
 resultos = []
@@ -64,70 +66,202 @@ itemsindividuais = []
 #-----------------------------------------------------------------    MENU    ------------------------------------------------------------------#
 
 def MAIN_MENU():
-        _sites_ = ['filmesTPT.txt','filmesCME.txt','filmesFTT.txt','filmesTFC.txt','filmesMVT.txt','filmesCMTnet.txt','filmesCMC.txt','filmesTFV.txt']
         folder = perfil
+        ONOFF_Geral()
+        ON_OFFS = open(folder + 'ONOFF.txt', 'w')
+        ON_OFFS.write(str('TPT:'+TPT_ONOFF[0]+'TFV:'+TFV_ONOFF[0]+'TFC:'+TFC_ONOFF[0]+'MVT:'+MVT_ONOFF[0]+'FTT:'+FTT_ONOFF[0]+'CMC:'+CMC_ONOFF[0]+'CME:'+CME_ONOFF[0]+'CMT:'+CMT_ONOFF[0]+'GGT:'+GGT_ONOFF[0]+'RTV:'+RTV_ONOFF[0]+'TGI:'+TGI_ONOFF[0]))
+        ON_OFFS.close()
+        
+        _sites_ = ['filmesTPT.txt','filmesCME.txt','filmesFTT.txt','filmesTFC.txt','filmesMVT.txt','filmesCMTnet.txt','filmesCMC.txt','filmesTFV.txt']
         for site in _sites_:
                 try:
                         Filmes_Fi = open(folder + site, 'w')
                         Filmes_Fi.close()
                 except: pass
-##        if selfAddon.getSetting("AvisoFanart") == "true":
-##                SdPpath = selfAddon.getAddonInfo('path')
-##                d = AvisoFanart("AvisoFanart.xml" , SdPpath, "Default")
-##                d.doModal()
-##                del d
-##                selfAddon.setSetting('AvisoFanart',value='false')
-        addDir('[B][COLOR green]SÉ[/COLOR][COLOR yellow]R[/COLOR][COLOR red]IES[/COLOR][/B] (A/Z) (SITESdosPORTUGAS)','urlTODAS',26,artfolder + 'SAZ1.png','nao','')                
+                
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
         url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
         url_TPT = 'http://toppt.net/category/series/'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
-        url_ultimos_episodios = urllib.urlencode(parameters)                                                                                    #508
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]EPISÓDIOS[/COLOR][/B] (SITESdosPORTUGAS)',url_ultimos_episodios,9009,artfolder + 'UEP.png','nao','')
-        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]S SÉRIES[/COLOR][/B]','url',9007,artfolder + 'US.png','nao','')
-        addDir('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','url',9006,artfolder + 'UF.png','nao','')
-        addDir('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]ANIMAÇÃO[/COLOR][/B]','url',9006,artfolder + 'UAN.png','nao','')
-        #addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (SITESdosPORTUGAS)','url',7500,artfolder + 'P1.png','nao','')
-        #addDir1('','url',1004,artfolder,False,'')
+        url_ultimos_episodios = urllib.urlencode(parameters)                                                                                    #508        
+        addDir('Últimos Filmes','url',9006,artfolder + 'UF.png','nao','')
+        addDir('Últimos Animação','url',9006,artfolder + 'UAN.png','nao','')
+        addDir('Últimas Séries','url',9007,artfolder + 'US.png','nao','')
+        addDir('Últimos Episódios',url_ultimos_episodios,9009,artfolder + 'UEP.png','nao','')
+        addDir1('','url',1002,artfolder,False,'')
+        addDir('Procurar (Filmes)','url',7500,artfolder + 'P1.png','nao','')
+        addDir('Procurar (Séries)','url',7500,artfolder + 'P1.png','nao','')
+
+##################################################################################################
         
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','url',7500,artfolder + 'P1.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','url',7500,artfolder + 'P1.png','nao','')
-        #addDir1('','url',1004,artfolder,False,'')
-        addDir('[B][COLOR green]I[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','url',20100,artfolder + 'IMDB.png','nao','')
-        addDir('[B][COLOR green]T[/COLOR][COLOR yellow]M[/COLOR][COLOR red]DB[/COLOR][/B] (Filmes/Séries)','http://direct',3012,artfolder + 'TMDB.png','nao','')
-        addDir('[B][COLOR green]RA[/COLOR][COLOR yellow]T[/COLOR][COLOR red]OTV[/COLOR][/B] (Filmes/Séries)','url',20001,artfolder + 'RTV.png','nao','')
-        addDir('[B][COLOR green]WAR[/COLOR][COLOR yellow]E[/COLOR][COLOR red]ZTUGA[/COLOR][/B] (Filmes/Séries)','url',30001,artfolder + 'WZT.png','nao','')
-        #addDir1('','url',1004,artfolder,False,'')
+def ONOFF_Geral():
+        url_TPT = 'http://toppt.net/'#moov7
+        url_TFV = 'http://www.tuga-filmes.us/'
+        url_TFC = 'http://www.tuga-filmes.com/'#'http://www.tuga-filmes.info/'
+        url_MVT = 'http://www.movie-tuga.blogspot.pt'
+        url_FTT = 'http://foitatoptuga.blogspot.pt/'#superfoitatuga#'http://foitatugadownload.blogspot.pt/'#'http://foitatugacinemaonline.blogspot.pt/'
+        url_CMT = 'http://www.cinematuga.net/'#'http://www.tugafilmes.org'#'http://www.cinematuga.net/'
+        url_CME = 'http://cinematugahd.net/'#'http://www.cinematuga.eu/'
+        url_CMC = 'http://www.cinemaemcasa.pt/'
+        url_GGT = 'http://gigatuga.com/'
+        url_RTV = 'http://ratotv.net/'
+        url_TGI = 'http://tuga.io/'
         
-        addDir('[B][COLOR green]SITES[/COLOR][COLOR yellow]dos[/COLOR][COLOR red]PORTUGAS[/COLOR][/B] (Filmes/Séries)','url',10000,artfolder + 'SDPI.png','nao','')
-        addDir('[B][COLOR yellow]SITES[/COLOR][COLOR blue]dos[/COLOR][COLOR green]BRAZUCAS[/COLOR][/B] (Filmes/Séries)','url',331,artfolder + 'SDB.png','nao','')
-        #addDir1('','url',1004,artfolder,False,'')
-        #addDir('[B][COLOR green]DEFI[/COLOR][COLOR yellow]N[/COLOR][COLOR red]IÇÕES[/COLOR][/B] (ADDON)','url',1000,artfolder + 'DEF1.png','nao','')#'ze-icon3.png'
+        threads = []
+
+        TPT = threading.Thread(name='TPT', target=TPTONOFF , args=(url_TPT,))
+        threads.append(TPT)
+
+        CME = threading.Thread(name='CME', target=CMEONOFF , args=(url_CME,))
+        threads.append(CME)
+
+        TFC = threading.Thread(name='TFC', target=TFCONOFF , args=(url_TFC,))
+        threads.append(TFC)
+        
+        FTT = threading.Thread(name='FTT', target=FTTONOFF , args=(url_FTT,))
+        threads.append(FTT)
+        
+        TFV = threading.Thread(name='TFV', target=TFVONOFF , args=(url_TFV,))
+        threads.append(TFV)
+        
+        MVT = threading.Thread(name='MVT', target=MVTONOFF , args=(url_MVT,))
+        threads.append(MVT)
+        
+        CMT = threading.Thread(name='CMT', target=CMTONOFF , args=(url_CMT,))
+        threads.append(CMT)
+
+        CMC = threading.Thread(name='CMC', target=CMCONOFF , args=(url_CMC,))
+        threads.append(CMC)
+
+        GGT = threading.Thread(name='GGT', target=GGTONOFF , args=(url_GGT,))
+        threads.append(GGT)
+
+        RTV = threading.Thread(name='RTV', target=RTVONOFF , args=(url_RTV,))
+        threads.append(RTV)
+
+        TGI = threading.Thread(name='TGI', target=TGIONOFF , args=(url_TGI,))
+        threads.append(TGI)
+
+        [i.start() for i in threads]
+        [i.join() for i in threads]
+
+def TFVONOFF(url_TFV):
+        try:
+		html_source = abrir_url(url_TFV)
+	except: html_source = ''
+	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+	if items != []: TFV_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: TFV_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def TFCONOFF(url_TFC):	
+	try:
+		html_source = abrir_url(url_TFC)
+	except: html_source = ''
+	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<article(.*?)</article>", html_source, re.DOTALL)
+	if items != []: TFC_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: TFC_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def MVTONOFF(url_MVT):
+	try:
+		html_source = abrir_url(url_MVT)
+	except: html_source = ''
+	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
+	if items != []: MVT_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: MVT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def TPTONOFF(url_TPT):
+	try:
+		html_source = abrir_url(url_TPT)
+	except: html_source = ''
+	items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
+	if not items: items = re.findall('<h2 class="title">(.*?)<div class="readmore">', html_source, re.DOTALL)
+	if items != []: TPT_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: TPT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def FTTONOFF(url_FTT):
+	try:
+		html_source = abrir_url(url_FTT)
+	except: html_source = ''
+	items = re.findall("<h2 class='post-title entry-title' itemprop='name headline'>(.*?)<div class='post-footer'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<div class='post-body entry-content'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+	if items != []: FTT_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: FTT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def CMTONOFF(url_CMT):
+	try:
+		html_source = abrir_url(url_CMT)
+	except: html_source = ''
+	items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
+	if items != []: CMT_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: CMT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def CMEONOFF(url_CME):
+	try:
+		html_source = abrir_url(url_CME)
+	except: html_source = ''
+	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+	if not items: items = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
+	if not items: items = re.findall('<div class="filmo">(.+?)</div>', html_source, re.DOTALL)
+	if not items: items = re.findall('<div class="col_maskolis">(.+?)</div>', html_source, re.DOTALL)
+	if items != []: CME_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: CME_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def CMCONOFF(url_CMC):
+	try:
+		html_source = abrir_url(url_CMC)
+	except: html_source = ''
+	items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+	if not items: items = re.findall("<div class='post bar hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
+	if items != []: CMC_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: CMC_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def GGTONOFF(url_GGT):
+	try:
+		html_source = abrir_url(url_GGT)
+	except: html_source = ''
+	items = re.findall("<article(.+?)</article>", html_source, re.DOTALL)
+	if items != []: GGT_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: GGT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def RTVONOFF(url_RTV):
+	try:
+		html_source = abrir_url(url_RTV)
+	except: html_source = ''
+	items = re.findall('<div class="format">(.+?)<div class="thumb">', html_source, re.DOTALL)
+	if items != []: RTV_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: RTV_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+def TGIONOFF(url_TGI):
+	try:
+		html_source = abrir_url(url_TGI)
+	except: html_source = ''
+	items = re.findall('<div class="thumb">\n(.+?)style="background-image: url', html_source, re.DOTALL)
+	if items != []: TGI_ONOFF.append('[COLOR green] | UP[/COLOR]')
+	else: TGI_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
+
+##############################################################################################################
         
 def ProcurarFilmesSeries():
-##        addDir1('[B][COLOR blue]SITESdosPORTUGAS:[/COLOR][/B]','url',1004,artfolder,False,'')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
-##        addDir1('[B][COLOR blue]IMDB:[/COLOR][/B]','url',1004,artfolder,False,'')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,short,tv_movie,tv_special,video&sort=moviemeter,asc&count=25&start=1&title=',20110,artfolder + 'P1.png','nao','')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=50&start=1&title=',20110,artfolder + 'P1.png','nao','')
-##        addDir1('[B][COLOR blue]TMDB:[/COLOR][/B]','url',1004,artfolder,False,'')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','1',2998,artfolder + 'P1.png','nao','')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','1',3011,artfolder + 'P1.png','nao','')
-##        addDir1('[B][COLOR blue]WAREZTUGA:[/COLOR][/B]','url',1004,artfolder,False,'')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.wareztuga.tv/',30009,artfolder + 'P1.png','nao','')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.wareztuga.tv/',30009,artfolder + 'P1.png','nao','')
-##        addDir1('[B][COLOR blue]RATOTV:[/COLOR][/B]','url',1004,artfolder,False,'')
-##        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.ratotv.net/',20006,artfolder + 'P1.png','nao','')
-        
+        ON_OFF = 0
+        folder = perfil
+        ON_OFFS = open(folder + 'ONOFF.txt', 'r')
+        read_ON_OFFS_File = ''
+        for line in ON_OFFS:
+                read_ON_OFFS_File = read_ON_OFFS_File + line
+        O_F = re.compile('TPT:(.+?)TFV:(.+?)TFC:(.+?)MVT:(.+?)FTT:(.+?)CMC:(.+?)CME:(.+?)CMT:(.+?)GGT:(.+?)RTV:(.+?)TGI:(.*)').findall(read_ON_OFFS_File)
+        ON_OFFS.close()
+        if 'UP' in O_F[0][0]: ON_OFF = ON_OFF + 1
+        if 'UP' in O_F[0][1]: ON_OFF = ON_OFF + 1
+        if 'UP' in O_F[0][2]: ON_OFF = ON_OFF + 1
+        if 'UP' in O_F[0][3]: ON_OFF = ON_OFF + 1
+        if 'UP' in O_F[0][4]: ON_OFF = ON_OFF + 1
+        if 'UP' in O_F[0][5]: ON_OFF = ON_OFF + 1
+        if 'UP' in O_F[0][6]: ON_OFF = ON_OFF + 1
+        if 'UP' in O_F[0][7]: ON_OFF = ON_OFF + 1
+        if 'UP' in O_F[0][8]: ON_OFF = ON_OFF + 1
+        if 'UP' in O_F[0][10]: ON_OFF = ON_OFF + 1
         _nomeproc_ = []
         _nomeproc_.append('[B][COLOR white]IMDB[/COLOR][/B]')
         _nomeproc_.append('[B][COLOR white]TMDB[/COLOR][/B]')
-        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]')
-        _nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]'+O_F[0][9])
+        #_nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B][COLOR green] | '+str(ON_OFF)+' UP[/COLOR][COLOR red] | '+str(10-ON_OFF)+' DOWN[/COLOR]')
         
         if 'Filmes' in name: FS = 'Filmes'
         elif 'Séries' in name: FS = 'Séries'
@@ -137,9 +271,9 @@ def ProcurarFilmesSeries():
         if index > -1:
                 if 'RATOTV' in _nomeproc_[index]:
                         procurarRato(name,'http://www.ratotv.net/')
-                elif 'WAREZTUGA' in _nomeproc_[index]:
-                        if 'Filmes' in name: procurarW(name,'http://www.wareztuga.tv/')
-                        elif 'Séries' in name: procurarW(name,'http://www.wareztuga.tv/')
+##                elif 'WAREZTUGA' in _nomeproc_[index]:
+##                        if 'Filmes' in name: procurarW(name,'http://www.wareztuga.tv/')
+##                        elif 'Séries' in name: procurarW(name,'http://www.wareztuga.tv/')
                 elif 'IMDB' in _nomeproc_[index]:
                         if 'Filmes' in name: procurarIMDB('http://akas.imdb.com/search/title?title_type=feature,short,tv_movie,tv_special,video&sort=moviemeter,asc&count=25&start=1&title=')
                         elif 'Séries' in name: procurarIMDB('http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=50&start=1&title=')
@@ -151,32 +285,48 @@ def ProcurarFilmesSeries():
                         elif 'Filmes' in name: Pesquisar.pesquisar()
                         elif 'Séries' in name: Pesquisar.pesquisar()
 
+####################################################################################################################
+
 def Ultimos_Episodios_Geral():
         url_TFC = 'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
+
+        ON_OFF = 0
+        folder = perfil
+        ON_OFFS = open(folder + 'ONOFF.txt', 'r')
+        read_ON_OFFS_File = ''
+        for line in ON_OFFS:
+                read_ON_OFFS_File = read_ON_OFFS_File + line
+        O_F = re.compile('TPT:(.+?)TFV:(.+?)TFC').findall(read_ON_OFFS_File)
+        ON_OFFS.close()
         
         _nomeproc_ = []
 ##        _nomeproc_.append('[B][COLOR white]IMDB[/COLOR][/B]')
 ##        _nomeproc_.append('[B][COLOR white]TMDB[/COLOR][/B]')
 ##        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]')
 ##        _nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TOPPT.NET')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.TV')
+##        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
+        if 'UP' in O_F[0][0]:
+                ON_OFF = ON_OFF + 1
+        _nomeproc_.append('[B][COLOR white]TOPPT.NET[/COLOR][/B]'+O_F[0][0])
+        if 'UP' in O_F[0][1]:
+                ON_OFF = ON_OFF + 1
+        _nomeproc_.append('[B][COLOR white]TUGA-FILMES.TV[/COLOR][/B]'+O_F[0][1])
+        if ON_OFF == 0: _nomeproc_.append('[B][COLOR white]De momento todos os Sites estão Down![/COLOR][/B]')
 
         indexservidores = xbmcgui.Dialog().select
-        index = indexservidores('Últimas Episódios', _nomeproc_)
+        index = indexservidores('Últimos Episódios', _nomeproc_)
         if index > -1:
                 if 'RATOTV' in _nomeproc_[index]: ratoTVTV('http://www.ratotv.net/tvshows/page/1/')
-                elif 'WAREZTUGA' in _nomeproc_[index]: WlinksS('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series')
-                elif 'IMDB' in _nomeproc_[index]: LinksIMDB1('http://akas.imdb.com/search/title?title_type=tv_series,mini_series&production_status=active&sort=moviemeter,asc&count=12&start=1')
-                elif 'TMDB' in _nomeproc_[index]: EMEXIBICAO('1')
-                elif 'TODOS' in _nomeproc_[index]:
-                        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
-                        url_TPT = 'http://toppt.net/category/series/'
-                        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
-                        url_ultimos_episodios = urllib.urlencode(parameters)
-                        Mashup.ultimos_episodios(url_ultimos_episodios)
+                #elif 'WAREZTUGA' in _nomeproc_[index]: WlinksS('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series')
+##                elif 'IMDB' in _nomeproc_[index]: LinksIMDB1('http://akas.imdb.com/search/title?title_type=tv_series,mini_series&production_status=active&sort=moviemeter,asc&count=12&start=1')
+##                elif 'TMDB' in _nomeproc_[index]: EMEXIBICAO('1')
+##                elif 'TODOS' in _nomeproc_[index]:
+##                        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
+##                        url_TPT = 'http://toppt.net/category/series/'
+##                        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+##                        url_ultimos_episodios = urllib.urlencode(parameters)
+##                        Mashup.ultimos_episodios(url_ultimos_episodios)
                 elif 'TOPPT.NET' in _nomeproc_[index]:
                         url_TFV = 'http://'
                         url_TPT = 'http://toppt.net/category/series/'
@@ -189,28 +339,39 @@ def Ultimos_Episodios_Geral():
                         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
                         url_ultimos_episodios = urllib.urlencode(parameters)
                         Mashup.ultimos_episodios(url_ultimos_episodios)
-        xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
-        xbmc.executebuiltin("Container.SetViewMode(504)")
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+##        xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+##        xbmc.executebuiltin("Container.SetViewMode(504)")
+##        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+#############################################################################################################################
                         
-def Ultimas_Series_Geral():        
+def Ultimas_Series_Geral():
+        ON_OFF = 0
+        folder = perfil
+        ON_OFFS = open(folder + 'ONOFF.txt', 'r')
+        read_ON_OFFS_File = ''
+        for line in ON_OFFS:
+                read_ON_OFFS_File = read_ON_OFFS_File + line
+        O_F = re.compile('TPT:(.+?)TFV:(.+?)TFC:(.+?)MVT:(.+?)FTT:(.+?)CMC:(.+?)CME:(.+?)CMT:(.+?)GGT:(.+?)RTV:(.+?)TGI:(.*)').findall(read_ON_OFFS_File)
+        ON_OFFS.close()
+        
         _nomeproc_ = []
         _nomeproc_.append('[B][COLOR white]IMDB[/COLOR][/B]')
         _nomeproc_.append('[B][COLOR white]TMDB[/COLOR][/B]')
-        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]')
-        _nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TOPPT.NET')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.TV')
+        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]'+O_F[0][9])
+        #_nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')
+       # _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
+        _nomeproc_.append('[B][COLOR white]TOPPT.NET[/COLOR][/B]'+O_F[0][0])
+        _nomeproc_.append('[B][COLOR white]TUGA-FILMES.TV[/COLOR][/B]'+O_F[0][1])
 
         indexservidores = xbmcgui.Dialog().select
         index = indexservidores('Últimas Séries', _nomeproc_)
         if index > -1:
                 if 'RATOTV' in _nomeproc_[index]: ratoTVTV('http://www.ratotv.net/tvshows/page/1/')
-                elif 'WAREZTUGA' in _nomeproc_[index]: WlinksS('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series')
+                #elif 'WAREZTUGA' in _nomeproc_[index]: WlinksS('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series')
                 elif 'IMDB' in _nomeproc_[index]: LinksIMDB1('http://akas.imdb.com/search/title?title_type=tv_series,mini_series&production_status=active&sort=moviemeter,asc&count=12&start=1')
                 elif 'TMDB' in _nomeproc_[index]: EMEXIBICAO('1')
-                elif 'TODOS' in _nomeproc_[index]: Fontes_ultimas_Series('http://toppt.net/category/series/'+'|'+'http://www.tuga-filmes.us/search/label/Séries')
+             #   elif 'TODOS' in _nomeproc_[index]: Fontes_ultimas_Series('http://toppt.net/category/series/'+'|'+'http://www.tuga-filmes.us/search/label/Séries')
                 elif 'TOPPT.NET' in _nomeproc_[index]: Fontes_ultimas_Series('http://toppt.net/category/series/'+'|'+'http://')
                 elif 'TUGA-FILMES.TV' in _nomeproc_[index]: Fontes_ultimas_Series('http://'+'|'+'http://www.tuga-filmes.us/search/label/Séries')
 
@@ -366,24 +527,7 @@ def Fontes_ultimas_Series(url):
                         ano_filme = '('+ano_filme+')'
                         qualidade = '('+qualidade
                         audio_filme = audio_filme+')'
-                        
-##                        n = re.compile('[[](.+?)[]][[](.+?)[]]').findall(nome)
-##                        if not n: n = re.compile('[[](.+?)[]] [[](.+?)[]]').findall(nome)
-##                        if n: nome = n[0][0]+' - '+n[0][1]
-##                        else:
-##                                n = re.compile('[(](.+?)[)][(](.+?)[)]').findall(nome)
-##                                if not n: n = re.compile('[(](.+?)[)] [(](.+?)[)]').findall(nome)
-##                                if n: nome = n[0][0]+' - '+n[0][1]
-##                                else:
-##                                        n = re.compile('[[](.+?)[]]').findall(nome)
-##                                        if n: nome = n[0]
-##                                        else:
-##                                                n = re.compile('[(](.+?)[)]').findall(nome)
-##                                                if n: nome = n[0]
-##                        qualidade = ''
-##                        ano_filme = ''
-##                        audio_filme = ''
-                        #addLink(nome,'','','')        
+        
                         try:
                                 if genero == '':
                                         genre = '---'
@@ -483,200 +627,19 @@ def Fontes_ultimas_Series(url):
         xbmc.executebuiltin("Container.SetViewMode(560)")#503
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
-def ProcurarFilmesSeries1():
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes/Séries)','http://www.tuga-filmes.us/search?q=',1,artfolder + 'P1.png','nao','')
-
-def TMDBmenu():
-        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','1',3002,artfolder + 'NC.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','1',3001,artfolder + 'FMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','1',3000,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]BREV[/COLOR][COLOR yellow]E[/COLOR][COLOR red]MENTE[/COLOR][/B] (Filmes)','1',2999,artfolder + 'BREV.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','1',2998,artfolder + 'P1.png','nao','')
-        addDir1('','url',1004,artfolder,False,'')
-        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (Séries)','1',3008,artfolder + 'EE.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','1',3009,artfolder + 'SMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Séries)','1',3010,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','1',3011,artfolder + 'P1.png','nao','')
-
-def IMDBmenu():
-        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','http://www.imdb.com/movies-in-theaters/?ref_=nv_tp_inth_1',20101,artfolder + 'NC.png','nao','')
-        addDir('[B][COLOR green]ANI[/COLOR][COLOR yellow]M[/COLOR][COLOR red]AÇÃO[/COLOR][/B] (Filmes)','http://www.imdb.com/genre/animation/',20102,artfolder + 'FA.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?sort=num_votes&title_type=feature,tv_movie&count=12&start=1',20102,artfolder + 'FMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?sort=moviemeter,asc&title_type=feature,tv_movie&count=12&start=1',20102,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]BOX[/COLOR][COLOR yellow]O[/COLOR][COLOR red]FFICE[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?sort=boxoffice_gross_us&title_type=feature,tv_movie&count=12&start=1',20102,artfolder + 'BO.png','nao','')
-        addDir('[B][COLOR green]ÓS[/COLOR][COLOR yellow]C[/COLOR][COLOR red]ARES[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?count=12&groups=oscar_best_picture_winners&sort=year,desc&start=1',20102,artfolder + 'OS.png','nao','')
-        addDir('[B][COLOR green]GÉ[/COLOR][COLOR yellow]N[/COLOR][COLOR red]EROS[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,tv_movie&sort=boxoffice_gross_us&count=12&start=1&genres=',20103,artfolder + 'GEN.png','nao','')
-        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,tv_movie&sort=boxoffice_gross_us&count=12&start=1&year=',20104,artfolder + 'ANO.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','http://akas.imdb.com/search/title?title_type=feature,short,tv_movie,tv_special,video&sort=moviemeter,asc&count=25&start=1&title=',20110,artfolder + 'P1.png','nao','')
-        addDir1('','url',1004,artfolder,False,'')
-        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&production_status=active&sort=moviemeter,asc&count=12&start=1',20102,artfolder + 'EE.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=num_votes,desc&count=12&start=1',20102,artfolder + 'SMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=12&start=1',20102,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]GÉ[/COLOR][COLOR yellow]N[/COLOR][COLOR red]EROS[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=25&start=1&genres=',20103,artfolder + 'GEN.png','nao','')
-        addDir('[B][COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter&count=12&start=1&year=',20104,artfolder + 'ANO.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','http://akas.imdb.com/search/title?title_type=tv_series,mini_series&sort=moviemeter,asc&count=50&start=1&title=',20110,artfolder + 'P1.png','nao','')
-
-def SITESdosPORTUGAS():
-        #####################################
-        url_TPT = 'http://toppt.net/'#moov7
-        url_TFV = 'http://www.tuga-filmes.us/'
-        url_TFC = 'http://www.tuga-filmes.com/'#'http://www.tuga-filmes.info/'
-        url_MVT = 'http://www.movie-tuga.blogspot.pt'
-        url_FTT = 'http://foitatoptuga.blogspot.pt/'#superfoitatuga#'http://foitatugadownload.blogspot.pt/'#'http://foitatugacinemaonline.blogspot.pt/'
-        url_CMT = 'http://www.cinematuga.net/'#'http://www.tugafilmes.org'#'http://www.cinematuga.net/'
-        url_CME = 'http://cinematugahd.net/'#'http://www.cinematuga.eu/'
-        url_CMC = 'http://www.cinemaemcasa.pt/'
-        url_GGT = 'http://gigatuga.com/'
-
-        threads = []
-
-        TPT = threading.Thread(name='TPT', target=TPTONOFF , args=(url_TPT,))
-        threads.append(TPT)
-
-        CME = threading.Thread(name='CME', target=CMEONOFF , args=(url_CME,))
-        threads.append(CME)
-
-        TFC = threading.Thread(name='TFC', target=TFCONOFF , args=(url_TFC,))
-        threads.append(TFC)
+################################################################################################################################
         
-        FTT = threading.Thread(name='FTT', target=FTTONOFF , args=(url_FTT,))
-        threads.append(FTT)
-        
-        TFV = threading.Thread(name='TFV', target=TFVONOFF , args=(url_TFV,))
-        threads.append(TFV)
-        
-        MVT = threading.Thread(name='MVT', target=MVTONOFF , args=(url_MVT,))
-        threads.append(MVT)
-        
-        CMT = threading.Thread(name='CMT', target=CMTONOFF , args=(url_CMT,))
-        threads.append(CMT)
-
-        CMC = threading.Thread(name='CMC', target=CMCONOFF , args=(url_CMC,))
-        threads.append(CMC)
-
-        GGT = threading.Thread(name='GGT', target=GGTONOFF , args=(url_GGT,))
-        threads.append(GGT)
-
-        [i.start() for i in threads]
-        [i.join() for i in threads]
-
-        addDir('[COLOR orange]FTT | [/COLOR][B][COLOR green]FOIT[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)'+FTT_ONOFF[0],'http://direct',601,artfolder + 'FTT1.png','nao','')
-        addDir('[COLOR orange]TPT | [/COLOR][B][COLOR green]TOP[/COLOR][COLOR yellow]-[/COLOR][COLOR red]PT.net[/COLOR][/B] (Filmes/Séries)'+TPT_ONOFF[0],'http://direct',231,artfolder + 'TPT1.png','nao','')
-        addDir('[COLOR orange]MVT | [/COLOR][B][COLOR green]MOV[/COLOR][COLOR yellow]I[/COLOR][COLOR red]ETUGA[/COLOR][/B] (Filmes)'+MVT_ONOFF[0],'http://direct',101,artfolder + 'MVT1.png','nao','')
-        addDir('[COLOR orange]CMT | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.net[/COLOR][/B] (Filmes)'+CMT_ONOFF[0],'http://direct',701,artfolder + 'CMT1.png','nao','')
-        addDir('[COLOR orange]TFV | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.tv[/COLOR][/B] (Filmes/Séries)'+TFV_ONOFF[0],'http://direct',31,artfolder + 'TFV1.png','nao','')
-        addDir('[COLOR orange]TFC | [/COLOR][B][COLOR green]TUGA-[/COLOR][COLOR yellow]F[/COLOR][COLOR red]ILMES.com[/COLOR][/B] (Filmes)'+TFC_ONOFF[0],'http://direct',71,artfolder + 'TFC1.png','nao','')
-        addDir('[COLOR orange]CME | [/COLOR][B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B] (Filmes)'+CME_ONOFF[0],'http://direct',801,artfolder + 'CME1.png','nao','')
-        addDir('[COLOR orange]CMC | [/COLOR][B][COLOR green]CINEM[/COLOR][COLOR yellow]A[/COLOR][COLOR red]EMCASA[/COLOR][/B] (Filmes)'+CMC_ONOFF[0],'http://direct',901,artfolder + 'CMC1.png','nao','')
-        addDir('[COLOR orange]GGT | [/COLOR][B][COLOR green]GIG[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B] (Filmes)'+GGT_ONOFF[0]+' [COLOR blue](NOVO)[/COLOR]','http://direct',851,artfolder,'nao','')
-
-
-def TFVONOFF(url_TFV):
-        try:
-		html_source = abrir_url(url_TFV)
-	except: html_source = ''
-	items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
-	if items != []: TFV_ONOFF.append('[COLOR green] | UP[/COLOR]')
-	else: TFV_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
-def TFCONOFF(url_TFC):	
-	try:
-		html_source = abrir_url(url_TFC)
-	except: html_source = ''
-	items = re.findall("<div id=\'titledata\'>(.*?)type=\'text/javascript\'>", html_source, re.DOTALL)
-	if not items: items = re.findall("<article(.*?)</article>", html_source, re.DOTALL)
-	if items != []: TFC_ONOFF.append('[COLOR green] | UP[/COLOR]')
-	else: TFC_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
-def MVTONOFF(url_MVT):
-	try:
-		html_source = abrir_url(url_MVT)
-	except: html_source = ''
-	items = re.findall('<div class=\'entry\'>(.+?)<div class="btnver">', html_source, re.DOTALL)
-	if items != []: MVT_ONOFF.append('[COLOR green] | UP[/COLOR]')
-	else: MVT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
-def TPTONOFF(url_TPT):
-	try:
-		html_source = abrir_url(url_TPT)
-	except: html_source = ''
-	items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
-	if not items: items = re.findall('<h2 class="title">(.*?)<div class="readmore">', html_source, re.DOTALL)
-	if items != []: TPT_ONOFF.append('[COLOR green] | UP[/COLOR]')
-	else: TPT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
-def FTTONOFF(url_FTT):
-	try:
-		html_source = abrir_url(url_FTT)
-	except: html_source = ''
-	items = re.findall("<div class='post-body entry-content'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-	if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
-	if not items: items = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-	if not items: items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-	if items != []: FTT_ONOFF.append('[COLOR green] | UP[/COLOR]')
-	else: FTT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
-def CMTONOFF(url_CMT):
-	try:
-		html_source = abrir_url(url_CMT)
-	except: html_source = ''
-	items = re.findall("<h3 class='post-title entry-title'(.*?)<span class='post-location'>", html_source, re.DOTALL)
-	if not items: items = re.findall("<div class=\'video-item\'>(.*?)<div class=\'clear\'>", html_source, re.DOTALL)
-	if items != []: CMT_ONOFF.append('[COLOR green] | UP[/COLOR]')
-	else: CMT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
-def CMEONOFF(url_CME):
-	try:
-		html_source = abrir_url(url_CME)
-	except: html_source = ''
-	items = re.findall("<h3 class='post-title entry-title'(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-	if not items: items = re.findall('<h1 class="entry-title">(.+?)<footer class="entry-meta">', html_source, re.DOTALL)
-	if not items: items = re.findall('<div class="filmo">(.+?)</div>', html_source, re.DOTALL)
-	if not items: items = re.findall('<div class="col_maskolis">(.+?)</div>', html_source, re.DOTALL)
-	if items != []: CME_ONOFF.append('[COLOR green] | UP[/COLOR]')
-	else: CME_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
-def CMCONOFF(url_CMC):
-	try:
-		html_source = abrir_url(url_CMC)
-	except: html_source = ''
-	items = re.findall("<h2 class='post-title entry-title'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-	if not items: items = re.findall("<div class='post bar hentry'>(.+?)<div class='post-footer'>", html_source, re.DOTALL)
-	if items != []: CMC_ONOFF.append('[COLOR green] | UP[/COLOR]')
-	else: CMC_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
-def GGTONOFF(url_GGT):
-	try:
-		html_source = abrir_url(url_GGT)
-	except: html_source = ''
-	items = re.findall("<article(.+?)</article>", html_source, re.DOTALL)
-	if items != []: GGT_ONOFF.append('[COLOR green] | UP[/COLOR]')
-	else: GGT_ONOFF.append('[COLOR red] | DOWN[/COLOR]')
-	#########################################
-        
-class AvisoFanart(xbmcgui.WindowXMLDialog):
-
-    def __init__( self, *args, **kwargs ):
-          xbmcgui.WindowXML.__init__(self)
-
-    def onInit(self):
-        pass
-          
-    def onClick(self,controlId):
-        if controlId == 2001: self.close()
-
-############################################ SEM USO ######################################################
-
-def FILMES_MENU():
-        addDir('[B][COLOR green]NOS[/COLOR][COLOR yellow] C[/COLOR][COLOR red]INEMAS[/COLOR][/B] (Filmes)','1',3002,artfolder + 'NC.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADOS[/COLOR][/B] (Filmes)','1',3001,artfolder + 'FMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Filmes)','1',3000,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]BREV[/COLOR][COLOR yellow]E[/COLOR][COLOR red]MENTE[/COLOR][/B] (Filmes)','1',2999,artfolder + 'BREV.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Filmes)','1',2998,artfolder + 'P1.png','nao','')
-
-def SERIES_MENU():
-        addDir('[B][COLOR green]EM E[/COLOR][COLOR yellow]X[/COLOR][COLOR red]IBIÇÃO[/COLOR][/B] (Séries)','1',3008,artfolder + 'EE.png','nao','')
-        addDir('[B][COLOR green]MAIS[/COLOR][COLOR yellow] V[/COLOR][COLOR red]OTADAS[/COLOR][/B] (Séries)','1',3009,artfolder + 'SMV.png','nao','')
-        addDir('[B][COLOR green]MAIS P[/COLOR][COLOR yellow]O[/COLOR][COLOR red]PULARES[/COLOR][/B] (Séries)','1',3010,artfolder + 'MP.png','nao','')
-        addDir('[B][COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR][/B] (Séries)','1',3011,artfolder + 'P1.png','nao','')
-
-####################################################################################################################################
 
 def qualtodos(name):
+        ON_OFF = 0
+        folder = perfil
+        ON_OFFS = open(folder + 'ONOFF.txt', 'r')
+        read_ON_OFFS_File = ''
+        for line in ON_OFFS:
+                read_ON_OFFS_File = read_ON_OFFS_File + line
+        O_F = re.compile('TPT:(.+?)TFV:(.+?)TFC:(.+?)MVT:(.+?)FTT:(.+?)CMC:(.+?)CME:(.+?)CMT:(.+?)GGT:(.+?)RTV:(.+?)TGI:(.*)').findall(read_ON_OFFS_File)
+        ON_OFFS.close()
+        
         _sites_ = ['filmesTPT.txt','filmesCME.txt','filmesFTT.txt','filmesTFC.txt','filmesMVT.txt','filmesCMTnet.txt','filmesCMC.txt','filmesTFV.txt']
         folder = perfil
         for site in _sites_:
@@ -685,72 +648,90 @@ def qualtodos(name):
                         Filmes_Fi.close()
                 except: pass
         _nomeproc_ = []
-        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]')
-        _nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TOPPT.NET')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.COM')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.TV')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMATUGA.EU')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMATUGA.NET')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | FOITATUGA')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMAEMCASA')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | MOVIETUGA')
+        _nomeproc_.append('[B][COLOR white]TODOS[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]'+O_F[0][9])
+        #_nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')        
+        _nomeproc_.append('[B][COLOR white]TOPPT.NET[/COLOR][/B]'+O_F[0][0])
+        _nomeproc_.append('[B][COLOR white]TUGA-FILMES.COM[/COLOR][/B]'+O_F[0][2])
+        _nomeproc_.append('[B][COLOR white]TUGA-FILMES.TV[/COLOR][/B]'+O_F[0][1])
+        _nomeproc_.append('[B][COLOR white]CINEMATUGA.EU[/COLOR][/B]'+O_F[0][6])
+        _nomeproc_.append('[B][COLOR white]CINEMATUGA.NET[/COLOR][/B]'+O_F[0][7])
+        _nomeproc_.append('[B][COLOR white]FOITATUGA[/COLOR][/B]'+O_F[0][4])
+        _nomeproc_.append('[B][COLOR white]CINEMAEMCASA[/COLOR][/B]'+O_F[0][5])
+        _nomeproc_.append('[B][COLOR white]MOVIETUGA[/COLOR][/B]'+O_F[0][3])
+        _nomeproc_.append('[B][COLOR white]GIGATUGA[/COLOR][/B]'+O_F[0][8])
+        _nomeproc_.append('[B][COLOR white]TUGA.IO[/COLOR][/B]'+O_F[0][10])
         _nummode_ = [0,1,233,73,33,803,703,603,903,103]
 
         indexservidores = xbmcgui.Dialog().select
         index = indexservidores('Procurar em:', _nomeproc_)
         if index > -1:
                 if 'RATOTV' in _nomeproc_[index]:
-                        if 'FILMES' in name: ratoTV('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S FILMES[/COLOR][/B]','http://www.ratotv.net/movies/page/1/')
-                        elif 'ANIMAÇÃO' in name: ratoTV('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]ANIMAÇÃO[/COLOR][/B]','http://www.ratotv.net/tags/Animação/page/1/')
-                elif 'WAREZTUGA' in _nomeproc_[index]:
-                        if 'FILMES' in name: WlinksF('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=movies')
-                        elif 'ANIMAÇÃO' in name: WlinksF('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&genres=17&mediaType=movies')
+                        if 'Filmes' in name: ratoTV('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S Filmes[/COLOR][/B]','http://www.ratotv.net/movies/page/1/')
+                        elif 'Animação' in name: ratoTV('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]Animação[/COLOR][/B]','http://www.ratotv.net/tags/Animação/page/1/')
+##                elif 'WAREZTUGA' in _nomeproc_[index]:
+##                        if 'Filmes' in name: WlinksF('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=movies')
+##                        elif 'Animação' in name: WlinksF('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&genres=17&mediaType=movies')
                 elif 'TODOS' in _nomeproc_[index]:
-                        if 'FILMES' in name: chamaUltimos('TODOS')
-                        elif 'ANIMAÇÃO' in name: chamaUltimosA('TODOS')
+                        if 'Filmes' in name: chamaUltimos('TODOS')
+                        elif 'Animação' in name: chamaUltimosA('TODOS')
                 elif 'TOPPT.NET' in _nomeproc_[index]:
-                        if 'FILMES' in name: chamaUltimos('TPT')
-                        elif 'ANIMAÇÃO' in name: chamaUltimosA('TPT')
+                        if 'Filmes' in name: chamaUltimos('TPT')
+                        elif 'Animação' in name: chamaUltimosA('TPT')
                 elif 'TUGA-FILMES.COM' in _nomeproc_[index]:
-                        if 'FILMES' in name: chamaUltimos('TFC')
-                        elif 'ANIMAÇÃO' in name: chamaUltimosA('TFC')
-                elif 'TUGA-FILMES.TV' in _nomeproc_[index]:
-                        if 'FILMES' in name: chamaUltimos('TFV')
-                        elif 'ANIMAÇÃO' in name: chamaUltimosA('TFV')
+                        if 'Filmes' in name: chamaUltimos('TFC')
+                        elif 'Animação' in name: chamaUltimosA('TFC')
+                elif 'TUGA-FFILMES.TV' in _nomeproc_[index]:
+                        if 'Filmes' in name: chamaUltimos('TFV')
+                        elif 'Animação' in name: chamaUltimosA('TFV')
                 elif 'CINEMATUGA.EU' in _nomeproc_[index]:
-                        if 'FILMES' in name: chamaUltimos('CME')
-                        elif 'ANIMAÇÃO' in name: chamaUltimosA('CME')
+                        if 'Filmes' in name: chamaUltimos('CME')
+                        elif 'Animação' in name: chamaUltimosA('CME')
                 elif 'CINEMATUGA.NET' in _nomeproc_[index]: 
-                        if 'FILMES' in name: chamaUltimos('CMT')
-                        elif 'ANIMAÇÃO' in name: chamaUltimosA('CMT')
+                        if 'Filmes' in name: chamaUltimos('CMT')
+                        elif 'Animação' in name: chamaUltimosA('CMT')
                 elif 'FOITATUGA' in _nomeproc_[index]: 
-                        if 'FILMES' in name: chamaUltimos('FTT')
-                        elif 'ANIMAÇÃO' in name: chamaUltimosA('FTT')
+                        if 'Filmes' in name: chamaUltimos('FTT')
+                        elif 'Animação' in name: chamaUltimosA('FTT')
                 elif 'CINEMAEMCASA' in _nomeproc_[index]: 
-                        if 'FILMES' in name: chamaUltimos('CMC')
-                        elif 'ANIMAÇÃO' in name: chamaUltimosA('CMC')
+                        if 'Filmes' in name: chamaUltimos('CMC')
+                        elif 'Animação' in name: chamaUltimosA('CMC')
                 elif 'MOVIETUGA' in _nomeproc_[index]: 
-                        if 'FILMES' in name: chamaUltimos('MVT')
-                        elif 'ANIMAÇÃO' in name: chamaUltimosA('MVT')
+                        if 'Filmes' in name: chamaUltimos('MVT')
+                        elif 'Animação' in name: chamaUltimosA('MVT')
+                elif 'GIGATUGA' in _nomeproc_[index]: 
+                        if 'Filmes' in name: chamaUltimos('GGT')
+                        elif 'Animação' in name: chamaUltimosA('GGT')
+                elif 'TUGA.IO' in _nomeproc_[index]: 
+                        if 'Filmes' in name: chamaUltimos('TGI')
+                        elif 'Animação' in name: chamaUltimosA('TGI')
 
 def chamaUltimos(name):
-        if name == 'TFV' or name == 'TODOS': url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
+        folder = perfil
+        ON_OFFS = open(folder + 'ONOFF.txt', 'r')
+        read_ON_OFFS_File = ''
+        for line in ON_OFFS:
+                read_ON_OFFS_File = read_ON_OFFS_File + line
+        O_F = re.compile('TPT:(.+?)TFV:(.+?)TFC:(.+?)MVT:(.+?)FTT:(.+?)CMC:(.+?)CME:(.+?)CMT:(.+?)GGT:(.+?)RTV:(.+?)TGI:(.*)').findall(read_ON_OFFS_File)
+        ON_OFFS.close()
+        if (name == 'RTV' or name == 'TODOS') and 'UP' in O_F[0][9]: ratoTV('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S Filmes[/COLOR][/B]','http://www.ratotv.net/movies/page/1/')
+        if (name == 'GGT' or name == 'TODOS') and 'UP' in O_F[0][8]: GigaTuga.GGT_encontrar_fontes_filmes('http://gigatuga.com/category/filmes/')
+        if (name == 'TGI' or name == 'TODOS') and 'UP' in O_F[0][10]: GigaTuga.GGT_encontrar_fontes_filmes('http://gigatuga.com/category/filmes/')
+        if (name == 'TFV' or name == 'TODOS') and 'UP' in O_F[0][1]: url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
         else: url_TFV = 'http:'
-        if name == 'TFC' or name == 'TODOS': url_TFC = 'http://www.tuga-filmes.com/'#'http://www.tuga-filmes.info/'
+        if (name == 'TFC' or name == 'TODOS') and 'UP' in O_F[0][2]: url_TFC = 'http://www.tuga-filmes.com/'#'http://www.tuga-filmes.info/'
         else: url_TFC = 'http:'
-        if name == 'MVT' or name == 'TODOS': url_MVT = 'http://www.movie-tuga.blogspot.pt'
+        if (name == 'MVT' or name == 'TODOS') and 'UP' in O_F[0][3]: url_MVT = 'http://www.movie-tuga.blogspot.pt'
         else: url_MVT = 'http:'
-        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatoptuga.blogspot.pt/'#'http://foitatugadownload.blogspot.pt/'#'http://foitatugacinemaonline.blogspot.pt/'
+        if (name == 'FTT' or name == 'TODOS') and 'UP' in O_F[0][4]: url_FTT = 'http://foitatoptuga.blogspot.pt/'#'http://foitatugadownload.blogspot.pt/'#'http://foitatugacinemaonline.blogspot.pt/'
         else: url_FTT = 'http:'
-        if name == 'CMT' or name == 'TODOS': url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
+        if (name == 'CMT' or name == 'TODOS') and 'UP' in O_F[0][7]: url_CMT = 'http://www.cinematuga.net/search/label/Filmes'#'http://www.tugafilmes.org/search/label/Filmes'
         else: url_CMT = 'http:'
-        if name == 'CME' or name == 'TODOS': url_CME = 'http://cinematugahd.net/category/filmes/'#'http://www.cinematuga.eu/search/label/Filmes'
+        if (name == 'CME' or name == 'TODOS') and 'UP' in O_F[0][6]: url_CME = 'http://cinematugahd.net/category/filmes/'#'http://www.cinematuga.eu/search/label/Filmes'
         else: url_CME = 'http:'
-        if name == 'CMC' or name == 'TODOS': url_CMC = 'http://www.cinemaemcasa.pt/'
+        if (name == 'CMC' or name == 'TODOS') and 'UP' in O_F[0][5]: url_CMC = 'http://www.cinemaemcasa.pt/'
         else: url_CMC = 'http:'
-        if name == 'TPT' or name == 'TODOS':
+        if (name == 'TPT' or name == 'TODOS') and 'UP' in O_F[0][0]:
                 try:
                         toppt_source = abrir_url('http://toppt.net/')
                 except: toppt_source = ''
@@ -763,21 +744,31 @@ def chamaUltimos(name):
         dirtodos(url_filmes_filmes)
 
 def chamaUltimosA(name):
-        if name == 'TFV' or name == 'TODOS': url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
+        folder = perfil
+        ON_OFFS = open(folder + 'ONOFF.txt', 'r')
+        read_ON_OFFS_File = ''
+        for line in ON_OFFS:
+                read_ON_OFFS_File = read_ON_OFFS_File + line
+        O_F = re.compile('TPT:(.+?)TFV:(.+?)TFC:(.+?)MVT:(.+?)FTT:(.+?)CMC:(.+?)CME:(.+?)CMT:(.+?)GGT:(.+?)RTV:(.+?)TGI:(.*)').findall(read_ON_OFFS_File)
+        ON_OFFS.close()
+        if (name == 'RTV' or name == 'TODOS') and 'UP' in O_F[0][9]: ratoTV('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]Animação[/COLOR][/B]','http://www.ratotv.net/tags/Animação/page/1/')
+        if (name == 'GGT' or name == 'TODOS') and 'UP' in O_F[0][8]: GigaTuga.GGT_encontrar_fontes_filmes('http://gigatuga.com/category/animacao/')
+        if (name == 'TGI' or name == 'TODOS') and 'UP' in O_F[0][10]: GigaTuga.GGT_encontrar_fontes_filmes('http://gigatuga.com/category/animacao/')
+        if (name == 'TFV' or name == 'TODOS') and 'UP' in O_F[0][1]: url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
         else: url_TFV = 'http:'
-        if name == 'TFC' or name == 'TODOS': url_TFC = 'http://www.tuga-filmes.com/category/animacao/'#'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
+        if (name == 'TFC' or name == 'TODOS') and 'UP' in O_F[0][2]: url_TFC = 'http://www.tuga-filmes.com/category/animacao/'#'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
         else: url_TFC = 'http:'
-        if name == 'MVT' or name == 'TODOS': url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
+        if (name == 'MVT' or name == 'TODOS') and 'UP' in O_F[0][3]: url_MVT = 'http://movie-tuga.blogspot.pt/search/label/animacao'
         else: url_MVT = 'http:'
-        if name == 'FTT' or name == 'TODOS': url_FTT = 'http://foitatoptuga.blogspot.pt/'#'http://foitatugadownload.blogspot.pt/search/label/Anima%C3%A7%C3%A3o'#'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
+        if (name == 'FTT' or name == 'TODOS') and 'UP' in O_F[0][4]: url_FTT = 'http://foitatoptuga.blogspot.pt/search/label/Animação'#'http://foitatugadownload.blogspot.pt/search/label/Anima%C3%A7%C3%A3o'#'http://foitatugacinemaonline.blogspot.pt/search/label/ANIMA%C3%87%C3%83O'
         else: url_FTT = 'http:'
-        if name == 'CMT' or name == 'TODOS': url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'#'http://www.tugafilmes.org/search/label/Filmes'
+        if (name == 'CMT' or name == 'TODOS') and 'UP' in O_F[0][7]: url_CMT = 'http://www.cinematuga.net/search/label/Anima%C3%A7%C3%A3o'#'http://www.tugafilmes.org/search/label/Filmes'
         else: url_CMT = 'http:'
-        if name == 'CME' or name == 'TODOS': url_CME = 'http://cinematugahd.net/category/animacao/'#'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
+        if (name == 'CME' or name == 'TODOS') and 'UP' in O_F[0][6]: url_CME = 'http://cinematugahd.net/category/animacao/'#'http://www.cinematuga.eu/search/label/Anima%C3%A7%C3%A3o'
         else: url_CME = 'http:'
-        if name == 'CMC' or name == 'TODOS': url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
+        if (name == 'CMC' or name == 'TODOS') and 'UP' in O_F[0][5]: url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
         else: url_CMC = 'http:'
-        if name == 'TPT' or name == 'TODOS':
+        if (name == 'TPT' or name == 'TODOS') and 'UP' in O_F[0][0]:
                 try:
                         toppt_source = abrir_url('http://toppt.net/')
                 except: toppt_source = ''
@@ -967,11 +958,12 @@ def dirtodos(url):
                 try:
                         html_source = abrir_url(url_FTT)
                 except: html_source = ''
-                itemsFTT = re.findall("<h3 class='post-title entry-title'>(.*?)<div class='post-footer'>", html_source, re.DOTALL)
-                if not itemsFTT: itemsFTT = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
-                if not itemsFTT: itemsFTT = re.findall("<h3 class='post-title entry-title' itemprop='name'>(.*?)<div class='post-footer'>", html_source, re.DOTALL)
-                if not itemsFTT: itemsFTT = re.findall("<a class='comment-link'(.*?)<div class='post-outer'>", html_source, re.DOTALL)
-                if not itemsFTT: itemsFTT = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
+                itemsFTT = re.findall("<textarea id='(.*?)<div class='jump-link'>", html_source, re.DOTALL)
+                if not itemsFTT: itemsFTT = re.findall("<h3 class='post-title entry-title'>(.*?)<div class='post-footer'>", html_source, re.DOTALL)
+##                if not itemsFTT: itemsFTT = re.findall("<div class='post hentry'>(.+?)<div class='post-outer'>", html_source, re.DOTALL)
+##                if not itemsFTT: itemsFTT = re.findall("<h3 class='post-title entry-title' itemprop='name'>(.*?)<div class='post-footer'>", html_source, re.DOTALL)
+##                if not itemsFTT: itemsFTT = re.findall("<a class='comment-link'(.*?)<div class='post-outer'>", html_source, re.DOTALL)
+##                if not itemsFTT: itemsFTT = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
                                 
                 if itemsFTT != []:
                         try:
@@ -1179,6 +1171,13 @@ def FF_CME(ordem,item,itemss):
         return itemss
 
 def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
+        folder = perfil
+        ON_OFFS = open(folder + 'ONOFF.txt', 'r')
+        read_ON_OFFS_File = ''
+        for line in ON_OFFS:
+                read_ON_OFFS_File = read_ON_OFFS_File + line
+        O_F = re.compile('TPT:(.+?)TFV:(.+?)TFC:(.+?)MVT:(.+?)FTT:(.+?)CMC:(.+?)CME:(.+?)CMT:(.+?)GGT:(.+?)RTV:(.+?)TGI:(.*)').findall(read_ON_OFFS_File)
+        ON_OFFS.close()
         mv = mvoutv
         nmt = namet
         ur = url
@@ -1188,15 +1187,17 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
         ico = iconimage
         _nomeproc_ = []
         _nomeproc_.append('[B][COLOR white]GENESIS[/COLOR][/B]')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TOPPT.NET')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.COM')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TUGA-FILMES.TV')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMATUGA.EU')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMATUGA.NET')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | FOITATUGA')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | CINEMAEMCASA')
-        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | MOVIETUGA')
+        _nomeproc_.append('[B][COLOR white]TODOS[/COLOR][/B]')
+        _nomeproc_.append('[B][COLOR white]TOPPT.NET[/COLOR][/B]'+O_F[0][0])
+        _nomeproc_.append('[B][COLOR white]TUGA-FILMES.COM[/COLOR][/B]'+O_F[0][2])
+        _nomeproc_.append('[B][COLOR white]TUGA-FILMES.TV[/COLOR][/B]'+O_F[0][1])
+        _nomeproc_.append('[B][COLOR white]CINEMATUGA.EU[/COLOR][/B]'+O_F[0][6])
+        _nomeproc_.append('[B][COLOR white]CINEMATUGA.NET[/COLOR][/B]'+O_F[0][7])
+        _nomeproc_.append('[B][COLOR white]FOITATUGA[/COLOR][/B]'+O_F[0][4])
+        _nomeproc_.append('[B][COLOR white]CINEMAEMCASA[/COLOR][/B]'+O_F[0][5])
+        _nomeproc_.append('[B][COLOR white]MOVIETUGA[/COLOR][/B]'+O_F[0][3])
+        _nomeproc_.append('[B][COLOR white]GIGATUGA[/COLOR][/B]'+O_F[0][8])
+        _nomeproc_.append('[B][COLOR white]TUGA.IO[/COLOR][/B]'+O_F[0][8])
         _nummode_ = [0,1,233,73,33,803,703,603,903,103]
 
         indexservidores = xbmcgui.Dialog().select
@@ -1231,163 +1232,164 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                         elif mvoutv == 'MoviesRTV':
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(namet,'',url)
                 elif 'TOPPT.NET' in _nomeproc_[index]:
-                        #addLink(str(mvoutv),'','','')
-                        if mvoutv != 'MoviesTPT':
-                                if mvoutv=='MoviesTFC':
+                       # addLink(str(name),'','','')
+                        if 'TPT' not in name:
+                                if 'TFC' in name:
                                         strstr,url = TFCmovies(name,url)
-                                elif mvoutv=='MoviesFTT':
+                                elif 'FTT' in name:
                                         strstr,url = FTTmovies(name,url)
-                                elif mvoutv=='MoviesTFV':
+                                elif 'TFV' in name:
                                         strstr,url = TFVmovies(name,url)
-                                elif mvoutv=='MoviesMVT':
+                                elif 'MVT' in name:
                                         strstr,url = MVTmovies(name,url)
-                                elif mvoutv=='MoviesCME':
+                                elif 'CME' in name:
                                         strstr,url = CMEmovies(name,url)
-                                elif mvoutv=='MoviesCMT':
+                                elif 'CMT' in name:
                                         strstr,url = CMTmovies(name,url)
-                                elif mvoutv=='MoviesCMC':
+                                elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
-                                elif mvoutv=='MoviesRTV':
+                                elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTPT',url)     
                         else: TopPt.TPT_encontrar_videos_filmes(name,url,iconimage,mvoutv)
                 elif 'TUGA-FILMES.COM' in _nomeproc_[index]:
-                        if mvoutv != 'MoviesTFC':
-                                if mvoutv=='MoviesTPT':
+                        if 'TFC' not in name:
+                                if 'TPT' in name:
                                         strstr,url = TPTmovies(name,url,iconimage)
-                                elif mvoutv=='MoviesFTT':
+                                elif 'FTT' in name:
                                         strstr,url = FTTmovies(name,url)
-                                elif mvoutv=='MoviesTFV':
+                                elif 'TFV' in name:
                                         strstr,url = TFVmovies(name,url)
-                                elif mvoutv=='MoviesMVT':
+                                elif 'MVT' in name:
                                         strstr,url = MVTmovies(name,url)
-                                elif mvoutv=='MoviesCME':
+                                elif 'CME' in name:
                                         strstr,url = CMEmovies(name,url)
-                                elif mvoutv=='MoviesCMT':
+                                elif 'CMT' in name:
                                         strstr,url = CMTmovies(name,url)
-                                elif mvoutv=='MoviesCMC':
+                                elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
-                                elif mvoutv=='MoviesRTV':
+                                elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTFC',url)
                         else: TugaFilmesCom.TFC_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'TUGA-FILMES.TV' in _nomeproc_[index]:
-                        if mvoutv != 'MoviesTFV':
-                                if mvoutv=='MoviesTPT':
+                        if 'TFV' not in name:
+                                if 'TPT' in name:
                                         strstr,url = TPTmovies(name,url,iconimage)
-                                elif mvoutv=='MoviesFTT':
+                                elif 'FTT' in name:
                                         strstr,url = FTTmovies(name,url)
-                                elif mvoutv=='MoviesTFC':
+                                elif 'TFC' in name:
                                         strstr,url = TFCmovies(name,url)
-                                elif mvoutv=='MoviesMVT':
+                                elif 'MVT' in name:
                                         strstr,url = MVTmovies(name,url)
-                                elif mvoutv=='MoviesCME':
+                                elif 'CME' in name:
                                         strstr,url = CMEmovies(name,url)
-                                elif mvoutv=='MoviesCMT':
+                                elif 'CMT' in name:
                                         strstr,url = CMTmovies(name,url)
-                                elif mvoutv=='MoviesCMC':
+                                elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
-                                elif mvoutv=='MoviesRTV':
+                                elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTFV',url)
                         else: TugaFilmesTV.TFV_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'CINEMATUGA.EU' in _nomeproc_[index]:
-                        if mvoutv != 'MoviesCME':
-                                if mvoutv=='MoviesTPT':
+                        if 'CME' not in name:
+                                if 'TPT' in name:
                                         strstr,url = TPTmovies(name,url,iconimage)
-                                elif mvoutv=='MoviesFTT':
+                                elif 'FTT' in name:
                                         strstr,url = FTTmovies(name,url)
-                                elif mvoutv=='MoviesTFV':
+                                elif 'TFV' in name:
                                         strstr,url = TFVmovies(name,url)
-                                elif mvoutv=='MoviesMVT':
+                                elif 'MVT' in name:
                                         strstr,url = MVTmovies(name,url)
-                                elif mvoutv=='MoviesTFC':
+                                elif 'TFC' in name:
                                         strstr,url = TFCmovies(name,url)
-                                elif mvoutv=='MoviesCMT':
+                                elif 'CMT' in name:
                                         strstr,url = CMTmovies(name,url)
-                                elif mvoutv=='MoviesCMC':
+                                elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
-                                elif mvoutv=='MoviesRTV':
+                                elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCME',url)
                         else: CinematugaEu.CME_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'CINEMATUGA.NET' in _nomeproc_[index]:
-                        if mvoutv != 'MoviesCMT':
-                                if mvoutv=='MoviesTPT':
+                        if 'CMT' not in name:
+                                if 'TPT' in name:
                                         strstr,url = TPTmovies(name,url,iconimage)
-                                elif mvoutv=='MoviesFTT':
+                                elif 'FTT' in name:
                                         strstr,url = FTTmovies(name,url)
-                                elif mvoutv=='MoviesTFV':
+                                elif 'TFV' in name:
                                         strstr,url = TFVmovies(name,url)
-                                elif mvoutv=='MoviesMVT':
+                                elif 'MVT' in name:
                                         strstr,url = MVTmovies(name,url)
-                                elif mvoutv=='MoviesCME':
+                                elif 'CME' in name:
                                         strstr,url = CMEmovies(name,url)
-                                elif mvoutv=='MoviesTFC':
+                                elif 'TFC' in name:
                                         strstr,url = TFCmovies(name,url)
-                                elif mvoutv=='MoviesCMC':
+                                elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
-                                elif mvoutv=='MoviesRTV':
+                                elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCMT',url)
                         else: Cinematuga.CMT_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'FOITATUGA' in _nomeproc_[index]:
-                        if mvoutv != 'MoviesFTT':
-                                if mvoutv=='MoviesTPT':
+                        #if mvoutv != 'MoviesFTT':
+                        if 'FTT' not in name:
+                                if 'TPT' in name:
                                         strstr,url = TPTmovies(name,url,iconimage)
-                                elif mvoutv=='MoviesTFC':
+                                elif 'TFC' in name:
                                         strstr,url = FTTmovies(name,url)
-                                elif mvoutv=='MoviesTFV':
+                                elif 'TFV' in name:
                                         strstr,url = TFVmovies(name,url)
-                                elif mvoutv=='MoviesMVT':
+                                elif 'MVT' in name:
                                         strstr,url = TFCmovies(name,url)
-                                elif mvoutv=='MoviesCME':
+                                elif 'CME' in name:
                                         strstr,url = CMEmovies(name,url)
-                                elif mvoutv=='MoviesCMT':
+                                elif 'CMT' in name:
                                         strstr,url = CMTmovies(name,url)
-                                elif mvoutv=='MoviesCMC':
+                                elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
-                                elif mvoutv=='MoviesRTV':
+                                elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteFTT',url)
                         else: FoitaTuga.FTT_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'CINEMAEMCASA' in _nomeproc_[index]:
-                        if mvoutv != 'MoviesCMC':
-                                if mvoutv=='MoviesTPT':
+                        if 'CMC'not in name:
+                                if 'TPT' in name:
                                         strstr,url = TPTmovies(name,url,iconimage)
-                                elif mvoutv=='MoviesFTT':
+                                elif 'FTT' in name:
                                         strstr,url = FTTmovies(name,url)
-                                elif mvoutv=='MoviesTFV':
+                                elif 'TFV' in name:
                                         strstr,url = TFVmovies(name,url)
-                                elif mvoutv=='MoviesMVT':
+                                elif 'MVT' in name:
                                         strstr,url = MVTmovies(name,url)
-                                elif mvoutv=='MoviesCME':
+                                elif 'CME' in name:
                                         strstr,url = CMEmovies(name,url)
-                                elif mvoutv=='MoviesCMT':
+                                elif 'CMT' in name:
                                         strstr,url = CMTmovies(name,url)
-                                elif mvoutv=='MoviesTFC':
+                                elif 'TFC' in name:
                                         strstr,url = TFCmovies(name,url)
-                                elif mvoutv=='MoviesRTV':
+                                elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCMC',url)
                         else: CinemaEmCasa.CMC_encontrar_videos_filmes(name,url,mvoutv)
                 elif 'MOVIETUGA' in _nomeproc_[index]:
-                        if mvoutv != 'MoviesMVT':
-                                if mvoutv=='MoviesTPT':
+                        if 'MVT' not in name:
+                                if 'TPT' in name:
                                         strstr,url = TPTmovies(name,url,iconimage)
-                                elif mvoutv=='MoviesFTT':
+                                elif 'FTT' in name:
                                         strstr,url = FTTmovies(name,url)
-                                elif mvoutv=='MoviesTFV':
+                                elif 'TFV' in name:
                                         strstr,url = TFVmovies(name,url)
-                                elif mvoutv=='MoviesTFC':
+                                elif 'TFC' in name:
                                         strstr,url = MVTmovies(name,url)
-                                elif mvoutv=='MoviesCME':
+                                elif 'CME' in name:
                                         strstr,url = CMEmovies(name,url)
-                                elif mvoutv=='MoviesCMT':
+                                elif 'CMT' in name:
                                         strstr,url = CMTmovies(name,url)
-                                elif mvoutv=='MoviesCMC':
+                                elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
-                                elif mvoutv=='MoviesRTV':
+                                elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteMVT',url)
                         else: MovieTuga.MVT_encontrar_videos_filmes(name,url,mvoutv)
@@ -2581,7 +2583,7 @@ def ratoTV(name,url):
                         if ('[COLOR green]' not in name and '[COLOR blue]' not in name) or name == "[COLOR blue]Página Seguinte >>>[/COLOR]" or '[COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR]' in name or '[COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR]' in name:
                                 FS = '[COLOR white]FILME | [/COLOR]'
                                 #addDir_trailer1(nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
-                        addDir_trailer1(FS+'[B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
+                        addDir_trailer1('[COLOR orange]RTV | [/COLOR][B][COLOR green]' + Otitle + '[/COLOR][/B][COLOR yellow] (' + year + ')[/COLOR]',url+'IMDB'+imdbcode+'IMDB',9004,iconimage,sinopse,fanart,year,'',Otitle,url,'MoviesRTV',num_filmes)
                 elif 'tvshows' in url:
                         if ('[COLOR green]' not in name and '[COLOR blue]' not in name) or name == "[COLOR blue]Página Seguinte >>>[/COLOR]" or '[COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR]' in name or '[COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR]' in name:
                                 FS = '[COLOR orange]SÉRIE | [/COLOR]'                                                                                   #3007
@@ -2602,9 +2604,10 @@ def ratoTV(name,url):
                 else:
                         addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pagseg,20000,artfolder + 'PAGS1.png','','')
 
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
-        xbmc.executebuiltin("Container.SetViewMode(503)")
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+##        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+##        xbmc.executebuiltin("Container.SetViewMode(503)")
+##        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
         
 def dadosImdbcode(title, Otitle, url, year, ordem, results, imdbcode, sinopse):
         api_key = '3e7807c4a01f18298f64662b257d7059'

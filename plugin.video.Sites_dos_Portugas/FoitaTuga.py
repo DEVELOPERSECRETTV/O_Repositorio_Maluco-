@@ -642,7 +642,9 @@ def FTT_encontrar_videos_filmes(name,url,mvoutv):
         try:
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
-        fontes_video = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
+        fontes_video = re.findall("<textarea id='(.*?)<div class='jump-link'>", fonte_video, re.DOTALL)
+        if not fontes_video: fontes_video = re.findall("<textarea id='(.*?)<div class='sharepost'>", fonte_video, re.DOTALL)
+        if not fontes_video: fontes_video = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
@@ -654,37 +656,53 @@ def FTT_encontrar_videos_filmes(name,url,mvoutv):
                         if imdb: imdbcode = imdb[0]
                         #else: imdbcode = ''
                 #if 'BREVEMENTE ONLINE' in fontes_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
-                match1 = re.compile('<script src="(.+?)" type="text/javascript"></script>').findall(fonte_e_url)
+                match1 = re.compile('<script src="(.+?)" type="text/javascript">').findall(fonte_e_url)
                 for fonte_id in match1: 
-                        if 'videomega' in fonte_id:
-                                try:  
-                                        if 'hashkey' in fonte_id:
-                                                conta_id_video = conta_id_video + 1
-                                                try:
-                                                        urlvideomega = abrir_url(fonte_id)
-                                                except: urlvideomega = ''
-                                                if urlvideomega != '':
-                                                        urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
-                                                        if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
-                                                        fonte_serv = '(Videomega)'
-                                                        #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
-                                        if 'iframe.js' in fonte_id:
-                                                conta_id_video = conta_id_video + 1
-                                                refvideo = re.compile('<script type="text/javascript">ref="(.+?)".+?</script>').findall(fonte_e_url)
-                                                if not refvideo: refvideo = re.compile(">ref='(.+?)'.+?</script>").findall(fonte_e_url)
-                                                url = 'http://videomega.tv/iframe.php?ref=' + refvideo[0] + '///' + name
-                                                fonte_serv = '(Videomega)'
-                                                #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
-                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+                        if 'videomega' in fonte_id and ('hashkey' in fonte_id or 'validatehash' in fonte_id):
+                                try:
+                                        conta_id_video = conta_id_video + 1
+                                        url = fonte_id + '///' + name
+                                        fonte_serv = '(Videomega)'
+                                        #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
+                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
                                 except:pass
+##                                try:  
+##                                        if 'hashkey' in fonte_id:
+##                                                conta_id_video = conta_id_video + 1
+##                                                try:
+##                                                        urlvideomega = abrir_url(fonte_id)
+##                                                except: urlvideomega = ''
+##                                                if urlvideomega != '':
+##                                                        urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
+##                                                        if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
+##                                                        fonte_serv = '(Videomega)'
+##                                                        #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
+##                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+##                                        elif 'iframe.js' in fonte_id:
+##                                                conta_id_video = conta_id_video + 1
+##                                                refvideo = re.compile('<script type="text/javascript">ref="(.+?)".+?</script>').findall(fonte_e_url)
+##                                                if not refvideo: refvideo = re.compile(">ref='(.+?)'.+?</script>").findall(fonte_e_url)
+##                                                url = 'http://videomega.tv/iframe.php?ref=' + refvideo[0] + '///' + name
+##                                                fonte_serv = '(Videomega)'
+##                                                #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
+##                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+##                                        else:
+##                                                try:
+##                                                        conta_id_video = conta_id_video + 1
+##                                                        url = fonte_id + '///' + name
+##                                                        fonte_serv = '(Videomega)'
+##                                                        #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
+##                                                        addDir(fonte_id+'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+##                                                except:pass
+##                                except:pass
                 match2 = re.compile('<iframe.+?src="(.+?)" .+?</iframe>').findall(fonte_e_url)
+                if not match2: match2 = re.compile("<iframe.+?src='(.+?)' .+?</iframe>").findall(fonte_e_url)
                 if not match2: match2 = re.compile('<iframe.+?src="(.+?)".+?>').findall(fonte_e_url)
                 if not match2: match2 = re.compile('<a href="(.+?)" target="_blank"><img border="0" src="http://1.bp.blogspot.com/-_yTINh6ZYdo/VNIWCpRm93I/AAAAAAAAAQk/akx68KoQ2VA/s1600/1.png"').findall(fonte_e_url)
                 if not match2: match2 = re.compile('<a href="(.+?)" target="_blank"><img border="0" src=".+?VER%2BONLINE.jpg"').findall(fonte_e_url)
 
                 for fonte_id in match2:
-                        if 'videomega' in fonte_id:
+                        if 'videomega' in fonte_id and ('hashkey' in fonte_id or 'validatehash' in fonte_id):
                                 try:
                                         conta_id_video = conta_id_video + 1
                                         url = fonte_id + '///' + name
@@ -725,7 +743,7 @@ def FTT_encontrar_videos_filmes(name,url,mvoutv):
 ##        else: nome_pesquisa = nnn[0]
         #addLink(n1+imdbcode,'','')
         url = 'IMDB'+imdbcode+'IMDB'
-        if mvoutv != 'MoviesFTT': FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'FTT',url)
+        if 'FTT' not in name: FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'FTT',url)
         
 ##        if '---' in nn:
 ##                n = re.compile('---(.+?)---').findall(nn)
@@ -754,7 +772,8 @@ def FTT_links(name,url,iconimage,fanart):
                 fonte_video = abrir_url(url)
         except: fonte_video = ''
         #addDir1(url+name,'url',1001,iconimage,False,fanart)
-        fontes_video = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
+        fontes_video = re.findall("<textarea id='(.*?)<div class='jump-link'>", fonte_video, re.DOTALL)
+        if not fontes_video: fontes_video = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='post-body entry-content'>(.*?)<div style='clear: both;'>", fonte_video, re.DOTALL)
         if not fontes_video: fontes_video = re.findall("<div class='video-item'>(.*?)<div class='clear'>", fonte_video, re.DOTALL)
         numero_de_fontes = len(fontes_video)
@@ -766,37 +785,46 @@ def FTT_links(name,url,iconimage,fanart):
                         if imdb: imdbcode = imdb[0]
                         #else: imdbcode = ''
                 #if 'BREVEMENTE ONLINE' in fontes_video: addDir1('[COLOR blue]BREVEMENTE ONLINE[/COLOR]','url',1004,artfolder,False,'')
-                match1 = re.compile('<script src="(.+?)" type="text/javascript"></script>').findall(fonte_e_url)
-                for fonte_id in match1: 
-                        if 'videomega' in fonte_id:
-                                try:  
-                                        if 'hashkey' in fonte_id:
-                                                conta_id_video = conta_id_video + 1
-                                                try:
-                                                        urlvideomega = abrir_url(fonte_id)
-                                                except: urlvideomega = ''
-                                                if urlvideomega != '':
-                                                        urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
-                                                        if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
-                                                        fonte_serv = '(Videomega)'
-                                                        #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
-                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
-                                        if 'iframe.js' in fonte_id:
-                                                conta_id_video = conta_id_video + 1
-                                                refvideo = re.compile('<script type="text/javascript">ref="(.+?)".+?</script>').findall(fonte_e_url)
-                                                if not refvideo: refvideo = re.compile(">ref='(.+?)'.+?</script>").findall(fonte_e_url)
-                                                url = 'http://videomega.tv/iframe.php?ref=' + refvideo[0] + '///' + name
-                                                fonte_serv = '(Videomega)'
-                                                #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
-                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+                match1 = re.compile('<script src="(.+?)" type="text/javascript">').findall(fonte_e_url)
+                for fonte_id in match1:
+                        if 'videomega' in fonte_id and ('hashkey' in fonte_id or 'validatehash' in fonte_id):
+                                try:
+                                        conta_id_video = conta_id_video + 1
+                                        url = fonte_id + '///' + name
+                                        fonte_serv = '(Videomega)'
+                                        #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
+                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
                                 except:pass
-                match2 = re.compile('<iframe.+?src="(.+?)".+?></iframe>').findall(fonte_e_url)
+##                        if 'videomega' in fonte_id:
+##                                try:  
+##                                        if 'hashkey' in fonte_id:
+##                                                conta_id_video = conta_id_video + 1
+##                                                try:
+##                                                        urlvideomega = abrir_url(fonte_id)
+##                                                except: urlvideomega = ''
+##                                                if urlvideomega != '':
+##                                                        urlvidlink = re.compile('ref="(.+?)"').findall(urlvideomega)
+##                                                        if urlvidlink: url = 'http://videomega.tv/iframe.php?ref=' + urlvidlink[0] + '///' + name
+##                                                        fonte_serv = '(Videomega)'
+##                                                        #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
+##                                                        addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+##                                        if 'iframe.js' in fonte_id:
+##                                                conta_id_video = conta_id_video + 1
+##                                                refvideo = re.compile('<script type="text/javascript">ref="(.+?)".+?</script>').findall(fonte_e_url)
+##                                                if not refvideo: refvideo = re.compile(">ref='(.+?)'.+?</script>").findall(fonte_e_url)
+##                                                url = 'http://videomega.tv/iframe.php?ref=' + refvideo[0] + '///' + name
+##                                                fonte_serv = '(Videomega)'
+##                                                #Play.PLAY_movie_url(url,'[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow]'+fonte_serv+'[/COLOR][/B]',iconimage,'',fanart)
+##                                                addDir('[B]- Fonte ' + str(conta_id_video) + ' : [COLOR yellow](Videomega)[/COLOR][/B]',urltrailer,30,iconimage,'',fanart)
+##                                except:pass
+                match2 = re.compile('<iframe.+?src="(.+?)" .+?</iframe>').findall(fonte_e_url)
+                if not match2: match2 = re.compile("<iframe.+?src='(.+?)' .+?</iframe>").findall(fonte_e_url)
                 if not match2: match2 = re.compile('<iframe.+?src="(.+?)".+?>').findall(fonte_e_url)
                 if not match2: match2 = re.compile('<a href="(.+?)" target="_blank"><img border="0" src="http://1.bp.blogspot.com/-_yTINh6ZYdo/VNIWCpRm93I/AAAAAAAAAQk/akx68KoQ2VA/s1600/1.png"').findall(fonte_e_url)
                 if not match2: match2 = re.compile('<a href="(.+?)" target="_blank"><img border="0" src=".+?VER%2BONLINE.jpg"').findall(fonte_e_url)
 
                 for fonte_id in match2:
-                        if 'videomega' in fonte_id:
+                        if 'videomega' in fonte_id and ('hashkey' in fonte_id or 'validatehash' in fonte_id):
                                 try:
                                         conta_id_video = conta_id_video + 1
                                         url = fonte_id + '///' + name

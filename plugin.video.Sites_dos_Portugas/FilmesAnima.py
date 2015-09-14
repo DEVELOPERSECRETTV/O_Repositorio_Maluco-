@@ -119,9 +119,10 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
                                 html_source = abrir_url(url_pesquisa)
                         except: html_source = ''
                         i=0
-                        items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
+                        items = re.findall('<h2 class="title"(.*?)<div id="sidebar-primary">', html_source, re.DOTALL)
+                        if not items: items = re.findall('<div class="post-wrap">(.*?)<div class="readmore-wrap">', html_source, re.DOTALL)
                         if not items: items = re.findall('<div class="postmeta-primary">(.*?)<div id="sidebar-primary">', html_source, re.DOTALL)
-                        #addLink(str(len(items)),'','','')
+                        #addLink(str(len(items))+url_pesquisa,'','','')
                         for item in items:                        
                                 i = i + 1
                                 a = str(i)
@@ -199,13 +200,15 @@ def FILMES_ANIMACAO_pesquisar(nome_pesquisa,nomesite,url):
 
 	url_pesquisa = 'http://foitatugadownload.blogspot.pt/search/?sitesearch=' + str(encode) #+ '&submit=Buscar'# + 'IMDB'+imdbcode+'IMDB'
 	url_pesquisa = 'http://foitatugadownload.blogspot.pt/search?q=' + str(encode)
+	url_pesquisa = 'http://foitatoptuga.blogspot.pt/search?q=' + str(encode)
 	if nomesite != 'FTT': #FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(url_pesquisa)
                 if nomesite == 'siteFTT' or nomesite == '' or nomesite=='TFV' or nomesite=='TFC' or nomesite=='TPT' or nomesite=='MVT' or nomesite=='CME' or nomesite=='CMT' or nomesite=='CMC':
                         try:
                                 html_source = abrir_url(url_pesquisa)
                         except: html_source = ''
                         i=0
-                        items = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", html_source, re.DOTALL)
+                        items = re.findall("<textarea id='(.*?)<div class='jump-link'>", html_source, re.DOTALL)
+                        if not items: items = re.findall("<h3 class='post-title entry-title'(.*?)<div class='post-footer'>", html_source, re.DOTALL)
                         if not items: items = re.findall("<div class='video-item'>(.*?)<div class='clear'>", html_source, re.DOTALL)
                         for item in items:                        
                                 i = i + 1
@@ -936,7 +939,8 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                 if imdb: imdbcode = imdb[0]
                                 else: imdbcode = ''
 
-                                urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
+                                urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
+                                if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
                                 if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>Ler mais").findall(item)
                                 if not urletitulo: urletitulo = re.compile("<a href='(.+?)' title='(.+?)'>").findall(item)
                                 if not urletitulo: urletitulo = re.compile("<a href='(.+?)'>(.+?)</a>").findall(item)
@@ -1015,6 +1019,8 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                                 nome = nome.replace(tirar_ano,'--')
                                                 tirar_ano = str(q_a_q_a)
                                                 nome = nome.replace(tirar_ano,'--')
+                                                tirar_ano = '('+str(q_a_q_a)+')'
+                                                nome = nome.replace(tirar_ano,'--')
 
                                 if '[PT/PT]' in nome:
                                         audio_filme = 'PT/PT'
@@ -1084,7 +1090,10 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                 qualid = re.compile('ASSISTIR ONLINE (.*)\n').findall(item)
                                 if qualid: qualidade_filme = qualid[0].replace('/ ',' ').replace('</b>','').replace('</span>','').replace('LEGENDADO','') + audio_filme
                                 else:
-                                        qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(item)
+                                        qualid = re.compile('AUDIO:&#160;.+?VERS.+?:&#160;(.+?)TAMANHO:').findall(item)
+                                        if not qualid: qualid = re.compile('AUDIO:&#160;.+?VERS.+?:(.+?)TAMANHO:').findall(item)
+                                        if not qualid: qualid = re.compile('AUDIO:.+?VERS.+?:(.+?)TAMANHO:').findall(item)
+                                        if not qualid: qualid = re.compile('[[]</span><span style=".+?"><span style=".+?">(.+?)</span><span style=".+?">[]]').findall(item)
                                         if not qualid: qualid = re.compile('VERS.+?:(.+?)[[]').findall(item)
                                         if qualid: qualidade_filme = qualid[0].replace('/ ','').replace('</b>','').replace('</span>','').replace(' ','') + audio_filme
                                         else: qualidade_filme = '---'
@@ -1134,7 +1143,7 @@ def FILMES_ANIMACAO_encontrar_fontes_pesquisa_FTT(FILMEN,url,pesquisou,imdbc,ite
                                                         if imdbcode != '':
                                                                 try:
                                                                         fanart,tmdb_id,poster,sin = themoviedb_api_IMDB().fanart_and_id(str(imdbcode),anofilme)
-                                                                        if sinopse == '' or '<div class="separator" style="clear: both; text-align: center;">' in sinopse: sinopse = sin
+                                                                        if sinopse == '' or '<div class="separator" style="clear: both; text-align: center;">' in sinopse or 'textarea' in sinopse: sinopse = sin
                                                                         if fanart == '': fanart,tmb,poster = themoviedb_api().fanart_and_id(nome_pesquisa,anofilme)
                                                                         if thumb == ''  or 'IMDb.png' in thumb or 'Sinopse' in thumb: thumb = poster
                                                                 except:pass
@@ -1384,8 +1393,9 @@ def FILMES_ANIMACAO_encontrar_fontes_filmes_TPT(FILMEN,url,pesquisou,imdbc,item)
                                 try:
                                         html_source = abrir_url(url)
                                 except: html_source = ''
-                                items = re.findall('<div class="post-(.*?)<span id="more-', html_source, re.DOTALL)
-                                #addLink(str(len(items))+imdbcode+imdbc,'','','')
+                                items = re.findall('<div id="content">(.*?)>DOWNLOAD', html_source, re.DOTALL)
+                                if not items: items = re.findall('<div class="post-(.*?)<span id="more-', html_source, re.DOTALL)
+                                #addLink(url+str(len(items))+imdbcode+imdbc,'','','')
                                 if items != []:
                                         print len(items)
                                         for item in items:
