@@ -96,7 +96,7 @@ def MAIN_MENU():
 ##################################################################################################
         
 def ONOFF_Geral():
-        url_TPT = 'http://toppt.net/'#moov7
+        url_TPT = 'http://toppt.tv/'#'http://toppt.net/'#moov7
         url_TFV = 'http://www.tuga-filmes.us/'
         url_TFC = 'http://www.tuga-filmes.com/'#'http://www.tuga-filmes.info/'
         url_MVT = 'http://www.movie-tuga.blogspot.pt'
@@ -329,7 +329,7 @@ def Ultimos_Episodios_Geral():
 ##                        Mashup.ultimos_episodios(url_ultimos_episodios)
                 elif 'TOPPT.NET' in _nomeproc_[index]:
                         url_TFV = 'http://'
-                        url_TPT = 'http://toppt.net/category/series/'
+                        url_TPT = 'http://toppt.tv/category/series/'#'http://toppt.net/category/series/'
                         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
                         url_ultimos_episodios = urllib.urlencode(parameters)
                         Mashup.ultimos_episodios(url_ultimos_episodios)
@@ -372,7 +372,7 @@ def Ultimas_Series_Geral():
                 elif 'IMDB' in _nomeproc_[index]: LinksIMDB1('http://akas.imdb.com/search/title?title_type=tv_series,mini_series&production_status=active&sort=moviemeter,asc&count=12&start=1')
                 elif 'TMDB' in _nomeproc_[index]: EMEXIBICAO('1')
              #   elif 'TODOS' in _nomeproc_[index]: Fontes_ultimas_Series('http://toppt.net/category/series/'+'|'+'http://www.tuga-filmes.us/search/label/Séries')
-                elif 'TOPPT.NET' in _nomeproc_[index]: Fontes_ultimas_Series('http://toppt.net/category/series/'+'|'+'http://')
+                elif 'TOPPT.NET' in _nomeproc_[index]: Fontes_ultimas_Series('http://toppt.tv/category/series/'+'|'+'http://')
                 elif 'TUGA-FILMES.TV' in _nomeproc_[index]: Fontes_ultimas_Series('http://'+'|'+'http://www.tuga-filmes.us/search/label/Séries')
 
 def Fontes_ultimas_Series(url):
@@ -731,13 +731,13 @@ def chamaUltimos(name):
         else: url_CME = 'http:'
         if (name == 'CMC' or name == 'TODOS') and 'UP' in O_F[0][5]: url_CMC = 'http://www.cinemaemcasa.pt/'
         else: url_CMC = 'http:'
-        if (name == 'TPT' or name == 'TODOS') and 'UP' in O_F[0][0]:
-                try:
-                        toppt_source = abrir_url('http://toppt.net/')
-                except: toppt_source = ''
-                saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
-                if saber_url_todos: url_TPT = saber_url_todos[0]
-                else: url_TPT = 'http:'
+        if (name == 'TPT' or name == 'TODOS') and 'UP' in O_F[0][0]: url_TPT = 'http://toppt.tv/category/filmes/'
+##                try:
+##                        toppt_source = abrir_url('http://toppt.tv/')
+##                except: toppt_source = ''
+##                saber_url_todos = re.compile('<a href="(.+?)">filmes</a></li>').findall(toppt_source)
+##                if saber_url_todos: url_TPT = saber_url_todos[0]
+##                else: url_TPT = 'http:'
         else: url_TPT = 'http:'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
@@ -768,13 +768,13 @@ def chamaUltimosA(name):
         else: url_CME = 'http:'
         if (name == 'CMC' or name == 'TODOS') and 'UP' in O_F[0][5]: url_CMC = 'http://www.cinemaemcasa.pt/search/label/Anima%C3%A7%C3%A3o'
         else: url_CMC = 'http:'
-        if (name == 'TPT' or name == 'TODOS') and 'UP' in O_F[0][0]:
-                try:
-                        toppt_source = abrir_url('http://toppt.net/')
-                except: toppt_source = ''
-                saber_url_todos = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
-                if saber_url_todos: url_TPT = saber_url_todos[0]
-                else: url_TPT = 'http:'
+        if (name == 'TPT' or name == 'TODOS') and 'UP' in O_F[0][0]: url_TPT = 'http://toppt.tv/category/animacao/'
+##                try:
+##                        toppt_source = abrir_url('http://toppt.tv/')
+##                except: toppt_source = ''
+##                saber_url_todos = re.compile('<a href="(.+?)">Animacao</a></li>').findall(toppt_source)
+##                if saber_url_todos: url_TPT = saber_url_todos[0]
+##                else: url_TPT = 'http:'
         else: url_TPT = 'http:'
         parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "url_FTT": url_FTT, "url_CMT": url_CMT, "url_CME": url_CME, "url_CMC": url_CMC, "fim": 'fim',"xpto":'xpto'}
         url_filmes_filmes = urllib.urlencode(parameters)
