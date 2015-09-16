@@ -110,9 +110,14 @@ def GGT_encontrar_fontes_filmes(url):
 ##        message = 'Por favor aguarde.'
 ##        progress.create('Progresso', 'A Procurar')
 ##        progress.update( percent, 'A Procurar Filmes ...', message, "" )
+##        try: todos_um = re.compile('(.+?)http').findall(url)[0]
+##        except: todos_um = 'UM'
+        todos_um = url
+        url = url.replace('TODOS','')
 
-        try: xbmcgui.Dialog().notification('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'GGT_1.png', 3000, sound=False)
-        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'GGT_1.png'))
+        if 'TODOS' not in todos_um:
+                try: xbmcgui.Dialog().notification('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'GGT_1.png', 3000, sound=False)
+                except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar Filmes.', 'Por favor aguarde...', artfolder + 'GGT_1.png'))
         
         try:
 		html_source = abrir_url(url)
@@ -225,7 +230,8 @@ def GGT_encontrar_fontes_filmes(url):
                                 
                                 if nome != '---':
                                         #num_filmes = num_filmes + 1
-                                        addDir_trailer1('[COLOR orange]GGT | [/COLOR]'+nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'Movies',num_filmes)
+                                        num_mode = 9004
+                                        addDir_trailer1('[COLOR orange]GGT | [/COLOR]'+nome,imdbcode,num_mode,thumb,sinopse,fanart,ano_filme,genero,O_Nome,urltrailer,'MoviesGGT',num_filmes)
                                 xbmc.sleep(20)
                         Filmes_Fi.close()
 
@@ -239,7 +245,13 @@ def GGT_encontrar_fontes_filmes(url):
                 proxima = re.compile("<a rel='nofollow' href='(.+?)'").findall(html_source)
                 try:
                         proxima_p = proxima[0]#.replace('%3A',':').replace('%2B','+')
-                        addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),852,artfolder + 'PAGS1.png','','')
+                        if 'TODOS' not in todos_um:
+                                addDir("[B]Página Seguinte >>[/B]",proxima_p.replace('&amp;','&'),852,artfolder + 'PAGS1.png','','')
+                        else:
+                                folder = perfil
+                                PsegGGT = open(folder + 'PsegGGT.txt', 'w')
+                                PsegGGT.write(str(proxima_p.replace('&amp;','&')+'TODOS'))
+                                PsegGGT.close()
                 except: pass
 
 def FF_GGT(ordem,item,itemss):
@@ -442,7 +454,7 @@ def GGT_encontrar_videos_filmes(name,url,mvoutv):
         else:
                 try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
                 except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
-        site = '[B][COLOR green]CINE[/COLOR][COLOR yellow]M[/COLOR][COLOR red]ATUGA.eu[/COLOR][/B]'
+        site = '[B][COLOR green]GIG[/COLOR][COLOR yellow]A[/COLOR][COLOR red]TUGA[/COLOR][/B]'
 ##        message = 'Por favor aguarde.'
 ##        percent = 0
 ##        progress.create('Progresso', 'A Procurar...')
@@ -614,7 +626,7 @@ def GGT_encontrar_videos_filmes(name,url,mvoutv):
 ##        else: nome_pesquisa = nnn[0]
         #addLink(n1+imdbcode,'','')
         url = 'IMDB'+imdbcode+'IMDB'
-        if mvoutv != 'MoviesGGT': FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'GGT_',url)
+        if mvoutv != 'MoviesGGT': FilmesAnima.FILMES_ANIMACAO_pesquisar(str(n1),'GGT',url)
         
 ##        if '---' in nn:
 ##                n = re.compile('---(.+?)---').findall(nn)

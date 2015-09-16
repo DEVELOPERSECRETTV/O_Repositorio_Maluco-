@@ -305,7 +305,7 @@ def Ultimos_Episodios_Geral():
 ##        _nomeproc_.append('[B][COLOR white]TMDB[/COLOR][/B]')
 ##        _nomeproc_.append('[B][COLOR white]RATOTV[/COLOR][/B]')
 ##        _nomeproc_.append('[B][COLOR white]WAREZTUGA[/COLOR][/B]')
-##        _nomeproc_.append('[B][COLOR white]SITESdosPORTUGAS[/COLOR][/B] | TODOS')
+        _nomeproc_.append('[B][COLOR white]TODOS[/COLOR][/B]')
         if 'UP' in O_F[0][0]:
                 ON_OFF = ON_OFF + 1
         _nomeproc_.append('[B][COLOR white]TOPPT.NET[/COLOR][/B]'+O_F[0][0])
@@ -321,12 +321,12 @@ def Ultimos_Episodios_Geral():
                 #elif 'WAREZTUGA' in _nomeproc_[index]: WlinksS('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series')
 ##                elif 'IMDB' in _nomeproc_[index]: LinksIMDB1('http://akas.imdb.com/search/title?title_type=tv_series,mini_series&production_status=active&sort=moviemeter,asc&count=12&start=1')
 ##                elif 'TMDB' in _nomeproc_[index]: EMEXIBICAO('1')
-##                elif 'TODOS' in _nomeproc_[index]:
-##                        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
-##                        url_TPT = 'http://toppt.net/category/series/'
-##                        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
-##                        url_ultimos_episodios = urllib.urlencode(parameters)
-##                        Mashup.ultimos_episodios(url_ultimos_episodios)
+                elif 'TODOS' in _nomeproc_[index]:
+                        url_TFV = 'http://www.tuga-filmes.us/search/label/S%C3%A9ries'
+                        url_TPT = 'http://toppt.tv/category/series/'
+                        parameters = {"url_TFV" : url_TFV, "url_TFC": url_TFC, "url_MVT": url_MVT, "url_TPT": url_TPT, "fim": 'fim',"xpto":'xpto'}
+                        url_ultimos_episodios = urllib.urlencode(parameters)
+                        Mashup.ultimos_episodios(url_ultimos_episodios)
                 elif 'TOPPT.NET' in _nomeproc_[index]:
                         url_TFV = 'http://'
                         url_TPT = 'http://toppt.tv/category/series/'#'http://toppt.net/category/series/'
@@ -371,7 +371,7 @@ def Ultimas_Series_Geral():
                 #elif 'WAREZTUGA' in _nomeproc_[index]: WlinksS('http://www.wareztuga.tv/pagination.ajax.php?p=1&order=date&mediaType=series')
                 elif 'IMDB' in _nomeproc_[index]: LinksIMDB1('http://akas.imdb.com/search/title?title_type=tv_series,mini_series&production_status=active&sort=moviemeter,asc&count=12&start=1')
                 elif 'TMDB' in _nomeproc_[index]: EMEXIBICAO('1')
-             #   elif 'TODOS' in _nomeproc_[index]: Fontes_ultimas_Series('http://toppt.net/category/series/'+'|'+'http://www.tuga-filmes.us/search/label/Séries')
+              #  elif 'TODOS' in _nomeproc_[index]: Fontes_ultimas_Series('http://toppt.net/category/series/'+'|'+'http://www.tuga-filmes.us/search/label/Séries')
                 elif 'TOPPT.NET' in _nomeproc_[index]: Fontes_ultimas_Series('http://toppt.tv/category/series/'+'|'+'http://')
                 elif 'TUGA-FILMES.TV' in _nomeproc_[index]: Fontes_ultimas_Series('http://'+'|'+'http://www.tuga-filmes.us/search/label/Séries')
 
@@ -714,9 +714,21 @@ def chamaUltimos(name):
                 read_ON_OFFS_File = read_ON_OFFS_File + line
         O_F = re.compile('TPT:(.+?)TFV:(.+?)TFC:(.+?)MVT:(.+?)FTT:(.+?)CMC:(.+?)CME:(.+?)CMT:(.+?)GGT:(.+?)RTV:(.+?)TGI:(.*)').findall(read_ON_OFFS_File)
         ON_OFFS.close()
-        if (name == 'RTV' or name == 'TODOS') and 'UP' in O_F[0][9]: ratoTV('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S Filmes[/COLOR][/B]','http://www.ratotv.net/movies/page/1/')
-        if (name == 'GGT' or name == 'TODOS') and 'UP' in O_F[0][8]: GigaTuga.GGT_encontrar_fontes_filmes('http://gigatuga.com/category/filmes/')
-        if (name == 'TGI' or name == 'TODOS') and 'UP' in O_F[0][10]: GigaTuga.GGT_encontrar_fontes_filmes('http://gigatuga.com/category/filmes/')
+        if (name == 'RTV' or name == 'TODOS') and 'UP' in O_F[0][9]:
+                if name == 'TODOS':
+                        RTV_url = 'http://www.ratotv.net/movies/page/1/TODOS'
+                        ratoTV('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S Filmes[/COLOR][/B]',RTV_url)
+                else:
+                        RTV_url = 'http://www.ratotv.net/movies/page/1/'
+                        ratoTV('[B][COLOR green]ÚLTIM[/COLOR][COLOR yellow]O[/COLOR][COLOR red]S Filmes[/COLOR][/B]',RTV_url)
+        if (name == 'GGT' or name == 'TODOS') and 'UP' in O_F[0][8]:
+                if name == 'TODOS':
+                        GGT_url = 'http://gigatuga.com/category/filmes/TODOS'
+                        GigaTuga.GGT_encontrar_fontes_filmes(GGT_url)
+                else:
+                        GGT_url = 'http://gigatuga.com/category/filmes/'
+                        GigaTuga.GGT_encontrar_fontes_filmes(GGT_url)
+       # if (name == 'TGI' or name == 'TODOS') and 'UP' in O_F[0][10]: GigaTuga.GGT_encontrar_fontes_filmes('http://gigatuga.com/category/filmes/')
         if (name == 'TFV' or name == 'TODOS') and 'UP' in O_F[0][1]: url_TFV = 'http://www.tuga-filmes.us/search/label/Filmes'
         else: url_TFV = 'http:'
         if (name == 'TFC' or name == 'TODOS') and 'UP' in O_F[0][2]: url_TFC = 'http://www.tuga-filmes.com/'#'http://www.tuga-filmes.info/'
@@ -751,9 +763,16 @@ def chamaUltimosA(name):
                 read_ON_OFFS_File = read_ON_OFFS_File + line
         O_F = re.compile('TPT:(.+?)TFV:(.+?)TFC:(.+?)MVT:(.+?)FTT:(.+?)CMC:(.+?)CME:(.+?)CMT:(.+?)GGT:(.+?)RTV:(.+?)TGI:(.*)').findall(read_ON_OFFS_File)
         ON_OFFS.close()
+        
         if (name == 'RTV' or name == 'TODOS') and 'UP' in O_F[0][9]: ratoTV('[B][COLOR green]ÚLTIMO[/COLOR][COLOR yellow]S [/COLOR][COLOR red]Animação[/COLOR][/B]','http://www.ratotv.net/tags/Animação/page/1/')
-        if (name == 'GGT' or name == 'TODOS') and 'UP' in O_F[0][8]: GigaTuga.GGT_encontrar_fontes_filmes('http://gigatuga.com/category/animacao/')
-        if (name == 'TGI' or name == 'TODOS') and 'UP' in O_F[0][10]: GigaTuga.GGT_encontrar_fontes_filmes('http://gigatuga.com/category/animacao/')
+        if (name == 'GGT' or name == 'TODOS') and 'UP' in O_F[0][8]:
+                if name == 'TODOS':
+                        GGT_url = 'http://gigatuga.com/category/animacao/TODOS'
+                        GigaTuga.GGT_encontrar_fontes_filmes(GGT_url)
+                else:
+                        GGT_url = 'http://gigatuga.com/category/animacao/'
+                        GigaTuga.GGT_encontrar_fontes_filmes(GGT_url)
+      #  if (name == 'TGI' or name == 'TODOS') and 'UP' in O_F[0][10]: GigaTuga.GGT_encontrar_fontes_filmes('http://gigatuga.com/category/animacao/')
         if (name == 'TFV' or name == 'TODOS') and 'UP' in O_F[0][1]: url_TFV = 'http://www.tuga-filmes.us/search/label/Anima%C3%A7%C3%A3o'
         else: url_TFV = 'http:'
         if (name == 'TFC' or name == 'TODOS') and 'UP' in O_F[0][2]: url_TFC = 'http://www.tuga-filmes.com/category/animacao/'#'http://www.tuga-filmes.info/search/label/Anima%C3%A7%C3%A3o?max-results=20'
@@ -782,8 +801,8 @@ def chamaUltimosA(name):
         
 
 def dirtodos(url):
-        try: xbmcgui.Dialog().notification('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
-        except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+        #try: xbmcgui.Dialog().notification('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png', 10000, sound=False)
+        #except: xbmc.executebuiltin("Notification(%s,%s, 10000, %s)" % ('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
 
         urlss = urllib.unquote(url)
         print urlss
@@ -1248,6 +1267,10 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
+                                elif 'GGT' in name:
+                                        strstr,url = GGTmovies(name,url)
+                                elif 'TGI' in name:
+                                        strstr,url = TGImovies(name,url)
                                 elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTPT',url)     
@@ -1268,6 +1291,10 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
+                                elif 'GGT' in name:
+                                        strstr,url = GGTmovies(name,url)
+                                elif 'TGI' in name:
+                                        strstr,url = TGImovies(name,url)
                                 elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTFC',url)
@@ -1288,6 +1315,10 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
+                                elif 'GGT' in name:
+                                        strstr,url = GGTmovies(name,url)
+                                elif 'TGI' in name:
+                                        strstr,url = TGImovies(name,url)
                                 elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteTFV',url)
@@ -1308,6 +1339,10 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
+                                elif 'GGT' in name:
+                                        strstr,url = GGTmovies(name,url)
+                                elif 'TGI' in name:
+                                        strstr,url = TGImovies(name,url)
                                 elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCME',url)
@@ -1328,6 +1363,10 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = TFCmovies(name,url)
                                 elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
+                                elif 'GGT' in name:
+                                        strstr,url = GGTmovies(name,url)
+                                elif 'TGI' in name:
+                                        strstr,url = TGImovies(name,url)
                                 elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCMT',url)
@@ -1349,6 +1388,10 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
+                                elif 'GGT' in name:
+                                        strstr,url = GGTmovies(name,url)
+                                elif 'TGI' in name:
+                                        strstr,url = TGImovies(name,url)
                                 elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteFTT',url)
@@ -1369,6 +1412,10 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif 'TFC' in name:
                                         strstr,url = TFCmovies(name,url)
+                                elif 'GGT' in name:
+                                        strstr,url = GGTmovies(name,url)
+                                elif 'TGI' in name:
+                                        strstr,url = TGImovies(name,url)
                                 elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
                                 FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteCMC',url)
@@ -1382,6 +1429,32 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                 elif 'TFV' in name:
                                         strstr,url = TFVmovies(name,url)
                                 elif 'TFC' in name:
+                                        strstr,url = TFCmovies(name,url)
+                                elif 'CME' in name:
+                                        strstr,url = CMEmovies(name,url)
+                                elif 'CMT' in name:
+                                        strstr,url = CMTmovies(name,url)
+                                elif 'CMC' in name:
+                                        strstr,url = CMCmovies(name,url)
+                                elif 'GGT' in name:
+                                        strstr,url = GGTmovies(name,url)
+                                elif 'TGI' in name:
+                                        strstr,url = TGImovies(name,url)
+                                elif 'RTV' in name:
+                                        strstr,url = RTVmovies(namet,url)
+                                FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteMVT',url)
+                        else: MovieTuga.MVT_encontrar_videos_filmes(name,url,mvoutv)
+                elif 'GIGATUGA' in _nomeproc_[index]:
+                        if 'GGT' not in name:
+                                if 'TPT' in name:
+                                        strstr,url = TPTmovies(name,url,iconimage)
+                                elif 'FTT' in name:
+                                        strstr,url = FTTmovies(name,url)
+                                elif 'TFV' in name:
+                                        strstr,url = TFVmovies(name,url)
+                                elif 'TFC' in name:
+                                        strstr,url = TFCmovies(name,url)
+                                elif 'MVT' in name:
                                         strstr,url = MVTmovies(name,url)
                                 elif 'CME' in name:
                                         strstr,url = CMEmovies(name,url)
@@ -1389,10 +1462,12 @@ def procurarOnde(mvoutv, namet, url, year, urltrailer, name, iconimage):
                                         strstr,url = CMTmovies(name,url)
                                 elif 'CMC' in name:
                                         strstr,url = CMCmovies(name,url)
+                                elif 'TGI' in name:
+                                        strstr,url = TGImovies(name,url)
                                 elif 'RTV' in name:
                                         strstr,url = RTVmovies(namet,url)
-                                FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteMVT',url)
-                        else: MovieTuga.MVT_encontrar_videos_filmes(name,url,mvoutv)
+                                FilmesAnima.FILMES_ANIMACAO_pesquisar(strstr,'siteGGT',url)
+                        else: GigaTuga.GGT_encontrar_videos_filmes(name,url,mvoutv)
 
         #if 'PROCUROU' in name or 'PROCURAR' in name:
        # addLink(name,'','','')
@@ -2508,8 +2583,15 @@ def ratoTV(name,url):
 
         pagsurl = url
 
-        try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
-        except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+        todos_um = url
+        url = url.replace('TODOS','')
+
+        if 'TODOS' not in todos_um:
+                try: xbmcgui.Dialog().notification('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png', 3000, sound=False)
+                except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % ('A Procurar.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
+        else:
+                try: xbmcgui.Dialog().notification('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png', 15000, sound=False)
+                except: xbmc.executebuiltin("Notification(%s,%s, 15000, %s)" % ('A Procurar Últimos Filmes.', 'Por favor aguarde...', artfolder + 'SDPI.png'))
 
         threads = []
         results = []
@@ -2600,9 +2682,21 @@ def ratoTV(name,url):
         if pseg:
                 if 'index.php' not in pagsurl: pagseg = pseg[0]
                 if ('[COLOR green]' not in name and '[COLOR blue]' not in name) or name == "[COLOR blue]Página Seguinte >>>[/COLOR]" or '[COLOR green]PRO[/COLOR][COLOR yellow]C[/COLOR][COLOR red]URAR[/COLOR]' in name or '[COLOR green]PO[/COLOR][COLOR yellow]R [/COLOR][COLOR red]ANO[/COLOR]' in name:
-                        addDir("[COLOR blue]Página Seguinte >>>[/COLOR]",pagseg,20000,artfolder + 'PAGS1.png','','')
+                        if 'TODOS' not in todos_um:
+                                addDir("[COLOR blue]Página Seguinte >>>[/COLOR]",pagseg,20000,artfolder + 'PAGS1.png','','')
+                        else:
+                                folder = perfil
+                                PsegRTV = open(folder + 'PsegRTV.txt', 'w')
+                                PsegRTV.write(str(pagseg+'TODOS'))
+                                PsegRTV.close()
                 else:
-                        addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pagseg,20000,artfolder + 'PAGS1.png','','')
+                        if 'TODOS' not in todos_um:
+                                addDir("[COLOR blue]Página Seguinte >>[/COLOR]",pagseg,20000,artfolder + 'PAGS1.png','','')
+                        else:
+                                folder = perfil
+                                PsegRTV = open(folder + 'PsegRTV.txt', 'w')
+                                PsegRTV.write(str(pagseg+'TODOS'))
+                                PsegRTV.close()
 
 ##        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
 ##        xbmc.executebuiltin("Container.SetViewMode(503)")
@@ -2923,7 +3017,42 @@ def TPTmovies(name,url,iconimage):
         #addLink(name,'','','')
         return str(n2),url
 
-def FTTmovies(name,url):
+def TPTmovies(name,url,iconimage):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        n1 = ''
+        n2 = ''
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        if nnnn:
+                n2 = nnnn[0][0]
+                n1 = nnnn[0][1]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0][0]
+                        n1 = nnnn[0][1]        
+        if not nnnn:
+                nnnn = re.compile('(.+?) [-] ').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[:] ').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0]
+        if not nnnn : n2 = nnn[0]
+        if n1 != '' and n2 != '':
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n2,'url',1004,iconimage,False,fanart)
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n1,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+        else:
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n2,'url',1004,iconimage,False,fanart)
+        url = 'IMDB'+imdbcode+'IMDB'
+        #addLink(name,'','','')
+        return str(n2),url
+
+def GGTmovies(name,url):
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
         if imdb: imdbcode = imdb[0]
         else: imdbcode = ''
@@ -2989,6 +3118,41 @@ def FTTmovies(name,url):
                 addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n1,'url',1004,iconimage,False,fanart)
         url = 'IMDB'+imdbcode+'IMDB'
         return str(n1),url
+
+def TGImovies(name,url,iconimage):
+        imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
+        if imdb: imdbcode = imdb[0]
+        else: imdbcode = ''
+        n1 = ''
+        n2 = ''
+        nnn = re.compile('[[]B[]][[]COLOR green[]](.+?)[[]/COLOR[]][[]/B[]]').findall(name)
+        nomeescolha = '[B][COLOR green]'+nnn[0]+'[/COLOR][/B]'
+        nnnn = re.compile('(.+?)[(](.+?)[)]').findall(nnn[0])
+        if nnnn:
+                n2 = nnnn[0][0]
+                n1 = nnnn[0][1]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[[](.+?)[]]').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0][0]
+                        n1 = nnnn[0][1]        
+        if not nnnn:
+                nnnn = re.compile('(.+?) [-] ').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0]
+        if not nnnn:
+                nnnn = re.compile('(.+?)[:] ').findall(nnn[0])
+                if nnnn:
+                        n2 = nnnn[0]
+        if not nnnn : n2 = nnn[0]
+        if n1 != '' and n2 != '':
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n2,'url',1004,iconimage,False,fanart)
+                addDir('[COLOR yellow]PROCURAR POR: [/COLOR]'+n1,'IMDB'+imdbcode+'IMDB',7,iconimage,'',fanart)
+        else:
+                addDir1('[COLOR blue]PROCUROU POR: [/COLOR]'+n2,'url',1004,iconimage,False,fanart)
+        url = 'IMDB'+imdbcode+'IMDB'
+        #addLink(name,'','','')
+        return str(n2),url
 
 def TFCmovies(name,url):
         imdb = re.compile('.+?IMDB(.+?)IMDB').findall(url)
